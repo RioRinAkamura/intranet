@@ -10,7 +10,7 @@ function* login(action) {
   // }
   return new Promise((resolve, reject) => {
     const { email, password } = action.payload;
-    if (email == 'hoaiphat0206@gmail.com' && password == '123123123') {
+    if (email === 'hoaiphat0206@gmail.com' && password === '123123123') {
       const user = {
         email,
         userId: '123qwe123',
