@@ -15,6 +15,9 @@ import { GlobalStyle } from '../styles/global-styles';
 import { HomePage } from './pages/HomePage/Loadable';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
+import { PublicRoute } from './components/Auth/Route';
+import config from 'config';
+import { Login } from './pages/Login/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -30,6 +33,12 @@ export function App() {
 
       <Switch>
         <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} />
+        <PublicRoute
+          restricted={true}
+          exact
+          path={config.LOGIN_PATH}
+          component={Login}
+        />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />
