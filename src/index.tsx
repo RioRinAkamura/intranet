@@ -26,8 +26,6 @@ import { ThemeProvider } from 'styles/theme/ThemeProvider';
 
 import reportWebVitals from 'reportWebVitals';
 
-import 'antd/dist/antd.css';
-
 // Initialize languages
 import './locales/i18n';
 

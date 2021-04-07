@@ -1,29 +1,37 @@
 import { take, call, put, select, takeLatest } from 'redux-saga/effects';
+import { request } from 'utils/request';
 import { authActions as actions } from '.';
 
-function* login(action) {
-  // const { email, password } = action.payload;
-  // try {
-
-  // } catch (error) {
-
-  // }
-  return new Promise((resolve, reject) => {
-    const { email, password } = action.payload;
-    if (email === 'hoaiphat0206@gmail.com' && password === '123123123') {
-      const user = {
-        email,
-        userId: '123qwe123',
-        token: '123asd123',
+function loginExample(email, password) {
+  return request('https://reqres.in/api/login', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  })
+    .then((response: any) => {
+      return {
+        token: response.token,
       };
-      resolve(user);
-    } else {
-      reject({
-        msg: 'Invalid user',
-      });
-    }
-  });
-  yield put({ type: actions.isSignin.type, payload: true });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
+function* login(action) {
+  try {
+    const { email, password } = action.payload;
+    const response = yield call(loginExample, email, password);
+    yield put(actions.isSignin({ authenticated: true }));
+  } catch (err) {
+    console.log(err);
+  }
+
+  // const data = yield user.json();
+  // yield put({ type: actions.isSignin.type, payload: true });
 }
 
 export function* authSaga() {
