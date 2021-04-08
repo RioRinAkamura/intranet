@@ -3,8 +3,6 @@ import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { authSaga } from './saga';
 import { AuthState } from './types';
-import { useHistory } from 'react-router-dom';
-import { useAuthState } from '..';
 
 export const initialState: AuthState = {
   authenticated: false,
@@ -18,12 +16,18 @@ const slice = createSlice({
       state,
       action: PayloadAction<{ username: string; password: string }>,
     ) {},
-    loginWithGoogle(state, action: PayloadAction<AuthState>) {
+    loginWithGoogle(
+      state,
+      action: PayloadAction<{ token: string; userId: string }>,
+    ) {
       state.authenticated = true;
     },
     isSignin(state, action: PayloadAction<AuthState>) {
       state.authenticated = true;
     },
+    loginRequesting(state, action: PayloadAction<any>) {},
+    loginSuccess(state, action: PayloadAction<any>) {},
+    loginError(state, action: PayloadAction<any>) {},
   },
 });
 

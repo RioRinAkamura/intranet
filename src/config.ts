@@ -4,7 +4,8 @@ export const config = {
   USERS_PATH: process.env.USERS_PATH || '/users',
   GOOGLE_CLIENT_ID:
     process.env.GOOGLE_CLIENT_ID ||
-    '208470488520-a6dhqdj0qv5tjmqrrdhtk7spdprcmg83.apps.googleusercontent.com',
+    '416792283902-niarsbm6k01a26ak8o5sc7251j03f0b0.apps.googleusercontent.com',
+  FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID || '507582956840215',
 };
 
 export default config;

@@ -2,10 +2,10 @@ import config from 'config';
 import React from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { useAuthSlice } from '../Auth/slice';
 
-export function Login() {
+export function GoogleLoginButton() {
   const { actions } = useAuthSlice();
   const dispatch = useDispatch();
 
@@ -14,7 +14,7 @@ export function Login() {
       token: res.tokenId,
       userId: res.googleId,
     };
-    dispatch(actions.loginWithGoogle({ authenticated: true }));
+    dispatch(actions.loginWithGoogle(data));
   };
   const onFailure = res => {
     console.log('Login fail ', res);
@@ -36,6 +36,8 @@ export function Login() {
 }
 
 const GoogleLoginBtn = styled(GoogleLogin)`
+  width: 100%;
+  place-content: center;
   div {
     padding: 5px !important;
   }

@@ -1,35 +1,79 @@
-import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
-import { useAuthState } from 'app/components/Auth';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
+import { AuthContext } from 'app/components/Auth/Context';
 import { useAuthSlice } from 'app/components/Auth/slice';
 import { selectAuth } from 'app/components/Auth/slice/selectors';
-import { Login } from 'app/components/GoogleLoginButton';
+import { FacebookLoginButton } from 'app/components/FacebookLoginButton';
+import { GoogleLoginButton } from 'app/components/GoogleLoginButton';
 import { Logout } from 'app/components/GoogleLogoutButton';
 import config from 'config';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import GoogleLogin from 'react-google-login';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 
-const FormItem = Form.Item;
+// const FormItem = Form.Item;
 const layout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 };
-const tailLayout = {
-  wrapperCol: {
-    sm: { offset: 3, span: 21 },
-    md: { offset: 6, span: 18 },
-    lg: { offset: 3, span: 21 },
-  },
-};
+
+// function useOutsideAlerter(ref) {
+//   useEffect(() => {
+//     /**
+//      * Alert if clicked on outside of element
+//      */
+//     function handleClickOutside(event) {
+//       if (ref.current && !ref.current.input.contains(event.target)) {
+//         alert('You clicked outside of me!');
+//       }
+//     }
+
+//     // Bind the event listener
+//     document.addEventListener('mousedown', handleClickOutside);
+//     return () => {
+//       // Unbind the event listener on clean up
+//       document.removeEventListener('mousedown', handleClickOutside);
+//     };
+//   }, [ref]);
+// }
 
 export const LoginForm: React.FC = () => {
   const { actions } = useAuthSlice();
   const dispatch = useDispatch();
   const auth = useSelector(selectAuth);
-  const authState = useAuthState();
   const history = useHistory();
+  const [form] = Form.useForm();
+  const emailRef = useRef<any>();
+  const passwordRef = useRef<any>();
+
+  useEffect(() => {
+    emailRef.current.focus();
+    let emailClicked = true;
+    let passwordClicked = false;
+    function handleClickOutside(event) {
+      if (event.target.id === 'email') {
+        emailClicked = true;
+      }
+      if (event.target.id === 'password') {
+        passwordClicked = true;
+      }
+      if (emailClicked && event.target.id !== 'email') {
+        emailClicked = false;
+        form.validateFields(['email']);
+      }
+      if (passwordClicked && event.target.id !== 'password') {
+        passwordClicked = false;
+        form.validateFields(['password']);
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   const onFinish = values => {
     dispatch(actions.login({ ...values }));
@@ -44,44 +88,74 @@ export const LoginForm: React.FC = () => {
   // }, [auth]);
 
   return (
-    <Form {...layout} onFinish={onFinish}>
-      <FormItem
-        name="email"
-        label="Email"
-        rules={[
-          { required: true, message: 'Please input your email!' },
-          { type: 'email', message: 'Your email is invalid!' },
-        ]}
-      >
-        <Input />
-      </FormItem>
-      <FormItem
-        name="password"
-        label="Password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
-      >
-        <Input.Password />
-      </FormItem>
-      <FormItem {...tailLayout} name="remember" valuePropName="checked">
-        <Checkbox>Remember me</Checkbox>
-      </FormItem>
-      <FormItem {...tailLayout}>
+    <Wrapper>
+      <Form {...layout} onFinish={onFinish} form={form}>
+        <FormItem
+          name="email"
+          label="Email address"
+          rules={[
+            { required: true, message: 'Please input your email!' },
+            { type: 'email', message: 'Your email is invalid!' },
+          ]}
+        >
+          <Input prefix={<UserOutlined />} ref={emailRef} size="large" />
+        </FormItem>
+        <FormItem
+          name="password"
+          label="Password"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input.Password
+            prefix={<LockOutlined />}
+            ref={passwordRef}
+            size="large"
+          />
+        </FormItem>
+        <FormItem name="remember" valuePropName="checked">
+          <Checkbox>Remember me</Checkbox>
+        </FormItem>
+        <FormItem>
+          <Row gutter={[8, 8]} justify="space-between">
+            <Col span={12}>
+              <Button type="link" size="large">
+                Forgot your password ?
+              </Button>
+            </Col>
+            {/* <Col span={6}>
+              <Button type="link" size="large">
+                Sign Up
+              </Button>
+            </Col> */}
+            <Col span={24}>
+              <Button block type="primary" htmlType="submit" size="large">
+                Login
+              </Button>
+            </Col>
+          </Row>
+        </FormItem>
+        <Divider orientation="center">Or</Divider>
         <Row gutter={[8, 8]}>
-          <Col>
-            <Button type="primary" htmlType="submit" size="large">
-              Login
-            </Button>
+          <Col span={24}>
+            <GoogleLoginButton />
           </Col>
-          <Col>
-            <Login />
-          </Col>
-          <Col>
-            <Logout />
+          <Col span={24}>
+            <FacebookLoginButton />
           </Col>
         </Row>
-      </FormItem>
-    </Form>
+      </Form>
+    </Wrapper>
   );
 };
 
-export default LoginForm;
+const FormItem = styled(Form.Item)`
+  label {
+    font-weight: bold;
+  }
+`;
+
+const Wrapper = styled.div`
+  button {
+    font-weight: 500 !important;
+    font-size: 16px !important;
+  }
+`;

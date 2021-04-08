@@ -53,8 +53,17 @@ function beforeUpload(file) {
   return isJpgOrPng && isLt2M;
 }
 
+interface UserProfile {
+  avatar: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+}
+
 export const Users: React.FC = () => {
   const [data, setData] = useState([]);
+  const [userProfile, setUserProfile] = useState<UserProfile>();
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 6,
@@ -65,6 +74,7 @@ export const Users: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [openModal, setOpenModal] = useState({ open: false, mode: '' });
+  const [viewModal, setViewModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [form] = Form.useForm();
   const [imageURL, setImageURL] = useState('');
@@ -85,7 +95,7 @@ export const Users: React.FC = () => {
     });
   };
 
-  const fetchData = (params: any) => {
+  const fetchData = params => {
     setLoading(true);
     request(
       'https://reqres.in/api/users?page=' + params.pagination.current,
@@ -226,10 +236,8 @@ export const Users: React.FC = () => {
                 shape="circle"
                 icon={<EyeOutlined />}
                 onClick={() => {
-                  form.setFieldsValue({
-                    ...record,
-                  });
-                  setOpenModal({ open: true, mode: 'view' });
+                  setUserProfile({ ...record });
+                  setViewModal(true);
                 }}
               />
             </Tooltip>
@@ -339,7 +347,7 @@ export const Users: React.FC = () => {
             </Button>
           </Col>
           <Col>
-            <Button size="large">
+            <ButtonImport size="large">
               <CSVReader
                 cssClass="react-csv-input"
                 label="Import CSV"
@@ -347,7 +355,7 @@ export const Users: React.FC = () => {
                 onFileLoaded={handleForce}
                 parserOptions={papaparseOptions}
               />
-            </Button>
+            </ButtonImport>
           </Col>
         </Row>
       </Col>
@@ -355,7 +363,7 @@ export const Users: React.FC = () => {
         <Table
           columns={columns}
           rowKey={(record: any) => {
-            console.log(record.id)
+            console.log(record.id);
             return record.id;
           }}
           dataSource={data}
@@ -454,6 +462,20 @@ export const Users: React.FC = () => {
           </FormItem>
         </Form>
       </Modal>
+
+      <Modal
+        title={<ModalTitle>User Profile</ModalTitle>}
+        visible={viewModal}
+        onCancel={() => setViewModal(false)}
+        footer={[]}
+      >
+        <Row>
+          <Col span={24}>
+            <h2>Avatar</h2>
+            <Avatar src={userProfile?.avatar} size={100} />
+          </Col>
+        </Row>
+      </Modal>
       <DeleteModal
         open={deleteModal}
         handleCancel={() => setDeleteModal(false)}
@@ -484,4 +506,10 @@ const IconButton = styled(Button)`
 
 const ModalTitle = styled.h1`
   text-align: center;
+`;
+
+const ButtonImport = styled(Button)`
+  label:hover {
+    cursor: pointer;
+  }
 `;

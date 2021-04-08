@@ -6,7 +6,7 @@ export const useAuthState = (): {
   loading: boolean;
   authenticated: boolean;
 } => {
-  return { loading: false, authenticated: false };
+  return { loading: false, authenticated: true };
 };
 
 export const useGetPermissions = (): void => {};
