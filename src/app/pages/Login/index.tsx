@@ -17,7 +17,7 @@ export const Login: React.FC = () => {
         /> */}
       </Helmet>
       <LoginWrapper justify="center" align="middle">
-        <Form xxl={6} xl={8} lg={10} xs={18}>
+        <Form xxl={6} xl={8} lg={10} xs={21}>
           <Title>
             <h1>Login</h1>
           </Title>
@@ -37,6 +37,8 @@ const Title = styled.div`
 const LoginWrapper = styled(Row)`
   position: fixed;
   width: 100%;
+  height: 100%;
+  overflow: auto;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);

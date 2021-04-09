@@ -11,6 +11,8 @@ import {
   message,
   Tooltip,
   Avatar,
+  List,
+  Spin,
 } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -21,6 +23,8 @@ import {
   EditOutlined,
   EyeOutlined,
   LoadingOutlined,
+  MailFilled,
+  PhoneFilled,
   PlusOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
@@ -29,6 +33,7 @@ import { DeleteModal } from 'app/components/DeleteModal';
 import { useUserspageSlice } from './slice';
 import { CSVLink } from 'react-csv';
 import CSVReader from 'react-csv-reader';
+import { isMobile } from 'react-device-detect';
 
 const FormItem = Form.Item;
 
@@ -64,13 +69,15 @@ interface UserProfile {
 export const Users: React.FC = () => {
   const [data, setData] = useState([]);
   const [userProfile, setUserProfile] = useState<UserProfile>();
-  const [pagination, setPagination] = useState({
+  const [tablePagination, setTablePagination] = useState({
     current: 1,
     pageSize: 6,
     total: 0,
   });
+  const [tableFilters, setTableFilters] = useState({});
   const [loading, setLoading] = useState(false);
   const [loadingUpload, setLoadingUpload] = useState(false);
+  const [moreLoading, setMoreLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [openModal, setOpenModal] = useState({ open: false, mode: '' });
@@ -83,14 +90,31 @@ export const Users: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchData({ pagination });
+    fetchData({ pagination: { ...tablePagination } });
+
+    function handleLoadMore() {
+      if (
+        window.innerHeight + document.documentElement.scrollTop ===
+        document.scrollingElement?.scrollHeight
+      ) {
+        setMoreLoading(true);
+        console.log('expand');
+        // Do load more content here!
+      }
+    }
+    document.addEventListener('scroll', handleLoadMore);
+    return () => {
+      document.removeEventListener('scroll', handleLoadMore);
+    };
   }, []);
 
   const handleTableChange = (pagination, filters, sorter) => {
+    const filterChanges =
+      JSON.stringify(filters) !== JSON.stringify(tableFilters);
     fetchData({
       sortField: sorter.field,
       sortOrder: sorter.order,
-      pagination,
+      pagination: filterChanges ? { ...pagination } : { ...tablePagination },
       ...filters,
     });
   };
@@ -101,12 +125,11 @@ export const Users: React.FC = () => {
       'https://reqres.in/api/users?page=' + params.pagination.current,
     ).then((response: any) => {
       setData(response.data);
-      pagination.total = response.total;
-      pagination.current = params.pagination.current;
-      setPagination({
-        ...pagination,
+      tablePagination.total = response.total;
+      tablePagination.current = params.pagination.current;
+      setTablePagination({
+        ...tablePagination,
         total: response.total,
-        current: params.pagination.current,
       });
       setLoading(false);
     });
@@ -209,13 +232,19 @@ export const Users: React.FC = () => {
     {
       title: 'First Name',
       dataIndex: 'first_name',
-      sorter: (a, b) => a.first_name.localeCompare(b.first_name),
+      sorter: {
+        compare: (a, b) => a.first_name.localeCompare(b.first_name),
+        multiple: 2,
+      },
       ...getColumnSearchProps('first_name'),
     },
     {
       title: 'Last Name',
       dataIndex: 'last_name',
-      sorter: (a, b) => a.last_name.localeCompare(b.last_name),
+      sorter: {
+        compare: (a, b) => a.last_name.localeCompare(b.last_name),
+        multiple: 1,
+      },
       ...getColumnSearchProps('last_name'),
     },
     {
@@ -321,58 +350,138 @@ export const Users: React.FC = () => {
   };
 
   return (
-    <Row gutter={[8, 8]} align="middle" justify="center">
-      <Col span={24}>
-        <h1>Users Page</h1>
-      </Col>
-      <Col span={24}>
-        <Row gutter={[8, 8]} justify="end">
-          <Col>
-            <Button
-              size="large"
-              type="primary"
-              onClick={() => setOpenModal({ open: true, mode: 'create' })}
-            >
-              Create User
-            </Button>
+    <>
+      <Row gutter={[8, 8]}>
+        <Col></Col>
+        <Col></Col>
+        <Col></Col>
+        <Col></Col>
+      </Row>
+      {isMobile ? (
+        <>
+          <List
+            className="demo-loadmore-list"
+            loading={loading}
+            itemLayout="vertical"
+            dataSource={data}
+            renderItem={(user: UserProfile, index: number) => (
+              <ListItem key={index}>
+                <Row gutter={[8, 8]}>
+                  <Col style={{ textAlign: 'center' }} span={10}>
+                    <Avatar size={{ xs: 130 }} src={user.avatar} />
+                  </Col>
+                  <Col span={14}>
+                    <h2>{user.first_name + ' ' + user.last_name}</h2>
+                    <ProfileDescription gutter={[8, 8]}>
+                      <Col span={4}>
+                        <PhoneFilled />
+                      </Col>
+                      <Col span={20}>{user.phone}</Col>
+                      <Col span={4}>
+                        <MailFilled />
+                      </Col>
+                      <Col span={20}>{user.email}</Col>
+                    </ProfileDescription>
+                  </Col>
+                </Row>
+                <Row gutter={[8, 8]}>
+                  <Col offset={10} span={14}>
+                    <Row gutter={[8, 8]}>
+                      <Col span={8}>
+                        <IconButton
+                          type="primary"
+                          shape="circle"
+                          icon={<EyeOutlined />}
+                          onClick={() => {
+                            setUserProfile({ ...user });
+                            setViewModal(true);
+                          }}
+                        />
+                      </Col>
+                      <Col span={8}>
+                        <IconButton
+                          shape="circle"
+                          icon={<EditOutlined />}
+                          onClick={() => {
+                            form.setFieldsValue({
+                              ...user,
+                            });
+                            setOpenModal({ open: true, mode: 'edit' });
+                          }}
+                        />
+                      </Col>
+                      <Col span={8}>
+                        <IconButton
+                          danger
+                          shape="circle"
+                          icon={<DeleteOutlined />}
+                          onClick={() => {
+                            setDeleteModal(true);
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </ListItem>
+            )}
+          />
+          {moreLoading && <Spin />}
+        </>
+      ) : (
+        <Row gutter={[8, 8]} align="middle" justify="center">
+          <Col span={24}>
+            <h1>Users Page</h1>
           </Col>
-          <Col>
-            <Button size="large">
-              <CSVLink
-                filename={'users-page-' + pagination.current + '.csv'}
-                data={data}
-              >
-                Export as CSV
-              </CSVLink>
-            </Button>
+          <Col span={24}>
+            <Row gutter={[8, 8]} justify="end">
+              <Col>
+                <Button
+                  size="large"
+                  type="primary"
+                  onClick={() => setOpenModal({ open: true, mode: 'create' })}
+                >
+                  Create User
+                </Button>
+              </Col>
+              <Col>
+                <Button size="large">
+                  <CSVLink
+                    filename={'users-page-' + tablePagination.current + '.csv'}
+                    data={data}
+                  >
+                    Export as CSV
+                  </CSVLink>
+                </Button>
+              </Col>
+              <Col>
+                <ButtonImport size="large">
+                  <CSVReader
+                    cssClass="react-csv-input"
+                    label="Import CSV"
+                    inputStyle={{ display: 'none' }}
+                    onFileLoaded={handleForce}
+                    parserOptions={papaparseOptions}
+                  />
+                </ButtonImport>
+              </Col>
+            </Row>
           </Col>
-          <Col>
-            <ButtonImport size="large">
-              <CSVReader
-                cssClass="react-csv-input"
-                label="Import CSV"
-                inputStyle={{ display: 'none' }}
-                onFileLoaded={handleForce}
-                parserOptions={papaparseOptions}
-              />
-            </ButtonImport>
+          <Col span={24}>
+            <Table
+              columns={columns}
+              rowKey={(record: any) => {
+                return record.id;
+              }}
+              dataSource={data}
+              pagination={tablePagination}
+              loading={loading}
+              onChange={handleTableChange}
+              scroll={{ x: 'max-content' }}
+            />
           </Col>
         </Row>
-      </Col>
-      <Col span={24}>
-        <Table
-          columns={columns}
-          rowKey={(record: any) => {
-            console.log(record.id);
-            return record.id;
-          }}
-          dataSource={data}
-          pagination={pagination}
-          loading={loading}
-          onChange={handleTableChange}
-          scroll={{ x: 'max-content' }}
-        />
-      </Col>
+      )}
       <Modal
         title={
           <ModalTitle>
@@ -462,7 +571,6 @@ export const Users: React.FC = () => {
           </FormItem>
         </Form>
       </Modal>
-
       <Modal
         title={<ModalTitle>User Profile</ModalTitle>}
         visible={viewModal}
@@ -480,7 +588,7 @@ export const Users: React.FC = () => {
         open={deleteModal}
         handleCancel={() => setDeleteModal(false)}
       />
-    </Row>
+    </>
   );
 };
 
@@ -512,4 +620,10 @@ const ButtonImport = styled(Button)`
   label:hover {
     cursor: pointer;
   }
+`;
+
+const ListItem = styled(List.Item)``;
+
+const ProfileDescription = styled(Row)`
+  color: gray;
 `;

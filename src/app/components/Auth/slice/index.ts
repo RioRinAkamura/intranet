@@ -25,7 +25,6 @@ const slice = createSlice({
     isSignin(state, action: PayloadAction<AuthState>) {
       state.authenticated = true;
     },
-    loginRequesting(state, action: PayloadAction<any>) {},
     loginSuccess(state, action: PayloadAction<any>) {},
     loginError(state, action: PayloadAction<any>) {},
   },
