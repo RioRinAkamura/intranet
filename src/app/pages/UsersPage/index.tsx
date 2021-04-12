@@ -88,9 +88,9 @@ interface Pagination {
 }
 
 interface Filters {
-  email?: string;
-  first_name?: string;
-  last_name?: string;
+  email?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
 }
 
 export const Users: React.FC = () => {
@@ -106,9 +106,9 @@ export const Users: React.FC = () => {
     totalPage: 0,
   });
   const [tableFilters, setTableFilters] = useState<Filters>({
-    email: '',
-    first_name: '',
-    last_name: '',
+    email: null,
+    first_name: null,
+    last_name: null,
   });
   const [tableSort, setTableSort] = useState({});
   const [loading, setLoading] = useState(false);
