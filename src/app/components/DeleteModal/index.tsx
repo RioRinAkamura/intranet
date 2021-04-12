@@ -2,12 +2,19 @@ import { Button, Modal } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 
-export const DeleteModal = props => {
+interface Props {
+  open: boolean;
+  handleDelete: () => void;
+  handleCancel: () => void;
+}
+
+export const DeleteModal = (props: Props) => {
   const { open, handleDelete, handleCancel } = props;
 
   return (
     <Modal
       visible={open}
+      onCancel={handleCancel}
       footer={[
         <Button size="large" onClick={handleCancel}>
           Cancel

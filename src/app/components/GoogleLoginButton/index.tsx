@@ -1,20 +1,35 @@
 import config from 'config';
 import React from 'react';
-import { GoogleLogin } from 'react-google-login';
+import {
+  GoogleLogin,
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from 'react-google-login';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
 import { useAuthSlice } from '../Auth/slice';
 
-export function GoogleLoginButton() {
+interface Props {}
+
+interface Login {
+  tokenId: string;
+  googleId: string;
+}
+
+export const GoogleLoginButton = (props: Props) => {
   const { actions } = useAuthSlice();
   const dispatch = useDispatch();
 
-  const onSuccess = res => {
-    const data = {
-      token: res.tokenId,
-      userId: res.googleId,
-    };
-    dispatch(actions.loginWithGoogle(data));
+  const onSuccess = (
+    response: GoogleLoginResponse | GoogleLoginResponseOffline,
+  ) => {
+    if ('googleId' in response) {
+      const data: Login = {
+        tokenId: response.tokenId,
+        googleId: response.googleId,
+      };
+      dispatch(actions.loginWithGoogle(data));
+    }
   };
   const onFailure = res => {
     console.log('Login fail ', res);
@@ -33,7 +48,7 @@ export function GoogleLoginButton() {
       />
     </div>
   );
-}
+};
 
 const GoogleLoginBtn = styled(GoogleLogin)`
   width: 100%;

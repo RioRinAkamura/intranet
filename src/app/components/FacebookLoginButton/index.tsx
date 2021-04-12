@@ -6,7 +6,9 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
 
-export function FacebookLoginButton() {
+interface Props {}
+
+export const FacebookLoginButton = (props: Props) => {
   const dispatch = useDispatch();
 
   const responseFacebook = response => {
@@ -31,7 +33,7 @@ export function FacebookLoginButton() {
       />
     </div>
   );
-}
+};
 
 const FacebookLoginBtn = styled(Button)`
   place-content: center;

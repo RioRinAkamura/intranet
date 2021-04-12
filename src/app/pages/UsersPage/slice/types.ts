@@ -1,2 +1,5 @@
 /* --- STATE --- */
-export interface UserspageState {}
+export interface UserspageState {
+  users: [];
+  loading: boolean;
+}

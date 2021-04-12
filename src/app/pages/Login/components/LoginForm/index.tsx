@@ -9,37 +9,18 @@ import { Logout } from 'app/components/GoogleLogoutButton';
 import config from 'config';
 import React, { useContext, useEffect, useRef } from 'react';
 import GoogleLogin from 'react-google-login';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 
-// const FormItem = Form.Item;
 const layout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 };
 
-// function useOutsideAlerter(ref) {
-//   useEffect(() => {
-//     /**
-//      * Alert if clicked on outside of element
-//      */
-//     function handleClickOutside(event) {
-//       if (ref.current && !ref.current.input.contains(event.target)) {
-//         alert('You clicked outside of me!');
-//       }
-//     }
-
-//     // Bind the event listener
-//     document.addEventListener('mousedown', handleClickOutside);
-//     return () => {
-//       // Unbind the event listener on clean up
-//       document.removeEventListener('mousedown', handleClickOutside);
-//     };
-//   }, [ref]);
-// }
-
 export const LoginForm: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const { actions } = useAuthSlice();
   const dispatch = useDispatch();
   const auth = useSelector(selectAuth);
@@ -78,14 +59,6 @@ export const LoginForm: React.FC = () => {
   const onFinish = values => {
     dispatch(actions.login({ ...values }));
   };
-
-  // useEffect(() => {
-  //   const { authenticated } = auth;
-  //   if (authenticated) {
-  //     authState.authenticated = true;
-  //     history.push('/users');
-  //   }
-  // }, [auth]);
 
   return (
     <Wrapper>

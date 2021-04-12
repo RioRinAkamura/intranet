@@ -18,7 +18,7 @@ const slice = createSlice({
     ) {},
     loginWithGoogle(
       state,
-      action: PayloadAction<{ token: string; userId: string }>,
+      action: PayloadAction<{ tokenId: string; googleId: string }>,
     ) {
       state.authenticated = true;
     },

@@ -13,8 +13,10 @@ import {
   Avatar,
   List,
   Spin,
+  Collapse,
+  TablePaginationConfig,
 } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
 import { request } from 'utils/request';
@@ -33,17 +35,28 @@ import { DeleteModal } from 'app/components/DeleteModal';
 import { useUserspageSlice } from './slice';
 import { CSVLink } from 'react-csv';
 import CSVReader from 'react-csv-reader';
-import { isMobile } from 'react-device-detect';
+import { isMobile, isMobileOnly } from 'react-device-detect';
+import { isEmpty, isEqual } from 'lodash';
+import { DialogModal } from 'app/components/DialogModal';
+import { useTranslation } from 'react-i18next';
+import {
+  FilterValue,
+  SorterResult,
+  TableCurrentDataSource,
+} from 'antd/lib/table/interface';
+import { UploadChangeParam } from 'antd/lib/upload';
+import { UploadFile } from 'antd/lib/upload/interface';
 
 const FormItem = Form.Item;
+const { Panel } = Collapse;
 
-function getBase64(img, callback) {
+const getBase64 = (img: Blob, callback: Function) => {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(img);
-}
+};
 
-function beforeUpload(file) {
+const beforeUpload = (file: File) => {
   const isJpgOrPng =
     file.type === 'image/jpeg' ||
     file.type === 'image/png' ||
@@ -56,9 +69,10 @@ function beforeUpload(file) {
     message.error('Image must smaller than 2MB!');
   }
   return isJpgOrPng && isLt2M;
-}
+};
 
 interface UserProfile {
+  id: string;
   avatar: string;
   first_name: string;
   last_name: string;
@@ -66,76 +80,149 @@ interface UserProfile {
   phone: string;
 }
 
+interface Pagination {
+  current?: number;
+  pageSize?: number;
+  total?: number;
+  totalPage?: number;
+}
+
+interface Filters {
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+}
+
 export const Users: React.FC = () => {
+  const { t, i18n } = useTranslation();
+  const { actions } = useUserspageSlice();
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [userProfile, setUserProfile] = useState<UserProfile>();
-  const [tablePagination, setTablePagination] = useState({
+  const [tablePagination, setTablePagination] = useState<Pagination>({
     current: 1,
-    pageSize: 6,
+    pageSize: 4,
     total: 0,
+    totalPage: 0,
   });
-  const [tableFilters, setTableFilters] = useState({});
+  const [tableFilters, setTableFilters] = useState<Filters>({
+    email: '',
+    first_name: '',
+    last_name: '',
+  });
+  const [tableSort, setTableSort] = useState({});
   const [loading, setLoading] = useState(false);
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [moreLoading, setMoreLoading] = useState(false);
+  const [isMore, setIsMore] = useState(true);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [openModal, setOpenModal] = useState({ open: false, mode: '' });
   const [viewModal, setViewModal] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState({ open: false, id: '' });
+  const [previewModal, setPreviewModal] = useState({ open: false, data: [] });
   const [form] = Form.useForm();
+  const [searchForm] = Form.useForm();
   const [imageURL, setImageURL] = useState('');
 
-  const { actions } = useUserspageSlice();
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    fetchData({ pagination: { ...tablePagination } });
-
-    function handleLoadMore() {
-      if (
-        window.innerHeight + document.documentElement.scrollTop ===
-        document.scrollingElement?.scrollHeight
-      ) {
-        setMoreLoading(true);
-        console.log('expand');
-        // Do load more content here!
-      }
-    }
-    document.addEventListener('scroll', handleLoadMore);
-    return () => {
-      document.removeEventListener('scroll', handleLoadMore);
-    };
+    fetchData(tablePagination);
   }, []);
 
-  const handleTableChange = (pagination, filters, sorter) => {
-    const filterChanges =
-      JSON.stringify(filters) !== JSON.stringify(tableFilters);
-    fetchData({
-      sortField: sorter.field,
-      sortOrder: sorter.order,
-      pagination: filterChanges ? { ...pagination } : { ...tablePagination },
-      ...filters,
-    });
-  };
-
-  const fetchData = params => {
+  const fetchData = (pagination: Pagination) => {
     setLoading(true);
     request(
-      'https://reqres.in/api/users?page=' + params.pagination.current,
+      'https://reqres.in/api/users?page=' +
+        pagination.current +
+        '&per_page=' +
+        pagination.pageSize,
     ).then((response: any) => {
       setData(response.data);
       tablePagination.total = response.total;
-      tablePagination.current = params.pagination.current;
-      setTablePagination({
-        ...tablePagination,
-        total: response.total,
-      });
+      tablePagination.current = response.page;
+      tablePagination.totalPage = response.total_pages;
+      setTablePagination(tablePagination);
       setLoading(false);
     });
   };
 
-  const getColumnSearchProps = dataIndex => ({
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<any> | SorterResult<any>[],
+  ) => {
+    const filterChanges = !isEqual(filters, tableFilters);
+    const sortChanges = !isEqual(sorter, tableSort);
+    if (filterChanges || sortChanges) {
+      setTableFilters(filters);
+      setTableSort(sorter);
+    }
+    if (!filterChanges && !sortChanges) {
+      fetchData(
+        filterChanges
+          ? { ...tablePagination }
+          : { ...pagination, totalPage: 0 },
+      );
+    }
+  };
+
+  const fetchLoadMoreData = useCallback(
+    (pagination: Pagination) => {
+      setLoading(true);
+      request(
+        'https://reqres.in/api/users?page=' +
+          pagination.current +
+          '&per_page=' +
+          pagination.pageSize,
+      ).then((response: any) => {
+        if (response.data.length > 0) {
+          let currentData = data;
+          const list = currentData.concat(response.data);
+          setData(list);
+          tablePagination.total = response.total;
+          tablePagination.current = response.page;
+          tablePagination.totalPage = response.total_pages;
+          setTablePagination({
+            ...tablePagination,
+          });
+          if (tablePagination.current === tablePagination.totalPage) {
+            setIsMore(false);
+          }
+          setLoading(false);
+          setMoreLoading(false);
+        }
+      });
+    },
+    [data, tablePagination],
+  );
+
+  useEffect(() => {
+    const handleLoadMore = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop ===
+        document.scrollingElement?.scrollHeight
+      ) {
+        const isNotMore = tablePagination.current === tablePagination.totalPage;
+        if (!isNotMore) {
+          setMoreLoading(true);
+          if (!moreLoading) {
+            fetchLoadMoreData({
+              ...tablePagination,
+              current: tablePagination.current && tablePagination.current + 1,
+            });
+          }
+        }
+      }
+    };
+    if (isMobileOnly) {
+      document.addEventListener('scroll', handleLoadMore);
+      return () => {
+        document.removeEventListener('scroll', handleLoadMore);
+      };
+    }
+  }, [fetchLoadMoreData, isMore, moreLoading, tablePagination]);
+
+  const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -186,6 +273,7 @@ export const Users: React.FC = () => {
     filterIcon: filtered => (
       <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
+    filtered: true,
     onFilter: (value, record) =>
       record[dataIndex]
         ? record[dataIndex]
@@ -206,22 +294,36 @@ export const Users: React.FC = () => {
       ),
   });
 
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  const handleSearch = (
+    selectedKeys: React.SetStateAction<string>[],
+    confirm: () => void,
+    dataIndex: string,
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
 
-  const handleReset = clearFilters => {
+  const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText('');
+  };
+
+  const totalSearch = () => {
+    const values = searchForm.getFieldsValue();
+    dispatch(actions.searchUsers(values));
+  };
+
+  const resetTotalSearch = () => {
+    searchForm.resetFields();
+    fetchData({ ...tablePagination, current: 1 });
   };
 
   const columns = [
     {
       title: 'Avatar',
       dataIndex: 'avatar',
-      render: (text, record) => (
+      render: (text, record: UserProfile) => (
         <Avatar
           size={100}
           src={text}
@@ -255,7 +357,7 @@ export const Users: React.FC = () => {
     {
       title: 'Options',
       dataIndex: 'id',
-      render: (text, record, index) => {
+      render: (text, record: UserProfile, index: number) => {
         return (
           <>
             <Tooltip title="View">
@@ -290,7 +392,7 @@ export const Users: React.FC = () => {
                 shape="circle"
                 icon={<DeleteOutlined />}
                 onClick={() => {
-                  setDeleteModal(true);
+                  setDeleteModal({ open: true, id: text });
                 }}
               />
             </Tooltip>
@@ -300,13 +402,12 @@ export const Users: React.FC = () => {
     },
   ];
 
-  const handleChange = info => {
+  const handleChange = (info: UploadChangeParam<UploadFile<any>>) => {
     if (info.file.status === 'uploading') {
       setLoadingUpload(true);
       return;
     }
     if (info.file.status === 'done') {
-      // Get this url from response in real world.
       getBase64(info.file.originFileObj, imageURL => {
         setImageURL(imageURL);
         setLoadingUpload(false);
@@ -319,7 +420,11 @@ export const Users: React.FC = () => {
     form
       .validateFields()
       .then(values => {
-        dispatch(actions.createUser(values));
+        if (openModal.mode === 'create') {
+          dispatch(actions.createUser(values));
+        } else {
+          dispatch(actions.editUser(values));
+        }
       })
       .catch(error => {
         console.log(error);
@@ -340,7 +445,9 @@ export const Users: React.FC = () => {
     </div>
   );
 
-  const handleForce = (data, fileInfo) => console.log(data, fileInfo);
+  const handleForce = (data: any) => {
+    setPreviewModal({ open: true, data: data });
+  };
 
   const papaparseOptions = {
     header: true,
@@ -349,15 +456,66 @@ export const Users: React.FC = () => {
     transformHeader: header => header.toLowerCase().replace(/\W/g, '_'),
   };
 
+  const handleDelete = () => {
+    const userId = deleteModal.id;
+    if (userId) {
+      dispatch(actions.deleteUser(userId));
+    }
+  };
+
+  const handleImport = () => {
+    const data = previewModal.data;
+    if (data.length > 0) {
+      dispatch(actions.importUsers(data));
+    }
+  };
+
   return (
     <>
-      <Row gutter={[8, 8]}>
-        <Col></Col>
-        <Col></Col>
-        <Col></Col>
-        <Col></Col>
-      </Row>
-      {isMobile ? (
+      <h1>Users Page</h1>
+      <Collapse style={{ margin: '1em 0 1em 0' }}>
+        <Panel header="Search" key="1">
+          <Form
+            form={searchForm}
+            labelCol={{ xxl: 6, xl: 8, lg: 6, md: 8, xs: 6 }}
+            wrapperCol={{ xxl: 18, xl: 16, lg: 18, md: 16, xs: 18 }}
+          >
+            <Row gutter={[8, 8]}>
+              <Col xl={6} lg={12} md={12} sm={24} xs={24}>
+                <FormItem name="first_name" label="First Name">
+                  <Input placeholder="Search by first name" />
+                </FormItem>
+              </Col>
+              <Col xl={6} lg={12} md={12} sm={24} xs={24}>
+                <FormItem name="last_name" label="Last Name">
+                  <Input placeholder="Search by last name" />
+                </FormItem>
+              </Col>
+              <Col xl={6} lg={12} md={12} sm={24} xs={24}>
+                <FormItem name="email" label="Email">
+                  <Input placeholder="Search by email" />
+                </FormItem>
+              </Col>
+              <Col xl={6} lg={12} md={12} sm={24} xs={24}>
+                <FormItem name="phone" label="Phone Number">
+                  <Input placeholder="Search by phone number" />
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={[8, 8]} justify="end">
+              <Col>
+                <Button type="primary" onClick={totalSearch}>
+                  Search
+                </Button>
+              </Col>
+              <Col>
+                <Button onClick={resetTotalSearch}>Reset</Button>
+              </Col>
+            </Row>
+          </Form>
+        </Panel>
+      </Collapse>
+      {isMobileOnly ? (
         <>
           <List
             className="demo-loadmore-list"
@@ -416,7 +574,7 @@ export const Users: React.FC = () => {
                           shape="circle"
                           icon={<DeleteOutlined />}
                           onClick={() => {
-                            setDeleteModal(true);
+                            setDeleteModal({ open: true, id: user.id });
                           }}
                         />
                       </Col>
@@ -426,16 +584,20 @@ export const Users: React.FC = () => {
               </ListItem>
             )}
           />
-          {moreLoading && <Spin />}
+          {isMore &&
+            (moreLoading ? (
+              <LoadMore>
+                <Spin indicator={<LoadingOutlined />} size="large" />
+              </LoadMore>
+            ) : (
+              <LoadMore></LoadMore>
+            ))}
         </>
       ) : (
-        <Row gutter={[8, 8]} align="middle" justify="center">
+        <Row align="middle" justify="center">
           <Col span={24}>
-            <h1>Users Page</h1>
-          </Col>
-          <Col span={24}>
-            <Row gutter={[8, 8]} justify="end">
-              <Col>
+            <Row justify="end">
+              <OptionButton>
                 <Button
                   size="large"
                   type="primary"
@@ -443,8 +605,8 @@ export const Users: React.FC = () => {
                 >
                   Create User
                 </Button>
-              </Col>
-              <Col>
+              </OptionButton>
+              <OptionButton>
                 <Button size="large">
                   <CSVLink
                     filename={'users-page-' + tablePagination.current + '.csv'}
@@ -453,8 +615,8 @@ export const Users: React.FC = () => {
                     Export as CSV
                   </CSVLink>
                 </Button>
-              </Col>
-              <Col>
+              </OptionButton>
+              <OptionButton>
                 <ButtonImport size="large">
                   <CSVReader
                     cssClass="react-csv-input"
@@ -464,15 +626,13 @@ export const Users: React.FC = () => {
                     parserOptions={papaparseOptions}
                   />
                 </ButtonImport>
-              </Col>
+              </OptionButton>
             </Row>
           </Col>
           <Col span={24}>
             <Table
               columns={columns}
-              rowKey={(record: any) => {
-                return record.id;
-              }}
+              rowKey="id"
               dataSource={data}
               pagination={tablePagination}
               loading={loading}
@@ -482,29 +642,26 @@ export const Users: React.FC = () => {
           </Col>
         </Row>
       )}
-      <Modal
-        title={
-          <ModalTitle>
-            {openModal.mode.charAt(0).toUpperCase() + openModal.mode.slice(1)}{' '}
-            User
-          </ModalTitle>
-        }
-        visible={openModal.open}
-        centered
-        onCancel={handleCancel}
+      <DialogModal
+        title={`${
+          openModal.mode.charAt(0).toUpperCase() + openModal.mode.slice(1)
+        } User`}
+        isOpen={openModal.open}
+        handleCancel={handleCancel}
         okText="Save"
         footer={[
-          <Button size="large" onClick={handleCancel}>
+          <Button key="onCancel" size="large" onClick={handleCancel}>
             Cancel
           </Button>,
           openModal.mode !== 'view' && (
-            <Button size="large" type="primary" onClick={handleOk}>
+            <Button key="onSave" size="large" type="primary" onClick={handleOk}>
               Save
             </Button>
           ),
         ]}
       >
         <Form form={form} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+          <FormItem hidden name="id" />
           <FormItem
             label="Avatar"
             name="avatar"
@@ -570,35 +727,79 @@ export const Users: React.FC = () => {
             <Input disabled={openModal.mode === 'view'} />
           </FormItem>
         </Form>
-      </Modal>
-      <Modal
-        title={<ModalTitle>User Profile</ModalTitle>}
-        visible={viewModal}
-        onCancel={() => setViewModal(false)}
-        footer={[]}
+      </DialogModal>
+      <DialogModal
+        title="User Profile"
+        isOpen={viewModal}
+        handleCancel={() => setViewModal(false)}
+        footer={null}
       >
-        <Row>
-          <Col span={24}>
-            <h2>Avatar</h2>
-            <Avatar src={userProfile?.avatar} size={100} />
-          </Col>
-        </Row>
-      </Modal>
+        {userProfile && (
+          <>
+            <ProfileAvatar>
+              <Avatar src={userProfile.avatar} size={150} />
+              <h2>{userProfile.first_name + ' ' + userProfile.last_name}</h2>
+            </ProfileAvatar>
+            <ProfileDescription gutter={[16, 16]} justify="center">
+              <ProfileBody span={2}>
+                <PhoneFilled />
+              </ProfileBody>
+              <ProfileBody span={14}>{userProfile.phone}</ProfileBody>
+            </ProfileDescription>
+            <ProfileDescription gutter={[16, 16]} justify="center">
+              <ProfileBody span={2}>
+                <MailFilled />
+              </ProfileBody>
+              <ProfileBody span={14}>{userProfile.email}</ProfileBody>
+            </ProfileDescription>
+          </>
+        )}
+      </DialogModal>
       <DeleteModal
-        open={deleteModal}
-        handleCancel={() => setDeleteModal(false)}
+        open={deleteModal.open}
+        handleCancel={() => setDeleteModal({ open: false, id: '' })}
+        handleDelete={handleDelete}
       />
+      <DialogModal
+        title="Preview Import File"
+        isOpen={previewModal.open}
+        handleCancel={() => {
+          setPreviewModal({ open: false, data: [] });
+        }}
+        okText="Save"
+        footer={[
+          <Button
+            key="onCancel"
+            size="large"
+            onClick={() => setPreviewModal({ open: false, data: [] })}
+          >
+            Cancel
+          </Button>,
+          openModal.mode !== 'view' && (
+            <Button
+              key="onSave"
+              size="large"
+              type="primary"
+              onClick={handleImport}
+            >
+              Save
+            </Button>
+          ),
+        ]}
+        width={1000}
+      >
+        <Table
+          columns={columns}
+          rowKey="id"
+          dataSource={previewModal.data}
+          pagination={false}
+        />
+      </DialogModal>
     </>
   );
 };
 
 export default Users;
-// const Wrapper = styled.div`
-//   width: 960px;
-//   margin: 0 auto;
-// `;
-
-// const Title = styled.h1``;
 
 const IconButton = styled(Button)`
   margin: 5px;
@@ -612,8 +813,17 @@ const IconButton = styled(Button)`
   }
 `;
 
+const OptionButton = styled(Col)`
+  margin-left: 1em;
+  margin-bottom: 1em;
+`;
+
 const ModalTitle = styled.h1`
   text-align: center;
+`;
+
+const FormTitle = styled(Col)`
+  text-align: right;
 `;
 
 const ButtonImport = styled(Button)`
@@ -624,6 +834,24 @@ const ButtonImport = styled(Button)`
 
 const ListItem = styled(List.Item)``;
 
+const ProfileAvatar = styled.div`
+  text-align: center;
+`;
+
+const ProfileBody = styled(Col)`
+  text-align: center;
+`;
+
 const ProfileDescription = styled(Row)`
   color: gray;
+`;
+
+const LoadMore = styled.div`
+  height: 100px;
+  width: 100%;
+  text-align: center;
+
+  div {
+    font-size: xxx-large;
+  }
 `;
