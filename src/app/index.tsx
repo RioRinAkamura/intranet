@@ -11,13 +11,15 @@ import { Helmet } from 'react-helmet-async';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 
 import { GlobalStyle } from '../styles/global-styles';
+import 'antd/dist/antd.css';
 
 import { HomePage } from './pages/HomePage/Loadable';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
-import { PublicRoute } from './components/Auth/Route';
+import { PrivateRoute, PublicRoute } from './components/Auth/Route';
 import config from 'config';
 import { Login } from './pages/Login/Loadable';
+import { Users } from './pages/UsersPage/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -32,13 +34,15 @@ export function App() {
       </Helmet>
 
       <Switch>
-        <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} />
+        {/* <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} /> */}
         <PublicRoute
           restricted={true}
           exact
           path={config.LOGIN_PATH}
           component={Login}
         />
+        <PrivateRoute exact path={config.DASHBOARD_PATH} component={HomePage} />
+        <PrivateRoute exact path={config.USERS_PATH} component={Users} />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />

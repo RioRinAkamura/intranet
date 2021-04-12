@@ -1,3 +1,5 @@
+import { api } from 'utils/sessionConfig';
+
 export const useGetIdentity = () => {
   return { identity: null, loading: false };
 };
