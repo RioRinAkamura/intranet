@@ -15,5 +15,90 @@
   "scaffoldingFeature": {
     "title": "Schnelles Scaffolding",
     "description": "Automatisieren Sie die Kreation von Komponenten, Containern, Routen, Selektoren und Sagas – und ihre Tests – direkt von dem Terminal!"
+  },
+  "translations": {
+    "someThing": "default value"
+  },
+  "LoginPage": {
+    "title": "Login",
+    "description": "Login Page",
+    "form": {
+      "title": "Login",
+      "email": "Email Address",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot your password",
+      "loginButton": "Login",
+      "loginFacebookButton": "Login with Facebook",
+      "loginGoogleButton": "Login with Google",
+      "dividerText": "Or",
+      "invalidEmail": "Your email is invalid!",
+      "emptyEmail": "Please input your email address!",
+      "emptyPassword": "Please input your password!"
+    }
+  },
+  "UsersPage": {
+    "title": "Login",
+    "description": "Login Page",
+    "list": {
+      "avatar": "Avatar",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "options": "Options",
+      "viewTooltip": "View",
+      "EditTooltip": "Edit",
+      "DeleteTooltip": "Delete",
+      "filter": {
+        "inputPlaceholder": "Search",
+        "searchButton": "Search",
+        "resetButton": "Reset",
+        "filterButton": "Filter"
+      }
+    },
+    "createUserButton": "Create User",
+    "exportCSV": "Export as CSV",
+    "importCSV": "Import CSV",
+    "search": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phoneNumber": "Phone Number",
+      "searchButton": "Search",
+      "resetButton": "Reset",
+      "firstNamePlaceholder": "Search by first name",
+      "lastNamePlaceholder": "Search by last name",
+      "emailPlaceholder": "Search by email",
+      "phoneNumberPlaceholder": "Search by phone number",
+      "title": "Search"
+    },
+    "modal": {
+      "createTitle": "Create",
+      "editTitle": "Edit",
+      "profileTitle": "User Profile",
+      "previewCSVTitle": "Preview Import File",
+      "form": {
+        "avatarUpload": "Upload",
+        "avatarLabel": "Avatar",
+        "emptyAvatar": "Please upload user avatar!",
+        "firstNameLabel": "First Name",
+        "emptyFirstName": "Please input user first name!",
+        "lastNameLabel": "Last Name",
+        "emptyLastName": "Please input user Last name!",
+        "emailLabel": "Email",
+        "emptyEmail": "Please input user email!",
+        "invalidEmail": "User's email is invalid!",
+        "phoneNumberLabel": "Phone Number",
+        "emptyPhoneNumber": "Please input user phone number!",
+        "submitButton": "Save",
+        "cancelButton": "Cancel",
+        "deleteButton": "Delete",
+        "deleteContent": "Are you sure to delete this user?",
+        "firstNamePlaceholder": "User first name",
+        "lastNamePlaceholder": "User last name",
+        "emailPlaceholder": "User email",
+        "phoneNumberPlaceholder": "User phone number"
+      }
+    }
   }
 }

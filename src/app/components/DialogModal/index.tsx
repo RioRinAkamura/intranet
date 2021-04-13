@@ -7,15 +7,15 @@ import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { messages } from './messages';
-import { Modal } from 'antd';
+import { Button, Modal } from 'antd';
 
 interface Props {
   className?: string;
-  title: string;
-  isOpen: boolean;
+  title?: string;
+  isOpen?: boolean;
   children?: React.ReactNode;
   footer?: React.ReactNode;
-  handleCancel: () => void;
+  handleCancel?: () => void;
   cancelText?: string;
   handleSubmit?: () => void;
   okText?: string;
@@ -43,10 +43,23 @@ export const DialogModal = React.memo(
         className={className}
         visible={isOpen}
         onCancel={handleCancel}
-        cancelText={cancelText}
-        onOk={handleSubmit}
-        okText={okText}
-        footer={footer}
+        footer={
+          cancelText && okText
+            ? [
+                <Button key="onCancel" size="large" onClick={handleCancel}>
+                  {cancelText}
+                </Button>,
+                <Button
+                  key="onSave"
+                  size="large"
+                  type="primary"
+                  onClick={handleSubmit}
+                >
+                  {okText}
+                </Button>,
+              ]
+            : null
+        }
         width={width}
       >
         {children}

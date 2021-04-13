@@ -1,10 +1,13 @@
+import { LoginMessages } from 'app/pages/Login/messages';
 import config from 'config';
+import { translations } from 'locales/translations';
 import React from 'react';
 import {
   GoogleLogin,
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from 'react-google-login';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
 import { useAuthSlice } from '../Auth/slice';
@@ -17,6 +20,7 @@ interface Login {
 }
 
 export const GoogleLoginButton = (props: Props) => {
+  const { t, i18n } = useTranslation();
   const { actions } = useAuthSlice();
   const dispatch = useDispatch();
 
@@ -40,7 +44,7 @@ export const GoogleLoginButton = (props: Props) => {
       <GoogleLoginBtn
         className="ant-btn ant-btn-primary ant-btn-lg"
         clientId={config.GOOGLE_CLIENT_ID}
-        buttonText="Login with Google"
+        buttonText={t(LoginMessages.loginGoogleButton())}
         onSuccess={onSuccess}
         onFailure={onFailure}
         cookiePolicy={'single_host_origin'}

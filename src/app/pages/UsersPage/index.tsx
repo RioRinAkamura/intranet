@@ -46,6 +46,8 @@ import {
 } from 'antd/lib/table/interface';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
+import { UsersMessages } from './messages';
+import { Helmet } from 'react-helmet-async';
 
 const FormItem = Form.Item;
 const { Panel } = Collapse;
@@ -231,7 +233,9 @@ export const Users: React.FC = () => {
     }) => (
       <div style={{ padding: 8 }}>
         <Input
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`${t(
+            UsersMessages.filterInputPlaceholder(),
+          )} ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={e =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -247,14 +251,14 @@ export const Users: React.FC = () => {
             size="small"
             style={{ width: 90 }}
           >
-            Search
+            {t(UsersMessages.filterSearchButton())}
           </Button>
           <Button
             onClick={() => handleReset(clearFilters)}
             size="small"
             style={{ width: 90 }}
           >
-            Reset
+            {t(UsersMessages.filterResetButton())}
           </Button>
           <Button
             type="link"
@@ -265,7 +269,7 @@ export const Users: React.FC = () => {
               setSearchedColumn(dataIndex);
             }}
           >
-            Filter
+            {t(UsersMessages.filterFilterButton())}
           </Button>
         </Space>
       </div>
@@ -321,7 +325,7 @@ export const Users: React.FC = () => {
 
   const columns = [
     {
-      title: 'Avatar',
+      title: t(UsersMessages.listAvatarTitle()),
       dataIndex: 'avatar',
       render: (text, record: UserProfile) => (
         <Avatar
@@ -332,7 +336,7 @@ export const Users: React.FC = () => {
       ),
     },
     {
-      title: 'First Name',
+      title: t(UsersMessages.listFirstNameTitle()),
       dataIndex: 'first_name',
       sorter: {
         compare: (a, b) => a.first_name.localeCompare(b.first_name),
@@ -341,7 +345,7 @@ export const Users: React.FC = () => {
       ...getColumnSearchProps('first_name'),
     },
     {
-      title: 'Last Name',
+      title: t(UsersMessages.listLastNameTitle()),
       dataIndex: 'last_name',
       sorter: {
         compare: (a, b) => a.last_name.localeCompare(b.last_name),
@@ -350,17 +354,17 @@ export const Users: React.FC = () => {
       ...getColumnSearchProps('last_name'),
     },
     {
-      title: 'Email',
+      title: t(UsersMessages.listEmailTitle()),
       dataIndex: 'email',
       ...getColumnSearchProps('email'),
     },
     {
-      title: 'Options',
+      title: t(UsersMessages.listOptionsTitle()),
       dataIndex: 'id',
       render: (text, record: UserProfile, index: number) => {
         return (
           <>
-            <Tooltip title="View">
+            <Tooltip title={t(UsersMessages.listViewTooltip())}>
               <IconButton
                 type="primary"
                 size="large"
@@ -372,7 +376,7 @@ export const Users: React.FC = () => {
                 }}
               />
             </Tooltip>
-            <Tooltip title="Edit">
+            <Tooltip title={t(UsersMessages.listEditTooltip())}>
               <IconButton
                 size="large"
                 shape="circle"
@@ -385,7 +389,7 @@ export const Users: React.FC = () => {
                 }}
               />
             </Tooltip>
-            <Tooltip title="Delete">
+            <Tooltip title={t(UsersMessages.listDeleteTooltip())}>
               <IconButton
                 danger
                 size="large"
@@ -441,7 +445,9 @@ export const Users: React.FC = () => {
   const uploadButton = (
     <div>
       {loadingUpload ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
+      <div style={{ marginTop: 8 }}>
+        {t(UsersMessages.modalFormAvatarUpload())}
+      </div>
     </div>
   );
 
@@ -472,9 +478,13 @@ export const Users: React.FC = () => {
 
   return (
     <>
-      <h1>Users Page</h1>
+      <Helmet>
+        <title>{t(UsersMessages.title())}</title>
+        <meta name="description" content={t(UsersMessages.description())} />
+      </Helmet>
+      <h1>{t(UsersMessages.title())}</h1>
       <Collapse style={{ margin: '1em 0 1em 0' }}>
-        <Panel header="Search" key="1">
+        <Panel header={t(UsersMessages.searchTitle())} key="1">
           <Form
             form={searchForm}
             labelCol={{ xxl: 6, xl: 8, lg: 6, md: 8, xs: 6 }}
@@ -482,34 +492,55 @@ export const Users: React.FC = () => {
           >
             <Row gutter={[8, 8]}>
               <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-                <FormItem name="first_name" label="First Name">
-                  <Input placeholder="Search by first name" />
+                <FormItem
+                  name="first_name"
+                  label={t(UsersMessages.searchFirstName())}
+                >
+                  <Input
+                    placeholder={t(UsersMessages.searchFirstNamePlaceholder())}
+                  />
                 </FormItem>
               </Col>
               <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-                <FormItem name="last_name" label="Last Name">
-                  <Input placeholder="Search by last name" />
+                <FormItem
+                  name="last_name"
+                  label={t(UsersMessages.searchLastName())}
+                >
+                  <Input
+                    placeholder={t(UsersMessages.searchLastNamePlaceholder())}
+                  />
                 </FormItem>
               </Col>
               <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-                <FormItem name="email" label="Email">
-                  <Input placeholder="Search by email" />
+                <FormItem name="email" label={t(UsersMessages.searchEmail())}>
+                  <Input
+                    placeholder={t(UsersMessages.searchEmailPlaceholder())}
+                  />
                 </FormItem>
               </Col>
               <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-                <FormItem name="phone" label="Phone Number">
-                  <Input placeholder="Search by phone number" />
+                <FormItem
+                  name="phone"
+                  label={t(UsersMessages.searchPhoneNumber())}
+                >
+                  <Input
+                    placeholder={t(
+                      UsersMessages.searchPhoneNumberPlaceholder(),
+                    )}
+                  />
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={[8, 8]} justify="end">
               <Col>
                 <Button type="primary" onClick={totalSearch}>
-                  Search
+                  {t(UsersMessages.searchSearchButton())}
                 </Button>
               </Col>
               <Col>
-                <Button onClick={resetTotalSearch}>Reset</Button>
+                <Button onClick={resetTotalSearch}>
+                  {t(UsersMessages.searchResetButton())}
+                </Button>
               </Col>
             </Row>
           </Form>
@@ -603,7 +634,7 @@ export const Users: React.FC = () => {
                   type="primary"
                   onClick={() => setOpenModal({ open: true, mode: 'create' })}
                 >
-                  Create User
+                  {t(UsersMessages.createUserButton())}
                 </Button>
               </OptionButton>
               <OptionButton>
@@ -612,7 +643,7 @@ export const Users: React.FC = () => {
                     filename={'users-page-' + tablePagination.current + '.csv'}
                     data={data}
                   >
-                    Export as CSV
+                    {t(UsersMessages.exportCSV())}
                   </CSVLink>
                 </Button>
               </OptionButton>
@@ -620,7 +651,7 @@ export const Users: React.FC = () => {
                 <ButtonImport size="large">
                   <CSVReader
                     cssClass="react-csv-input"
-                    label="Import CSV"
+                    label={t(UsersMessages.importCSV())}
                     inputStyle={{ display: 'none' }}
                     onFileLoaded={handleForce}
                     parserOptions={papaparseOptions}
@@ -643,33 +674,31 @@ export const Users: React.FC = () => {
         </Row>
       )}
       <DialogModal
-        title={`${
-          openModal.mode.charAt(0).toUpperCase() + openModal.mode.slice(1)
-        } User`}
+        title={
+          openModal.mode === 'create'
+            ? t(UsersMessages.modalCreateTitle())
+            : t(UsersMessages.modalEditTitle())
+        }
         isOpen={openModal.open}
         handleCancel={handleCancel}
-        okText="Save"
-        footer={[
-          <Button key="onCancel" size="large" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          openModal.mode !== 'view' && (
-            <Button key="onSave" size="large" type="primary" onClick={handleOk}>
-              Save
-            </Button>
-          ),
-        ]}
+        handleSubmit={handleOk}
+        cancelText={t(UsersMessages.modalFormCancelButton())}
+        okText={t(UsersMessages.modalFormSubmitButton())}
       >
         <Form form={form} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
           <FormItem hidden name="id" />
           <FormItem
-            label="Avatar"
+            label={t(UsersMessages.modalFormAvatarLabel())}
             name="avatar"
             valuePropName="file"
-            rules={[{ required: true, message: 'Please upload your avatar!' }]}
+            rules={[
+              {
+                required: true,
+                message: t(UsersMessages.modalFormEmptyAvatar()),
+              },
+            ]}
           >
             <Upload
-              disabled={openModal.mode === 'view'}
               name="avatar"
               listType="picture-card"
               className="avatar-uploader"
@@ -691,45 +720,67 @@ export const Users: React.FC = () => {
             </Upload>
           </FormItem>
           <FormItem
-            label="First Name"
+            label={t(UsersMessages.modalFormFirstNameLabel())}
             name="first_name"
             rules={[
               {
                 required: true,
-                message: 'Please input user fisrt name!',
+                message: t(UsersMessages.modalFormEmptyFirstName()),
               },
             ]}
           >
-            <Input disabled={openModal.mode === 'view'} />
+            <Input
+              placeholder={t(UsersMessages.modalFormFirstNamePlaceholder())}
+            />
           </FormItem>
           <FormItem
-            label="Last Name"
+            label={t(UsersMessages.modalFormLastNameLabel())}
             name="last_name"
             rules={[
               {
                 required: true,
-                message: 'Please input user last name!',
+                message: t(UsersMessages.modalFormEmptyLastName()),
               },
             ]}
           >
-            <Input disabled={openModal.mode === 'view'} />
+            <Input
+              placeholder={t(UsersMessages.modalFormLastNamePlaceholder())}
+            />
           </FormItem>
           <FormItem
-            label="Email"
+            label={t(UsersMessages.modalFormEmailLabel())}
             name="email"
             rules={[
               {
                 required: true,
-                message: 'Please input user email!',
+                message: t(UsersMessages.modalFormEmptyEmail()),
+              },
+              {
+                type: 'email',
+                message: t(UsersMessages.modalFormInvalidEmail()),
               },
             ]}
           >
-            <Input disabled={openModal.mode === 'view'} />
+            <Input placeholder={t(UsersMessages.modalFormEmailPlaceholder())} />
+          </FormItem>
+          <FormItem
+            label={t(UsersMessages.modalFormPhoneNumberLabel())}
+            name="phoneNumber"
+            rules={[
+              {
+                required: true,
+                message: t(UsersMessages.modalFormEmptyPhoneNumber()),
+              },
+            ]}
+          >
+            <Input
+              placeholder={t(UsersMessages.modalFormPhoneNumberPlaceholder())}
+            />
           </FormItem>
         </Form>
       </DialogModal>
       <DialogModal
-        title="User Profile"
+        title={t(UsersMessages.modalProfileTitle())}
         isOpen={viewModal}
         handleCancel={() => setViewModal(false)}
         footer={null}
@@ -757,35 +808,21 @@ export const Users: React.FC = () => {
       </DialogModal>
       <DeleteModal
         open={deleteModal.open}
+        cancelText={t(UsersMessages.modalFormCancelButton())}
+        deleteText={t(UsersMessages.modalFormDeleteButton())}
+        content={t(UsersMessages.modalFormDeleteContent())}
         handleCancel={() => setDeleteModal({ open: false, id: '' })}
         handleDelete={handleDelete}
       />
       <DialogModal
-        title="Preview Import File"
+        title={t(UsersMessages.modalPreviewCSVTitle())}
         isOpen={previewModal.open}
         handleCancel={() => {
           setPreviewModal({ open: false, data: [] });
         }}
-        okText="Save"
-        footer={[
-          <Button
-            key="onCancel"
-            size="large"
-            onClick={() => setPreviewModal({ open: false, data: [] })}
-          >
-            Cancel
-          </Button>,
-          openModal.mode !== 'view' && (
-            <Button
-              key="onSave"
-              size="large"
-              type="primary"
-              onClick={handleImport}
-            >
-              Save
-            </Button>
-          ),
-        ]}
+        handleSubmit={handleImport}
+        cancelText={t(UsersMessages.modalFormCancelButton())}
+        okText={t(UsersMessages.modalFormSubmitButton())}
         width={1000}
       >
         <Table

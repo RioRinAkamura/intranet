@@ -19,10 +19,21 @@ exports[`<App /> should render and match the snapshot 1`] = `
     />
   </Helmet>
   <Switch>
-    <Route
+    <PublicRoute
       component={[Function]}
       exact={true}
-      path="/"
+      path="/login"
+      restricted={true}
+    />
+    <PrivateRoute
+      component={[Function]}
+      exact={true}
+      path="/dashboard"
+    />
+    <PrivateRoute
+      component={[Function]}
+      exact={true}
+      path="/users"
     />
     <Route
       component={[Function]}

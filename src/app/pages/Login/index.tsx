@@ -1,4 +1,5 @@
 import { Col, Row } from 'antd';
+import { translations } from 'locales/translations';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
 import { StyleConstants } from 'styles/StyleConstants';
 import { LoginForm } from './components/LoginForm';
+import { LoginMessages } from './messages';
 
 export const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -13,16 +15,13 @@ export const Login: React.FC = () => {
   return (
     <Wrapper>
       <Helmet>
-        <title>Login Page</title>
-        {/* <meta
-          name="description"
-          content="A React Boilerplate application homepage"
-        /> */}
+        <title>{t(LoginMessages.title())}</title>
+        <meta name="description" content={t(LoginMessages.description())} />
       </Helmet>
       <LoginWrapper justify="center" align="middle">
         <Form xxl={6} xl={8} lg={10} xs={21}>
           <Title>
-            <h1>Login</h1>
+            <h1>{t(LoginMessages.formTitle())}</h1>
           </Title>
           <LoginForm />
         </Form>
