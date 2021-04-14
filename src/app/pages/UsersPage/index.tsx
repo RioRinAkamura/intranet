@@ -46,7 +46,8 @@ import {
 } from 'antd/lib/table/interface';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
-
+import { ToastMessageType } from 'app/components/ToastNotification';
+import { useNotify } from 'app/components/ToastNotification';
 const FormItem = Form.Item;
 const { Panel } = Collapse;
 
@@ -124,7 +125,7 @@ export const Users: React.FC = () => {
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
   const [imageURL, setImageURL] = useState('');
-
+  const { notify } = useNotify();
   useEffect(() => {
     fetchData(tablePagination);
   }, []);
@@ -436,6 +437,13 @@ export const Users: React.FC = () => {
     setImageURL('');
     setLoadingUpload(false);
     setOpenModal({ open: false, mode: '' });
+    notify({
+      type: ToastMessageType.Info,
+      message: 'Cancel Create User',
+      description: ' Cancel Create User Success',
+      className: 'label-cancel-user',
+      duration: 2,
+    });
   };
 
   const uploadButton = (
