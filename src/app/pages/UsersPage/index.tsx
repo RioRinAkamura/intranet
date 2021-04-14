@@ -60,6 +60,8 @@ import { UploadFile } from 'antd/lib/upload/interface';
 import { UsersMessages } from './messages';
 import { Helmet } from 'react-helmet-async';
 
+import { ToastMessageType } from 'app/components/ToastNotification';
+import { useNotify } from 'app/components/ToastNotification';
 const { Panel } = Collapse;
 
 const getBase64 = (img: Blob, callback: Function) => {
@@ -138,6 +140,7 @@ export const Users: React.FC = () => {
   const [imageURL, setImageURL] = useState('');
   const [formLayout, setFormLayout] = useState(1);
 
+  const { notify } = useNotify();
   useEffect(() => {
     fetchData(tablePagination);
   }, []);
@@ -451,6 +454,13 @@ export const Users: React.FC = () => {
     setImageURL('');
     setLoadingUpload(false);
     setOpenModal({ open: false, mode: '' });
+    notify({
+      type: ToastMessageType.Info,
+      message: 'Cancel Create User',
+      description: ' Cancel Create User Success',
+      className: 'label-cancel-user',
+      duration: 2,
+    });
   };
 
   const uploadButton = (
