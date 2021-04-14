@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Route, Redirect } from 'react-router-dom';
-import { useAuthState } from '.';
+import { useAuthState } from './useAuthState';
 import config from '../../../config';
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {

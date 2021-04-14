@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
-import { useLogin } from 'app/components/Auth';
+import { useLogin } from 'app/components/Auth/useLogin';
 import { useAuthSlice } from 'app/components/Auth/slice';
 import { selectAuth } from 'app/components/Auth/slice/selectors';
 import { FacebookLoginButton } from 'app/components/FacebookLoginButton';
@@ -57,7 +57,7 @@ export const LoginForm: React.FC = () => {
     };
   }, []);
 
-  const onFinish = async values => {
+  const onFinish = async (values: { email: string; password: string }) => {
     // dispatch(actions.login({ ...values }));
     await login({ ...values });
     // localStorage.setItem('token', getdata.data.token);
