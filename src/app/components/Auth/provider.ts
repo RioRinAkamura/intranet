@@ -37,7 +37,9 @@ export const customProvider: AuthProvider = {
   checkError: (): Promise<void> => Promise.resolve(),
   getPermissions: (): Promise<void> => Promise.resolve(),
   getIdentity: async (): Promise<UserIdentity> => {
-    // const identify = await api.user.me();
+    const identify = await api.user.me();
+    console.log('identify', identify);
+
     return defaultIdentity;
   },
 };

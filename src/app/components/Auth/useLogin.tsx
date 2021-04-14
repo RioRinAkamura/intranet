@@ -1,32 +1,37 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { AuthContext } from './Context';
 import { useAuthProvider } from './useAuthProvider';
 
-interface Data {
+interface LoginPayload {
   email: string;
   password: string;
 }
 
-interface LoginPayload {
-  userLogin: (data: Data) => void;
+interface LoginHook {
+  login: (data: LoginPayload) => void;
+  loading: boolean;
+  error: Error | null;
 }
 
-export const useLogin = (): LoginPayload => {
+export const useLogin = (): LoginHook => {
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
   const { setAuthState } = useContext(AuthContext);
-  const { login, getIdentity } = useAuthProvider();
-  const userLogin = (data: Data) => {
-    login(data.email, data.password);
-    getIdentity()
-      .then(response => {
-        setAuthState({
-          authenticated: true,
-          identity: response,
-        });
-      })
-      .catch(err => {
-        console.log(err);
+  const { authProvider } = useAuthProvider();
+  const login = async (data: LoginPayload): Promise<void> => {
+    setLoading(true);
+    try {
+      setLoading(false);
+      await authProvider.login(data.email, data.password);
+      const userIdentity = await authProvider.getIdentity();
+      setAuthState({
+        authenticated: true,
+        identity: userIdentity,
       });
+    } catch (e) {
+      setLoading(false);
+      setError(e);
+    }
   };
-
-  return { userLogin };
+  return { login, loading, error };
 };
