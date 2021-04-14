@@ -19,7 +19,7 @@ interface Props {
   cancelText?: string;
   handleSubmit?: () => void;
   okText?: string;
-  width?: number;
+  width?: number | string;
 }
 
 export const DialogModal = React.memo(

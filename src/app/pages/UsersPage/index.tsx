@@ -15,6 +15,10 @@ import {
   Spin,
   Collapse,
   TablePaginationConfig,
+  Divider,
+  DatePicker,
+  Radio,
+  Select,
 } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -24,11 +28,18 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
+  FacebookFilled,
+  GithubFilled,
+  GitlabFilled,
+  LinkedinFilled,
   LoadingOutlined,
   MailFilled,
   PhoneFilled,
   PlusOutlined,
   SearchOutlined,
+  SkypeFilled,
+  SkypeOutlined,
+  TwitterCircleFilled,
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { DeleteModal } from 'app/components/DeleteModal';
@@ -49,7 +60,6 @@ import { UploadFile } from 'antd/lib/upload/interface';
 import { UsersMessages } from './messages';
 import { Helmet } from 'react-helmet-async';
 
-const FormItem = Form.Item;
 const { Panel } = Collapse;
 
 const getBase64 = (img: Blob, callback: Function) => {
@@ -126,6 +136,7 @@ export const Users: React.FC = () => {
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
   const [imageURL, setImageURL] = useState('');
+  const [formLayout, setFormLayout] = useState(1);
 
   useEffect(() => {
     fetchData(tablePagination);
@@ -684,100 +695,355 @@ export const Users: React.FC = () => {
         handleSubmit={handleOk}
         cancelText={t(UsersMessages.modalFormCancelButton())}
         okText={t(UsersMessages.modalFormSubmitButton())}
+        width={'70vw'}
       >
-        <Form form={form} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-          <FormItem hidden name="id" />
-          <FormItem
-            label={t(UsersMessages.modalFormAvatarLabel())}
-            name="avatar"
-            valuePropName="file"
-            rules={[
-              {
-                required: true,
-                message: t(UsersMessages.modalFormEmptyAvatar()),
-              },
-            ]}
-          >
-            <Upload
-              name="avatar"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList={false}
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              beforeUpload={beforeUpload}
-              onChange={handleChange}
-              accept="image/png, image/jpeg, image/jpg"
-            >
-              {imageURL || form.getFieldValue('avatar') ? (
-                <img
-                  src={imageURL || form.getFieldValue('avatar')}
-                  alt="avatar"
-                  style={{ width: '100%' }}
-                />
-              ) : (
-                uploadButton
-              )}
-            </Upload>
-          </FormItem>
-          <FormItem
-            label={t(UsersMessages.modalFormFirstNameLabel())}
-            name="first_name"
-            rules={[
-              {
-                required: true,
-                message: t(UsersMessages.modalFormEmptyFirstName()),
-              },
-            ]}
-          >
-            <Input
-              placeholder={t(UsersMessages.modalFormFirstNamePlaceholder())}
-            />
-          </FormItem>
-          <FormItem
-            label={t(UsersMessages.modalFormLastNameLabel())}
-            name="last_name"
-            rules={[
-              {
-                required: true,
-                message: t(UsersMessages.modalFormEmptyLastName()),
-              },
-            ]}
-          >
-            <Input
-              placeholder={t(UsersMessages.modalFormLastNamePlaceholder())}
-            />
-          </FormItem>
-          <FormItem
-            label={t(UsersMessages.modalFormEmailLabel())}
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: t(UsersMessages.modalFormEmptyEmail()),
-              },
-              {
-                type: 'email',
-                message: t(UsersMessages.modalFormInvalidEmail()),
-              },
-            ]}
-          >
-            <Input placeholder={t(UsersMessages.modalFormEmailPlaceholder())} />
-          </FormItem>
-          <FormItem
-            label={t(UsersMessages.modalFormPhoneNumberLabel())}
-            name="phoneNumber"
-            rules={[
-              {
-                required: true,
-                message: t(UsersMessages.modalFormEmptyPhoneNumber()),
-              },
-            ]}
-          >
-            <Input
-              placeholder={t(UsersMessages.modalFormPhoneNumberPlaceholder())}
-            />
-          </FormItem>
-        </Form>
+        {formLayout === 1 && (
+          <Form form={form} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+            <Row gutter={[64, 32]}>
+              <Col md={10} style={{ borderRight: '0.5em solid #ececec' }}>
+                <FormItem
+                  // label={t(UsersMessages.modalFormAvatarLabel())}
+                  name="avatar"
+                  valuePropName="file"
+                  rules={[
+                    {
+                      required: true,
+                      message: t(UsersMessages.modalFormEmptyAvatar()),
+                    },
+                  ]}
+                >
+                  <div style={{ textAlign: 'center' }}>
+                    <Upload
+                      name="avatar"
+                      listType="picture"
+                      showUploadList={false}
+                      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                      beforeUpload={beforeUpload}
+                      onChange={handleChange}
+                      accept="image/png, image/jpeg, image/jpg"
+                    >
+                      {imageURL || form.getFieldValue('avatar') ? (
+                        <Avatar
+                          src={imageURL || form.getFieldValue('avatar')}
+                          alt="avatar"
+                          size={150}
+                        />
+                      ) : (
+                        uploadButton
+                      )}
+                    </Upload>
+                  </div>
+                </FormItem>
+                <Row gutter={[16, 16]}>
+                  <Divider orientation="left">
+                    <b>{t(UsersMessages.modalInfomationTitle())}</b>
+                  </Divider>
+                  <Col md={12} xs={24}>
+                    <FormItem
+                      label={t(UsersMessages.modalFormFirstNameLabel())}
+                      name="first_name"
+                      rules={[
+                        {
+                          required: true,
+                          message: t(UsersMessages.modalFormEmptyFirstName()),
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        placeholder={t(
+                          UsersMessages.modalFormFirstNamePlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col md={12} xs={24}>
+                    <FormItem
+                      label={t(UsersMessages.modalFormLastNameLabel())}
+                      name="last_name"
+                      rules={[
+                        {
+                          required: true,
+                          message: t(UsersMessages.modalFormEmptyLastName()),
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        placeholder={t(
+                          UsersMessages.modalFormLastNamePlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col md={12} xs={24}>
+                    <FormItem
+                      name="dob"
+                      label={t(UsersMessages.modalFormDOBLabel())}
+                    >
+                      <DatePicker
+                        size="large"
+                        placeholder={t(UsersMessages.modalFormDOBPlaceholder())}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col md={12} xs={24}>
+                    <FormItem
+                      label={t(UsersMessages.modalFormPhoneNumberLabel())}
+                      name="phoneNumber"
+                      rules={[
+                        {
+                          required: true,
+                          message: t(UsersMessages.modalFormEmptyPhoneNumber()),
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        placeholder={t(
+                          UsersMessages.modalFormPhoneNumberPlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col md={24} xs={24}>
+                    <FormItem
+                      label={t(UsersMessages.modalFormEmailLabel())}
+                      name="email"
+                      rules={[
+                        {
+                          required: true,
+                          message: t(UsersMessages.modalFormEmptyEmail()),
+                        },
+                        {
+                          type: 'email',
+                          message: t(UsersMessages.modalFormInvalidEmail()),
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        placeholder={t(
+                          UsersMessages.modalFormEmailPlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col md={12} xs={24}>
+                    <FormItem
+                      name="gender"
+                      label={t(UsersMessages.modalFormGenderLabel())}
+                    >
+                      <Radio.Group>
+                        <Radio value="Male">
+                          {t(UsersMessages.modalFormGenderMaleLabel())}
+                        </Radio>
+                        <Radio value="Female">
+                          {t(UsersMessages.modalFormGenderFemaleLabel())}
+                        </Radio>
+                      </Radio.Group>
+                    </FormItem>
+                  </Col>
+                  <Col md={12} xs={24}>
+                    <FormItem
+                      label={t(UsersMessages.modalFormStatusLabel())}
+                      name="status"
+                    >
+                      <Radio.Group defaultValue="Single">
+                        <Radio value="Single">
+                          {t(UsersMessages.modalFormStatusSingleLabel())}
+                        </Radio>
+                        <Radio value="Married">
+                          {t(UsersMessages.modalFormStatusMarriedLabel())}
+                        </Radio>
+                      </Radio.Group>
+                    </FormItem>
+                  </Col>
+                </Row>
+              </Col>
+              <Col md={14} style={{ borderLeft: '0.5em solid #ececec' }}>
+                <Row gutter={[16, 16]}>
+                  <Divider orientation="left">
+                    <b>{t(UsersMessages.modalFormJobLabel())}</b>
+                  </Divider>
+                  <Col md={12} xs={24}>
+                    <FormItem
+                      label={t(UsersMessages.modalFormJobTitleLabel())}
+                      name="job_title"
+                    >
+                      <Input
+                        size="large"
+                        placeholder={t(
+                          UsersMessages.modalFormJobTitlePlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col md={12} xs={24}>
+                    <FormItem
+                      label={t(UsersMessages.modalFormTypeLabel())}
+                      name="type"
+                    >
+                      <Select defaultValue="Full-time" size="large">
+                        <Select.Option value="Full-time">
+                          {t(UsersMessages.modalFormTypeFullTimeLabel())}
+                        </Select.Option>
+                        <Select.Option value="Part-time">
+                          {t(UsersMessages.modalFormTypePartTimeLabel())}
+                        </Select.Option>
+                        <Select.Option value="Probation">
+                          {t(UsersMessages.modalFormTypeProbationLabel())}
+                        </Select.Option>
+                        <Select.Option value="Etc">
+                          {t(UsersMessages.modalFormTypeEtcLabel())}
+                        </Select.Option>
+                      </Select>
+                    </FormItem>
+                  </Col>
+                  <Divider orientation="left">
+                    <b>{t(UsersMessages.modalFormSocialsLabel())}</b>
+                  </Divider>
+                  <Col lg={12} xs={24}>
+                    <FormItem
+                      name="skype"
+                      label={t(UsersMessages.modalFormSocialsSkypeLabel())}
+                    >
+                      <Input
+                        size="large"
+                        prefix={
+                          <SkypeFilled
+                            style={{
+                              color: '#00aff0',
+                              marginRight: 5,
+                              fontSize: 'large',
+                            }}
+                          />
+                        }
+                        placeholder={t(
+                          UsersMessages.modalFormSocialsSkypePlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col lg={12} xs={24}>
+                    <FormItem
+                      name="twitter"
+                      label={t(UsersMessages.modalFormSocialsTwitterLabel())}
+                    >
+                      <Input
+                        size="large"
+                        prefix={
+                          <TwitterCircleFilled
+                            style={{
+                              color: '#00acee',
+                              marginRight: 5,
+                              fontSize: 'large',
+                            }}
+                          />
+                        }
+                        placeholder={t(
+                          UsersMessages.modalFormSocialsTwitterPlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col lg={12} xs={24}>
+                    <FormItem
+                      name="FB"
+                      label={t(UsersMessages.modalFormSocialsFacebookLabel())}
+                    >
+                      <Input
+                        size="large"
+                        prefix={
+                          <FacebookFilled
+                            style={{
+                              color: '#1378f3',
+                              marginRight: 5,
+                              fontSize: 'large',
+                            }}
+                          />
+                        }
+                        placeholder={t(
+                          UsersMessages.modalFormSocialsFacebookPlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col lg={12} xs={24}>
+                    <FormItem
+                      name="linkedin"
+                      label={t(UsersMessages.modalFormSocialsLinkedinLabel())}
+                    >
+                      <Input
+                        size="large"
+                        prefix={
+                          <LinkedinFilled
+                            style={{
+                              color: '#0e76a8',
+                              marginRight: 5,
+                              fontSize: 'large',
+                            }}
+                          />
+                        }
+                        placeholder={t(
+                          UsersMessages.modalFormSocialsLinkedinPlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col lg={12} xs={24}>
+                    <FormItem
+                      name="github"
+                      label={t(UsersMessages.modalFormSocialsGithubLabel())}
+                    >
+                      <Input
+                        size="large"
+                        prefix={
+                          <GithubFilled
+                            style={{
+                              color: '#171515',
+                              marginRight: 5,
+                              fontSize: 'large',
+                            }}
+                          />
+                        }
+                        placeholder={t(
+                          UsersMessages.modalFormSocialsGithubPlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col lg={12} xs={24}>
+                    <FormItem
+                      name="gitlab"
+                      label={t(UsersMessages.modalFormSocialsGitlabLabel())}
+                    >
+                      <Input
+                        size="large"
+                        prefix={
+                          <GitlabFilled
+                            style={{
+                              color: '#fc6d26',
+                              marginRight: 5,
+                              fontSize: 'large',
+                            }}
+                          />
+                        }
+                        placeholder={t(
+                          UsersMessages.modalFormSocialsGitlabPlaceholder(),
+                        )}
+                      />
+                    </FormItem>
+                  </Col>
+                </Row>
+                {/* <Divider>
+                  <b>{t(UsersMessages.modalFormSocialsLabel())}</b>
+                </Divider> */}
+                <Row gutter={[16, 16]}></Row>
+              </Col>
+            </Row>
+          </Form>
+        )}
       </DialogModal>
       <DialogModal
         title={t(UsersMessages.modalProfileTitle())}
@@ -890,5 +1156,14 @@ const LoadMore = styled.div`
 
   div {
     font-size: xxx-large;
+  }
+`;
+
+const FormItem = styled(Form.Item)`
+  div {
+    width: 100%;
+  }
+  label {
+    font-weight: 500;
   }
 `;

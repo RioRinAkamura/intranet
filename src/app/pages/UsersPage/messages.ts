@@ -67,66 +67,160 @@ export const UsersMessages = {
     _t(translations.UsersPage.modal.profileTitle, 'User Profile'),
   modalPreviewCSVTitle: () =>
     _t(translations.UsersPage.modal.previewCSVTitle, 'Preview Import File'),
+  modalInfomationTitle: () =>
+    _t(translations.UsersPage.modal.infomation, 'Profile Infomation'),
   modalFormAvatarUpload: () =>
-    _t(translations.UsersPage.modal.form.avatarUpload, 'Upload'),
+    _t(translations.UsersPage.modal.form.avatar.upload, 'Upload'),
   modalFormAvatarLabel: () =>
-    _t(translations.UsersPage.modal.form.avatarLabel, 'Avatar'),
+    _t(translations.UsersPage.modal.form.avatar.label, 'Avatar'),
   modalFormEmptyAvatar: () =>
     _t(
-      translations.UsersPage.modal.form.emptyAvatar,
+      translations.UsersPage.modal.form.avatar.empty,
       'Please upload user avatar!',
     ),
   modalFormFirstNameLabel: () =>
-    _t(translations.UsersPage.modal.form.firstNameLabel, 'First Name'),
+    _t(translations.UsersPage.modal.form.firstName.label, 'First Name'),
   modalFormFirstNamePlaceholder: () =>
     _t(
-      translations.UsersPage.modal.form.firstNamePlaceholder,
+      translations.UsersPage.modal.form.firstName.placeholder,
       'User first name',
     ),
   modalFormEmptyFirstName: () =>
     _t(
-      translations.UsersPage.modal.form.emptyFirstName,
+      translations.UsersPage.modal.form.firstName.empty,
       'Please input user first name!',
     ),
   modalFormLastNameLabel: () =>
-    _t(translations.UsersPage.modal.form.lastNameLabel, 'Last Name'),
+    _t(translations.UsersPage.modal.form.lastName.label, 'Last Name'),
   modalFormLastNamePlaceholder: () =>
-    _t(translations.UsersPage.modal.form.lastNamePlaceholder, 'User last name'),
+    _t(
+      translations.UsersPage.modal.form.lastName.placeholder,
+      'User last name',
+    ),
   modalFormEmptyLastName: () =>
     _t(
-      translations.UsersPage.modal.form.emptyLastName,
+      translations.UsersPage.modal.form.lastName.empty,
       'Please input user last name!',
     ),
   modalFormEmailLabel: () =>
-    _t(translations.UsersPage.modal.form.emailLabel, 'Email'),
+    _t(translations.UsersPage.modal.form.email.label, 'Email'),
   modalFormEmailPlaceholder: () =>
-    _t(translations.UsersPage.modal.form.emailPlaceholder, 'User email'),
+    _t(translations.UsersPage.modal.form.email.placeholder, 'User email'),
   modalFormEmptyEmail: () =>
     _t(
-      translations.UsersPage.modal.form.emptyEmail,
+      translations.UsersPage.modal.form.email.empty,
       'Please input user email!',
     ),
   modalFormInvalidEmail: () =>
     _t(
-      translations.UsersPage.modal.form.invalidEmail,
+      translations.UsersPage.modal.form.email.invalid,
       "User's email is invalid!",
     ),
+  modalFormDOBLabel: () =>
+    _t(translations.UsersPage.modal.form.DOB.label, 'Date of Birth'),
+  modalFormDOBPlaceholder: () =>
+    _t(translations.UsersPage.modal.form.DOB.placeholder, "Select user's DOB"),
+  modalFormEmptyDOB: () =>
+    _t(
+      translations.UsersPage.modal.form.DOB.empty,
+      "Please input user's date of birth!",
+    ),
+  modalFormGenderLabel: () =>
+    _t(translations.UsersPage.modal.form.gender.label, 'Gender'),
+  modalFormGenderMaleLabel: () =>
+    _t(translations.UsersPage.modal.form.gender.male.label, 'Male'),
+  modalFormGenderFemaleLabel: () =>
+    _t(translations.UsersPage.modal.form.gender.female.label, 'Female'),
   modalFormPhoneNumberLabel: () =>
-    _t(translations.UsersPage.modal.form.phoneNumberLabel, 'Phone Number'),
+    _t(translations.UsersPage.modal.form.phoneNumber.label, 'Phone Number'),
   modalFormPhoneNumberPlaceholder: () =>
     _t(
-      translations.UsersPage.modal.form.phoneNumberPlaceholder,
+      translations.UsersPage.modal.form.phoneNumber.placeholder,
       'User phone number',
     ),
   modalFormEmptyPhoneNumber: () =>
     _t(
-      translations.UsersPage.modal.form.emptyPhoneNumber,
+      translations.UsersPage.modal.form.phoneNumber.empty,
       'Please input user phone number!',
     ),
   modalFormInvalidPhoneNumber: () =>
     _t(
-      translations.UsersPage.modal.form.emptyPhoneNumber,
+      translations.UsersPage.modal.form.phoneNumber.invalid,
       "User's phone number is invalid!",
+    ),
+  modalFormStatusLabel: () =>
+    _t(translations.UsersPage.modal.form.status.label, 'Status'),
+  modalFormStatusSingleLabel: () =>
+    _t(translations.UsersPage.modal.form.status.single.label, 'Single'),
+  modalFormStatusMarriedLabel: () =>
+    _t(translations.UsersPage.modal.form.status.married.label, 'Married'),
+  modalFormTypeLabel: () =>
+    _t(translations.UsersPage.modal.form.type.label, 'Type'),
+  modalFormTypeFullTimeLabel: () =>
+    _t(translations.UsersPage.modal.form.type.fullTime.label, 'Full-time'),
+  modalFormTypePartTimeLabel: () =>
+    _t(translations.UsersPage.modal.form.type.partTim.label, 'Part-time'),
+  modalFormTypeProbationLabel: () =>
+    _t(translations.UsersPage.modal.form.type.probation.label, 'Probation'),
+  modalFormTypeEtcLabel: () =>
+    _t(translations.UsersPage.modal.form.type.etc.label, 'Etc'),
+  modalFormJobLabel: () =>
+    _t(translations.UsersPage.modal.form.job.label, 'Job Infomation'),
+  modalFormJobTitleLabel: () =>
+    _t(translations.UsersPage.modal.form.jobTitle.label, 'Job Title'),
+  modalFormJobTitlePlaceholder: () =>
+    _t(
+      translations.UsersPage.modal.form.jobTitle.placeholder,
+      "Input user's job title!",
+    ),
+  modalFormEmptyJobTitle: () =>
+    _t(
+      translations.UsersPage.modal.form.jobTitle.empty,
+      "Please input user's job title!",
+    ),
+  modalFormSocialsLabel: () =>
+    _t(translations.UsersPage.modal.form.socials.label, 'Social Network'),
+  modalFormSocialsSkypeLabel: () =>
+    _t(translations.UsersPage.modal.form.socials.skype.label, 'Skype'),
+  modalFormSocialsSkypePlaceholder: () =>
+    _t(
+      translations.UsersPage.modal.form.socials.skype.placeholder,
+      "Input user's Skype",
+    ),
+  modalFormSocialsTwitterLabel: () =>
+    _t(translations.UsersPage.modal.form.socials.twitter.label, 'Twitter'),
+  modalFormSocialsTwitterPlaceholder: () =>
+    _t(
+      translations.UsersPage.modal.form.socials.twitter.placeholder,
+      "Input user's Twitter",
+    ),
+  modalFormSocialsFacebookLabel: () =>
+    _t(translations.UsersPage.modal.form.socials.facebook.label, 'Facebook'),
+  modalFormSocialsFacebookPlaceholder: () =>
+    _t(
+      translations.UsersPage.modal.form.socials.facebook.placeholder,
+      "Input user's Facebook",
+    ),
+  modalFormSocialsLinkedinLabel: () =>
+    _t(translations.UsersPage.modal.form.socials.linkedin.label, 'Linkedin'),
+  modalFormSocialsLinkedinPlaceholder: () =>
+    _t(
+      translations.UsersPage.modal.form.socials.linkedin.placeholder,
+      "Input user's Linkedin",
+    ),
+  modalFormSocialsGithubLabel: () =>
+    _t(translations.UsersPage.modal.form.socials.github.label, 'Github'),
+  modalFormSocialsGithubPlaceholder: () =>
+    _t(
+      translations.UsersPage.modal.form.socials.github.placeholder,
+      "Input user's Github",
+    ),
+  modalFormSocialsGitlabLabel: () =>
+    _t(translations.UsersPage.modal.form.socials.gitlab.label, 'Gitlab'),
+  modalFormSocialsGitlabPlaceholder: () =>
+    _t(
+      translations.UsersPage.modal.form.socials.gitlab.placeholder,
+      "Input user's Gitlab",
     ),
   modalFormSubmitButton: () =>
     _t(translations.UsersPage.modal.form.submitButton, 'Save'),

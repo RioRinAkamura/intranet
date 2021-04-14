@@ -11,8 +11,8 @@ const authorize = (email: string, password: string) => {
 function* login(action) {
   try {
     const { email, password } = action.payload;
-    // yield call(authorize, email, password);
-    yield call(api.auth.login, email, password);
+    yield call(authorize, email, password);
+    // yield call(api.auth.login, email, password);
     yield put(actions.isSignin({ authenticated: true }));
   } catch (err) {
     console.log(err);
@@ -29,7 +29,7 @@ function* loginAsGoogle(action) {
 }
 
 export function* authSaga() {
-  yield [
+  yield* [
     takeLatest(actions.login.type, login),
     takeLatest(actions.loginWithGoogle.type, loginAsGoogle),
   ];
