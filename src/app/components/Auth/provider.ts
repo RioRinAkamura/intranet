@@ -29,14 +29,14 @@ export const defaultProvider: AuthProvider = {
 };
 
 export const customProvider: AuthProvider = {
-  login: async (username: string, password: string) => {
+  login: async (username: string, password: string): Promise<void> => {
     await api.auth.login(username, password);
   },
   logout: (): Promise<void> => Promise.resolve(),
   checkAuth: (): Promise<void> => Promise.resolve(),
   checkError: (): Promise<void> => Promise.resolve(),
   getPermissions: (): Promise<void> => Promise.resolve(),
-  getIdentity: async () => {
+  getIdentity: async (): Promise<UserIdentity> => {
     // const identify = await api.user.me();
     return defaultIdentity;
   },

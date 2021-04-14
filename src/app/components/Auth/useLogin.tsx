@@ -1,21 +1,22 @@
 import { useContext } from 'react';
 import { AuthContext } from './Context';
+import { useAuthProvider } from './useAuthProvider';
 
-interface IData {
+interface Data {
   email: string;
   password: string;
 }
 
-interface IUseLogin {
-  login: (data: IData) => void;
+interface LoginPayload {
+  userLogin: (data: Data) => void;
 }
 
-export const useLogin = (): IUseLogin => {
-  const { authProvider, setAuthState } = useContext(AuthContext);
-  const login = (data: IData) => {
-    authProvider.login(data.email, data.password);
-    authProvider
-      .getIdentity()
+export const useLogin = (): LoginPayload => {
+  const { setAuthState } = useContext(AuthContext);
+  const { login, getIdentity } = useAuthProvider();
+  const userLogin = (data: Data) => {
+    login(data.email, data.password);
+    getIdentity()
       .then(response => {
         setAuthState({
           authenticated: true,
@@ -27,5 +28,5 @@ export const useLogin = (): IUseLogin => {
       });
   };
 
-  return { login };
+  return { userLogin };
 };

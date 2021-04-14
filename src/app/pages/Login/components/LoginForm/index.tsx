@@ -28,7 +28,7 @@ export const LoginForm: React.FC = () => {
   const [form] = Form.useForm();
   const emailRef = useRef<any>();
   const passwordRef = useRef<any>();
-  const { login } = useLogin();
+  const { userLogin } = useLogin();
 
   useEffect(() => {
     emailRef.current.focus();
@@ -59,7 +59,7 @@ export const LoginForm: React.FC = () => {
 
   const onFinish = async (values: { email: string; password: string }) => {
     // dispatch(actions.login({ ...values }));
-    await login({ ...values });
+    await userLogin({ ...values });
     // localStorage.setItem('token', getdata.data.token);
     history.push('/users');
   };
