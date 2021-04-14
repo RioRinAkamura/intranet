@@ -1,21 +1,26 @@
 import React from 'react';
-import { AuthProvider } from './provider';
+import { AuthProvider, defaultProvider } from './provider';
 
 import { AuthState } from './slice/types';
 
 interface AuthContextProviderProps {
   authState: AuthState;
+  authProvider: AuthProvider;
+  setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
 }
 
 export const AuthContext = React.createContext<AuthContextProviderProps>({
-  authState: { authenticated: false },
+  authState: { authenticated: false, identity: { id: '' } },
+  authProvider: { ...defaultProvider },
+  setAuthState: () => {},
 });
 
 export const useAuthContextProvider = (authProvider: AuthProvider) => {
   const [authState, setAuthState] = React.useState<AuthState>({
     authenticated: false,
+    identity: { id: '' },
   });
-  return { authState, authProvider };
+  return { authState, authProvider, setAuthState };
 };
 
 export const AuthContextProvider = ({ authProvider, children }) => {
@@ -26,6 +31,7 @@ export const AuthContextProvider = ({ authProvider, children }) => {
 };
 
 // Login: dispatch LoginAction =>
+// eslint-disable-next-line no-lone-blocks
 {
   /* <AuthContextProvider authProvider={}></AuthContextProvider>; */
 }

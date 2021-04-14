@@ -20,9 +20,12 @@ import { PrivateRoute, PublicRoute } from './components/Auth/Route';
 import config from 'config';
 import { Login } from './pages/Login/Loadable';
 import { Users } from './pages/UsersPage/Loadable';
+import { AuthContextProvider } from './components/Auth/Context';
+import { defaultProvider } from './components/Auth/provider';
 
 export function App() {
   const { i18n } = useTranslation();
+
   return (
     <BrowserRouter>
       <Helmet
@@ -32,19 +35,24 @@ export function App() {
       >
         <meta name="description" content="A React Boilerplate application" />
       </Helmet>
-
-      <Switch>
-        {/* <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} /> */}
-        <PublicRoute
-          restricted={true}
-          exact
-          path={config.LOGIN_PATH}
-          component={Login}
-        />
-        <PrivateRoute exact path={config.DASHBOARD_PATH} component={HomePage} />
-        <PrivateRoute exact path={config.USERS_PATH} component={Users} />
-        <Route component={NotFoundPage} />
-      </Switch>
+      <AuthContextProvider authProvider={defaultProvider}>
+        <Switch>
+          {/* <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} /> */}
+          <PublicRoute
+            restricted={true}
+            exact
+            path={config.LOGIN_PATH}
+            component={Login}
+          />
+          <PrivateRoute
+            exact
+            path={config.DASHBOARD_PATH}
+            component={HomePage}
+          />
+          <PrivateRoute exact path={config.USERS_PATH} component={Users} />
+          <Route component={NotFoundPage} />
+        </Switch>
+      </AuthContextProvider>
       <GlobalStyle />
     </BrowserRouter>
   );

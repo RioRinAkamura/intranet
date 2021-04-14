@@ -1,3 +1,5 @@
+import { api } from 'utils/sessionConfig';
+
 export interface UserIdentity {
   id: string;
   displayName?: string;
@@ -18,10 +20,14 @@ export interface AuthProvider {
 const defaultIdentity: UserIdentity = { id: '' };
 
 export const defaultProvider: AuthProvider = {
-  login: (): Promise<void> => Promise.resolve(),
+  login: async (username: string, password: string) => {
+    await api.auth.login(username, password);
+  },
   logout: (): Promise<void> => Promise.resolve(),
   checkAuth: (): Promise<void> => Promise.resolve(),
   checkError: (): Promise<void> => Promise.resolve(),
   getPermissions: (): Promise<void> => Promise.resolve(),
-  getIdentity: (): Promise<UserIdentity> => Promise.resolve(defaultIdentity),
+  getIdentity: async () => {
+    return (await api.user.me()) || defaultIdentity;
+  },
 };
