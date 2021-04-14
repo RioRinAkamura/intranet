@@ -20,6 +20,15 @@ export interface AuthProvider {
 const defaultIdentity: UserIdentity = { id: '' };
 
 export const defaultProvider: AuthProvider = {
+  login: (): Promise<void> => Promise.resolve(),
+  logout: (): Promise<void> => Promise.resolve(),
+  checkAuth: (): Promise<void> => Promise.resolve(),
+  checkError: (): Promise<void> => Promise.resolve(),
+  getPermissions: (): Promise<void> => Promise.resolve(),
+  getIdentity: (): Promise<UserIdentity> => Promise.resolve(defaultIdentity),
+};
+
+export const customProvider: AuthProvider = {
   login: async (username: string, password: string) => {
     await api.auth.login(username, password);
   },
@@ -28,6 +37,7 @@ export const defaultProvider: AuthProvider = {
   checkError: (): Promise<void> => Promise.resolve(),
   getPermissions: (): Promise<void> => Promise.resolve(),
   getIdentity: async () => {
-    return (await api.user.me()) || defaultIdentity;
+    // const identify = await api.user.me();
+    return defaultIdentity;
   },
 };

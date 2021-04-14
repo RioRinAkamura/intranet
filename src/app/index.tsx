@@ -21,7 +21,7 @@ import config from 'config';
 import { Login } from './pages/Login/Loadable';
 import { Users } from './pages/UsersPage/Loadable';
 import { AuthContextProvider } from './components/Auth/Context';
-import { defaultProvider } from './components/Auth/provider';
+import { customProvider } from './components/Auth/provider';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -35,7 +35,7 @@ export function App() {
       >
         <meta name="description" content="A React Boilerplate application" />
       </Helmet>
-      <AuthContextProvider authProvider={defaultProvider}>
+      <AuthContextProvider authProvider={customProvider}>
         <Switch>
           {/* <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} /> */}
           <PublicRoute
