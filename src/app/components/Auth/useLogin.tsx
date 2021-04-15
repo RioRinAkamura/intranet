@@ -29,9 +29,8 @@ export const useLogin = (): LoginHook => {
       });
     } catch (e) {
       setError(e);
-    }
-    finally {
-       setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
   return { login, loading, error };

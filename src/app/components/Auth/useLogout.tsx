@@ -12,13 +12,13 @@ export const useLogout = (): LogoutHook => {
   const [error, setError] = React.useState<Error | null>(null);
   const { authProvider } = useAuthProvider();
   const logout = async (): Promise<void> => {
-    setLoading(true);
     try {
-      setLoading(false);
+      setLoading(true);
       await authProvider.logout();
     } catch (error) {
-      setLoading(false);
       setError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
