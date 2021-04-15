@@ -6,19 +6,18 @@
  * contain code that should be seen on all pages. (e.g. navigation bar)
  */
 
+import 'antd/dist/antd.css';
+import config from 'config';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
-
-import { GlobalStyle } from '../styles/global-styles';
-import 'antd/dist/antd.css';
-
-import { HomePage } from './pages/HomePage/Loadable';
-import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { GlobalStyle } from '../styles/global-styles';
+import AppLayout from './components/AppLayout';
 import { PrivateRoute, PublicRoute } from './components/Auth/Route';
-import config from 'config';
+import { HomePage } from './pages/HomePage/Loadable';
 import { Login } from './pages/Login/Loadable';
+import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { Users } from './pages/UsersPage/Loadable';
 
 export function App() {
@@ -34,15 +33,21 @@ export function App() {
       </Helmet>
 
       <Switch>
-        {/* <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} /> */}
         <PublicRoute
           restricted={true}
           exact
           path={config.LOGIN_PATH}
           component={Login}
         />
-        <PrivateRoute exact path={config.DASHBOARD_PATH} component={HomePage} />
-        <PrivateRoute exact path={config.USERS_PATH} component={Users} />
+        <AppLayout>
+          <PrivateRoute
+            exact
+            path={config.DASHBOARD_PATH}
+            component={HomePage}
+          />
+          <PrivateRoute exact path={config.USERS_PATH} component={Users} />
+        </AppLayout>
+
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />
