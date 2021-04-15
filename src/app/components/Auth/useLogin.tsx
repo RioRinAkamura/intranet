@@ -19,9 +19,8 @@ export const useLogin = (): LoginHook => {
   const { setAuthState } = useContext(AuthContext);
   const { authProvider } = useAuthProvider();
   const login = async (data: LoginPayload): Promise<void> => {
-    setLoading(true);
     try {
-      setLoading(false);
+      setLoading(true);
       await authProvider.login(data.email, data.password);
       const userIdentity = await authProvider.getIdentity();
       setAuthState({
@@ -29,8 +28,10 @@ export const useLogin = (): LoginHook => {
         identity: userIdentity,
       });
     } catch (e) {
-      setLoading(false);
       setError(e);
+    }
+    finally {
+       setLoading(false);
     }
   };
   return { login, loading, error };
