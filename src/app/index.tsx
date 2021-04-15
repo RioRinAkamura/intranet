@@ -20,6 +20,7 @@ import { PrivateRoute, PublicRoute } from './components/Auth/Route';
 import config from 'config';
 import { Login } from './pages/Login/Loadable';
 import { Users } from './pages/UsersPage/Loadable';
+import { ChangePasswordPage } from './pages/ChangePasswordPage/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -43,6 +44,11 @@ export function App() {
         />
         <PrivateRoute exact path={config.DASHBOARD_PATH} component={HomePage} />
         <PrivateRoute exact path={config.USERS_PATH} component={Users} />
+        <PrivateRoute
+          exact
+          path={config.CHANGEPASSWORD_PATH}
+          component={ChangePasswordPage}
+        />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />

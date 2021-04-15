@@ -15,5 +15,16 @@
   "scaffoldingFeature": {
     "title": "Schnelles Scaffolding",
     "description": "Automatisieren Sie die Kreation von Komponenten, Containern, Routen, Selektoren und Sagas – und ihre Tests – direkt von dem Terminal!"
+  },
+  "changPassword": {
+    "changePasswordButton": "Change Password DE",
+    "cancleChangePasswordButton": "Cancle DE",
+    "oldPassword": "Old Password DE",
+    "newPassword": "New Password DE",
+    "retypePassword": "Retype Password DE",
+    "isRequired": "(*) This field is required DE",
+    "minLength": "(*) Min length 8 DE",
+    "complexPassword": "(*) Password includes letters, digits, capital characters, special characters DE",
+    "isNotMatch": "(*) This field is not match DE"
   }
 }

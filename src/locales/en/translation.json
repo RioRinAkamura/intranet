@@ -15,5 +15,16 @@
   "scaffoldingFeature": {
     "title": "Quick Scaffolding",
     "description": "Automate the creation of components, features, routes, selectors and sagas - and their tests - right from the CLI! Avoid fighting the glue of your code and focus on your app!"
+  },
+  "changPassword": {
+    "changePasswordButton": "Change Password",
+    "cancleChangePasswordButton": "Cancle",
+    "oldPassword": "Old Password",
+    "newPassword": "New Password",
+    "retypePassword": "Retype Password",
+    "isRequired": "(*) This field is required",
+    "minLength": "(*) Min length 8",
+    "complexPassword": "(*) Password includes letters, digits, capital characters, special characters",
+    "isNotMatch": "(*) This field is not match"
   }
 }
