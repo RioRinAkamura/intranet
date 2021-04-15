@@ -1,5 +1,3 @@
-import { api } from 'utils/sessionConfig';
-
 export interface UserIdentity {
   id: string;
   displayName?: string;
@@ -26,20 +24,4 @@ export const defaultProvider: AuthProvider = {
   checkError: (): Promise<void> => Promise.resolve(),
   getPermissions: (): Promise<void> => Promise.resolve(),
   getIdentity: (): Promise<UserIdentity> => Promise.resolve(defaultIdentity),
-};
-
-export const customProvider: AuthProvider = {
-  login: async (username: string, password: string): Promise<void> => {
-    await api.auth.login(username, password);
-  },
-  logout: (): Promise<void> => Promise.resolve(),
-  checkAuth: (): Promise<void> => Promise.resolve(),
-  checkError: (): Promise<void> => Promise.resolve(),
-  getPermissions: (): Promise<void> => Promise.resolve(),
-  getIdentity: async (): Promise<UserIdentity> => {
-    const identify = await api.user.me();
-    console.log('identify', identify);
-
-    return defaultIdentity;
-  },
 };
