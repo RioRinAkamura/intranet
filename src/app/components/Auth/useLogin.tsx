@@ -17,7 +17,7 @@ export const useLogin = (): LoginHook => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
   const { setAuthState } = useContext(AuthContext);
-  const { authProvider } = useAuthProvider();
+  const authProvider = useAuthProvider();
   const login = async (data: LoginPayload): Promise<void> => {
     try {
       setLoading(true);

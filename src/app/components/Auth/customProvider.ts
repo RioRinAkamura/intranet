@@ -9,8 +9,7 @@ export const customProvider: AuthProvider = {
     await api.auth.logout();
   },
   checkAuth: async (): Promise<UserIdentity> => {
-    const identify = await api.user.me();
-    return identify;
+    return await api.user.me();
   },
   checkError: (): Promise<void> => Promise.resolve(),
   getPermissions: (): Promise<void> => Promise.resolve(),
