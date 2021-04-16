@@ -1,14 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Route, Redirect } from 'react-router-dom';
 import config from '../../../config';
-import { AuthContext } from './Context';
 import { useAuthState } from './useAuthState';
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
   const [auth, setAuth] = useState(true);
   const authenticated = useAuthState();
-  // const { authState } = useContext(AuthContext);
 
   const getAuth = async () => {
     try {
@@ -22,7 +20,6 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
   };
 
   useEffect(() => {
-    // if (authState.authenticated) getAuth();
     getAuth();
   }, []);
 
@@ -32,13 +29,6 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={props =>
-        // authState.authenticated ? (
-        //   <Component {...props} />
-        // ) : auth ? (
-        //   <Component {...props} />
-        // ) : (
-        //   <Redirect to={config.LOGIN_PATH} />
-        // )
         auth ? <Component {...props} /> : <Redirect to={config.LOGIN_PATH} />
       }
     />
@@ -64,7 +54,6 @@ export const PublicRoute = ({ component: Component, restricted, ...rest }) => {
 
   useEffect(() => {
     getAuth();
-    // if (!authState.authenticated) getAuth();
   }, []);
   return (
     // restricted = false meaning public route
@@ -72,14 +61,6 @@ export const PublicRoute = ({ component: Component, restricted, ...rest }) => {
     <Route
       {...rest}
       render={props =>
-        // authState.authenticated && restricted ? (
-        //   <Redirect to={config.DASHBOARD_PATH} />
-        // ) : auth ? (
-        //   <Redirect to={config.DASHBOARD_PATH} />
-        // ) : (
-        //   <Component {...props} />
-        // )
-
         auth && restricted ? (
           <Redirect to={config.DASHBOARD_PATH} />
         ) : (
