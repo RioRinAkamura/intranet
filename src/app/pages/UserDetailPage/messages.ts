@@ -6,6 +6,6 @@
 import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
-export const messages = {
+export const UserDetailPageMessages = {
   // someThing: () => _t(translations.someThing,'default value'),
 };

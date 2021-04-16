@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
 
-import { UserForm } from '..';
+import { UserDetailPage } from '..';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -14,9 +14,9 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
-describe('<UserForm  />', () => {
+describe('<UserDetailPage  />', () => {
   it('should match snapshot', () => {
-    const loadingIndicator = render(<UserForm />);
+    const loadingIndicator = render(<UserDetailPage />);
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });
