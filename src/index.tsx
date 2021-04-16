@@ -13,12 +13,6 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import FontFaceObserver from 'fontfaceobserver';
 
-//Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'jquery/dist/jquery.min.js';
-import 'popper.js/dist/umd/popper.min.js';
-import 'bootstrap/dist/js/bootstrap.min.js';
-
 // Use consistent styling
 import 'sanitize.css/sanitize.css';
 

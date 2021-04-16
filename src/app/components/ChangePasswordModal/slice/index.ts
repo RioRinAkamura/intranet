@@ -10,7 +10,10 @@ const slice = createSlice({
   name: 'changePassword',
   initialState,
   reducers: {
-    changePassword(state, action: PayloadAction<{ oldPassword: string; newPassword: string }>) {},
+    changePassword(
+      state,
+      action: PayloadAction<{ oldPassword: string; newPassword: string }>,
+    ) {},
   },
 });
 

@@ -5,7 +5,4 @@ import { initialState } from '.';
 
 const selectSlice = (state: RootState) => state.changePassword || initialState;
 
-export const select = createSelector(
-  [selectSlice],
-  state => state,
-);
+export const select = createSelector([selectSlice], state => state);

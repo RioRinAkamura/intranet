@@ -8,13 +8,16 @@ import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
 export const messages = {
-  changePasswordButton: () => _t(translations.changPassword.changePasswordButton),
-  changePasswordCancle: () => _t(translations.changPassword.cancleChangePasswordButton),
+  changePasswordTitle: () => _t(translations.changPassword.title),
+  changePasswordCancel: () => _t(translations.changPassword.cancel),
   changePasswordOld: () => _t(translations.changPassword.oldPassword),
   changePasswordNew: () => _t(translations.changPassword.newPassword),
   changePasswordRetype: () => _t(translations.changPassword.retypePassword),
   changePasswordIsRequired: () => _t(translations.changPassword.isRequired),
   changePasswordMinLength: () => _t(translations.changPassword.minLength),
-  changePasswordComplexPassword: () => _t(translations.changPassword.complexPassword),
+  changePasswordComplexPassword: () =>
+    _t(translations.changPassword.complexPassword),
   changePasswordIsNotMatch: () => _t(translations.changPassword.isNotMatch),
+  changePasswordSuccess: () => _t(translations.changPassword.changePassSuccess),
+  changePasswordFailed: () => _t(translations.changPassword.changePassFailed),
 };
