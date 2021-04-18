@@ -22,7 +22,8 @@ export const useLogin = (): LoginHook => {
     try {
       setLoading(true);
       await authProvider.login(data.email, data.password);
-      setAuthState(true);
+      const identity = await authProvider.getIdentity();
+      setAuthState(true, identity ?? undefined);
     } catch (e) {
       setError(e);
     } finally {

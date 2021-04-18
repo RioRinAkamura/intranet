@@ -5,7 +5,7 @@ import { userspageActions as actions } from '.';
 function* getUsers() {
   try {
     const response = yield call(() => {
-      return api.contact.list();
+      return [];
     });
     console.log(response.json());
   } catch (err) {}

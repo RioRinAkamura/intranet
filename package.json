@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "4.6.2",
-    "@goldfishcode/template-api-sdk": "0.0.1",
+    "@hdwebsoft/boilerplate-api-sdk": "0.0.1",
     "@reduxjs/toolkit": "1.4.0",
     "@testing-library/jest-dom": "5.11.4",
     "@testing-library/react": "11.0.2",
@@ -108,7 +108,7 @@
   },
   "engines": {
     "npm": ">=6.4.1",
-    "node": ">=10.13.0"
+    "node": ">=14.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
