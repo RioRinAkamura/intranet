@@ -28,8 +28,6 @@ import reportWebVitals from 'reportWebVitals';
 
 // Initialize languages
 import './locales/i18n';
-import { AuthContextProvider } from 'app/components/Auth/Context';
-import { customProvider } from 'app/components/Auth/customProvider';
 
 // Observe loading of Inter (to remove 'Inter', remove the <link> tag in
 // the index.html file and this observer)
@@ -47,11 +45,9 @@ ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider>
       <HelmetProvider>
-        <AuthContextProvider authProvider={customProvider}>
-          <React.StrictMode>
-            <App />
-          </React.StrictMode>
-        </AuthContextProvider>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
       </HelmetProvider>
     </ThemeProvider>
   </Provider>,
@@ -68,4 +64,4 @@ if (module.hot) {
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals(console.log);

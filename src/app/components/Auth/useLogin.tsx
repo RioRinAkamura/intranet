@@ -8,7 +8,7 @@ interface LoginPayload {
 }
 
 interface LoginHook {
-  login: (data: LoginPayload) => void;
+  login: (data: LoginPayload) => Promise<void>;
   loading: boolean;
   error: Error | null;
 }
@@ -16,17 +16,13 @@ interface LoginHook {
 export const useLogin = (): LoginHook => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
-  const { setAuthState } = useContext(AuthContext);
   const authProvider = useAuthProvider();
+  const { setAuthState } = useContext(AuthContext);
   const login = async (data: LoginPayload): Promise<void> => {
     try {
       setLoading(true);
       await authProvider.login(data.email, data.password);
-      const userIdentity = await authProvider.getIdentity();
-      setAuthState({
-        authenticated: true,
-        identity: userIdentity,
-      });
+      setAuthState(true);
     } catch (e) {
       setError(e);
     } finally {

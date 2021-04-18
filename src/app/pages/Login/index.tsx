@@ -1,23 +1,14 @@
 import { Col, Row } from 'antd';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
-import { StyleConstants } from 'styles/StyleConstants';
 import { LoginForm } from './components/LoginForm';
 
 export const Login: React.FC = () => {
-  const { t, i18n } = useTranslation();
-
   return (
     <Wrapper>
       <Helmet>
-        <title>Login Page</title>
-        {/* <meta
-          name="description"
-          content="A React Boilerplate application homepage"
-        /> */}
+        <title>Login</title>
       </Helmet>
       <LoginWrapper justify="center" align="middle">
         <Form xxl={6} xl={8} lg={10} xs={21}>

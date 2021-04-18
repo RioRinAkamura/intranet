@@ -31,7 +31,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           <Link to="/">Dashboard</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<TeamOutlined />}>
-          <Link to="/users">Employess</Link>
+          <Link to="/employees">Employess</Link>
         </Menu.Item>
         <Menu.Item key="3" icon={<ContainerOutlined />}>
           Option 3

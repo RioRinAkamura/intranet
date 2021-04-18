@@ -1,5 +1,5 @@
-import { take, call, put, select, takeLatest } from 'redux-saga/effects';
-import { api } from 'utils/sessionConfig';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { api } from 'utils/api';
 import { userspageActions as actions } from '.';
 
 function* getUsers() {
@@ -15,7 +15,6 @@ function* searchUsers(action) {
   try {
     // declare
     // call api
-    const response = yield call(() => {});
     yield put(actions.searchUsersSuccess);
   } catch (err) {
     console.log(err);
@@ -27,7 +26,6 @@ function* createUser(action) {
   try {
     // declare
     // call api
-    const response = yield call(() => {});
     yield put(actions.createUserSuccess);
   } catch (err) {
     console.log(err);
@@ -39,7 +37,6 @@ function* editUser(action) {
   try {
     // declare
     // call api
-    const response = yield call(() => {});
     yield put(actions.editUserSuccess);
   } catch (err) {
     console.log(err);
@@ -51,7 +48,6 @@ function* deleteUser(action) {
   try {
     // declare
     // call api
-    const response = yield call(() => {});
     yield put(actions.deleteUserSuccess);
   } catch (err) {
     console.log(err);
@@ -63,7 +59,6 @@ function* importUsers(action) {
   try {
     // declare
     // call api
-    const response = yield call(() => {});
     yield put(actions.importUsersSuccess);
   } catch (err) {
     console.log(err);
