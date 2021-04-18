@@ -23,8 +23,8 @@ pipeline  {
       }
       steps {
         echo 'starting build'
-        echo "@hdwebsoft:registry https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" >> .npmrc
-        echo "//gitlab.example.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+        sh "echo '@hdwebsoft:registry https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/'> .npmrc"
+        sh "echo '//gitlab.example.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}' > .npmrc"
         sh 'npm install'
         sh 'npm run build'
         sh 'tar cvzf build.tar.gz dist'
