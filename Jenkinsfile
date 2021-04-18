@@ -18,7 +18,7 @@ pipeline  {
 
       environment {
         REACT_APP_API_URL = "https://api.boilerplate.dev.hdwebsoft.co/v1"
-        CI_PROJECT_I = "25975384"
+        CI_PROJECT_ID = "25975384"
         CI_JOB_TOKEN = "ZiveEc1yo29oMESFoiN3"
       }
       steps {
