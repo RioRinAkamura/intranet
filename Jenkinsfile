@@ -18,10 +18,13 @@ pipeline  {
 
       environment {
         REACT_APP_API_URL = "https://api.boilerplate.dev.hdwebsoft.co/v1"
+        CI_PROJECT_I = "25975384"
+        CI_JOB_TOKEN = "ZiveEc1yo29oMESFoiN3"
       }
       steps {
         echo 'starting build'
-        sh 'apk update && apk add --no-cache bash git openssh'
+        echo "@hdwebsoft:registry https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
+        echo "//gitlab.example.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" > .npmrc
         sh 'npm install'
         sh 'npm run build'
         sh 'tar cvzf build.tar.gz dist'
