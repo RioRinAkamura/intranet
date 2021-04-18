@@ -28,6 +28,8 @@ import reportWebVitals from 'reportWebVitals';
 
 // Initialize languages
 import './locales/i18n';
+import { AuthContextProvider } from 'app/components/Auth/Context';
+import { customProvider } from 'app/components/Auth/customProvider';
 
 // Observe loading of Inter (to remove 'Inter', remove the <link> tag in
 // the index.html file and this observer)
@@ -45,9 +47,11 @@ ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider>
       <HelmetProvider>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
+        <AuthContextProvider authProvider={customProvider}>
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>
+        </AuthContextProvider>
       </HelmetProvider>
     </ThemeProvider>
   </Provider>,
