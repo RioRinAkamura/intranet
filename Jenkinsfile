@@ -29,7 +29,7 @@ pipeline  {
         sh "npm config set -- '//gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken' ${CI_JOB_TOKEN}"
         sh 'npm install'
         sh 'npm run build'
-        sh 'tar cvzf build.tar.gz dist'
+        sh 'tar cvzf build.tar.gz build'
         stash includes: 'build.tar.gz', name: 'build.tar.gz'
       }
     }
