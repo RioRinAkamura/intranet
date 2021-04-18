@@ -19,23 +19,11 @@ import { HomePage } from './pages/HomePage/Loadable';
 import { Login } from './pages/Login/Loadable';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { Users } from './pages/UsersPage/Loadable';
-import { useAuthProvider } from './components/Auth/useAuthProvider';
+import { authProvider } from './components/Auth/defaultAuthProvider';
+import { AuthContextProvider } from './components/Auth/Context';
 
 export function App() {
   const { i18n } = useTranslation();
-  const authProvider = useAuthProvider();
-  // const checkAuth = authProvider.checkAuth();
-
-  // React.useEffect(() => {
-  //   const checkAuth = authProvider.checkAuth();
-  //   try {
-  //     console.log('abc');
-  //   } catch (error) {
-  //     console.log('def');
-  //   }
-  //   console.log('checkAuth', checkAuth);
-  // }, []);
-
   return (
     <BrowserRouter>
       <Helmet
@@ -45,26 +33,26 @@ export function App() {
       >
         <meta name="description" content="A React Boilerplate application" />
       </Helmet>
-      {/* <AuthContextProvider authProvider={customProvider}> */}
-      <Switch>
-        <PublicRoute
-          restricted={true}
-          exact
-          path={config.LOGIN_PATH}
-          component={Login}
-        />
-        <AppLayout>
-          <PrivateRoute
+      <AuthContextProvider authProvider={authProvider}>
+        <Switch>
+          <PublicRoute
+            restricted={true}
             exact
-            path={config.DASHBOARD_PATH}
-            component={HomePage}
+            path={config.LOGIN_PATH}
+            component={Login}
           />
-          <PrivateRoute exact path={config.USERS_PATH} component={Users} />
-        </AppLayout>
+          <AppLayout>
+            <PrivateRoute
+              exact
+              path={config.DASHBOARD_PATH}
+              component={HomePage}
+            />
+            <PrivateRoute exact path="/employees" component={Users} />
+          </AppLayout>
 
-        <Route component={NotFoundPage} />
-      </Switch>
-      {/* </AuthContextProvider> */}
+          <Route component={NotFoundPage} />
+        </Switch>
+      </AuthContextProvider>
       <GlobalStyle />
     </BrowserRouter>
   );

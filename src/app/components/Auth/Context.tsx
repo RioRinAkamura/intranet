@@ -1,26 +1,62 @@
 import React from 'react';
-import { AuthProvider, defaultProvider } from './provider';
+import { AuthProvider, defaultProvider } from './authProvider';
+import { UserIdentity } from './types';
 
-import { AuthState } from './slice/types';
-
-interface AuthContextProviderProps {
-  authState: AuthState;
+interface AuthContextValues {
+  loading: boolean;
+  authenticated: boolean;
+  identity?: UserIdentity | null;
+  error?: Error;
   authProvider: AuthProvider;
-  setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
+  setAuthState: (authenticated: boolean, identity?: UserIdentity) => void;
 }
 
-export const AuthContext = React.createContext<AuthContextProviderProps>({
-  authState: { authenticated: false, identity: { id: '' } },
-  authProvider: { ...defaultProvider },
-  setAuthState: () => {},
+export const AuthContext = React.createContext<AuthContextValues>({
+  authProvider: defaultProvider,
+  loading: false,
+  authenticated: false,
+  identity: null,
+  setAuthState: (_authenticated: boolean, _identity?: UserIdentity) => {},
 });
 
-export const useAuthContextProvider = (authProvider: AuthProvider) => {
-  const [authState, setAuthState] = React.useState<AuthState>({
-    authenticated: false,
-    identity: { id: '' },
-  });
-  return { authState, authProvider, setAuthState };
+export const useAuthContextProvider = (
+  authProvider: AuthProvider,
+): AuthContextValues => {
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(undefined);
+  const [authenticated, setAuthenticated] = React.useState(false);
+  const [identity, setIdentity] = React.useState<UserIdentity | null>();
+
+  const setAuthState = React.useCallback(
+    (authenticated: boolean, identity?: UserIdentity) => {
+      setAuthenticated(authenticated);
+      if (identity) setIdentity(identity);
+    },
+    [],
+  );
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const identity = await authProvider.getIdentity();
+        setIdentity(identity);
+        setAuthenticated(identity ? true : false);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [authProvider]);
+  return {
+    loading,
+    authenticated,
+    identity,
+    error,
+    authProvider,
+    setAuthState,
+  };
 };
 
 export const AuthContextProvider = ({ authProvider, children }) => {
@@ -29,9 +65,3 @@ export const AuthContextProvider = ({ authProvider, children }) => {
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
-
-// Login: dispatch LoginAction =>
-// eslint-disable-next-line no-lone-blocks
-{
-  /* <AuthContextProvider authProvider={}></AuthContextProvider>; */
-}

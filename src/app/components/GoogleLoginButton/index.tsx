@@ -5,9 +5,7 @@ import {
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from 'react-google-login';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
-import { useAuthSlice } from '../Auth/slice';
 
 interface Props {}
 
@@ -17,8 +15,8 @@ interface Login {
 }
 
 export const GoogleLoginButton = (props: Props) => {
-  const { actions } = useAuthSlice();
-  const dispatch = useDispatch();
+  // const { actions } = useAuthSlice();
+  // const dispatch = useDispatch();
 
   const onSuccess = (
     response: GoogleLoginResponse | GoogleLoginResponseOffline,
@@ -28,7 +26,8 @@ export const GoogleLoginButton = (props: Props) => {
         tokenId: response.tokenId,
         googleId: response.googleId,
       };
-      dispatch(actions.loginWithGoogle(data));
+      console.log('login google: ', data);
+      // dispatch(actions.loginWithGoogle(data));
     }
   };
   const onFailure = res => {

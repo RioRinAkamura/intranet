@@ -1,18 +1,8 @@
 import { useContext } from 'react';
+import { AuthState } from './types';
 import { AuthContext } from './Context';
 
-export const useAuthState = async (): Promise<{
-  loading: boolean;
-  authenticated: boolean;
-}> => {
-  const { authProvider } = useContext(AuthContext);
-
-  return await authProvider
-    .checkAuth()
-    .then(() => {
-      return { loading: false, authenticated: true };
-    })
-    .catch(() => {
-      return { loading: false, authenticated: false };
-    });
+export const useAuthState = (): AuthState => {
+  const { authenticated, identity, loading } = useContext(AuthContext);
+  return { authenticated, identity, loading };
 };

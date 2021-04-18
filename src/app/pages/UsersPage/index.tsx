@@ -6,7 +6,6 @@ import {
   Space,
   Table,
   Form,
-  Modal,
   Upload,
   message,
   Tooltip,
@@ -16,7 +15,7 @@ import {
   Collapse,
   TablePaginationConfig,
 } from 'antd';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
 import { request } from 'utils/request';
@@ -35,15 +34,10 @@ import { DeleteModal } from 'app/components/DeleteModal';
 import { useUserspageSlice } from './slice';
 import { CSVLink } from 'react-csv';
 import CSVReader from 'react-csv-reader';
-import { isMobile, isMobileOnly } from 'react-device-detect';
-import { isEmpty, isEqual } from 'lodash';
+import { isMobileOnly } from 'react-device-detect';
+import { isEqual } from 'lodash';
 import { DialogModal } from 'app/components/DialogModal';
-import { useTranslation } from 'react-i18next';
-import {
-  FilterValue,
-  SorterResult,
-  TableCurrentDataSource,
-} from 'antd/lib/table/interface';
+import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { ToastMessageType } from 'app/components/ToastNotification';
@@ -95,7 +89,6 @@ interface Filters {
 }
 
 export const Users: React.FC = () => {
-  const { t, i18n } = useTranslation();
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
@@ -824,14 +817,6 @@ const IconButton = styled(Button)`
 const OptionButton = styled(Col)`
   margin-left: 1em;
   margin-bottom: 1em;
-`;
-
-const ModalTitle = styled.h1`
-  text-align: center;
-`;
-
-const FormTitle = styled(Col)`
-  text-align: right;
 `;
 
 const ButtonImport = styled(Button)`

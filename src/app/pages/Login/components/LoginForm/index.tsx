@@ -1,16 +1,9 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
 import { useLogin } from 'app/components/Auth/useLogin';
-import { useAuthSlice } from 'app/components/Auth/slice';
-import { selectAuth } from 'app/components/Auth/slice/selectors';
 import { FacebookLoginButton } from 'app/components/FacebookLoginButton';
 import { GoogleLoginButton } from 'app/components/GoogleLoginButton';
-import { Logout } from 'app/components/GoogleLogoutButton';
-import config from 'config';
 import React, { useEffect, useRef } from 'react';
-import GoogleLogin from 'react-google-login';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 
@@ -20,15 +13,11 @@ const layout = {
 };
 
 export const LoginForm: React.FC = () => {
-  const { t, i18n } = useTranslation();
-  const { actions } = useAuthSlice();
-  const dispatch = useDispatch();
-  const auth = useSelector(selectAuth);
   const history = useHistory();
   const [form] = Form.useForm();
   const emailRef = useRef<any>();
   const passwordRef = useRef<any>();
-  const { login } = useLogin();
+  const { login, loading } = useLogin();
 
   useEffect(() => {
     emailRef.current.focus();
@@ -55,13 +44,11 @@ export const LoginForm: React.FC = () => {
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, []);
+  }, [form]);
 
   const onFinish = async (values: { email: string; password: string }) => {
-    // dispatch(actions.login({ ...values }));
     await login({ ...values });
-    // localStorage.setItem('token', getdata.data.token);
-    history.push('/users');
+    history.push('/employees');
   };
 
   return (
@@ -104,7 +91,13 @@ export const LoginForm: React.FC = () => {
               </Button>
             </Col> */}
             <Col span={24}>
-              <Button block type="primary" htmlType="submit" size="large">
+              <Button
+                block
+                type="primary"
+                htmlType="submit"
+                size="large"
+                loading={loading}
+              >
                 Login
               </Button>
             </Col>
