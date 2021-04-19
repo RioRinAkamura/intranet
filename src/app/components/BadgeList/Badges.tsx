@@ -5,24 +5,28 @@ import styled from 'styled-components';
 import { BellOutlined, DownOutlined } from '@ant-design/icons';
 import { ChangePasswordModal } from '../ChangePasswordModal';
 import { useChangePasswordSlice } from './../ChangePasswordModal/slice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'types';
 
 export function Badges() {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
   const { actions } = useChangePasswordSlice();
   const dispatch = useDispatch();
+  const changePasswordState = useSelector(
+    (state: RootState) => state.changePassword,
+  );
+  const isModalVisible: any = changePasswordState?.isModalVisible;
 
   const showModal = () => {
-    setIsModalVisible(true);
+    dispatch(actions.showModalChangePassword());
   };
 
   const handleOk = values => {
-    setIsModalVisible(false);
     dispatch(actions.changePassword(values));
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
+    dispatch(actions.resetState());
   };
 
   const notifyMenu = (

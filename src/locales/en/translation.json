@@ -21,12 +21,16 @@
     "cancel": "Cancel",
     "oldPassword": "Old Password",
     "newPassword": "New Password",
-    "retypePassword": "Retype Password",
+    "retypePassword": "Confirm Password",
     "isRequired": "(*) This field is required",
     "minLength": "(*) Min length 8",
-    "complexPassword": "(*) Password includes letters, digits, capital characters, special characters",
-    "isNotMatch": "(*) This field is not match",
-    "changePassSuccess": "(*) Change password success",
-    "changePassFailed": "(*) Change password failed"
+    "complexPassword": "(*) Password includes letters, digits, capital characters, special characters, at least 8 characters",
+    "isNotMatch": "(*) The two passwords that you entered do not match!",
+    "changePassSuccess": "Change password success",
+    "changePassFailed": "Change password failed",
+    "wrongOldPassword": "Wrong Old Password",
+    "inputOldPassword": "Please input old password!",
+    "inputNewPassword": "Please input new password!",
+    "inputRetypePassword": "Please input retype password!"
   }
 }

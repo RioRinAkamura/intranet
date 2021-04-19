@@ -20,4 +20,9 @@ export const messages = {
   changePasswordIsNotMatch: () => _t(translations.changPassword.isNotMatch),
   changePasswordSuccess: () => _t(translations.changPassword.changePassSuccess),
   changePasswordFailed: () => _t(translations.changPassword.changePassFailed),
+  changePasswordWrongOld: () => _t(translations.changPassword.wrongOldPassword),
+  changePasswordInputOld: () => _t(translations.changPassword.inputOldPassword),
+  changePasswordInputNew: () => _t(translations.changPassword.inputNewPassword),
+  changePasswordInputRetype: () =>
+    _t(translations.changPassword.inputRetypePassword),
 };

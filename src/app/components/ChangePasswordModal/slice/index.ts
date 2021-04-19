@@ -4,7 +4,12 @@ import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { Saga } from './saga';
 import { State } from './types';
 
-export const initialState: State = {};
+export const initialState: State = {
+  isLoading: false,
+  changePasswordSuccess: false,
+  changePasswordFailed: false,
+  isModalVisible: false,
+};
 
 const slice = createSlice({
   name: 'changePassword',
@@ -13,7 +18,35 @@ const slice = createSlice({
     changePassword(
       state,
       action: PayloadAction<{ oldPassword: string; newPassword: string }>,
-    ) {},
+    ) {
+      state.isLoading = true;
+      state.changePasswordSuccess = false;
+      state.changePasswordFailed = false;
+    },
+    showModalChangePassword(state) {
+      state.isLoading = false;
+      state.changePasswordSuccess = false;
+      state.changePasswordFailed = false;
+      state.isModalVisible = true;
+    },
+    changeSuccess(state) {
+      state.isLoading = false;
+      state.changePasswordSuccess = true;
+      state.changePasswordFailed = false;
+      state.isModalVisible = false;
+    },
+    changeErr(state) {
+      state.isLoading = false;
+      state.changePasswordSuccess = false;
+      state.changePasswordFailed = true;
+      state.isModalVisible = false;
+    },
+    resetState(state) {
+      state.isLoading = false;
+      state.changePasswordSuccess = false;
+      state.changePasswordFailed = false;
+      state.isModalVisible = false;
+    },
   },
 });
 
