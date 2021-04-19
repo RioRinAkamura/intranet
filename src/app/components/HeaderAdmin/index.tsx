@@ -38,7 +38,7 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
               <Link to="/">Dashboard</Link>
             </NavItem>
             <NavItem>
-              <Link to="/users">Employees</Link>
+              <Link to="/employees">Employees</Link>
             </NavItem>
             <NavItem>
               <Link to="/">Setting</Link>
@@ -82,6 +82,10 @@ const Wrapper = styled.header`
   background-color: #fff;
   color: #000;
   width: 100%;
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  left: 0;
 `;
 
 const SubHeader = styled.div`
