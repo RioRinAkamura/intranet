@@ -1,16 +1,12 @@
 import { FacebookFilled } from '@ant-design/icons';
 import { Button } from 'antd';
-import config from 'config';
 import React from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
 
 interface Props {}
 
 export const FacebookLoginButton = (props: Props) => {
-  const dispatch = useDispatch();
-
   const responseFacebook = response => {
     console.log(response);
   };

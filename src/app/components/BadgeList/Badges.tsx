@@ -2,12 +2,11 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Badge, Dropdown, Menu } from 'antd';
 import styled from 'styled-components';
-import { BellOutlined, DownOutlined } from '@ant-design/icons';
+import { BellOutlined } from '@ant-design/icons';
 import { ChangePasswordModal } from '../ChangePasswordModal';
 import { useChangePasswordSlice } from './../ChangePasswordModal/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'types';
-import { State } from './../ChangePasswordModal/slice/types';
 
 export function Badges() {
   // const [isModalVisible, setIsModalVisible] = useState(false);

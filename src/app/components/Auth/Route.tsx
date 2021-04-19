@@ -1,11 +1,13 @@
 import React from 'react';
 
 import { Route, Redirect } from 'react-router-dom';
-import { useAuthState } from '.';
 import config from '../../../config';
+import { useAuthState } from './useAuthState';
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
-  const { authenticated } = useAuthState();
+  const { authenticated, loading } = useAuthState();
+  if (loading) return null;
+
   return (
     // Show the component only when the user is logged in
     // Otherwise, redirect the user to /signin page
@@ -23,7 +25,6 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
 };
 
 export const PublicRoute = ({ component: Component, restricted, ...rest }) => {
-  console.log('config.DASHBOARD_PATH: ', config.DASHBOARD_PATH);
   const { authenticated } = useAuthState();
   return (
     // restricted = false meaning public route

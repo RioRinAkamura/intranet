@@ -19,6 +19,8 @@ import { HomePage } from './pages/HomePage/Loadable';
 import { Login } from './pages/Login/Loadable';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { Users } from './pages/UsersPage/Loadable';
+import { authProvider } from './components/Auth/defaultAuthProvider';
+import { AuthContextProvider } from './components/Auth/Context';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -31,25 +33,26 @@ export function App() {
       >
         <meta name="description" content="A React Boilerplate application" />
       </Helmet>
-
-      <Switch>
-        <PublicRoute
-          restricted={true}
-          exact
-          path={config.LOGIN_PATH}
-          component={Login}
-        />
-        <AppLayout>
-          <PrivateRoute
+      <AuthContextProvider authProvider={authProvider}>
+        <Switch>
+          <PublicRoute
+            restricted={true}
             exact
-            path={config.DASHBOARD_PATH}
-            component={HomePage}
+            path={config.LOGIN_PATH}
+            component={Login}
           />
-          <PrivateRoute exact path={config.USERS_PATH} component={Users} />
-        </AppLayout>
+          <AppLayout>
+            <PrivateRoute
+              exact
+              path={config.DASHBOARD_PATH}
+              component={HomePage}
+            />
+            <PrivateRoute exact path="/employees" component={Users} />
+          </AppLayout>
 
-        <Route component={NotFoundPage} />
-      </Switch>
+          <Route component={NotFoundPage} />
+        </Switch>
+      </AuthContextProvider>
       <GlobalStyle />
     </BrowserRouter>
   );

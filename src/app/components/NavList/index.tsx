@@ -1,4 +1,3 @@
-import * as React from 'react';
 import styled from 'styled-components';
 
 export const NavList = styled.ul`
@@ -11,4 +10,8 @@ export const NavList = styled.ul`
   padding: 0;
   margin-bottom: 0;
   list-style: none;
+
+  @media (max-width: 768px) {
+    display: none;
+  } ;
 `;
