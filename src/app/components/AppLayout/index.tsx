@@ -1,6 +1,7 @@
 import { Layout } from 'antd';
 import * as React from 'react';
 import { RouteProps } from 'react-router';
+import HeaderAdmin from '../HeaderAdmin';
 
 import Sidebar from '../Sidebar';
 
@@ -23,7 +24,7 @@ const AppLayout: React.FC<AdminRouteProps> = ({
     <Layout style={{ minHeight: '100vh' }}>
       <Sidebar collapsed={collapsed} onCollapse={onCollapse} />
       <Layout className="site-layout">
-        {/* <HeaderAdmin collapsed={collapsed} onCollapse={onCollapse} /> */}
+        <HeaderAdmin collapsed={collapsed} onCollapse={onCollapse} />
         <Content style={{ margin: '0 16px' }}>
           <div
             className="site-layout-background"
