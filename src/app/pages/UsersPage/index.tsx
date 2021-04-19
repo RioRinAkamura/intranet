@@ -1,25 +1,4 @@
 import {
-  Button,
-  Col,
-  Input,
-  Row,
-  Space,
-  Table,
-  Form,
-  Upload,
-  message,
-  Tooltip,
-  Avatar,
-  List,
-  Spin,
-  Collapse,
-  TablePaginationConfig,
-} from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import styled from 'styled-components/macro';
-import { request } from 'utils/request';
-import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
@@ -28,20 +7,43 @@ import {
   PhoneFilled,
   PlusOutlined,
   SearchOutlined,
+  TagsOutlined,
 } from '@ant-design/icons';
-import Highlighter from 'react-highlight-words';
-import { DeleteModal } from 'app/components/DeleteModal';
-import { useUserspageSlice } from './slice';
-import { CSVLink } from 'react-csv';
-import CSVReader from 'react-csv-reader';
-import { isMobileOnly } from 'react-device-detect';
-import { isEqual } from 'lodash';
-import { DialogModal } from 'app/components/DialogModal';
+import {
+  Avatar,
+  Button,
+  Col,
+  Collapse,
+  Form,
+  Input,
+  List,
+  message,
+  Row,
+  Space,
+  Spin,
+  Table,
+  TablePaginationConfig,
+  Tooltip,
+  Upload,
+} from 'antd';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
-import { ToastMessageType } from 'app/components/ToastNotification';
-import { useNotify } from 'app/components/ToastNotification';
+import { DeleteModal } from 'app/components/DeleteModal';
+import { DialogModal } from 'app/components/DialogModal';
+import Tags from 'app/components/Tags';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import { isEqual } from 'lodash';
+import React, { useCallback, useEffect, useState } from 'react';
+import { CSVLink } from 'react-csv';
+import CSVReader from 'react-csv-reader';
+import { isMobileOnly } from 'react-device-detect';
+import Highlighter from 'react-highlight-words';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components/macro';
+import { request } from 'utils/request';
+import { useUserspageSlice } from './slice';
+
 const FormItem = Form.Item;
 const { Panel } = Collapse;
 
@@ -73,6 +75,7 @@ interface UserProfile {
   last_name: string;
   email: string;
   phone: string;
+  tags?: string[];
 }
 
 interface Pagination {
@@ -119,6 +122,7 @@ export const Users: React.FC = () => {
   const [searchForm] = Form.useForm();
   const [imageURL, setImageURL] = useState('');
   const { notify } = useNotify();
+
   useEffect(() => {
     fetchData(tablePagination);
   }, []);
@@ -361,7 +365,7 @@ export const Users: React.FC = () => {
                 shape="circle"
                 icon={<EyeOutlined />}
                 onClick={() => {
-                  setUserProfile({ ...record });
+                  setUserProfile({ ...record, tags: ['123', '456'] });
                   setViewModal(true);
                 }}
               />
@@ -727,6 +731,9 @@ export const Users: React.FC = () => {
           >
             <Input disabled={openModal.mode === 'view'} />
           </FormItem>
+          <FormItem label="Tags" name="tags">
+            <Tags />
+          </FormItem>
         </Form>
       </DialogModal>
       <DialogModal
@@ -752,6 +759,18 @@ export const Users: React.FC = () => {
                 <MailFilled />
               </ProfileBody>
               <ProfileBody span={14}>{userProfile.email}</ProfileBody>
+            </ProfileDescription>
+            <ProfileDescription gutter={[16, 16]} justify="center">
+              <ProfileBody span={2}>
+                <TagsOutlined />
+              </ProfileBody>
+              <ProfileBody span={14}>
+                {userProfile.tags
+                  ?.map(item => {
+                    return item;
+                  })
+                  .join(', ')}
+              </ProfileBody>
             </ProfileDescription>
           </>
         )}
