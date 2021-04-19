@@ -38,7 +38,7 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
               <Link to="/">Dashboard</Link>
             </NavItem>
             <NavItem>
-              <Link to="/users">Employees</Link>
+              <Link to="/employees">Employees</Link>
             </NavItem>
             <NavItem>
               <Link to="/">Setting</Link>
