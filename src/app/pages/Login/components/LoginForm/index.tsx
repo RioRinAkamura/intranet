@@ -4,8 +4,10 @@ import { useLogin } from 'app/components/Auth/useLogin';
 import { FacebookLoginButton } from 'app/components/FacebookLoginButton';
 import { GoogleLoginButton } from 'app/components/GoogleLoginButton';
 import React, { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
+import { LoginMessages } from '../../messages';
 
 const layout = {
   labelCol: { span: 24 },
@@ -13,6 +15,7 @@ const layout = {
 };
 
 export const LoginForm: React.FC = () => {
+  const { t } = useTranslation();
   const history = useHistory();
   const [form] = Form.useForm();
   const emailRef = useRef<any>();
@@ -56,18 +59,29 @@ export const LoginForm: React.FC = () => {
       <Form {...layout} onFinish={onFinish} form={form}>
         <FormItem
           name="email"
-          label="Email address"
+          label={t(LoginMessages.email())}
           rules={[
-            { required: true, message: 'Please input your email!' },
-            { type: 'email', message: 'Your email is invalid!' },
+            {
+              required: true,
+              message: t(LoginMessages.emptyEmail()),
+            },
+            {
+              type: 'email',
+              message: t(LoginMessages.invalidEmail()),
+            },
           ]}
         >
           <Input prefix={<UserOutlined />} ref={emailRef} size="large" />
         </FormItem>
         <FormItem
           name="password"
-          label="Password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          label={t(LoginMessages.password())}
+          rules={[
+            {
+              required: true,
+              message: t(LoginMessages.emptyPassword()),
+            },
+          ]}
         >
           <Input.Password
             prefix={<LockOutlined />}
@@ -76,13 +90,13 @@ export const LoginForm: React.FC = () => {
           />
         </FormItem>
         <FormItem name="remember" valuePropName="checked">
-          <Checkbox>Remember me</Checkbox>
+          <Checkbox>{t(LoginMessages.rememberMe())}</Checkbox>
         </FormItem>
         <FormItem>
           <Row gutter={[8, 8]} justify="space-between">
             <Col span={12}>
               <Button type="link" size="large">
-                Forgot your password ?
+                {t(LoginMessages.forgotPassword())}
               </Button>
             </Col>
             {/* <Col span={6}>
@@ -98,12 +112,12 @@ export const LoginForm: React.FC = () => {
                 size="large"
                 loading={loading}
               >
-                Login
+                {t(LoginMessages.loginButton())}
               </Button>
             </Col>
           </Row>
         </FormItem>
-        <Divider orientation="center">Or</Divider>
+        <Divider orientation="center">{t(LoginMessages.dividerText())}</Divider>
         <Row gutter={[8, 8]}>
           <Col span={24}>
             <GoogleLoginButton />

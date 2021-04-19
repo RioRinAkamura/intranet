@@ -1,19 +1,24 @@
 import { Col, Row } from 'antd';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { LoginForm } from './components/LoginForm';
+import { LoginMessages } from './messages';
 
 export const Login: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <Wrapper>
       <Helmet>
-        <title>Login</title>
+        <title>{t(LoginMessages.title())}</title>
+        <meta name="description" content={t(LoginMessages.description())} />
       </Helmet>
       <LoginWrapper justify="center" align="middle">
         <Form xxl={6} xl={8} lg={10} xs={21}>
           <Title>
-            <h1>Login</h1>
+            <h1>{t(LoginMessages.formTitle())}</h1>
           </Title>
           <LoginForm />
         </Form>
