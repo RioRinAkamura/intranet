@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Badge, Dropdown, Menu } from 'antd';
 import styled from 'styled-components';
-import { BellOutlined, DownOutlined } from '@ant-design/icons';
+import { BellOutlined } from '@ant-design/icons';
 
 const notifyMenu = (
   <Menu>

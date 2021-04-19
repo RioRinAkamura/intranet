@@ -3,7 +3,15 @@
  * HeaderButton
  *
  */
-import { Avatar, Button, Col, Popover, Row, Table, TablePaginationConfig } from 'antd';
+import {
+  Avatar,
+  Button,
+  Col,
+  Popover,
+  Row,
+  Table,
+  TablePaginationConfig,
+} from 'antd';
 import { DialogModal } from 'app/components/DialogModal';
 import * as React from 'react';
 import CSVReader from 'react-csv-reader';
@@ -13,7 +21,6 @@ import styled from 'styled-components/macro';
 import { UsersMessages } from '../../messages';
 import { CSVLink } from 'react-csv';
 import { request } from 'utils/request';
-import { ColumnsType } from 'antd/lib/table';
 import { UserProfile } from '../..';
 
 interface HeaderButtonProps {
@@ -24,7 +31,7 @@ interface HeaderButtonProps {
 
 export const HeaderButton = (props: HeaderButtonProps) => {
   const { pagination, data, selectedRows } = props;
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const history = useHistory();
 
   const [previewModal, setPreviewModal] = React.useState({
@@ -56,7 +63,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   };
 
   const handleImport = () => {
-    const data = previewModal.data;
+    // const data = previewModal.data;
+    console.log('Handle Import CSV');
     // if (data.length > 0) {
     //   dispatch(actions.importUsers(data));
     // }

@@ -1,11 +1,10 @@
 import { Layout } from 'antd';
 import * as React from 'react';
 import { RouteProps } from 'react-router';
-import { HeaderAdmin } from '../HeaderAdmin';
 
 import Sidebar from '../Sidebar';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer } = Layout;
 
 type AdminRouteProps = {
   component?: React.ComponentType;

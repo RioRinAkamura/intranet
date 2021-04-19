@@ -1,6 +1,5 @@
 import { LoginMessages } from 'app/pages/Login/messages';
 import config from 'config';
-import { translations } from 'locales/translations';
 import React from 'react';
 import {
   GoogleLogin,
@@ -8,9 +7,7 @@ import {
   GoogleLoginResponseOffline,
 } from 'react-google-login';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
-import { useAuthSlice } from '../Auth/slice';
 
 interface Props {}
 
@@ -20,9 +17,7 @@ interface Login {
 }
 
 export const GoogleLoginButton = (props: Props) => {
-  const { t, i18n } = useTranslation();
-  const { actions } = useAuthSlice();
-  const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const onSuccess = (
     response: GoogleLoginResponse | GoogleLoginResponseOffline,
@@ -32,7 +27,8 @@ export const GoogleLoginButton = (props: Props) => {
         tokenId: response.tokenId,
         googleId: response.googleId,
       };
-      dispatch(actions.loginWithGoogle(data));
+      console.log('login google: ', data);
+      // dispatch(actions.loginWithGoogle(data));
     }
   };
   const onFailure = res => {

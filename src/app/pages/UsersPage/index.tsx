@@ -8,12 +8,10 @@ import {
   Form,
   Tooltip,
   Avatar,
-  List,
-  Spin,
   Collapse,
   TablePaginationConfig,
 } from 'antd';
-import React, { Key, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Key, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
 import { request } from 'utils/request';
@@ -21,22 +19,17 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  LoadingOutlined,
-  MailFilled,
-  PhoneFilled,
   SearchOutlined,
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { useUserspageSlice } from './slice';
-import { isMobile, isMobileOnly } from 'react-device-detect';
-import { isEmpty, isEqual } from 'lodash';
+import { isMobileOnly } from 'react-device-detect';
+import { isEqual } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { UsersMessages } from './messages';
 import { Helmet } from 'react-helmet-async';
-
-import { useNotify } from 'app/components/ToastNotification';
 import { useHistory } from 'react-router';
 import { SearchUsers } from './components/SearchUsers/Loadable';
 import { HeaderButton } from './components/HeaderButton/Loadable';
@@ -68,7 +61,7 @@ interface Filters {
 }
 
 export const Users: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
@@ -97,11 +90,6 @@ export const Users: React.FC = () => {
 
   const [searchForm] = Form.useForm();
   const history = useHistory();
-
-  const { notify } = useNotify();
-  useEffect(() => {
-    fetchData(tablePagination);
-  }, []);
 
   const fetchData = (pagination: Pagination) => {
     setLoading(true);

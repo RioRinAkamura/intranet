@@ -1,5 +1,4 @@
-import { Badge } from 'antd';
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components/macro';
 import { Badges } from './Badges';
 

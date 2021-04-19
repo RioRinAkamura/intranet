@@ -1,7 +1,14 @@
-import { UserIdentity } from './provider';
+import { UserIdentity } from './types';
 import { useGetIdentity } from './useGetIdentity';
 
-export const useMe = (): UserIdentity | null => {
-  const getMe = useGetIdentity();
-  return getMe;
+/**
+ * An alias of useGetIdentity
+ * @returns
+ */
+export const useMe = (): {
+  identity?: UserIdentity | null;
+  loading: boolean;
+  error?: Error;
+} => {
+  return useGetIdentity();
 };

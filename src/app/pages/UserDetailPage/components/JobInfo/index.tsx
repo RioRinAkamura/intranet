@@ -6,7 +6,6 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { messages } from './messages';
 import { Col, Divider, Form, Input, Row, Select } from 'antd';
 import { UsersMessages } from 'app/pages/UsersPage/messages';
 
@@ -14,7 +13,7 @@ interface Props {}
 
 export const JobInfo = (props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>

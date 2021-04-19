@@ -6,13 +6,12 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { UserDetailPageMessages } from './messages';
 import { Avatar, Button, Col, Form, Input, message, Row, Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { UsersMessages } from '../UsersPage/messages';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
-import { RouteComponentProps, useLocation, useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { JobInfo } from './components/JobInfo/Loadable';
 import { BankAccounts } from './components/BankAccounts/Loadable';
@@ -51,7 +50,7 @@ interface LocationState {
 export function UserDetailPage(props: Props) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id } = useParams<Record<string, string | undefined>>();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const location = useLocation<LocationState>();
 

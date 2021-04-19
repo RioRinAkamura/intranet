@@ -1,16 +1,13 @@
 import { Col, Row } from 'antd';
-import { translations } from 'locales/translations';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
-import { StyleConstants } from 'styles/StyleConstants';
 import { LoginForm } from './components/LoginForm';
 import { LoginMessages } from './messages';
 
 export const Login: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Wrapper>

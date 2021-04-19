@@ -6,7 +6,6 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { messages } from './messages';
 import { Button, Col, Divider, Form, Input, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
@@ -120,7 +119,6 @@ const FormItem = styled(Form.Item)`
     font-weight: 500;
   }
 `;
-
 
 const WrapperBank = styled.div`
   height: 35vh;

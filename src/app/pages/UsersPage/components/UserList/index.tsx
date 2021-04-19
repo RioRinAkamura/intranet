@@ -5,8 +5,6 @@
  */
 import * as React from 'react';
 import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
-import { messages } from './messages';
 import { Avatar, Button, Col, List, Row, Spin } from 'antd';
 import {
   DeleteOutlined,
@@ -30,7 +28,6 @@ interface Props {
 export const UserList = (props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { loading, data, isMore, moreLoading, onDelete } = props;
-  const { t, i18n } = useTranslation();
   const history = useHistory();
 
   return (
