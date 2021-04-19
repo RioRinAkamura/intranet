@@ -21,7 +21,7 @@ import styled from 'styled-components/macro';
 import { UsersMessages } from '../../messages';
 import { CSVLink } from 'react-csv';
 import { request } from 'utils/request';
-import { UserProfile } from '../..';
+import { UserProfile } from '../../../types';
 
 interface HeaderButtonProps {
   pagination: TablePaginationConfig;
@@ -52,10 +52,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   };
 
   const getAllUsers = (event, done) => {
-    // setLoading(true);
     request('https://reqres.in/api/users').then((response: any) => {
       setUsers(response.data);
-      // setLoading(false);
       if (users) {
         done();
       }
@@ -63,11 +61,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   };
 
   const handleImport = () => {
-    // const data = previewModal.data;
     console.log('Handle Import CSV');
-    // if (data.length > 0) {
-    //   dispatch(actions.importUsers(data));
-    // }
   };
 
   const columns = [

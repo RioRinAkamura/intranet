@@ -18,8 +18,8 @@ import { PrivateRoute, PublicRoute } from './components/Auth/Route';
 import { HomePage } from './pages/HomePage/Loadable';
 import { Login } from './pages/Login/Loadable';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
-import { Users } from './pages/UsersPage/Loadable';
-import { UserDetailPage } from './pages/UserDetailPage/Loadable';
+import { Users } from './pages/UserPage/UserListPage/Loadable';
+import { UserDetailPage } from './pages/UserPage/UserDetailPage/Loadable';
 import { authProvider } from './components/Auth/defaultAuthProvider';
 import { AuthContextProvider } from './components/Auth/Context';
 

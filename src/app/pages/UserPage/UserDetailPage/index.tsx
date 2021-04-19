@@ -8,7 +8,6 @@ import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { Avatar, Button, Col, Form, Input, message, Row, Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { UsersMessages } from '../UsersPage/messages';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { useLocation, useParams } from 'react-router';
@@ -16,6 +15,8 @@ import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { JobInfo } from './components/JobInfo/Loadable';
 import { BankAccounts } from './components/BankAccounts/Loadable';
 import { SocialNetwork } from './components/SocialNetwork/Loadable';
+import { UserDetailMessages } from './messages';
+import { useGetUserDetail } from './useGetUserDetail';
 
 interface Props {}
 
@@ -48,16 +49,23 @@ interface LocationState {
 }
 
 export function UserDetailPage(props: Props) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id } = useParams<Record<string, string | undefined>>();
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const location = useLocation<LocationState>();
 
+  const { user } = useGetUserDetail(id);
+
   const [imageURL, setImageURL] = React.useState('');
   const [loadingUpload, setLoadingUpload] = React.useState(false);
   const [isCreate, setIsCreate] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
+
+  React.useEffect(() => {
+    if (user) {
+      form.setFieldsValue({ ...user });
+    }
+  }, [form, user]);
 
   const handleChange = (info: UploadChangeParam<UploadFile<any>>) => {
     if (info.file.status === 'uploading') {
@@ -94,7 +102,7 @@ export function UserDetailPage(props: Props) {
     <div>
       {loadingUpload ? <LoadingOutlined /> : <PlusOutlined />}
       <div style={{ marginTop: 8 }}>
-        {t(UsersMessages.modalFormAvatarUpload())}
+        {t(UserDetailMessages.formAvatarUpload())}
       </div>
     </div>
   );
@@ -135,7 +143,10 @@ export function UserDetailPage(props: Props) {
                 block
                 size="large"
                 shape="round"
-                onClick={() => setIsEdit(false)}
+                onClick={() => {
+                  setIsEdit(false);
+                  handleSubmit();
+                }}
               >
                 Save
               </Button>
@@ -157,13 +168,12 @@ export function UserDetailPage(props: Props) {
             <Row gutter={[8, 8]} align="middle" justify="center">
               <Col span={24}>
                 <FormItem
-                  // label={t(UsersMessages.modalFormAvatarLabel())}
                   name="avatar"
                   valuePropName="file"
                   rules={[
                     {
                       required: true,
-                      message: t(UsersMessages.modalFormEmptyAvatar()),
+                      message: t(UserDetailMessages.formEmptyAvatar()),
                     },
                   ]}
                 >

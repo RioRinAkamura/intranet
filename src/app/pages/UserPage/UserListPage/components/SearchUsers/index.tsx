@@ -16,7 +16,6 @@ interface Props {
 }
 
 export const SearchUsers = memo((props: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { form, onSearch, onReset } = props;
   const { t } = useTranslation();
 

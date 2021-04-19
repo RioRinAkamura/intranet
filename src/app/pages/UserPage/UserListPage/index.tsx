@@ -11,10 +11,9 @@ import {
   Collapse,
   TablePaginationConfig,
 } from 'antd';
-import React, { Key, useCallback, useEffect, useState } from 'react';
+import React, { Key, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
-import { request } from 'utils/request';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -34,37 +33,14 @@ import { useHistory } from 'react-router';
 import { SearchUsers } from './components/SearchUsers/Loadable';
 import { HeaderButton } from './components/HeaderButton/Loadable';
 import { UserList } from './components/UserList/Loadable';
+import { Filters, Pagination, UserProfile } from '../types';
+import { useGetUserList } from './useGetUserList';
 const { Panel } = Collapse;
-
-export interface UserProfile {
-  id: string;
-  avatar: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-}
-
-interface Pagination {
-  current?: number;
-  pageSize?: number;
-  total?: number;
-  totalPage?: number;
-  pageSizeOptions?: string[];
-  showSizeChanger?: boolean;
-}
-
-interface Filters {
-  email?: string | null;
-  first_name?: string | null;
-  last_name?: string | null;
-}
 
 export const Users: React.FC = () => {
   const { t } = useTranslation();
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
-  const [data, setData] = useState([]);
   const [tablePagination, setTablePagination] = useState<Pagination>({
     current: 1,
     pageSize: 4,
@@ -77,10 +53,12 @@ export const Users: React.FC = () => {
     email: null,
     first_name: null,
     last_name: null,
+    phone: null,
   });
+  const { users, loading, resPagination } = useGetUserList(tablePagination);
   const [tableSort, setTableSort] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [moreLoading, setMoreLoading] = useState(false);
+  const [moreLoading, setMoreLoading] = useState(true);
+  const [userList, setUserList] = useState<UserProfile[]>([]);
   const [isMore, setIsMore] = useState(true);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -90,24 +68,6 @@ export const Users: React.FC = () => {
 
   const [searchForm] = Form.useForm();
   const history = useHistory();
-
-  const fetchData = (pagination: Pagination) => {
-    setLoading(true);
-    request(
-      'https://reqres.in/api/users?page=' +
-        pagination.current +
-        '&per_page=' +
-        pagination.pageSize,
-    ).then((response: any) => {
-      setData(response.data);
-      tablePagination.total = response.total;
-      tablePagination.current = response.page;
-      tablePagination.totalPage = response.total_pages;
-      tablePagination.pageSize = pagination.pageSize;
-      setTablePagination(tablePagination);
-      setLoading(false);
-    });
-  };
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -121,43 +81,13 @@ export const Users: React.FC = () => {
       setTableSort(sorter);
     }
     if (!filterChanges && !sortChanges) {
-      fetchData(
-        filterChanges
-          ? { ...tablePagination }
-          : { ...pagination, totalPage: 0 },
-      );
+      setTablePagination({ ...pagination });
     }
   };
 
-  const fetchLoadMoreData = useCallback(
-    (pagination: Pagination) => {
-      setLoading(true);
-      request(
-        'https://reqres.in/api/users?page=' +
-          pagination.current +
-          '&per_page=' +
-          pagination.pageSize,
-      ).then((response: any) => {
-        if (response.data.length > 0) {
-          let currentData = data;
-          const list = currentData.concat(response.data);
-          setData(list);
-          tablePagination.total = response.total;
-          tablePagination.current = response.page;
-          tablePagination.totalPage = response.total_pages;
-          setTablePagination({
-            ...tablePagination,
-          });
-          if (tablePagination.current === tablePagination.totalPage) {
-            setIsMore(false);
-          }
-          setLoading(false);
-          setMoreLoading(false);
-        }
-      });
-    },
-    [data, tablePagination],
-  );
+  useEffect(() => {
+    setUserList(prev => prev.concat(users));
+  }, [users]);
 
   useEffect(() => {
     const handleLoadMore = () => {
@@ -165,14 +95,15 @@ export const Users: React.FC = () => {
         window.innerHeight + document.documentElement.scrollTop ===
         document.scrollingElement?.scrollHeight
       ) {
-        const isNotMore = tablePagination.current === tablePagination.totalPage;
-        if (!isNotMore) {
-          setMoreLoading(true);
-          if (!moreLoading) {
-            fetchLoadMoreData({
+        if (moreLoading) {
+          if (resPagination.total !== userList.length) {
+            setTablePagination({
               ...tablePagination,
               current: tablePagination.current && tablePagination.current + 1,
             });
+          } else {
+            setIsMore(false);
+            setMoreLoading(false);
           }
         }
       }
@@ -183,7 +114,7 @@ export const Users: React.FC = () => {
         document.removeEventListener('scroll', handleLoadMore);
       };
     }
-  }, [fetchLoadMoreData, isMore, moreLoading, tablePagination]);
+  }, [isMore, moreLoading, resPagination.total, tablePagination, userList]);
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({
@@ -281,7 +212,7 @@ export const Users: React.FC = () => {
 
   const resetTotalSearch = () => {
     searchForm.resetFields();
-    fetchData({ ...tablePagination, current: 1 });
+    setTablePagination({ ...tablePagination, current: 1 });
   };
 
   const columns = [
@@ -320,6 +251,11 @@ export const Users: React.FC = () => {
       ...getColumnSearchProps('email'),
     },
     {
+      title: 'Phone Number',
+      dataIndex: 'phone',
+      ...getColumnSearchProps('phone'),
+    },
+    {
       title: t(UsersMessages.listOptionsTitle()),
       dataIndex: 'id',
       render: (text, record: UserProfile, index: number) => {
@@ -343,7 +279,7 @@ export const Users: React.FC = () => {
                 icon={<EditOutlined />}
                 onClick={() => {
                   history.push({
-                    pathname: '/users/' + text,
+                    pathname: '/employees/' + text,
                     state: { edit: true },
                   });
                 }}
@@ -400,7 +336,7 @@ export const Users: React.FC = () => {
       {isMobileOnly ? (
         <UserList
           loading={loading}
-          data={data}
+          data={userList}
           isMore={isMore}
           moreLoading={moreLoading}
           onDelete={(id: string) => setDeleteModal({ open: true, id: id })}
@@ -423,8 +359,8 @@ export const Users: React.FC = () => {
           </Col>
           <Col span={12}>
             <HeaderButton
-              pagination={tablePagination}
-              data={data}
+              pagination={resPagination}
+              data={users}
               selectedRows={selectedRows}
             />
           </Col>
@@ -436,8 +372,8 @@ export const Users: React.FC = () => {
               }}
               columns={columns}
               rowKey="id"
-              dataSource={data}
-              pagination={tablePagination}
+              dataSource={users}
+              pagination={resPagination}
               loading={loading}
               onChange={handleTableChange}
               scroll={{ x: 'max-content' }}

@@ -14,8 +14,8 @@ import {
   MailFilled,
   PhoneFilled,
 } from '@ant-design/icons';
-import { UserProfile } from '../..';
 import { useHistory } from 'react-router';
+import { UserProfile } from '../../../types';
 
 interface Props {
   loading: boolean;
@@ -26,7 +26,6 @@ interface Props {
 }
 
 export const UserList = (props: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { loading, data, isMore, moreLoading, onDelete } = props;
   const history = useHistory();
 

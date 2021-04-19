@@ -16,6 +16,9 @@
     "title": "Quick Scaffolding",
     "description": "Automate the creation of components, features, routes, selectors and sagas - and their tests - right from the CLI! Avoid fighting the glue of your code and focus on your app!"
   },
+  "translations": {
+    "someThing": "default value"
+  },
   "LoginPage": {
     "title": "Login",
     "description": "Login Page",
@@ -28,125 +31,133 @@
       "emptyPassword": "Please input your password!",
       "rememberMe": "Remember me",
       "forgotPassword": "Forgot your password",
-      "dividerText": "Or",
       "loginButton": "Login",
+      "loginFacebookButton": "Login with Facebook",
       "loginGoogleButton": "Login with Google",
-      "loginFacebookButton": "Login with Facebook"
+      "dividerText": "Or"
     }
   },
-  "UsersPage": {
-    "title": "Users Page",
-    "description": "Users Page",
-    "list": {
-      "avatar": "Avatar",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "email": "Email",
-      "options": "Options",
-      "viewTooltip": "View",
-      "EditTooltip": "Edit",
-      "DeleteTooltip": "Delete",
-      "filter": {
-        "inputPlaceholder": "Search",
-        "searchButton": "Search",
-        "resetButton": "Reset",
-        "filterButton": "Filter"
-      }
-    },
-    "createUserButton": "Create User",
-    "exportCSV": "Export as CSV",
-    "importCSV": "Import CSV",
-    "search": {
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "email": "Email",
-      "phoneNumber": "Phone Number",
-      "searchButton": "Search",
-      "resetButton": "Reset",
-      "firstNamePlaceholder": "Search by first name",
-      "lastNamePlaceholder": "Search by last name",
-      "emailPlaceholder": "Search by email",
-      "phoneNumberPlaceholder": "Search by phone number",
-      "title": "Search"
-    },
+  "UserDetailPage": {
+    "title": "User Detail",
+    "description": "User Detail",
+    "createTitle": "Create User",
     "modal": {
-      "createTitle": "Create User",
-      "editTitle": "Edit User",
-      "profileTitle": "User Profile",
-      "previewCSVTitle": "Preview Import File",
       "form": {
         "avatar": {
           "upload": "Upload",
           "label": "Avatar",
-          "empty": "Please upload user avatar!"
+          "empty": "Please upload user's avatar!"
         },
-        "firstName": {
-          "label": "First Name",
-          "placeholder": "User first name",
-          "empty": "Please input user first name!"
-        },
-        "lastName": {
-          "label": "Last Name",
-          "placeholder": "User last name",
-          "empty": "Please input user last name!"
-        },
-        "email": {
-          "label": "Email",
-          "placeholder": "User email",
-          "empty": "Please input user email!",
-          "invalid": "User's email is invalid!"
-        },
-        "DOB": {
-          "label": "Date of Birth",
-          "placeholder": "Select user's DOB",
-          "empty": "Please input user's date of birth!"
-        },
-        "gender": {
-          "label": "Gender",
-          "male": {
-            "label": "Male"
+        "profile": {
+          "title": "Profile Infomation",
+          "firstName": {
+            "label": "First Name",
+            "placeholder": "User's first name",
+            "empty": "Please input user first name!"
           },
-          "female": {
-            "label": "Female"
+          "lastName": {
+            "label": "Last Name",
+            "placeholder": "User's last name",
+            "empty": "Please input user last name!"
+          },
+          "DOB": {
+            "label": "Date of Birth",
+            "placeholder": "Select user's DOB",
+            "empty": "Please input user's date of birth!"
+          },
+          "gender": {
+            "label": "Gender",
+            "male": {
+              "label": "Male"
+            },
+            "female": {
+              "label": "Female"
+            }
+          },
+          "phoneNumber": {
+            "label": "Phone Number",
+            "placeholder": "User's phone number",
+            "empty": "Please input user's phone number!",
+            "invalid": "User's phone number is invalid!"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "User's email",
+            "empty": "Please input user's email!",
+            "invalid": "User's email is invalid!"
+          },
+          "status": {
+            "label": "Status",
+            "single": {
+              "label": "Single"
+            },
+            "married": {
+              "label": "Married"
+            }
+          },
+          "idNumber": {
+            "label": "Id Number",
+            "placeholder": "User's id number"
+          },
+          "issuedDate": {
+            "label": "Issued Date",
+            "placeholder": "User's issued date"
+          },
+          "issuedPlace": {
+            "label": "Issued Place",
+            "placeholder": "User's issued place"
+          },
+          "socialInsuranceNo": {
+            "label": "Social Insurance No",
+            "placeholder": "User's social insurance no"
           }
         },
-        "phoneNumber": {
-          "label": "Phone Number",
-          "placeholder": "User phone number",
-          "empty": "Please input user phone number!",
-          "invalid": "User's phone number is invalid!"
-        },
-        "status": {
-          "label": "Status",
-          "single": {
-            "label": "Single"
+        "job": {
+          "title": "Job Infomation",
+          "jobTitle": {
+            "label": "Job Title",
+            "placeholder": "Input user's job title!",
+            "empty": "Please input user's job title!"
           },
-          "married": {
-            "label": "Married"
+          "type": {
+            "label": "Type",
+            "fullTime": {
+              "label": "Full-time"
+            },
+            "partTim": {
+              "label": "Part-time"
+            },
+            "probation": {
+              "label": "Probation"
+            },
+            "etc": {
+              "label": "Etc"
+            }
           }
         },
-        "type": {
-          "label": "Type",
-          "fullTime": {
-            "label": "Full-time"
+        "bank": {
+          "title": "Bank Accounts",
+          "name": {
+            "label": "Bank Name",
+            "placeholder": "User's bank name",
+            "empty": "Please input user's bank name"
           },
-          "partTim": {
-            "label": "Part-time"
+          "number": {
+            "label": "Bank Number",
+            "placeholder": "User's bank number",
+            "empty": "Please input user's bank number"
           },
-          "probation": {
-            "label": "Probation"
+          "branch": {
+            "label": "Branch",
+            "placeholder": "User's bank branch",
+            "empty": "Please input user's bank branch"
           },
-          "etc": {
-            "label": "Etc"
+          "button": {
+            "add": "Add Bank Account"
           }
         },
-        "jobTitle": {
-          "label": "Job Title",
-          "placeholder": "Input user's job title!",
-          "empty": "Please input user's job title!"
-        },
-        "socials": {
-          "label": "Social Network",
+        "social": {
+          "title": "Social Network",
           "skype": {
             "label": "Skype",
             "placeholder": "Input user's Skype"
@@ -172,21 +183,63 @@
             "placeholder": "Input user's Gitlab"
           }
         },
-        "submitButton": "Save",
+        "button": {
+          "edit": "Edit",
+          "submit": "Save",
+          "cancel": "Cancel"
+        }
+      }
+    }
+  },
+  "UsersPage": {
+    "title": "Login",
+    "description": "Login Page",
+    "createUserButton": "Create User",
+    "exportCSV": "Export as CSV",
+    "exportAllUser": "Export as CSV for all",
+    "exportPerPage": "Export as CSV this page",
+    "exportSelected": "Export as CSV for selected rows",
+    "importCSV": "Import CSV",
+    "list": {
+      "avatar": "Avatar",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "options": "Options",
+      "viewTooltip": "View",
+      "EditTooltip": "Edit",
+      "DeleteTooltip": "Delete",
+      "filter": {
+        "inputPlaceholder": "Search",
+        "searchButton": "Search",
+        "resetButton": "Reset",
+        "filterButton": "Filter"
+      }
+    },
+    "search": {
+      "title": "Search",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Search by first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Search by last name",
+      "email": "Email",
+      "emailPlaceholder": "Search by email",
+      "phoneNumber": "Phone Number",
+      "phoneNumberPlaceholder": "Search by phone number",
+      "searchButton": "Search",
+      "resetButton": "Reset"
+    },
+    "modal": {
+      "createTitle": "Create User",
+      "editTitle": "Edit User",
+      "profileTitle": "User Profile",
+      "previewCSVTitle": "Preview Import File",
+      "form": {
         "deleteButton": "Delete",
         "deleteContent": "Are you sure to delete this user?",
         "cancelButton": "Cancel",
-        "job": {
-          "label": "Job Infomation"
-        }
-      },
-      "infomation": "Profile Infomation"
-    },
-    "exportAllUser": "Export as CSV for all",
-    "exportPerPage": "Export as CSV this page",
-    "exportSelected": "Export as CSV for selected rows"
-  },
-  "translations": {
-    "someThing": "default value"
+        "submitButton": "Save"
+      }
+    }
   }
 }

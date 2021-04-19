@@ -8,17 +8,17 @@ import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { Button, Col, Divider, Form, Input, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { UserDetailMessages } from '../../messages';
 
 interface Props {}
 
 export const BankAccounts = (props: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>
       <Divider orientation="left">
-        <b>Bank Accounts</b>
+        <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
       </Divider>
       <WrapperBank>
         <Form.List name="bank_accounts">
@@ -34,38 +34,46 @@ export const BankAccounts = (props: Props) => {
                   <Col md={11} xs={24}>
                     <FormItem
                       {...restField}
-                      label={`Bank name ${name + 1}`}
+                      label={`${t(
+                        UserDetailMessages.formBankAccountsTitle(),
+                      )} ${name + 1}`}
                       name={[name, 'bank_name']}
                       fieldKey={[fieldKey, 'bank_name']}
                       rules={[
                         {
                           required: true,
-                          message: 'Missing bank name',
+                          message: t(UserDetailMessages.formEmptyBankName()),
                         },
                       ]}
                     >
                       <Input
                         size="large"
-                        placeholder="Input user's bank name"
+                        placeholder={t(
+                          UserDetailMessages.formBankNamePlaceholder(),
+                        )}
                       />
                     </FormItem>
                   </Col>
                   <Col md={11} xs={24}>
                     <FormItem
                       {...restField}
-                      label={`Bank number ${name + 1}`}
+                      label={`${t(UserDetailMessages.formBankNumberLabel())} ${
+                        name + 1
+                      }`}
                       name={[name, 'number']}
                       fieldKey={[fieldKey, 'number']}
                       rules={[
                         {
                           required: true,
-                          message: 'Missing number',
+                          message: t(UserDetailMessages.formEmptyBankNumber()),
                         },
                       ]}
                     >
                       <Input
                         size="large"
-                        placeholder="Input user's bank number"
+                        placeholder={t(
+                          UserDetailMessages.formBankNumberPlaceholder(),
+                        )}
                       />
                     </FormItem>
                   </Col>
@@ -75,19 +83,23 @@ export const BankAccounts = (props: Props) => {
                   <Col md={24} xs={24}>
                     <FormItem
                       {...restField}
-                      label={`Branch ${name + 1}`}
+                      label={`${t(UserDetailMessages.formBankBranchLabel())} ${
+                        name + 1
+                      }`}
                       name={[name, 'branch']}
                       fieldKey={[fieldKey, 'branch']}
                       rules={[
                         {
                           required: true,
-                          message: 'Missing branch',
+                          message: t(UserDetailMessages.formEmptyBankBranch()),
                         },
                       ]}
                     >
                       <Input
                         size="large"
-                        placeholder="Input user's bank branch"
+                        placeholder={t(
+                          UserDetailMessages.formBankBranchPlaceholder(),
+                        )}
                       />
                     </FormItem>
                   </Col>
@@ -100,7 +112,7 @@ export const BankAccounts = (props: Props) => {
                   block
                   icon={<PlusOutlined />}
                 >
-                  Add field
+                  {t(UserDetailMessages.formBankAddButton())}
                 </Button>
               </FormItem>
             </>

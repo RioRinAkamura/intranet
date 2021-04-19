@@ -19,11 +19,6 @@ const renderer = createRenderer();
 
 describe('<DialogModal  />', () => {
   let utils;
-  // it('should match snapshot', () => {
-  //   renderer.render(<DialogModal>Test Modal</DialogModal>);
-  //   const renderedOutput = renderer.getRenderOutput();
-  //   expect(renderedOutput).toMatchSnapshot();
-  // });
 
   it('shoud render dialog modal', () => {
     const { queryByText, getByRole } = render(

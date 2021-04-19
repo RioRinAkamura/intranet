@@ -7,7 +7,6 @@ import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { Col, Divider, Form, Input, Row } from 'antd';
-import { UsersMessages } from 'app/pages/UsersPage/messages';
 import {
   FacebookFilled,
   GithubFilled,
@@ -16,23 +15,23 @@ import {
   SkypeFilled,
   TwitterCircleFilled,
 } from '@ant-design/icons';
+import { UserDetailMessages } from '../../messages';
 
 interface Props {}
 
 export const SocialNetwork = (props: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>
       <Divider orientation="left">
-        <b>{t(UsersMessages.modalFormSocialsLabel())}</b>
+        <b>{t(UserDetailMessages.formSocialNetworkTitle())}</b>
       </Divider>
       <Row gutter={[16, 16]}>
         <Col lg={12} xs={24}>
           <FormItem
             name="skype"
-            label={t(UsersMessages.modalFormSocialsSkypeLabel())}
+            label={t(UserDetailMessages.formSocialsSkypeLabel())}
           >
             <Input
               size="large"
@@ -45,14 +44,14 @@ export const SocialNetwork = (props: Props) => {
                   }}
                 />
               }
-              placeholder={t(UsersMessages.modalFormSocialsSkypePlaceholder())}
+              placeholder={t(UserDetailMessages.formSocialsSkypePlaceholder())}
             />
           </FormItem>
         </Col>
         <Col lg={12} xs={24}>
           <FormItem
             name="twitter"
-            label={t(UsersMessages.modalFormSocialsTwitterLabel())}
+            label={t(UserDetailMessages.formSocialsTwitterLabel())}
           >
             <Input
               size="large"
@@ -66,7 +65,7 @@ export const SocialNetwork = (props: Props) => {
                 />
               }
               placeholder={t(
-                UsersMessages.modalFormSocialsTwitterPlaceholder(),
+                UserDetailMessages.formSocialsTwitterPlaceholder(),
               )}
             />
           </FormItem>
@@ -74,7 +73,7 @@ export const SocialNetwork = (props: Props) => {
         <Col lg={12} xs={24}>
           <FormItem
             name="FB"
-            label={t(UsersMessages.modalFormSocialsFacebookLabel())}
+            label={t(UserDetailMessages.formSocialsFacebookLabel())}
           >
             <Input
               size="large"
@@ -88,7 +87,7 @@ export const SocialNetwork = (props: Props) => {
                 />
               }
               placeholder={t(
-                UsersMessages.modalFormSocialsFacebookPlaceholder(),
+                UserDetailMessages.formSocialsFacebookPlaceholder(),
               )}
             />
           </FormItem>
@@ -96,7 +95,7 @@ export const SocialNetwork = (props: Props) => {
         <Col lg={12} xs={24}>
           <FormItem
             name="linkedin"
-            label={t(UsersMessages.modalFormSocialsLinkedinLabel())}
+            label={t(UserDetailMessages.formSocialsLinkedinLabel())}
           >
             <Input
               size="large"
@@ -110,7 +109,7 @@ export const SocialNetwork = (props: Props) => {
                 />
               }
               placeholder={t(
-                UsersMessages.modalFormSocialsLinkedinPlaceholder(),
+                UserDetailMessages.formSocialsLinkedinPlaceholder(),
               )}
             />
           </FormItem>
@@ -118,7 +117,7 @@ export const SocialNetwork = (props: Props) => {
         <Col lg={12} xs={24}>
           <FormItem
             name="github"
-            label={t(UsersMessages.modalFormSocialsGithubLabel())}
+            label={t(UserDetailMessages.formSocialsGithubLabel())}
           >
             <Input
               size="large"
@@ -131,14 +130,14 @@ export const SocialNetwork = (props: Props) => {
                   }}
                 />
               }
-              placeholder={t(UsersMessages.modalFormSocialsGithubPlaceholder())}
+              placeholder={t(UserDetailMessages.formSocialsGithubPlaceholder())}
             />
           </FormItem>
         </Col>
         <Col md={12} xs={24}>
           <FormItem
             name="gitlab"
-            label={t(UsersMessages.modalFormSocialsGitlabLabel())}
+            label={t(UserDetailMessages.formSocialsGitlabLabel())}
           >
             <Input
               size="large"
@@ -151,7 +150,7 @@ export const SocialNetwork = (props: Props) => {
                   }}
                 />
               }
-              placeholder={t(UsersMessages.modalFormSocialsGitlabPlaceholder())}
+              placeholder={t(UserDetailMessages.formSocialsGitlabPlaceholder())}
             />
           </FormItem>
         </Col>

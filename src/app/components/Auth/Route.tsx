@@ -5,25 +5,8 @@ import config from '../../../config';
 import { useAuthState } from './useAuthState';
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
-  // const [auth, setAuth] = useState(true);
-  // const authenticated = useAuthState();
   const { authenticated, loading } = useAuthState();
   if (loading) return null;
-
-  // const getAuth = async () => {
-  //   try {
-  //     const response = await authenticated;
-  //     if (response) {
-  //       setAuth(response.authenticated);
-  //     }
-  //   } catch (error) {
-  //     setAuth(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getAuth();
-  // }, []);
 
   return (
     // Show the component only when the user is logged in

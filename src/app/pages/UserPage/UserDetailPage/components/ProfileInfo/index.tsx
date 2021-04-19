@@ -6,121 +6,120 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { UsersMessages } from 'app/pages/UsersPage/messages';
 import { Col, DatePicker, Divider, Form, Input, Radio, Row } from 'antd';
+import { UserDetailMessages } from '../../messages';
 
 interface Props {}
 
 export const ProfileInfo = (props: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Row gutter={[16, 16]}>
       <Divider orientation="left">
-        <b>{t(UsersMessages.modalInfomationTitle())}</b>
+        <b>{t(UserDetailMessages.formProfileTitle())}</b>
       </Divider>
       <Col md={6} xs={24}>
         <FormItem
-          label={t(UsersMessages.modalFormFirstNameLabel())}
+          label={t(UserDetailMessages.formFirstNameLabel())}
           name="first_name"
           rules={[
             {
               required: true,
-              message: t(UsersMessages.modalFormEmptyFirstName()),
+              message: t(UserDetailMessages.formEmptyFirstName()),
             },
           ]}
         >
           <Input
             size="large"
-            placeholder={t(UsersMessages.modalFormFirstNamePlaceholder())}
+            placeholder={t(UserDetailMessages.formFirstNamePlaceholder())}
           />
         </FormItem>
       </Col>
       <Col md={6} xs={24}>
         <FormItem
-          label={t(UsersMessages.modalFormLastNameLabel())}
+          label={t(UserDetailMessages.formLastNameLabel())}
           name="last_name"
           rules={[
             {
               required: true,
-              message: t(UsersMessages.modalFormEmptyLastName()),
+              message: t(UserDetailMessages.formEmptyLastName()),
             },
           ]}
         >
           <Input
             size="large"
-            placeholder={t(UsersMessages.modalFormLastNamePlaceholder())}
+            placeholder={t(UserDetailMessages.formLastNamePlaceholder())}
           />
         </FormItem>
       </Col>
       <Col md={6} xs={24}>
-        <FormItem name="dob" label={t(UsersMessages.modalFormDOBLabel())}>
+        <FormItem name="dob" label={t(UserDetailMessages.formDOBLabel())}>
           <DatePicker
             size="large"
-            placeholder={t(UsersMessages.modalFormDOBPlaceholder())}
+            placeholder={t(UserDetailMessages.formDOBPlaceholder())}
           />
         </FormItem>
       </Col>
       <Col md={6} xs={24}>
-        <FormItem name="gender" label={t(UsersMessages.modalFormGenderLabel())}>
+        <FormItem name="gender" label={t(UserDetailMessages.formGenderLabel())}>
           <Radio.Group>
             <Radio value="Male">
-              {t(UsersMessages.modalFormGenderMaleLabel())}
+              {t(UserDetailMessages.formGenderMaleLabel())}
             </Radio>
             <Radio value="Female">
-              {t(UsersMessages.modalFormGenderFemaleLabel())}
+              {t(UserDetailMessages.formGenderFemaleLabel())}
             </Radio>
           </Radio.Group>
         </FormItem>
       </Col>
       <Col md={6} xs={24}>
         <FormItem
-          label={t(UsersMessages.modalFormPhoneNumberLabel())}
+          label={t(UserDetailMessages.formPhoneNumberLabel())}
           name="phoneNumber"
           rules={[
             {
               required: true,
-              message: t(UsersMessages.modalFormEmptyPhoneNumber()),
+              message: t(UserDetailMessages.formEmptyPhoneNumber()),
             },
           ]}
         >
           <Input
             size="large"
-            placeholder={t(UsersMessages.modalFormPhoneNumberPlaceholder())}
+            placeholder={t(UserDetailMessages.formPhoneNumberPlaceholder())}
           />
         </FormItem>
       </Col>
       <Col md={12} xs={24}>
         <FormItem
-          label={t(UsersMessages.modalFormEmailLabel())}
+          label={t(UserDetailMessages.formEmailLabel())}
           name="email"
           rules={[
             {
               required: true,
-              message: t(UsersMessages.modalFormEmptyEmail()),
+              message: t(UserDetailMessages.formEmptyEmail()),
             },
             {
               type: 'email',
-              message: t(UsersMessages.modalFormInvalidEmail()),
+              message: t(UserDetailMessages.formInvalidEmail()),
             },
           ]}
         >
           <Input
             size="large"
-            placeholder={t(UsersMessages.modalFormEmailPlaceholder())}
+            placeholder={t(UserDetailMessages.formEmailPlaceholder())}
           />
           <Row gutter={[16, 16]}></Row>
         </FormItem>
       </Col>
       <Col md={6} xs={24}>
-        <FormItem label={t(UsersMessages.modalFormStatusLabel())} name="status">
+        <FormItem label={t(UserDetailMessages.formStatusLabel())} name="status">
           <Radio.Group defaultValue="Single">
             <Radio value="Single">
-              {t(UsersMessages.modalFormStatusSingleLabel())}
+              {t(UserDetailMessages.formStatusSingleLabel())}
             </Radio>
             <Radio value="Married">
-              {t(UsersMessages.modalFormStatusMarriedLabel())}
+              {t(UserDetailMessages.formStatusMarriedLabel())}
             </Radio>
           </Radio.Group>
         </FormItem>
