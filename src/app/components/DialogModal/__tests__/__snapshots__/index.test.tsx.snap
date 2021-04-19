@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DialogModal  /> should match snapshot 1`] = `
+<Modal
+  centered={true}
+  confirmLoading={false}
+  footer={null}
+  okType="primary"
+  title={<DialogModal__ModalTitle />}
+  visible={false}
+  width={520}
+>
+  Test Modal
+</Modal>
+`;

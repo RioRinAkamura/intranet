@@ -12,8 +12,6 @@ function* getUsers() {
 
 function* searchUsers(action) {
   try {
-    // declare
-    // call api
     yield put(actions.searchUsersSuccess);
   } catch (err) {
     console.log(err);
@@ -23,8 +21,6 @@ function* searchUsers(action) {
 
 function* createUser(action) {
   try {
-    // declare
-    // call api
     yield put(actions.createUserSuccess);
   } catch (err) {
     console.log(err);
@@ -34,8 +30,6 @@ function* createUser(action) {
 
 function* editUser(action) {
   try {
-    // declare
-    // call api
     yield put(actions.editUserSuccess);
   } catch (err) {
     console.log(err);
@@ -45,8 +39,6 @@ function* editUser(action) {
 
 function* deleteUser(action) {
   try {
-    // declare
-    // call api
     yield put(actions.deleteUserSuccess);
   } catch (err) {
     console.log(err);
@@ -56,8 +48,6 @@ function* deleteUser(action) {
 
 function* importUsers(action) {
   try {
-    // declare
-    // call api
     yield put(actions.importUsersSuccess);
   } catch (err) {
     console.log(err);
@@ -66,7 +56,7 @@ function* importUsers(action) {
 }
 
 export function* userspageSaga() {
-  yield [
+  yield* [
     takeLatest(actions.fetchUsers.type, getUsers),
     takeLatest(actions.createUser.type, createUser),
     takeLatest(actions.editUser.type, editUser),

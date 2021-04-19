@@ -23,12 +23,6 @@ const data = [
   { value: 'cyan' },
 ];
 
-const arrColor = ['magenta', 'red', 'volcano', 'orange', 'gold'];
-
-const randomColor = (): void => {
-  const random = Math.trunc(Math.random() * 5);
-};
-
 const tagRender = ({ label, value, closable, onClose }) => {
   return (
     <div>

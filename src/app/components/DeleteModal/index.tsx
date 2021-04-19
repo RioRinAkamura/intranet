@@ -4,12 +4,22 @@ import styled from 'styled-components';
 
 interface Props {
   open: boolean;
+  cancelText: string;
+  deleteText: string;
+  content: string;
   handleDelete: () => void;
   handleCancel: () => void;
 }
 
 export const DeleteModal = (props: Props) => {
-  const { open, handleDelete, handleCancel } = props;
+  const {
+    open,
+    cancelText,
+    deleteText,
+    content,
+    handleDelete,
+    handleCancel,
+  } = props;
 
   return (
     <Modal
@@ -17,14 +27,14 @@ export const DeleteModal = (props: Props) => {
       onCancel={handleCancel}
       footer={[
         <Button size="large" onClick={handleCancel}>
-          Cancel
+          {cancelText}
         </Button>,
         <Button type="primary" size="large" danger onClick={handleDelete}>
-          Delete
+          {deleteText}
         </Button>,
       ]}
     >
-      <P>Are you sure you want to delete it?</P>
+      <P>{content}</P>
     </Modal>
   );
 };

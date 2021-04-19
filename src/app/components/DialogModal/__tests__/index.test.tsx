@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { DialogModal } from '..';
+import { createRenderer } from 'react-test-renderer/shallow';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -14,9 +15,15 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
+const renderer = createRenderer();
+
 describe('<DialogModal  />', () => {
-  it('should match snapshot', () => {
-    const loadingIndicator = render(<DialogModal />);
-    expect(loadingIndicator.container.firstChild).toMatchSnapshot();
+  let utils;
+
+  it('shoud render dialog modal', () => {
+    const { queryByText, getByRole } = render(
+      <DialogModal okText="Submit">Test Modal</DialogModal>,
+    );
+    expect(getByRole('button')).toBeTruthy();
   });
 });
