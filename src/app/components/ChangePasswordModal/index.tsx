@@ -8,7 +8,7 @@ import { ToastMessageType, useNotify } from '../ToastNotification';
 import styled from 'styled-components';
 
 interface Props {
-  isModalVisible: boolean;
+  isModalVisible: boolean | undefined;
   handleOk: (value) => void;
   handleCancel: () => void;
 }
@@ -184,4 +184,5 @@ const SpinLoading = styled(Spin)`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 `;

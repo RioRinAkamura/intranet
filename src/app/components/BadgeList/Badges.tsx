@@ -7,6 +7,7 @@ import { ChangePasswordModal } from '../ChangePasswordModal';
 import { useChangePasswordSlice } from './../ChangePasswordModal/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'types';
+import { State } from './../ChangePasswordModal/slice/types';
 
 export function Badges() {
   // const [isModalVisible, setIsModalVisible] = useState(false);
@@ -15,7 +16,8 @@ export function Badges() {
   const changePasswordState = useSelector(
     (state: RootState) => state.changePassword,
   );
-  const isModalVisible: any = changePasswordState?.isModalVisible;
+  const isModalVisible: boolean | undefined =
+    changePasswordState?.isModalVisible;
 
   const showModal = () => {
     dispatch(actions.showModalChangePassword());
