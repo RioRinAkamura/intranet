@@ -9,6 +9,7 @@ import { Layout, Menu } from 'antd';
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { Logo } from './Logo';
 
 interface Props {
@@ -25,6 +26,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
       collapsible
       collapsed={collapsed}
       onCollapse={() => onCollapse(collapsed)}
+      breakpoint="lg"
     >
       <Logo />
       <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
