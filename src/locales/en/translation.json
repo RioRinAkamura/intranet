@@ -181,7 +181,10 @@
         }
       },
       "infomation": "Profile Infomation"
-    }
+    },
+    "exportAllUser": "Export as CSV for all",
+    "exportPerPage": "Export as CSV this page",
+    "exportSelected": "Export as CSV for selected rows"
   },
   "translations": {
     "someThing": "default value"

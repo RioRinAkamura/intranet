@@ -12,6 +12,15 @@ export const UsersMessages = {
   createUserButton: () =>
     _t(translations.UsersPage.createUserButton, 'Create User'),
   exportCSV: () => _t(translations.UsersPage.exportCSV, 'Export as CSV'),
+  exportAllUser: () =>
+    _t(translations.UsersPage.exportAllUser, 'Export as CSV for all'),
+  exportPerPage: () =>
+    _t(translations.UsersPage.exportPerPage, 'Export as CSV this page'),
+  exportSelected: () =>
+    _t(
+      translations.UsersPage.exportSelected,
+      'Export as CSV for selected rows',
+    ),
   importCSV: () => _t(translations.UsersPage.importCSV, 'Import CSV'),
   listAvatarTitle: () => _t(translations.UsersPage.list.avatar, 'Avatar'),
   listFirstNameTitle: () =>

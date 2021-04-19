@@ -6,22 +6,22 @@ import { useAuthState } from './useAuthState';
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
   const [auth, setAuth] = useState(true);
-  const authenticated = useAuthState();
+  // const authenticated = useAuthState();
 
-  const getAuth = async () => {
-    try {
-      const response = await authenticated;
-      if (response) {
-        setAuth(response.authenticated);
-      }
-    } catch (error) {
-      setAuth(false);
-    }
-  };
+  // const getAuth = async () => {
+  //   try {
+  //     const response = await authenticated;
+  //     if (response) {
+  //       setAuth(response.authenticated);
+  //     }
+  //   } catch (error) {
+  //     setAuth(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    getAuth();
-  }, []);
+  // useEffect(() => {
+  //   getAuth();
+  // }, []);
 
   return (
     // Show the component only when the user is logged in
@@ -38,23 +38,23 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
 export const PublicRoute = ({ component: Component, restricted, ...rest }) => {
   console.log('config.DASHBOARD_PATH: ', config.DASHBOARD_PATH);
   const [auth, setAuth] = useState(false);
-  const authenticated = useAuthState();
-  // const { authState } = useContext(AuthContext);
+  // const authenticated = useAuthState();
+  // // const { authState } = useContext(AuthContext);
 
-  const getAuth = async () => {
-    try {
-      const response = await authenticated;
-      if (response) {
-        setAuth(response.authenticated);
-      }
-    } catch (error) {
-      setAuth(false);
-    }
-  };
+  // const getAuth = async () => {
+  //   try {
+  //     const response = await authenticated;
+  //     if (response) {
+  //       setAuth(response.authenticated);
+  //     }
+  //   } catch (error) {
+  //     setAuth(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    getAuth();
-  }, []);
+  // useEffect(() => {
+  //   getAuth();
+  // }, []);
   return (
     // restricted = false meaning public route
     // restricted = true meaning restricted route

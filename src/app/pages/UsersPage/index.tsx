@@ -6,21 +6,14 @@ import {
   Space,
   Table,
   Form,
-  Modal,
-  Upload,
-  message,
   Tooltip,
   Avatar,
   List,
   Spin,
   Collapse,
   TablePaginationConfig,
-  Divider,
-  DatePicker,
-  Radio,
-  Select,
 } from 'antd';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
 import { request } from 'utils/request';
@@ -28,45 +21,29 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  FacebookFilled,
-  GithubFilled,
-  GitlabFilled,
-  LinkedinFilled,
   LoadingOutlined,
   MailFilled,
   PhoneFilled,
-  PlusOutlined,
   SearchOutlined,
-  SkypeFilled,
-  SkypeOutlined,
-  TwitterCircleFilled,
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { useUserspageSlice } from './slice';
-import { CSVLink } from 'react-csv';
-import CSVReader from 'react-csv-reader';
 import { isMobile, isMobileOnly } from 'react-device-detect';
 import { isEmpty, isEqual } from 'lodash';
-import { DialogModal } from 'app/components/DialogModal';
 import { useTranslation } from 'react-i18next';
-import {
-  FilterValue,
-  SorterResult,
-  TableCurrentDataSource,
-} from 'antd/lib/table/interface';
-import { UploadChangeParam } from 'antd/lib/upload';
-import { UploadFile } from 'antd/lib/upload/interface';
+import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { UsersMessages } from './messages';
 import { Helmet } from 'react-helmet-async';
 
-import { ToastMessageType } from 'app/components/ToastNotification';
 import { useNotify } from 'app/components/ToastNotification';
-import { UserDetailPage } from '../UserDetailPage/Loadable';
 import { useHistory } from 'react-router';
+import { SearchUsers } from './components/SearchUsers/Loadable';
+import { HeaderButton } from './components/HeaderButton/Loadable';
+import { UserList } from './components/UserList/Loadable';
 const { Panel } = Collapse;
 
-interface UserProfile {
+export interface UserProfile {
   id: string;
   avatar: string;
   first_name: string;
@@ -80,6 +57,8 @@ interface Pagination {
   pageSize?: number;
   total?: number;
   totalPage?: number;
+  pageSizeOptions?: string[];
+  showSizeChanger?: boolean;
 }
 
 interface Filters {
@@ -98,6 +77,8 @@ export const Users: React.FC = () => {
     pageSize: 4,
     total: 0,
     totalPage: 0,
+    pageSizeOptions: ['2', '3', '4', '6'],
+    showSizeChanger: true,
   });
   const [tableFilters, setTableFilters] = useState<Filters>({
     email: null,
@@ -111,8 +92,9 @@ export const Users: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [deleteModal, setDeleteModal] = useState({ open: false, id: '' });
-  const [previewModal, setPreviewModal] = useState({ open: false, data: [] });
-  const [form] = Form.useForm();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const [selectedRows, setSelectedRows] = useState<UserProfile[]>([]);
+
   const [searchForm] = Form.useForm();
   const history = useHistory();
 
@@ -133,6 +115,7 @@ export const Users: React.FC = () => {
       tablePagination.total = response.total;
       tablePagination.current = response.page;
       tablePagination.totalPage = response.total_pages;
+      tablePagination.pageSize = pagination.pageSize;
       setTablePagination(tablePagination);
       setLoading(false);
     });
@@ -395,17 +378,6 @@ export const Users: React.FC = () => {
     },
   ];
 
-  const handleForce = (data: any) => {
-    setPreviewModal({ open: true, data: data });
-  };
-
-  const papaparseOptions = {
-    header: true,
-    dynamicTyping: true,
-    skipEmptyLines: true,
-    transformHeader: header => header.toLowerCase().replace(/\W/g, '_'),
-  };
-
   const handleDelete = () => {
     const userId = deleteModal.id;
     if (userId) {
@@ -413,11 +385,12 @@ export const Users: React.FC = () => {
     }
   };
 
-  const handleImport = () => {
-    const data = previewModal.data;
-    if (data.length > 0) {
-      dispatch(actions.importUsers(data));
-    }
+  const handleSelectedRows = (
+    selectedRowKeys: Key[],
+    selectedRows: UserProfile[],
+  ) => {
+    setSelectedRowKeys(selectedRowKeys);
+    setSelectedRows(selectedRows);
   };
 
   return (
@@ -429,182 +402,50 @@ export const Users: React.FC = () => {
       <h1>{t(UsersMessages.title())}</h1>
       <Collapse style={{ margin: '1em 0 1em 0' }}>
         <Panel header={t(UsersMessages.searchTitle())} key="1">
-          <Form
+          <SearchUsers
             form={searchForm}
-            labelCol={{ xxl: 6, xl: 8, lg: 6, md: 8, xs: 6 }}
-            wrapperCol={{ xxl: 18, xl: 16, lg: 18, md: 16, xs: 18 }}
-          >
-            <Row gutter={[8, 8]}>
-              <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-                <FormItem
-                  name="first_name"
-                  label={t(UsersMessages.searchFirstName())}
-                >
-                  <Input
-                    placeholder={t(UsersMessages.searchFirstNamePlaceholder())}
-                  />
-                </FormItem>
-              </Col>
-              <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-                <FormItem
-                  name="last_name"
-                  label={t(UsersMessages.searchLastName())}
-                >
-                  <Input
-                    placeholder={t(UsersMessages.searchLastNamePlaceholder())}
-                  />
-                </FormItem>
-              </Col>
-              <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-                <FormItem name="email" label={t(UsersMessages.searchEmail())}>
-                  <Input
-                    placeholder={t(UsersMessages.searchEmailPlaceholder())}
-                  />
-                </FormItem>
-              </Col>
-              <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-                <FormItem
-                  name="phone"
-                  label={t(UsersMessages.searchPhoneNumber())}
-                >
-                  <Input
-                    placeholder={t(
-                      UsersMessages.searchPhoneNumberPlaceholder(),
-                    )}
-                  />
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={[8, 8]} justify="end">
-              <Col>
-                <Button type="primary" onClick={totalSearch}>
-                  {t(UsersMessages.searchSearchButton())}
-                </Button>
-              </Col>
-              <Col>
-                <Button onClick={resetTotalSearch}>
-                  {t(UsersMessages.searchResetButton())}
-                </Button>
-              </Col>
-            </Row>
-          </Form>
+            onSearch={totalSearch}
+            onReset={resetTotalSearch}
+          />
         </Panel>
       </Collapse>
       {isMobileOnly ? (
-        <>
-          <List
-            className="demo-loadmore-list"
-            loading={loading}
-            itemLayout="vertical"
-            dataSource={data}
-            renderItem={(user: UserProfile, index: number) => (
-              <ListItem key={index}>
-                <Row gutter={[8, 8]}>
-                  <Col style={{ textAlign: 'center' }} span={10}>
-                    <Avatar size={{ xs: 130 }} src={user.avatar} />
-                  </Col>
-                  <Col span={14}>
-                    <h2>{user.first_name + ' ' + user.last_name}</h2>
-                    <ProfileDescription gutter={[8, 8]}>
-                      <Col span={4}>
-                        <PhoneFilled />
-                      </Col>
-                      <Col span={20}>{user.phone}</Col>
-                      <Col span={4}>
-                        <MailFilled />
-                      </Col>
-                      <Col span={20}>{user.email}</Col>
-                    </ProfileDescription>
-                  </Col>
-                </Row>
-                <Row gutter={[8, 8]}>
-                  <Col offset={10} span={14}>
-                    <Row gutter={[8, 8]}>
-                      <Col span={8}>
-                        <IconButton
-                          type="primary"
-                          shape="circle"
-                          icon={<EyeOutlined />}
-                          onClick={() => {
-                            history.push('/users/' + user.id);
-                          }}
-                        />
-                      </Col>
-                      <Col span={8}>
-                        <IconButton
-                          shape="circle"
-                          icon={<EditOutlined />}
-                          onClick={() => {
-                            history.push({
-                              pathname: '/users/' + user.id,
-                              state: { edit: true },
-                            });
-                          }}
-                        />
-                      </Col>
-                      <Col span={8}>
-                        <IconButton
-                          danger
-                          shape="circle"
-                          icon={<DeleteOutlined />}
-                          onClick={() => {
-                            setDeleteModal({ open: true, id: user.id });
-                          }}
-                        />
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </ListItem>
-            )}
-          />
-          {isMore &&
-            (moreLoading ? (
-              <LoadMore>
-                <Spin indicator={<LoadingOutlined />} size="large" />
-              </LoadMore>
-            ) : (
-              <LoadMore></LoadMore>
-            ))}
-        </>
+        <UserList
+          loading={loading}
+          data={data}
+          isMore={isMore}
+          moreLoading={moreLoading}
+          onDelete={(id: string) => setDeleteModal({ open: true, id: id })}
+        />
       ) : (
         <Row align="middle" justify="center">
-          <Col span={24}>
-            <Row justify="end">
-              <OptionButton>
-                <Button
-                  size="large"
-                  type="primary"
-                  onClick={() => history.push('/create-user')}
-                >
-                  {t(UsersMessages.createUserButton())}
-                </Button>
-              </OptionButton>
-              <OptionButton>
-                <Button size="large">
-                  <CSVLink
-                    filename={'users-page-' + tablePagination.current + '.csv'}
-                    data={data}
-                  >
-                    {t(UsersMessages.exportCSV())}
-                  </CSVLink>
-                </Button>
-              </OptionButton>
-              <OptionButton>
-                <ButtonImport size="large">
-                  <CSVReader
-                    cssClass="react-csv-input"
-                    label={t(UsersMessages.importCSV())}
-                    inputStyle={{ display: 'none' }}
-                    onFileLoaded={handleForce}
-                    parserOptions={papaparseOptions}
-                  />
-                </ButtonImport>
-              </OptionButton>
+          <Col span={12}>
+            <Row justify="start">
+              <Button
+                danger
+                size="large"
+                disabled={selectedRowKeys.length === 0}
+                onClick={() => {
+                  console.log('Call Deleted');
+                }}
+              >
+                Delete {`${selectedRowKeys.length} data`}{' '}
+              </Button>
             </Row>
+          </Col>
+          <Col span={12}>
+            <HeaderButton
+              pagination={tablePagination}
+              data={data}
+              selectedRows={selectedRows}
+            />
           </Col>
           <Col span={24}>
             <Table
+              rowSelection={{
+                selectedRowKeys,
+                onChange: handleSelectedRows,
+              }}
               columns={columns}
               rowKey="id"
               dataSource={data}
@@ -624,24 +465,6 @@ export const Users: React.FC = () => {
         handleCancel={() => setDeleteModal({ open: false, id: '' })}
         handleDelete={handleDelete}
       />
-      <DialogModal
-        title={t(UsersMessages.modalPreviewCSVTitle())}
-        isOpen={previewModal.open}
-        handleCancel={() => {
-          setPreviewModal({ open: false, data: [] });
-        }}
-        handleSubmit={handleImport}
-        cancelText={t(UsersMessages.modalFormCancelButton())}
-        okText={t(UsersMessages.modalFormSubmitButton())}
-        width={1000}
-      >
-        <Table
-          columns={columns}
-          rowKey="id"
-          dataSource={previewModal.data}
-          pagination={false}
-        />
-      </DialogModal>
     </>
   );
 };
@@ -657,40 +480,5 @@ const IconButton = styled(Button)`
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-  }
-`;
-
-const OptionButton = styled(Col)`
-  margin-left: 1em;
-  margin-bottom: 1em;
-`;
-const ButtonImport = styled(Button)`
-  label:hover {
-    cursor: pointer;
-  }
-`;
-
-const ListItem = styled(List.Item)``;
-
-const ProfileDescription = styled(Row)`
-  color: gray;
-`;
-
-const LoadMore = styled.div`
-  height: 100px;
-  width: 100%;
-  text-align: center;
-
-  div {
-    font-size: xxx-large;
-  }
-`;
-
-const FormItem = styled(Form.Item)`
-  div {
-    width: 100%;
-  }
-  label {
-    font-weight: 500;
   }
 `;
