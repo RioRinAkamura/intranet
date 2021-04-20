@@ -268,7 +268,7 @@ export const Users: React.FC = () => {
                 shape="circle"
                 icon={<EyeOutlined />}
                 onClick={() => {
-                  history.push(`users/${text}`);
+                  history.push(`/empoyees/${text}`);
                 }}
               />
             </Tooltip>

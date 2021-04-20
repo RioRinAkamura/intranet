@@ -77,6 +77,7 @@ export function UserDetailPage(props: Props) {
   React.useEffect(() => {
     if (user) {
       form.setFieldsValue({ ...user });
+      console.log(user);
       setData({ ...user });
     }
   }, [form, user]);
@@ -111,7 +112,7 @@ export function UserDetailPage(props: Props) {
         history.replace(location.pathname, {});
       }
     }
-  }, [location]);
+  }, [history, location]);
 
   const uploadButton = (
     <div

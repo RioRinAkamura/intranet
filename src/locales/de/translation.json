@@ -230,7 +230,11 @@
       "phoneNumber": "Phone Number",
       "phoneNumberPlaceholder": "Search by phone number",
       "searchButton": "Search",
-      "resetButton": "Reset"
+      "resetButton": "Reset",
+      "search": {
+        "label": "Search",
+        "placeholder": "Search user's first name, last name, email and phone number"
+      }
     },
     "modal": {
       "createTitle": "Create User",

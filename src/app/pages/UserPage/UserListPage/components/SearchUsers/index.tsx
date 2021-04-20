@@ -27,43 +27,23 @@ export const SearchUsers = memo((props: Props) => {
     >
       <Row gutter={[8, 8]}>
         <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-          <FormItem
-            name="first_name"
-            label={t(UsersMessages.searchFirstName())}
-          >
-            <Input
-              placeholder={t(UsersMessages.searchFirstNamePlaceholder())}
-            />
+          <FormItem name="search" label={t(UsersMessages.searchLabel())}>
+            <Input placeholder={t(UsersMessages.searchPlaceholder())} />
           </FormItem>
-        </Col>
-        <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-          <FormItem name="last_name" label={t(UsersMessages.searchLastName())}>
-            <Input placeholder={t(UsersMessages.searchLastNamePlaceholder())} />
-          </FormItem>
-        </Col>
-        <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-          <FormItem name="email" label={t(UsersMessages.searchEmail())}>
-            <Input placeholder={t(UsersMessages.searchEmailPlaceholder())} />
-          </FormItem>
-        </Col>
-        <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-          <FormItem name="phone" label={t(UsersMessages.searchPhoneNumber())}>
-            <Input
-              placeholder={t(UsersMessages.searchPhoneNumberPlaceholder())}
-            />
-          </FormItem>
-        </Col>
-      </Row>
-      <Row gutter={[8, 8]} justify="end">
-        <Col>
-          <Button type="primary" onClick={onSearch}>
-            {t(UsersMessages.searchSearchButton())}
-          </Button>
         </Col>
         <Col>
-          <Button onClick={onReset}>
-            {t(UsersMessages.searchResetButton())}
-          </Button>
+          <Row gutter={[8, 8]} justify="end">
+            <Col>
+              <Button type="primary" onClick={onSearch}>
+                {t(UsersMessages.searchSearchButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button onClick={onReset}>
+                {t(UsersMessages.searchResetButton())}
+              </Button>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Form>

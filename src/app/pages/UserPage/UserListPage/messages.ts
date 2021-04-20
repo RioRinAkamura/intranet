@@ -42,28 +42,11 @@ export const UsersMessages = {
   filterFilterButton: () =>
     _t(translations.UsersPage.list.filter.filterButton, 'Filter'),
   searchTitle: () => _t(translations.UsersPage.search.title, 'Search'),
-  searchFirstName: () =>
-    _t(translations.UsersPage.search.firstName, 'First Name'),
-  searchFirstNamePlaceholder: () =>
+  searchLabel: () => _t(translations.UsersPage.search.search.label, 'Search'),
+  searchPlaceholder: () =>
     _t(
-      translations.UsersPage.search.firstNamePlaceholder,
-      'Search by first name',
-    ),
-  searchLastName: () => _t(translations.UsersPage.search.lastName, 'Last Name'),
-  searchLastNamePlaceholder: () =>
-    _t(
-      translations.UsersPage.search.lastNamePlaceholder,
-      'Search by last name',
-    ),
-  searchEmail: () => _t(translations.UsersPage.search.email, 'Email'),
-  searchEmailPlaceholder: () =>
-    _t(translations.UsersPage.search.emailPlaceholder, 'Search by email'),
-  searchPhoneNumber: () =>
-    _t(translations.UsersPage.search.phoneNumber, 'Phone Number'),
-  searchPhoneNumberPlaceholder: () =>
-    _t(
-      translations.UsersPage.search.phoneNumberPlaceholder,
-      'Search by phone number',
+      translations.UsersPage.search.search.placeholder,
+      "Search user's first name, last name, email and phone number",
     ),
   searchSearchButton: () =>
     _t(translations.UsersPage.search.searchButton, 'Search'),

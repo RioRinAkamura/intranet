@@ -13,8 +13,6 @@ export const useGetUserDetail = (
   const [error, setError] = React.useState(undefined);
   const [user, setUser] = React.useState<UserProfile | undefined>();
 
-  console.log(id);
-
   React.useEffect(() => {
     setLoading(true);
     fakeAPI
