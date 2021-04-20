@@ -7,32 +7,34 @@ import { ToastMessageType, useNotify } from '../ToastNotification';
 import { useHistory } from 'react-router';
 import { useLogout } from '../Auth/useLogout';
 import { ChangePasswordModal } from '../ChangePasswordModal';
-import { useChangePasswordSlice } from './../ChangePasswordModal/slice';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'types';
+import {
+  useChangePassword,
+  ChangePasswordPayload,
+} from '../ChangePasswordHook';
 
 export function Badges() {
   const { notify } = useNotify();
   const history = useHistory();
   const { logout } = useLogout();
-  const { actions } = useChangePasswordSlice();
-  const dispatch = useDispatch();
-  const changePasswordState = useSelector(
-    (state: RootState) => state.changePassword,
-  );
+  const {
+    changePasswordState,
+    showModalChangePassword,
+    changePassword,
+    resetStateChangePassword,
+  } = useChangePassword();
   const isModalVisible: boolean | undefined =
     changePasswordState?.isModalVisible;
 
   const showModal = () => {
-    dispatch(actions.showModalChangePassword());
+    showModalChangePassword();
   };
 
-  const handleOk = values => {
-    dispatch(actions.changePassword(values));
+  const handleOk = (values: ChangePasswordPayload) => {
+    changePassword(values);
   };
 
   const handleCancel = () => {
-    dispatch(actions.resetState());
+    resetStateChangePassword();
   };
 
   const onClickLogout = async () => {

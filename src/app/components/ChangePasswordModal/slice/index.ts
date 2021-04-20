@@ -17,7 +17,11 @@ const slice = createSlice({
   reducers: {
     changePassword(
       state,
-      action: PayloadAction<{ oldPassword: string; newPassword: string }>,
+      action: PayloadAction<{
+        oldpassword: string;
+        newpassword: string;
+        confirmpassword: string;
+      }>,
     ) {
       state.isLoading = true;
       state.changePasswordSuccess = false;

@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 import { Modal, Form, Input, Space, Button, Spin, Divider } from 'antd';
 import { messages } from './messages';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { RootState } from 'types';
 import { ToastMessageType, useNotify } from '../ToastNotification';
 import styled from 'styled-components';
+import { useChangePassword } from '../ChangePasswordHook';
 
 interface Props {
   isModalVisible: boolean | undefined;
@@ -18,17 +17,10 @@ export const ChangePasswordModal = (props: Props) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const { notify } = useNotify();
-  const changePasswordState = useSelector(
-    (state: RootState) => state.changePassword,
-  );
+  const { changePasswordState } = useChangePassword();
 
   useEffect(() => {
-    if (isModalVisible) {
-      form.resetFields();
-    }
-  }, [isModalVisible]);
-
-  useEffect(() => {
+    form.resetFields();
     if (changePasswordState?.changePasswordSuccess) {
       notify({
         type: ToastMessageType.Info,
@@ -45,7 +37,7 @@ export const ChangePasswordModal = (props: Props) => {
         duration: 2,
       });
     }
-  });
+  }, [isModalVisible]);
 
   const formItemLayout = {
     labelCol: {
