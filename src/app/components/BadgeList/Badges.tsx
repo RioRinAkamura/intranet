@@ -88,7 +88,6 @@ export function Badges() {
 
 const Wrapper = styled.li`
   display: inline-block;
-  margin-right: -1rem;
 `;
 
 const Item = styled.button`

@@ -57,12 +57,12 @@ export function App() {
             component={ResetPassword}
           />
           <AppLayout>
-            <PrivateRoute
+            <Route
               exact
               path={config.DASHBOARD_PATH}
               component={HomePage}
             />
-            <PrivateRoute exact path={config.USERS_PATH} component={Users} />
+            <Route exact path={config.USERS_PATH} component={Users} />
             <PrivateRoute
               exact
               path={`${config.USERS_PATH}/:id`}

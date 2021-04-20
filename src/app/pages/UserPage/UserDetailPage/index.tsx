@@ -17,6 +17,7 @@ import { BankAccounts } from './components/BankAccounts/Loadable';
 import { SocialNetwork } from './components/SocialNetwork/Loadable';
 import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
+import Tags from 'app/components/Tags';
 
 interface Props {}
 
@@ -212,13 +213,16 @@ export function UserDetailPage(props: Props) {
           </Col>
         </Row>
         <Row gutter={[16, 16]}>
-          <Col md={8}>
+          <Col md={6}>
             <JobInfo />
           </Col>
-          <Col md={8}>
+          <Col md={6}>
+            <Tags />
+          </Col>
+          <Col md={6}>
             <BankAccounts />
           </Col>
-          <Col md={8}>
+          <Col md={6}>
             <SocialNetwork />
           </Col>
         </Row>

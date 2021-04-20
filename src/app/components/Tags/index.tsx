@@ -1,6 +1,7 @@
 import { Select, Tag } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { request } from 'utils/request';
 
 interface Props {}
 
@@ -24,6 +25,10 @@ const data = [
 ];
 
 const tagRender = ({ label, value, closable, onClose }) => {
+
+
+
+
   return (
     <div>
       <Tag
