@@ -32,9 +32,33 @@
       "rememberMe": "Remember me",
       "forgotPassword": "Forgot your password",
       "loginButton": "Login",
+      "registerLinkText": "register now!",
       "loginFacebookButton": "Login with Facebook",
       "loginGoogleButton": "Login with Google",
       "dividerText": "Or"
+    }
+  },
+  "ResetPasswordPage": {
+    "title": "Reset Password",
+    "description": "Reset Password Page",
+    "form": {
+      "title": "Reset Your Password",
+      "newPassword": {
+        "label": "New Password",
+        "placeholder": "Input your new password",
+        "invalid": "Password at least 8 characters and including letters, digits, capital characters, special characters!",
+        "empty": "Please input your new password!"
+      },
+      "retypePassword": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm your new password",
+        "emptyNewPassword": "Please input new password first!",
+        "invalid": "Confirm Password at least 8 characters and including letters, digits, capital characters, special characters!",
+        "empty": "Please confirm your new password!",
+        "notMatch": "Your new password and confirm password don't match!"
+      },
+      "resetButton": "Reset Password",
+      "backButton": "Back to login page"
     }
   },
   "UserDetailPage": {
@@ -240,6 +264,22 @@
         "cancelButton": "Cancel",
         "submitButton": "Save"
       }
+    }
+  },
+  "ForgotPasswordPage": {
+    "title": "Forgot Password",
+    "description": "Forgot Password Page",
+    "form": {
+      "title": "Forgot Your Password?",
+      "description": "Enter your registered email below to receive password reset instruction.",
+      "email": {
+        "label": "Email Address",
+        "placeholder": "Your email",
+        "invalid": "Your email is invalid!",
+        "empty": "Please input your email address!"
+      },
+      "forgotButton": "Send Request",
+      "backButton": "Back to login page"
     }
   }
 }

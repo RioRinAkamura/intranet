@@ -57,66 +57,71 @@ export const LoginForm: React.FC = () => {
   return (
     <Wrapper>
       <Form {...layout} onFinish={onFinish} form={form}>
-        <FormItem
-          name="email"
-          label={t(LoginMessages.email())}
-          rules={[
-            {
-              required: true,
-              message: t(LoginMessages.emptyEmail()),
-            },
-            {
-              type: 'email',
-              message: t(LoginMessages.invalidEmail()),
-            },
-          ]}
-        >
-          <Input prefix={<UserOutlined />} ref={emailRef} size="large" />
-        </FormItem>
-        <FormItem
-          name="password"
-          label={t(LoginMessages.password())}
-          rules={[
-            {
-              required: true,
-              message: t(LoginMessages.emptyPassword()),
-            },
-          ]}
-        >
-          <Input.Password
-            prefix={<LockOutlined />}
-            ref={passwordRef}
-            size="large"
-          />
-        </FormItem>
-        <FormItem name="remember" valuePropName="checked">
-          <Checkbox>{t(LoginMessages.rememberMe())}</Checkbox>
-        </FormItem>
-        <FormItem>
-          <Row gutter={[8, 8]} justify="space-between">
-            <Col span={12}>
-              <Button type="link" size="large">
+        <Row gutter={[8, 8]}>
+          <Col span={24}>
+            <FormItem
+              name="email"
+              label={t(LoginMessages.email())}
+              rules={[
+                {
+                  required: true,
+                  message: t(LoginMessages.emptyEmail()),
+                },
+                {
+                  type: 'email',
+                  message: t(LoginMessages.invalidEmail()),
+                },
+              ]}
+            >
+              <Input prefix={<UserOutlined />} ref={emailRef} size="large" />
+            </FormItem>
+          </Col>
+          <Col span={24}>
+            <FormItem
+              name="password"
+              label={t(LoginMessages.password())}
+              rules={[
+                {
+                  required: true,
+                  message: t(LoginMessages.emptyPassword()),
+                },
+              ]}
+            >
+              <Input.Password
+                prefix={<LockOutlined />}
+                ref={passwordRef}
+                size="large"
+              />
+            </FormItem>
+          </Col>
+          <Col md={12} xs={24}>
+            <FormItem name="remember" valuePropName="checked">
+              <Checkbox>{t(LoginMessages.rememberMe())}</Checkbox>
+            </FormItem>
+          </Col>
+          <Col md={12} xs={24}>
+            <FormItem>
+              <Button type="link" href="/forgot-password" size="large">
                 {t(LoginMessages.forgotPassword())}
               </Button>
-            </Col>
-            {/* <Col span={6}>
-              <Button type="link" size="large">
-                Sign Up
-              </Button>
-            </Col> */}
-            <Col span={24}>
-              <Button
-                block
-                type="primary"
-                htmlType="submit"
-                size="large"
-                loading={loading}
-              >
-                {t(LoginMessages.loginButton())}
-              </Button>
-            </Col>
-          </Row>
-        </FormItem>
+            </FormItem>
+          </Col>
+          <Col span={24}>
+            <Button
+              block
+              type="primary"
+              htmlType="submit"
+              size="large"
+              loading={loading}
+            >
+              {t(LoginMessages.loginButton())}
+            </Button>
+            <p>
+              {t(LoginMessages.dividerText())}
+              <Button type="link">{t(LoginMessages.registerLinkText())}</Button>
+            </p>
+          </Col>
+        </Row>
         <Divider orientation="center">{t(LoginMessages.dividerText())}</Divider>
         <Row gutter={[8, 8]}>
           <Col span={24}>

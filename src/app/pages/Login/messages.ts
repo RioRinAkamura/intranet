@@ -28,6 +28,8 @@ export const LoginMessages = {
   forgotPassword: () =>
     _t(translations.LoginPage.form.forgotPassword, 'Forgot your password'),
   loginButton: () => _t(translations.LoginPage.form.loginButton, 'Login'),
+  registerLinkText: () =>
+    _t(translations.LoginPage.form.registerLinkText, 'register now!'),
   loginFacebookButton: () =>
     _t(translations.LoginPage.form.loginFacebookButton, 'Login with Facebook'),
   loginGoogleButton: () =>
