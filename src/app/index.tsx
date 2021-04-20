@@ -22,6 +22,8 @@ import { Users } from './pages/UserPage/UserListPage/Loadable';
 import { UserDetailPage } from './pages/UserPage/UserDetailPage/Loadable';
 import { authProvider } from './components/Auth/defaultAuthProvider';
 import { AuthContextProvider } from './components/Auth/Context';
+import { ForgotPassword } from './pages/ForgotPassword/Loadable';
+import { ResetPassword } from './pages/ResetPassword/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -41,6 +43,18 @@ export function App() {
             exact
             path={config.LOGIN_PATH}
             component={Login}
+          />
+          <PublicRoute
+            restricted={true}
+            exact
+            path="/forgot-password"
+            component={ForgotPassword}
+          />
+          <PublicRoute
+            restricted={true}
+            exact
+            path="/reset-password"
+            component={ResetPassword}
           />
           <AppLayout>
             <PrivateRoute
