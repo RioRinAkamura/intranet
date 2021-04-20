@@ -1,5 +1,5 @@
 import * as React from 'react';
-import fakeAPI from '../../../../utils/fakeAPI';
+import fakeAPI from 'utils/fakeAPI';
 import { Pagination, UserProfile } from '../types';
 
 export const useGetUserList = (
