@@ -8,7 +8,10 @@ interface AuthContextValues {
   identity?: UserIdentity | null;
   error?: Error;
   authProvider: AuthProvider;
-  setAuthState: (authenticated: boolean, identity?: UserIdentity) => void;
+  setAuthState: (
+    authenticated: boolean,
+    identity?: UserIdentity | null,
+  ) => void;
 }
 
 export const AuthContext = React.createContext<AuthContextValues>({
@@ -16,7 +19,10 @@ export const AuthContext = React.createContext<AuthContextValues>({
   loading: false,
   authenticated: false,
   identity: null,
-  setAuthState: (_authenticated: boolean, _identity?: UserIdentity) => {},
+  setAuthState: (
+    _authenticated: boolean,
+    _identity?: UserIdentity | null,
+  ) => {},
 });
 
 export const useAuthContextProvider = (
@@ -28,9 +34,9 @@ export const useAuthContextProvider = (
   const [identity, setIdentity] = React.useState<UserIdentity | null>();
 
   const setAuthState = React.useCallback(
-    (authenticated: boolean, identity?: UserIdentity) => {
+    (authenticated: boolean, identity?: UserIdentity | null) => {
       setAuthenticated(authenticated);
-      if (identity) setIdentity(identity);
+      setIdentity(identity);
     },
     [],
   );

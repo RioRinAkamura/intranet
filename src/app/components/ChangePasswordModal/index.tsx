@@ -22,9 +22,11 @@ export const ChangePasswordModal = (props: Props) => {
     (state: RootState) => state.changePassword,
   );
 
-  if (isModalVisible === true) {
-    form.resetFields();
-  }
+  useEffect(() => {
+    if (isModalVisible) {
+      form.resetFields();
+    }
+  }, [isModalVisible]);
 
   useEffect(() => {
     if (changePasswordState?.changePasswordSuccess) {
