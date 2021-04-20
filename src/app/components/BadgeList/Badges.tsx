@@ -1,15 +1,41 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { Badge, Dropdown, Menu } from 'antd';
 import styled from 'styled-components';
 import { BellOutlined } from '@ant-design/icons';
 import { ToastMessageType, useNotify } from '../ToastNotification';
 import { useHistory } from 'react-router';
 import { useLogout } from '../Auth/useLogout';
+import { ChangePasswordModal } from '../ChangePasswordModal';
+import {
+  useChangePassword,
+  ChangePasswordPayload,
+} from '../ChangePasswordHook';
 
 export function Badges() {
   const { notify } = useNotify();
   const history = useHistory();
   const { logout } = useLogout();
+  const {
+    changePasswordState,
+    showModalChangePassword,
+    changePassword,
+    resetStateChangePassword,
+  } = useChangePassword();
+  const isModalVisible: boolean | undefined =
+    changePasswordState?.isModalVisible;
+
+  const showModal = () => {
+    showModalChangePassword();
+  };
+
+  const handleOk = (values: ChangePasswordPayload) => {
+    changePassword(values);
+  };
+
+  const handleCancel = () => {
+    resetStateChangePassword();
+  };
 
   const onClickLogout = async () => {
     await logout();
@@ -41,7 +67,7 @@ export function Badges() {
           <a href="https://www.antgroup.com">Profile</a>
         </Menu.Item>
         <Menu.Item key="1">
-          <a href="https://www.aliyun.com">Change password</a>
+          <a onClick={showModal}>Change password</a>
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="3" onClick={() => onClickLogout()}>
@@ -82,6 +108,12 @@ export function Badges() {
           </a>
         </Dropdown>
       </Item>
+
+      <ChangePasswordModal
+        isModalVisible={isModalVisible}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+      />
     </Wrapper>
   );
 }
