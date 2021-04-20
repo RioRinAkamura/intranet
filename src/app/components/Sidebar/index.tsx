@@ -6,9 +6,11 @@ import {
   TeamOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-import { Logos } from 'app/pages/HomePage/Logos';
+
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { Logo } from './Logo';
 
 interface Props {
   collapsed: boolean;
@@ -24,8 +26,9 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
       collapsible
       collapsed={collapsed}
       onCollapse={() => onCollapse(collapsed)}
+      breakpoint="lg"
     >
-      <Logos />
+      <Logo />
       <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
         <Menu.Item key="1" icon={<PieChartOutlined />}>
           <Link to="/">Dashboard</Link>

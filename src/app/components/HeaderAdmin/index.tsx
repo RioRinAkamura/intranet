@@ -11,6 +11,7 @@ import styled from 'styled-components/macro';
 import { BadgeList } from '../BadgeList';
 import { NavList } from '../NavList';
 import { NavItem } from '../NavList/NavItem';
+import { Logo } from '../Sidebar/Logo';
 
 interface Props {
   collapsed: boolean;
@@ -45,6 +46,9 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
             </NavItem>
           </NavList>
         </div>
+        <LogoHeader>
+          <Logo />
+        </LogoHeader>
 
         <BadgeList />
       </PageWrapper>
@@ -82,6 +86,23 @@ const Wrapper = styled.header`
   background-color: #fff;
   color: #000;
   width: 100%;
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  left: 0;
+`;
+
+const LogoHeader = styled.div`
+  width: 250px;
+  display: none;
+
+  @media screen and (max-width: 756px) {
+    display: block;
+  }
+
+  @media screen and (max-width: 480px) {
+    flex: 1;
+  } ;
 `;
 
 const SubHeader = styled.div`
