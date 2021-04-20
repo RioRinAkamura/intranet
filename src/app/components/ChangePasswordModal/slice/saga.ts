@@ -1,22 +1,25 @@
 import { take, call, put, select, takeLatest, delay } from 'redux-saga/effects';
 import { changePasswordActions as actions } from '.';
+import { PayloadAction } from '@reduxjs/toolkit';
 
-function* ChangePw(action) {
+function* changePassword(
+  action: PayloadAction<{
+    oldpassword: string;
+    newpassword: string;
+    confirmPassword: string;
+  }>,
+) {
   try {
     //yield call api change Password
-    yield delay(1000);
-    let status = 200;
-    if (status === 200) {
-      yield put({ type: actions.changeSuccess.type });
-    } else {
-      yield put({ type: actions.changeErr.type });
-    }
-    yield put({ type: actions.resetState.type });
+    yield put({ type: actions.changeSuccess.type });
   } catch (err) {
     console.log(err);
+    yield put({ type: actions.changeErr.type });
+  } finally {
+    yield put({ type: actions.resetState.type });
   }
 }
 
 export function* Saga() {
-  yield takeLatest(actions.changePassword.type, ChangePw);
+  yield takeLatest(actions.changePassword.type, changePassword);
 }

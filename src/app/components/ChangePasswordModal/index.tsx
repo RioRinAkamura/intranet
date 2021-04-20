@@ -56,19 +56,6 @@ export const ChangePasswordModal = (props: Props) => {
     },
   };
 
-  const tailFormItemLayout = {
-    wrapperCol: {
-      xs: {
-        span: 24,
-        offset: 0,
-      },
-      sm: {
-        span: 12,
-        offset: 12,
-      },
-    },
-  };
-
   return (
     <Modal
       title={t(messages.changePasswordTitle())}
@@ -125,18 +112,6 @@ export const ChangePasswordModal = (props: Props) => {
               message:
                 '(*) Password includes letters, digits, capital characters, special characters',
             },
-
-            // ({ getFieldValue }) => ({
-            //   validator(_, value) {
-            //     let pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,-.\/:;<=>?\\@[\]^_`{|}~]).{8,64}$/;
-            //     if (!value || getFieldValue('newpassword').match(pattern)) {
-            //       return Promise.resolve();
-            //     }
-            //     return Promise.reject(
-            //       new Error(t(messages.changePasswordComplexPassword())),
-            //     );
-            //   },
-            // }),
           ]}
           hasFeedback
         >
