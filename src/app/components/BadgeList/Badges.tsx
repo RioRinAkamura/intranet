@@ -2,34 +2,55 @@ import * as React from 'react';
 import { Badge, Dropdown, Menu } from 'antd';
 import styled from 'styled-components';
 import { BellOutlined } from '@ant-design/icons';
-
-const notifyMenu = (
-  <Menu>
-    <Menu.Item key="0">
-      <a href="https://www.antgroup.com">1st menu item</a>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <a href="https://www.aliyun.com">2nd menu item</a>
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="3">3rd menu item</Menu.Item>
-  </Menu>
-);
-
-const UserMenu = (
-  <Menu>
-    <Menu.Item key="0">
-      <a href="https://www.antgroup.com">Profile</a>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <a href="https://www.aliyun.com">Change password</a>
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="3">Logout</Menu.Item>
-  </Menu>
-);
+import { ToastMessageType, useNotify } from '../ToastNotification';
+import { useHistory } from 'react-router';
+import { useLogout } from '../Auth/useLogout';
 
 export function Badges() {
+  const { notify } = useNotify();
+  const history = useHistory();
+  const { logout } = useLogout();
+
+  const onClickLogout = async () => {
+    await logout();
+    notify({
+      type: ToastMessageType.Info,
+      message: ' User Logout Success ',
+      duration: 2,
+    });
+    history.push('/login');
+  };
+
+  const notifyMenu = (
+    <Menu>
+      <Menu.Item key="0">
+        <a href="https://www.antgroup.com">1st menu item</a>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <a href="https://www.aliyun.com">2nd menu item</a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="3">3rd menu item</Menu.Item>
+    </Menu>
+  );
+
+  const UserMenu = () => {
+    return (
+      <Menu>
+        <Menu.Item key="0">
+          <a href="https://www.antgroup.com">Profile</a>
+        </Menu.Item>
+        <Menu.Item key="1">
+          <a href="https://www.aliyun.com">Change password</a>
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item key="3" onClick={() => onClickLogout()}>
+          Logout
+        </Menu.Item>
+      </Menu>
+    );
+  };
+
   return (
     <Wrapper>
       <Item>
@@ -46,7 +67,7 @@ export function Badges() {
         </Dropdown>
       </Item>
       <Item>
-        <Dropdown overlay={UserMenu} trigger={['click']}>
+        <Dropdown overlay={() => UserMenu()} trigger={['click']}>
           <a
             className="ant-dropdown-link"
             onClick={e => e.preventDefault()}
