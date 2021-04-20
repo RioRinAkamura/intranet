@@ -1,6 +1,7 @@
 import { GithubRepoFormState } from 'app/pages/HomePage/Features/GithubRepoForm/slice/types';
 import { ThemeState } from 'styles/theme/slice/types';
 import { UserspageState } from 'app/pages/UserPage/UserListPage/slice/types';
+import { State } from 'app/components/ChangePasswordModal/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /*
@@ -13,5 +14,6 @@ export interface RootState {
   theme?: ThemeState;
   githubRepoForm?: GithubRepoFormState;
   userspage?: UserspageState;
+  changePassword?: State;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }
