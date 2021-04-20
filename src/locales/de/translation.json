@@ -186,6 +186,10 @@
           "edit": "Edit",
           "submit": "Save",
           "cancel": "Cancel"
+        },
+        "code": {
+          "label": "Code",
+          "placeholder": "User's code"
         }
       }
     }

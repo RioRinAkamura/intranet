@@ -105,11 +105,12 @@ export const BankAccounts = (props: Props) => {
                   </Col>
                 </Row>
               ))}
-              <FormItem>
+              <FormItem label="&nbsp;">
                 <Button
                   type="dashed"
                   onClick={() => add()}
                   block
+                  size="large"
                   icon={<PlusOutlined />}
                 >
                   {t(UserDetailMessages.formBankAddButton())}

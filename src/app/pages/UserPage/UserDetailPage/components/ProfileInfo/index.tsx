@@ -109,7 +109,6 @@ export const ProfileInfo = (props: Props) => {
             size="large"
             placeholder={t(UserDetailMessages.formEmailPlaceholder())}
           />
-          <Row gutter={[16, 16]}></Row>
         </FormItem>
       </Col>
       <Col md={6} xs={24}>
@@ -125,23 +124,49 @@ export const ProfileInfo = (props: Props) => {
         </FormItem>
       </Col>
       <Col md={6} xs={24}>
-        <FormItem name="id_number" label="Id Number">
-          <Input size="large" />
+        <FormItem
+          name="id_number"
+          label={t(UserDetailMessages.formIdNumberLabel())}
+        >
+          <Input
+            size="large"
+            placeholder={t(UserDetailMessages.formIdNumberPlaceholder())}
+          />
         </FormItem>
       </Col>
       <Col md={6} xs={24}>
-        <FormItem name="issued_date" label="Issued Date">
-          <DatePicker size="large" />
+        <FormItem
+          name="issued_date"
+          label={t(UserDetailMessages.formIssuedDateLabel())}
+        >
+          <DatePicker
+            size="large"
+            placeholder={t(UserDetailMessages.formIssuedDatePlaceholder())}
+          />
         </FormItem>
       </Col>
       <Col md={6} xs={24}>
-        <FormItem name="issued_place" label="Issued Place">
-          <Input size="large" />
+        <FormItem
+          name="issued_place"
+          label={t(UserDetailMessages.formIssuedPlaceLabel())}
+        >
+          <Input
+            size="large"
+            placeholder={t(UserDetailMessages.formIssuedPlacePlaceholder())}
+          />
         </FormItem>
       </Col>
       <Col md={6} xs={24}>
-        <FormItem name="social_insurance_no" label="Social Insurance No">
-          <Input size="large" />
+        <FormItem
+          name="social_insurance_no"
+          label={t(UserDetailMessages.formSocialInsuranceNoLabel())}
+        >
+          <Input
+            size="large"
+            placeholder={t(
+              UserDetailMessages.formSocialInsuranceNoPlaceholder(),
+            )}
+          />
         </FormItem>
       </Col>
     </Row>

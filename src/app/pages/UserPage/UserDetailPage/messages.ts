@@ -14,6 +14,10 @@ export const UserDetailMessages = {
     _t(translations.UserDetailPage.modal.form.avatar.upload, 'Upload'),
   formAvatarLabel: () =>
     _t(translations.UserDetailPage.modal.form.avatar.label, 'Avatar'),
+  formCodeLabel: () =>
+    _t(translations.UserDetailPage.modal.form.code.label, 'Code'),
+  formCodePlaceholder: () =>
+    _t(translations.UserDetailPage.modal.form.code.placeholder, "User's code"),
   formEmptyAvatar: () =>
     _t(
       translations.UserDetailPage.modal.form.avatar.empty,
