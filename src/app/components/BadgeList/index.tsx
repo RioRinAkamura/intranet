@@ -13,4 +13,9 @@ export function BadgeList() {
 const Wrapper = styled.ul`
   padding-right: 20px;
   margin-bottom: 0;
+  padding-left: 0;
+
+  @media screen and (max-width: 480px) {
+    padding-right: 0;
+  }
 `;
