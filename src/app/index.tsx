@@ -30,11 +30,11 @@ export function App() {
   return (
     <BrowserRouter>
       <Helmet
-        titleTemplate="%s - React Boilerplate"
-        defaultTitle="React Boilerplate"
+        titleTemplate="%s - Staff Management"
+        defaultTitle="Staff Management"
         htmlAttributes={{ lang: i18n.language }}
       >
-        <meta name="description" content="A React Boilerplate application" />
+        <meta name="description" content="A Staff Management application" />
       </Helmet>
       <AuthContextProvider authProvider={authProvider}>
         <Switch>
