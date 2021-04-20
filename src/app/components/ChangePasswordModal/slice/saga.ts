@@ -1,6 +1,7 @@
 import { take, call, put, select, takeLatest, delay } from 'redux-saga/effects';
 import { changePasswordActions as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { api } from 'utils/api';
 
 function* changePassword(
   action: PayloadAction<{
@@ -11,12 +12,14 @@ function* changePassword(
 ) {
   try {
     //yield call api change Password
+    const { oldpassword, newpassword } = action.payload;
+    yield call(() => api.auth.changePassword(oldpassword, newpassword));
     yield put({ type: actions.changeSuccess.type });
+
+    yield put({ type: actions.resetState.type });
   } catch (err) {
-    console.log(err);
     yield put({ type: actions.changeErr.type });
   } finally {
-    yield put({ type: actions.resetState.type });
   }
 }
 

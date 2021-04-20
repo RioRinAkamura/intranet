@@ -43,7 +43,6 @@ const slice = createSlice({
       state.isLoading = false;
       state.changePasswordSuccess = false;
       state.changePasswordFailed = true;
-      state.isModalVisible = false;
     },
     resetState(state) {
       state.isLoading = false;

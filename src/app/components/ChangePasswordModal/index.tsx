@@ -3,7 +3,6 @@ import { Modal, Form, Input, Space, Button, Spin, Divider } from 'antd';
 import { messages } from './messages';
 import { useTranslation } from 'react-i18next';
 import { ToastMessageType, useNotify } from '../ToastNotification';
-import styled from 'styled-components';
 import { useChangePassword } from '../ChangePasswordHook';
 
 interface Props {
@@ -18,9 +17,13 @@ export const ChangePasswordModal = (props: Props) => {
   const { t } = useTranslation();
   const { notify } = useNotify();
   const { changePasswordState } = useChangePassword();
+  const isLoading = changePasswordState?.isLoading;
 
   useEffect(() => {
     form.resetFields();
+  }, [isModalVisible]);
+
+  useEffect(() => {
     if (changePasswordState?.changePasswordSuccess) {
       notify({
         type: ToastMessageType.Info,
@@ -37,7 +40,7 @@ export const ChangePasswordModal = (props: Props) => {
         duration: 2,
       });
     }
-  }, [isModalVisible]);
+  });
 
   const formItemLayout = {
     labelCol: {
@@ -61,7 +64,12 @@ export const ChangePasswordModal = (props: Props) => {
         <Button key="back" onClick={handleCancel}>
           {t(messages.changePasswordCancel())}
         </Button>,
-        <Button form="changePasswordModal" type="primary" htmlType="submit">
+        <Button
+          loading={isLoading}
+          form="changePasswordModal"
+          type="primary"
+          htmlType="submit"
+        >
           {t(messages.changePasswordTitle())}
         </Button>,
       ]}
@@ -136,22 +144,7 @@ export const ChangePasswordModal = (props: Props) => {
         >
           <Input.Password />
         </Form.Item>
-
-        {changePasswordState?.isLoading ? <SpinLoading></SpinLoading> : ''}
       </Form>
     </Modal>
   );
 };
-
-const SpinLoading = styled(Spin)`
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background-color: rgb(255 255 255 / 50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-`;
