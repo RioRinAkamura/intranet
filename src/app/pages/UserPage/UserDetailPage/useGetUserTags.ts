@@ -1,24 +1,22 @@
-import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import * as React from 'react';
 import fakeAPI from '../../../../utils/fakeAPI';
+import { TagType } from '../types';
 
-export const useGetUserDetail = (
-  id?: string,
-): {
+export const useGetUserTags = (): {
   loading: boolean;
   error?: Error;
-  user: Employee | undefined;
+  tags: TagType[] | undefined;
 } => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(undefined);
-  const [user, setUser] = React.useState<Employee | undefined>();
+  const [tags, setTags] = React.useState<TagType[] | undefined>([]);
 
   React.useEffect(() => {
     setLoading(true);
     fakeAPI
-      .get('/hr/employees/' + id)
+      .get('/hr/employees/tags')
       .then((response: any) => {
-        setUser(response);
+        setTags(response);
       })
       .catch(err => {
         setError(err);
@@ -26,10 +24,10 @@ export const useGetUserDetail = (
       .finally(() => {
         setLoading(false);
       });
-  }, [id]);
+  }, []);
   return {
     loading,
     error,
-    user,
+    tags,
   };
 };

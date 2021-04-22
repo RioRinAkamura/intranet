@@ -85,6 +85,16 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.profile.gender.female.label,
       'Female',
     ),
+  formGenderOtherLabel: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.gender.other.label,
+      'Other',
+    ),
+  formEmptyGender: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.gender.empty,
+      "Please select user's gender",
+    ),
   formPhoneNumberLabel: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.phoneNumber.label,
@@ -208,6 +218,13 @@ export const UserDetailMessages = {
     ),
   formTypeEtcLabel: () =>
     _t(translations.UserDetailPage.modal.form.job.type.etc.label, 'Etc'),
+  formJobTagsLabel: () =>
+    _t(translations.UserDetailPage.modal.form.job.jobTags.label, 'Tags'),
+  formJobTagsPlaceholder: () =>
+    _t(
+      translations.UserDetailPage.modal.form.job.jobTags.placeholder,
+      "User's tags",
+    ),
   formBankAccountsTitle: () =>
     _t(translations.UserDetailPage.modal.form.bank.title, 'Bank Accounts'),
   formBankNameLabel: () =>
@@ -307,4 +324,6 @@ export const UserDetailMessages = {
     _t(translations.UserDetailPage.modal.form.button.submit, 'Save'),
   formCancelButton: () =>
     _t(translations.UserDetailPage.modal.form.button.cancel, 'Cancel'),
+  formBackButton: () =>
+    _t(translations.UserDetailPage.modal.form.button.back, 'Back'),
 };

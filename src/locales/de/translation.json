@@ -96,6 +96,10 @@
             },
             "female": {
               "label": "Female"
+            },
+            "empty": "Please select user's gender",
+            "other": {
+              "label": "Other"
             }
           },
           "phoneNumber": {
@@ -157,6 +161,10 @@
             "etc": {
               "label": "Etc"
             }
+          },
+          "jobTags": {
+            "label": "Tags",
+            "placeholder": "User's tags"
           }
         },
         "bank": {
@@ -210,7 +218,8 @@
         "button": {
           "edit": "Edit",
           "submit": "Save",
-          "cancel": "Cancel"
+          "cancel": "Cancel",
+          "back": "Back"
         },
         "code": {
           "label": "Code",
@@ -220,8 +229,8 @@
     }
   },
   "UsersPage": {
-    "title": "Login",
-    "description": "Login Page",
+    "title": "User Page",
+    "description": "User Page",
     "createUserButton": "Create User",
     "exportCSV": "Export as CSV",
     "exportAllUser": "Export as CSV for all",
@@ -233,7 +242,7 @@
       "firstName": "First Name",
       "lastName": "Last Name",
       "email": "Email",
-      "options": "Options",
+      "options": "Actions",
       "viewTooltip": "View",
       "EditTooltip": "Edit",
       "DeleteTooltip": "Delete",

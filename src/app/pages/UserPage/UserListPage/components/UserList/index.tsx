@@ -15,20 +15,19 @@ import {
   PhoneFilled,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router';
-import { UserProfile } from '../../../types';
+import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 interface Props {
   loading: boolean;
-  data: UserProfile[];
+  data: Employee[];
   isMore: boolean;
   moreLoading: boolean;
   onDelete: (id: string) => void;
 }
 
-export const UserList = (props: Props) => {
+export const UserList = React.memo((props: Props) => {
   const { loading, data, isMore, moreLoading, onDelete } = props;
   const history = useHistory();
-
   return (
     <Wrapper>
       <List
@@ -36,7 +35,7 @@ export const UserList = (props: Props) => {
         loading={loading}
         itemLayout="vertical"
         dataSource={data}
-        renderItem={(user: UserProfile, index: number) => (
+        renderItem={(user: Employee, index: number) => (
           <ListItem key={index}>
             <Row gutter={[8, 8]}>
               <Col style={{ textAlign: 'center' }} span={10}>
@@ -105,7 +104,7 @@ export const UserList = (props: Props) => {
         ))}
     </Wrapper>
   );
-};
+});
 
 const IconButton = styled(Button)`
   margin: 5px;

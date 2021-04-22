@@ -6,18 +6,8 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import {
-  Avatar,
-  Button,
-  Col,
-  Divider,
-  Form,
-  Input,
-  message,
-  Row,
-  Upload,
-} from 'antd';
-import { CodeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { Avatar, Button, Col, Form, Input, message, Row, Upload } from 'antd';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { useHistory, useLocation, useParams } from 'react-router';
@@ -27,7 +17,8 @@ import { BankAccounts } from './components/BankAccounts/Loadable';
 import { SocialNetwork } from './components/SocialNetwork/Loadable';
 import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
-import { UserProfile } from '../types';
+import moment from 'moment';
+import { useUpdateUserDetail } from './useUpdateUserDetail';
 
 interface Props {}
 
@@ -54,9 +45,6 @@ const beforeUpload = (file: File) => {
 
 interface LocationState {
   edit: boolean;
-  from: {
-    pathname: string;
-  };
 }
 
 export function UserDetailPage(props: Props) {
@@ -67,18 +55,24 @@ export function UserDetailPage(props: Props) {
   const history = useHistory();
 
   const { user } = useGetUserDetail(id);
+  const { update, loading } = useUpdateUserDetail();
 
   const [imageURL, setImageURL] = React.useState('');
   const [loadingUpload, setLoadingUpload] = React.useState(false);
   const [isCreate, setIsCreate] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
-  const [data, setData] = React.useState<UserProfile>();
+
+  const dateFormat = 'YYYY-MM-DD';
 
   React.useEffect(() => {
     if (user) {
-      form.setFieldsValue({ ...user });
       console.log(user);
-      setData({ ...user });
+      form.setFieldsValue({
+        ...user,
+        id: user.id,
+        dob: user.dob && moment(user.dob, dateFormat),
+        issued_date: user.issued_date && moment(user.issued_date, dateFormat),
+      });
     }
   }, [form, user]);
 
@@ -115,14 +109,7 @@ export function UserDetailPage(props: Props) {
   }, [history, location]);
 
   const uploadButton = (
-    <div
-      style={{
-        width: '50%',
-        margin: '0 25%',
-        border: '1px dashed',
-        padding: '5em',
-      }}
-    >
+    <div>
       {loadingUpload ? <LoadingOutlined /> : <PlusOutlined />}
       <div style={{ marginTop: 8 }}>
         {t(UserDetailMessages.formAvatarUpload())}
@@ -130,17 +117,19 @@ export function UserDetailPage(props: Props) {
     </div>
   );
 
-  const editProps = isCreate
-    ? {}
-    : isEdit
-    ? {}
-    : { readOnly: true, bordered: false };
+  const isView = isCreate || isEdit ? false : true;
 
   const handleSubmit = () => {
     form
       .validateFields()
-      .then(values => {
-        console.log(values);
+      .then(async values => {
+        values.dob = moment(values.dob).format('YYYY-MM-DD');
+        if (isEdit) {
+          const response = await update(values);
+          if (response) {
+            setIsEdit(false);
+          }
+        }
       })
       .catch(err => console.log(err));
   };
@@ -149,184 +138,141 @@ export function UserDetailPage(props: Props) {
     <Wrapper>
       <WrapperButton>
         <Row gutter={[8, 8]} justify="end">
+          <Col md={isCreate ? 2 : 4} xs={12}>
+            <Row gutter={[8, 8]}>
+              <Col span={isCreate ? 24 : 12}>
+                <Button
+                  block
+                  size="large"
+                  shape="round"
+                  onClick={() => history.push('/employees')}
+                >
+                  {t(UserDetailMessages.formBackButton())}
+                </Button>
+              </Col>
+              {isCreate ? (
+                <></>
+              ) : isEdit ? (
+                <Col span={12}>
+                  <Button
+                    block
+                    size="large"
+                    shape="round"
+                    onClick={() => {
+                      setIsEdit(false);
+                    }}
+                  >
+                    {t(UserDetailMessages.formCancelButton())}
+                  </Button>
+                </Col>
+              ) : (
+                <Col span={12}>
+                  <Button
+                    type="primary"
+                    block
+                    size="large"
+                    shape="round"
+                    loading={loading}
+                    onClick={() => setIsEdit(true)}
+                  >
+                    {t(UserDetailMessages.formEditButton())}
+                  </Button>
+                </Col>
+              )}
+            </Row>
+          </Col>
+        </Row>
+      </WrapperButton>
+      <Form form={form} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+        <Form.Item hidden name="id">
+          <Input hidden />
+        </Form.Item>
+        <WrapperItem>
+          <Row gutter={[32, 32]}>
+            <LeftScreen md={10}>
+              <Row gutter={[8, 8]} align="middle" justify="center">
+                <Col span={24}>
+                  <FormItemAvatar
+                    name="avatar"
+                    valuePropName="file"
+                    rules={[
+                      {
+                        required: true,
+                        message: t(UserDetailMessages.formEmptyAvatar()),
+                      },
+                    ]}
+                  >
+                    <WrapperImage style={{ textAlign: 'center' }}>
+                      <Upload
+                        name="avatar"
+                        listType="picture"
+                        showUploadList={false}
+                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        beforeUpload={beforeUpload}
+                        onChange={handleChange}
+                        accept="image/png, image/jpeg, image/jpg"
+                        disabled={!isCreate && !isEdit}
+                      >
+                        {imageURL || user?.avatar ? (
+                          <Avatar
+                            src={user?.avatar || imageURL}
+                            alt="avatar"
+                            size={100}
+                          />
+                        ) : (
+                          uploadButton
+                        )}
+                      </Upload>
+                    </WrapperImage>
+                  </FormItemAvatar>
+                </Col>
+              </Row>
+              <ProfileInfo isView={isView} />
+            </LeftScreen>
+            <RightScreen md={14}>
+              <JobInfo isView={isView} />
+              <SocialNetwork isView={isView} />
+              <BankAccounts isView={isView} />
+            </RightScreen>
+          </Row>
+        </WrapperItem>
+      </Form>
+      <WrapperButton>
+        <Row gutter={[8, 8]} justify="end">
           <Col md={2} xs={12}>
-            {isCreate ? (
+            {(isCreate || isEdit) && (
               <Button
                 type="primary"
                 block
                 size="large"
                 shape="round"
-                onClick={handleSubmit}
-              >
-                Save
-              </Button>
-            ) : isEdit ? (
-              <Button
-                type="primary"
-                block
-                size="large"
-                shape="round"
+                loading={loading}
                 onClick={() => {
-                  setIsEdit(false);
                   handleSubmit();
                 }}
               >
-                Save
-              </Button>
-            ) : (
-              <Button
-                type="primary"
-                block
-                size="large"
-                shape="round"
-                onClick={() => setIsEdit(true)}
-              >
-                Edit
+                {t(UserDetailMessages.formSubmitButton())}
               </Button>
             )}
           </Col>
         </Row>
       </WrapperButton>
-      {isCreate || isEdit ? (
-        <Form form={form} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-          <WrapperItem>
-            <Row gutter={[32, 32]}>
-              <Col md={8} style={{ borderRight: '8px solid #ececec' }}>
-                <Row gutter={[8, 8]} align="middle" justify="center">
-                  <Col span={24}>
-                    <FormItem
-                      name="avatar"
-                      valuePropName="file"
-                      rules={[
-                        {
-                          required: true,
-                          message: t(UserDetailMessages.formEmptyAvatar()),
-                        },
-                      ]}
-                    >
-                      <div style={{ textAlign: 'center' }}>
-                        <UploadImage
-                          name="avatar"
-                          listType="picture"
-                          showUploadList={false}
-                          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                          beforeUpload={beforeUpload}
-                          onChange={handleChange}
-                          accept="image/png, image/jpeg, image/jpg"
-                        >
-                          {imageURL || form.getFieldValue('avatar') ? (
-                            <Avatar
-                              src={imageURL || form.getFieldValue('avatar')}
-                              alt="avatar"
-                              size={250}
-                            />
-                          ) : (
-                            uploadButton
-                          )}
-                        </UploadImage>
-                      </div>
-                    </FormItem>
-                  </Col>
-                  <Col>
-                    <FormItem
-                      name="code"
-                      label={t(UserDetailMessages.formCodeLabel())}
-                    >
-                      <Input
-                        {...editProps}
-                        size="large"
-                        placeholder={t(
-                          UserDetailMessages.formCodePlaceholder(),
-                        )}
-                      />
-                    </FormItem>
-                  </Col>
-                </Row>
-              </Col>
-              <Col md={16} style={{ borderLeft: '2px solid #ececec' }}>
-                <ProfileInfo />
-              </Col>
-            </Row>
-          </WrapperItem>
-          <Divider />
-          <Row gutter={[16, 16]}>
-            <Col md={8}>
-              <WrapperItem>
-                <SocialNetwork />
-              </WrapperItem>
-            </Col>
-            <Col md={8}>
-              <WrapperItem>
-                <JobInfo />
-              </WrapperItem>
-            </Col>
-            <Col md={8}>
-              <WrapperItem>
-                <BankAccounts />
-              </WrapperItem>
-            </Col>
-          </Row>
-        </Form>
-      ) : (
-        data && (
-          <>
-            <WrapperItem>
-              <Row gutter={[32, 32]}>
-                <Col md={8} style={{ borderRight: '8px solid #ececec' }}>
-                  <Row gutter={[32, 32]} align="middle" justify="center">
-                    <Col span={24}>
-                      <div style={{ textAlign: 'center' }}>
-                        <Avatar src={data.avatar} alt="avatar" size={250} />
-                      </div>
-                    </Col>
-                    <Col>
-                      <div>
-                        <span>
-                          {data.first_name} {data.last_name}
-                        </span>
-                      </div>
-                      <div>
-                        <span>
-                          <CodeOutlined style={{ fontSize: 'x-large' }} />{' '}
-                          123123123
-                        </span>
-                      </div>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col md={16} style={{ borderLeft: '2px solid #ececec' }}>
-                  <ProfileInfo />
-                </Col>
-              </Row>
-            </WrapperItem>
-            <Divider />
-            <Row gutter={[16, 16]}>
-              <Col md={8}>
-                <WrapperItem>
-                  <SocialNetwork />
-                </WrapperItem>
-              </Col>
-              <Col md={8}>
-                <WrapperItem>
-                  <JobInfo />
-                </WrapperItem>
-              </Col>
-              <Col md={8}>
-                <WrapperItem>
-                  <BankAccounts />
-                </WrapperItem>
-              </Col>
-            </Row>
-          </>
-        )
-      )}
     </Wrapper>
   );
 }
 
-const FormItem = styled(Form.Item)`
+const LeftScreen = styled(Col)`
+  border-right: 8px solid #ececec;
+`;
+
+const RightScreen = styled(Col)`
+  border-left: 2px solid #ececec;
+`;
+
+const FormItemAvatar = styled(Form.Item)`
   div {
     width: 100%;
+    text-align: center;
   }
   label {
     font-weight: 500;
@@ -339,7 +285,7 @@ const Wrapper = styled.div`
 
 const WrapperItem = styled.div`
   margin: 5px;
-  padding: 10px;
+  padding: 20px;
   height: 100%;
   background-color: #fff;
   border-radius: 5px;
@@ -352,9 +298,7 @@ const WrapperButton = styled.div`
   height: 100%;
 `;
 
-const UploadImage = styled(Upload)`
-  width: 250px;
-  height: 250px;
-  line-height: 250px;
-  font-size: 18px;
+const WrapperImage = styled.div`
+  margin-top: 1em;
+  text-align: center;
 `;

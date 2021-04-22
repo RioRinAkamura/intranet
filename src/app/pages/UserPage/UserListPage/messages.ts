@@ -7,8 +7,8 @@ import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
 export const UsersMessages = {
-  title: () => _t(translations.UsersPage.title, 'Login'),
-  description: () => _t(translations.UsersPage.description, 'Login Page'),
+  title: () => _t(translations.UsersPage.title, 'User Page'),
+  description: () => _t(translations.UsersPage.description, 'User Page'),
   createUserButton: () =>
     _t(translations.UsersPage.createUserButton, 'Create User'),
   exportCSV: () => _t(translations.UsersPage.exportCSV, 'Export as CSV'),
@@ -28,7 +28,7 @@ export const UsersMessages = {
   listLastNameTitle: () =>
     _t(translations.UsersPage.list.lastName, 'Last Name'),
   listEmailTitle: () => _t(translations.UsersPage.list.email, 'Email'),
-  listOptionsTitle: () => _t(translations.UsersPage.list.options, 'Options'),
+  listOptionsTitle: () => _t(translations.UsersPage.list.options, 'Actions'),
   listViewTooltip: () => _t(translations.UsersPage.list.viewTooltip, 'View'),
   listEditTooltip: () => _t(translations.UsersPage.list.EditTooltip, 'Edit'),
   listDeleteTooltip: () =>

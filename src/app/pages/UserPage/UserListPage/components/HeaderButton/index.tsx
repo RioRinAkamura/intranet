@@ -21,12 +21,12 @@ import styled from 'styled-components/macro';
 import { UsersMessages } from '../../messages';
 import { CSVLink } from 'react-csv';
 import { request } from 'utils/request';
-import { UserProfile } from '../../../types';
+import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 interface HeaderButtonProps {
   pagination: TablePaginationConfig;
-  data?: UserProfile[];
-  selectedRows: UserProfile[];
+  data?: Employee[];
+  selectedRows: Employee[];
 }
 
 export const HeaderButton = (props: HeaderButtonProps) => {
@@ -68,7 +68,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     {
       title: t(UsersMessages.listAvatarTitle()),
       dataIndex: 'avatar',
-      render: (text, record: UserProfile) => (
+      render: (text, record: Employee) => (
         <Avatar
           size={100}
           src={text}

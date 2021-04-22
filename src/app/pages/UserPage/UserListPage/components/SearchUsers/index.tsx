@@ -13,10 +13,11 @@ interface Props {
   onSearch: () => void;
   onReset: () => void;
   form: FormInstance;
+  loading: boolean;
 }
 
 export const SearchUsers = memo((props: Props) => {
-  const { form, onSearch, onReset } = props;
+  const { form, onSearch, onReset, loading } = props;
   const { t } = useTranslation();
 
   return (
@@ -34,12 +35,17 @@ export const SearchUsers = memo((props: Props) => {
         <Col>
           <Row gutter={[8, 8]} justify="end">
             <Col>
-              <Button type="primary" onClick={onSearch}>
+              <Button
+                loading={loading}
+                type="primary"
+                htmlType="submit"
+                onClick={onSearch}
+              >
                 {t(UsersMessages.searchSearchButton())}
               </Button>
             </Col>
             <Col>
-              <Button onClick={onReset}>
+              <Button loading={loading} onClick={onReset}>
                 {t(UsersMessages.searchResetButton())}
               </Button>
             </Col>
