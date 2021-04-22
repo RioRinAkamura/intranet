@@ -66,7 +66,6 @@ export function UserDetailPage(props: Props) {
 
   React.useEffect(() => {
     if (user) {
-      console.log(user);
       form.setFieldsValue({
         ...user,
         id: user.id,
@@ -125,6 +124,7 @@ export function UserDetailPage(props: Props) {
       .then(async values => {
         values.dob = moment(values.dob).format('YYYY-MM-DD');
         if (isEdit) {
+          delete values.email;
           const response = await update(values);
           if (response) {
             setIsEdit(false);
@@ -227,7 +227,7 @@ export function UserDetailPage(props: Props) {
                   </FormItemAvatar>
                 </Col>
               </Row>
-              <ProfileInfo isView={isView} />
+              <ProfileInfo isView={isView} isEdit={isEdit} />
             </LeftScreen>
             <RightScreen md={14}>
               <JobInfo isView={isView} />

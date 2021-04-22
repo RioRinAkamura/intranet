@@ -21,6 +21,7 @@ import { UserDetailMessages } from '../../messages';
 
 interface ProfileInfoProps {
   isView?: boolean;
+  isEdit?: boolean;
 }
 
 const inputProps: InputProps = {
@@ -36,7 +37,7 @@ const datePickerProps: DatePickerProps = {
 };
 
 export const ProfileInfo = (props: ProfileInfoProps) => {
-  const { isView } = props;
+  const { isView, isEdit } = props;
   const { t } = useTranslation();
 
   return (
@@ -196,6 +197,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
           >
             <Input
               {...(isView ? inputProps : {})}
+              disabled={isEdit}
               size="large"
               placeholder={
                 isView ? '' : t(UserDetailMessages.formEmailPlaceholder())

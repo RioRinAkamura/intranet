@@ -1,13 +1,16 @@
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from 'utils/api';
+import { UserDetailMessages } from './messages';
 
 export const useUpdateUserDetail = (): {
   loading: boolean;
   error?: Error;
   update: (data: Employee) => Promise<Employee | undefined>;
 } => {
+  const { t } = useTranslation();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(undefined);
   const { notify } = useNotify();
@@ -16,7 +19,14 @@ export const useUpdateUserDetail = (): {
     setLoading(true);
     try {
       const response = await api.hr.employee.update(data);
-      return response;
+      if (response) {
+        notify({
+          type: ToastMessageType.Info,
+          duration: 2,
+          message: t(UserDetailMessages.updateSuccessMessage()),
+        });
+        return response;
+      }
     } catch (error) {
       setError(error);
       notify({

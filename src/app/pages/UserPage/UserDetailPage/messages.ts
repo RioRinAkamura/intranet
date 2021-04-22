@@ -326,4 +326,9 @@ export const UserDetailMessages = {
     _t(translations.UserDetailPage.modal.form.button.cancel, 'Cancel'),
   formBackButton: () =>
     _t(translations.UserDetailPage.modal.form.button.back, 'Back'),
+  updateSuccessMessage: () =>
+    _t(
+      translations.UserDetailPage.modal.message.sucess,
+      'Update employee successfully',
+    ),
 };

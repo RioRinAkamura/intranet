@@ -225,6 +225,9 @@
           "label": "Code",
           "placeholder": "User's code"
         }
+      },
+      "message": {
+        "sucess": "Update employee successfully"
       }
     }
   },
@@ -298,5 +301,22 @@
       "forgotButton": "Send Request",
       "backButton": "Back to login page"
     }
+  },
+  "changPassword": {
+    "title": "",
+    "cancel": "",
+    "oldPassword": "",
+    "newPassword": "",
+    "retypePassword": "",
+    "isRequired": "",
+    "minLength": "",
+    "complexPassword": "",
+    "isNotMatch": "",
+    "changePassSuccess": "",
+    "changePassFailed": "",
+    "wrongOldPassword": "",
+    "inputOldPassword": "",
+    "inputNewPassword": "",
+    "inputRetypePassword": ""
   }
 }

@@ -105,7 +105,7 @@ export const JobInfo = (props: JobInfoProps) => {
               tagRender={props => (
                 <TagOption color="blue" style={{ padding: '6px 12px' }}>
                   {props.label}
-                  <Link onClick={() => props.onClose()}>x</Link>
+                  {!isView && <Link onClick={() => props.onClose()}>x</Link>}
                 </TagOption>
               )}
             >
