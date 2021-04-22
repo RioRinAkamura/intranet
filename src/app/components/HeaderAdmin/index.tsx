@@ -3,8 +3,14 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
+  AppstoreOutlined,
+  ContainerOutlined,
+  MailOutlined,
+  PieChartOutlined,
+  TeamOutlined,
 } from '@ant-design/icons';
-import { Breadcrumb } from 'antd';
+import { Breadcrumb, Drawer, Menu } from 'antd';
+import SubMenu from 'antd/lib/menu/SubMenu';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
@@ -20,64 +26,66 @@ interface Props {
 
 const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
   return (
-    <Wrapper>
-      <PageWrapper>
-        <div style={{ display: 'flex' }}>
-          <IconToggle>
-            {React.createElement(
-              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-              {
-                className: 'trigger',
-                onClick: () => {
-                  onCollapse(collapsed);
+    <>
+      <Wrapper>
+        <PageWrapper>
+          <div style={{ display: 'flex' }}>
+            <IconToggle>
+              {React.createElement(
+                collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                {
+                  className: 'trigger',
+                  onClick: () => {
+                    onCollapse(collapsed);
+                  },
                 },
-              },
-            )}
-          </IconToggle>
+              )}
+            </IconToggle>
+            <NavList>
+              <NavItem>
+                <Link to="/">Dashboard</Link>
+              </NavItem>
+              <NavItem>
+                <Link to="/employees">Employees</Link>
+              </NavItem>
+              <NavItem>
+                <Link to="/">Setting</Link>
+              </NavItem>
+            </NavList>
+          </div>
+          <LogoHeader>
+            <Logo />
+          </LogoHeader>
+
+          <BadgeList />
+        </PageWrapper>
+
+        <SubHeader>
+          <Breadcrumb style={{ margin: '16px 0' }}>
+            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {window.location.pathname.substr(1)}
+            </Breadcrumb.Item>
+          </Breadcrumb>
           <NavList>
             <NavItem>
+              <Icon>
+                <LineChartOutlined />
+              </Icon>
               <Link to="/">Dashboard</Link>
             </NavItem>
+
             <NavItem>
-              <Link to="/employees">Employees</Link>
-            </NavItem>
-            <NavItem>
+              <Icon>
+                <SettingOutlined />
+              </Icon>
+
               <Link to="/">Setting</Link>
             </NavItem>
           </NavList>
-        </div>
-        <LogoHeader>
-          <Logo />
-        </LogoHeader>
-
-        <BadgeList />
-      </PageWrapper>
-
-      <SubHeader>
-        <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-          <Breadcrumb.Item>
-            {window.location.pathname.substr(1)}
-          </Breadcrumb.Item>
-        </Breadcrumb>
-        <NavList>
-          <NavItem>
-            <Icon>
-              <LineChartOutlined />
-            </Icon>
-            <Link to="/">Dashboard</Link>
-          </NavItem>
-
-          <NavItem>
-            <Icon>
-              <SettingOutlined />
-            </Icon>
-
-            <Link to="/">Setting</Link>
-          </NavItem>
-        </NavList>
-      </SubHeader>
-    </Wrapper>
+        </SubHeader>
+      </Wrapper>
+    </>
   );
 };
 
