@@ -17,7 +17,7 @@ import { BankAccounts } from './components/BankAccounts/Loadable';
 import { SocialNetwork } from './components/SocialNetwork/Loadable';
 import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
-import Tags from 'app/components/Tags';
+import { Tags } from './components/Tags';
 
 interface Props {}
 
