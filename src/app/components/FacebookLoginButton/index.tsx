@@ -1,6 +1,8 @@
 import { FacebookFilled } from '@ant-design/icons';
 import { Button } from 'antd';
 import { LoginMessages } from 'app/pages/Login/messages';
+import { useSocialLogin } from 'app/pages/Login/useSocialLogin';
+import config from 'config';
 import React from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { useTranslation } from 'react-i18next';
@@ -10,15 +12,16 @@ interface Props {}
 
 export const FacebookLoginButton = (props: Props) => {
   const { t } = useTranslation();
+  const { login } = useSocialLogin();
 
-  const responseFacebook = response => {
-    console.log(response);
+  const responseFacebook = async response => {
+    await login(response.accessToken, 'facebook');
   };
 
   return (
     <div>
       <FacebookLogin
-        appId="1088597931155576"
+        appId={config.FACEBOOK_APP_ID}
         callback={responseFacebook}
         render={renderProps => (
           <FacebookLoginBtn
