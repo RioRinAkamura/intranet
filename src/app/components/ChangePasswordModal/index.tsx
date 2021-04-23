@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button } from 'antd';
 import { messages } from './messages';
 import { useTranslation } from 'react-i18next';
 import { ToastMessageType, useNotify } from '../ToastNotification';
-import { useChangePassword } from '../ChangePasswordHook';
+import { useChangePassword } from './useChangePassword';
 
 interface Props {
   isModalVisible: boolean | undefined;

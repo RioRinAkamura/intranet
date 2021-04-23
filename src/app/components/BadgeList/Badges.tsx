@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Badge, Dropdown, Menu } from 'antd';
 import styled from 'styled-components';
 import { BellOutlined } from '@ant-design/icons';
@@ -9,7 +9,7 @@ import { ChangePasswordModal } from '../ChangePasswordModal';
 import {
   useChangePassword,
   ChangePasswordPayload,
-} from '../ChangePasswordHook';
+} from '../ChangePasswordModal/useChangePassword';
 
 export function Badges() {
   const { notify } = useNotify();
