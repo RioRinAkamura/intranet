@@ -17,7 +17,6 @@ import { BankAccounts } from './components/BankAccounts/Loadable';
 import { SocialNetwork } from './components/SocialNetwork/Loadable';
 import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
-import { Tags } from './components/Tags';
 import moment from 'moment';
 import { useUpdateUserDetail } from './useUpdateUserDetail';
 
