@@ -122,7 +122,8 @@ export function UserDetailPage(props: Props) {
     form
       .validateFields()
       .then(async values => {
-        values.dob = moment(values.dob).format('YYYY-MM-DD');
+        values.dob = moment(values.dob).format(dateFormat);
+        values.issued_date = moment(values.issued_date).format(dateFormat);
         if (isEdit) {
           delete values.email;
           const response = await update(values);

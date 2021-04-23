@@ -279,6 +279,20 @@ export const Users: React.FC = () => {
   };
 
   useEffect(() => {
+    // function setSearch(dataIndex: string) {
+    //   setSelectedKeys(prevState => ({
+    //     ...prevState,
+    //     code: urlParams.code,
+    //   }));
+    //   setSearchText(prevState => ({
+    //     ...prevState,
+    //     code: urlParams.code,
+    //   }));
+    //   setSearchedColumn(prevState => ({
+    //     ...prevState,
+    //     code: urlParams.code,
+    //   }));
+    // }
     if (urlParams.search) {
       searchForm.setFieldsValue({ search: urlParams.search });
     }
@@ -435,6 +449,7 @@ export const Users: React.FC = () => {
     {
       title: 'Tags',
       dataIndex: 'tags',
+      width: '10%',
       render: (text, record: Employee, index: number) => {
         return (
           <>
