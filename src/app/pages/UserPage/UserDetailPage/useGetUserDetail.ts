@@ -1,9 +1,9 @@
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import * as React from 'react';
-import fakeAPI from '../../../../utils/fakeAPI';
+import { api } from 'utils/api';
 
 export const useGetUserDetail = (
-  id?: string,
+  id: string,
 ): {
   loading: boolean;
   error?: Error;
@@ -15,17 +15,16 @@ export const useGetUserDetail = (
 
   React.useEffect(() => {
     setLoading(true);
-    fakeAPI
-      .get('/hr/employees/' + id)
-      .then((response: any) => {
+    (async () => {
+      try {
+        const response = await api.hr.employee.get(id);
         setUser(response);
-      })
-      .catch(err => {
-        setError(err);
-      })
-      .finally(() => {
+      } catch (error) {
+        setError(error);
+      } finally {
         setLoading(false);
-      });
+      }
+    })();
   }, [id]);
   return {
     loading,

@@ -48,7 +48,7 @@ interface LocationState {
 }
 
 export function UserDetailPage(props: Props) {
-  const { id } = useParams<Record<string, string | undefined>>();
+  const { id } = useParams<Record<string, string>>();
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const location = useLocation<LocationState>();
@@ -90,12 +90,12 @@ export function UserDetailPage(props: Props) {
   };
 
   React.useEffect(() => {
-    if (id) {
+    if (!history.location.pathname.includes('create')) {
       setIsCreate(false);
     } else {
       setIsCreate(true);
     }
-  }, [id]);
+  }, [history.location.pathname]);
 
   React.useEffect(() => {
     if (location.state) {
