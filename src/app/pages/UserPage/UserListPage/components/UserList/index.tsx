@@ -15,8 +15,9 @@ import {
   PhoneFilled,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router';
-import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
 
+type Employee = models.hr.Employee;
 interface Props {
   loading: boolean;
   data: Employee[];
