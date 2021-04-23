@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { Badge, Dropdown, Menu } from 'antd';
 import styled from 'styled-components';
 import { BellOutlined } from '@ant-design/icons';
@@ -67,6 +66,7 @@ export function Badges() {
           <a href="https://www.antgroup.com">Profile</a>
         </Menu.Item>
         <Menu.Item key="1">
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a onClick={showModal}>Change password</a>
         </Menu.Item>
         <Menu.Divider />
