@@ -9,7 +9,6 @@ import { Drawer, Layout, Menu } from 'antd';
 import React from 'react';
 import { isMobile } from 'react-device-detect';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import { Logo } from './Logo';
 
 interface Props {

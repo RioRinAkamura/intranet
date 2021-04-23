@@ -1,6 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Row } from 'antd';
-import { Link } from 'app/components/Link';
+import { Button, Form, Input } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';

@@ -10,9 +10,9 @@ import {
   Avatar,
   Collapse,
   TablePaginationConfig,
+  Tag,
 } from 'antd';
 import React, { Key, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components/macro';
 import {
   DeleteOutlined,
@@ -22,31 +22,36 @@ import {
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { DeleteModal } from 'app/components/DeleteModal';
-import { useUserspageSlice } from './slice';
 import { isMobileOnly } from 'react-device-detect';
 import { isEqual } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { UsersMessages } from './messages';
 import { Helmet } from 'react-helmet-async';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { SearchUsers } from './components/SearchUsers/Loadable';
 import { HeaderButton } from './components/HeaderButton/Loadable';
 import { UserList } from './components/UserList/Loadable';
-import { Filters, Pagination, UserProfile } from '../types';
+import { Filters, Pagination, ParamsPayload } from '../types';
 import { useGetUserList } from './useGetUserList';
+import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { parse, stringify } from 'query-string';
+
 const { Panel } = Collapse;
 
 export const Users: React.FC = () => {
   const { t } = useTranslation();
-  const { actions } = useUserspageSlice();
-  const dispatch = useDispatch();
+  const location = useLocation();
+  const urlParams: ParamsPayload = parse(location.search, {
+    sort: false,
+    parseNumbers: true,
+  });
   const [tablePagination, setTablePagination] = useState<Pagination>({
     current: 1,
-    pageSize: 4,
+    pageSize: 20,
     total: 0,
     totalPage: 0,
-    pageSizeOptions: ['2', '3', '4', '6'],
+    pageSizeOptions: ['10', '20', '50', '100'],
     showSizeChanger: true,
   });
   const [tableFilters, setTableFilters] = useState<Filters>({
@@ -54,17 +59,22 @@ export const Users: React.FC = () => {
     first_name: null,
     last_name: null,
     phone: null,
+    code: null,
   });
-  const { users, loading, resPagination } = useGetUserList(tablePagination);
+  const { users, loading, resPagination } = useGetUserList(
+    tablePagination,
+    urlParams,
+  );
   const [tableSort, setTableSort] = useState({});
   const [moreLoading, setMoreLoading] = useState(true);
-  const [userList, setUserList] = useState<UserProfile[]>([]);
+  const [userList, setUserList] = useState<Employee[]>([]);
   const [isMore, setIsMore] = useState(true);
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
+  const [searchText, setSearchText] = useState({});
+  const [searchedColumn, setSearchedColumn] = useState({});
   const [deleteModal, setDeleteModal] = useState({ open: false, id: '' });
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
-  const [selectedRows, setSelectedRows] = useState<UserProfile[]>([]);
+  const [selectedRows, setSelectedRows] = useState<Employee[]>([]);
+  const [selectedKeys, setSelectedKeys] = useState({});
 
   const [searchForm] = Form.useForm();
   const history = useHistory();
@@ -81,6 +91,17 @@ export const Users: React.FC = () => {
       setTableSort(sorter);
     }
     if (!filterChanges && !sortChanges) {
+      console.log(urlParams);
+      history.replace({
+        search: stringify(
+          {
+            ...urlParams,
+            page: pagination.current,
+            limit: pagination.pageSize,
+          },
+          { sort: false },
+        ),
+      });
       setTablePagination({ ...pagination });
     }
   };
@@ -117,51 +138,41 @@ export const Users: React.FC = () => {
   }, [isMore, moreLoading, resPagination.total, tablePagination, userList]);
 
   const getColumnSearchProps = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => (
+    filterDropdown: ({ confirm }) => (
       <div style={{ padding: 8 }}>
         <Input
           placeholder={`${t(
             UsersMessages.filterInputPlaceholder(),
           )} ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          value={selectedKeys[dataIndex]}
+          onChange={e => {
+            e.persist();
+            setSelectedKeys(prevState => ({
+              ...prevState,
+              [dataIndex]: e.target.value ? e.target.value : null,
+            }));
+          }}
+          onPressEnter={() => handleSearch(dataIndex, confirm)}
           style={{ width: 188, marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            onClick={() => handleSearch(dataIndex, confirm)}
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
+            loading={loading}
           >
             {t(UsersMessages.filterSearchButton())}
           </Button>
           <Button
-            onClick={() => handleReset(clearFilters)}
+            onClick={() => handleReset(dataIndex, confirm)}
             size="small"
+            loading={loading}
             style={{ width: 90 }}
           >
             {t(UsersMessages.filterResetButton())}
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({ closeDropdown: false });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            {t(UsersMessages.filterFilterButton())}
           </Button>
         </Space>
       </div>
@@ -169,7 +180,6 @@ export const Users: React.FC = () => {
     filterIcon: filtered => (
       <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
-    filtered: true,
     onFilter: (value, record) =>
       record[dataIndex]
         ? record[dataIndex]
@@ -178,10 +188,13 @@ export const Users: React.FC = () => {
             .includes(value.toLowerCase())
         : '',
     render: text =>
-      searchedColumn === dataIndex ? (
+      searchedColumn[dataIndex] || searchForm.getFieldValue('search') ? (
         <Highlighter
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[searchText]}
+          searchWords={[
+            searchText[dataIndex],
+            searchForm.getFieldValue('search'),
+          ]}
           autoEscape
           textToHighlight={text ? text.toString() : ''}
         />
@@ -190,38 +203,185 @@ export const Users: React.FC = () => {
       ),
   });
 
-  const handleSearch = (
-    selectedKeys: React.SetStateAction<string>[],
-    confirm: () => void,
-    dataIndex: string,
-  ) => {
+  const handleSearch = (dataIndex: string, confirm: () => void) => {
+    setSearchText(prevState => ({
+      ...prevState,
+      [dataIndex]: selectedKeys[dataIndex],
+    }));
+    setSearchedColumn(prevState => ({
+      ...prevState,
+      [dataIndex]: selectedKeys[dataIndex],
+    }));
+    if (selectedKeys[dataIndex]) {
+      history.replace({
+        search: stringify(
+          {
+            ...urlParams,
+            [dataIndex]: selectedKeys[dataIndex],
+          },
+          { sort: false },
+        ),
+      });
+    } else {
+      delete urlParams[dataIndex];
+      history.replace({
+        search: stringify(
+          {
+            ...urlParams,
+          },
+          { sort: false },
+        ),
+      });
+    }
     confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
   };
 
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchText('');
+  const handleReset = (dataIndex: string, confirm: () => void) => {
+    setSearchText(prevState => ({
+      ...prevState,
+      [dataIndex]: null,
+    }));
+    setSearchedColumn(prevState => ({
+      ...prevState,
+      [dataIndex]: null,
+    }));
+    setSelectedKeys(prevState => ({
+      ...prevState,
+      [dataIndex]: null,
+    }));
+    delete urlParams[dataIndex];
+    history.replace({
+      search: stringify(
+        {
+          ...urlParams,
+        },
+        { sort: false },
+      ),
+    });
+    confirm();
   };
 
   const totalSearch = () => {
-    const values = searchForm.getFieldsValue();
-    dispatch(actions.searchUsers(values));
+    const values = searchForm.getFieldValue('search');
+    history.replace({
+      search: stringify({ search: values }),
+    });
   };
 
   const resetTotalSearch = () => {
     searchForm.resetFields();
-    setTablePagination({ ...tablePagination, current: 1 });
+    setSelectedKeys({});
+    setSearchText('');
+    setSearchedColumn('');
+    history.replace({
+      search: '',
+    });
   };
+
+  useEffect(() => {
+    if (urlParams.search) {
+      searchForm.setFieldsValue({ search: urlParams.search });
+    }
+    if (urlParams.limit) {
+      setTablePagination(prevState => ({
+        ...prevState,
+        pageSize: urlParams.limit,
+        current: urlParams.page,
+      }));
+    }
+    if (urlParams.page) {
+      setTablePagination(prevState => ({
+        ...prevState,
+        pageSize: urlParams.limit,
+        current: urlParams.page,
+      }));
+    }
+    if (urlParams.first_name) {
+      setSearchText(prevState => ({
+        ...prevState,
+        first_name: urlParams.first_name,
+      }));
+      setSearchedColumn(prevState => ({
+        ...prevState,
+        first_name: urlParams.first_name,
+      }));
+    }
+    if (urlParams.last_name) {
+      setSelectedKeys(prevState => ({
+        ...prevState,
+        last_name: urlParams.last_name,
+      }));
+      setSearchText(prevState => ({
+        ...prevState,
+        last_name: urlParams.last_name,
+      }));
+      setSearchedColumn(prevState => ({
+        ...prevState,
+        last_name: urlParams.last_name,
+      }));
+    }
+    if (urlParams.phone) {
+      setSelectedKeys(prevState => ({
+        ...prevState,
+        phone: urlParams.phone,
+      }));
+      setSearchText(prevState => ({
+        ...prevState,
+        phone: urlParams.phone,
+      }));
+      setSearchedColumn(prevState => ({
+        ...prevState,
+        phone: urlParams.phone,
+      }));
+    }
+    if (urlParams.email) {
+      setSelectedKeys(prevState => ({
+        ...prevState,
+        email: urlParams.email,
+      }));
+      setSearchText(prevState => ({
+        ...prevState,
+        email: urlParams.email,
+      }));
+      setSearchedColumn(prevState => ({
+        ...prevState,
+        email: urlParams.email,
+      }));
+    }
+    if (urlParams.code) {
+      setSelectedKeys(prevState => ({
+        ...prevState,
+        code: urlParams.code,
+      }));
+      setSearchText(prevState => ({
+        ...prevState,
+        code: urlParams.code,
+      }));
+      setSearchedColumn(prevState => ({
+        ...prevState,
+        code: urlParams.code,
+      }));
+    }
+  }, [
+    searchForm,
+    urlParams.limit,
+    urlParams.page,
+    urlParams.search,
+    urlParams.ordering,
+    urlParams.first_name,
+    urlParams.last_name,
+    urlParams.phone,
+    urlParams.email,
+    urlParams.code,
+  ]);
 
   const columns = [
     {
       title: t(UsersMessages.listAvatarTitle()),
       dataIndex: 'avatar',
-      render: (text, record: UserProfile) => (
+      render: (text, record: Employee) => (
         <Avatar
-          size={100}
+          size={50}
           src={text}
           alt={record.first_name + ' ' + record.last_name}
         />
@@ -232,7 +392,7 @@ export const Users: React.FC = () => {
       dataIndex: 'first_name',
       sorter: {
         compare: (a, b) => a.first_name.localeCompare(b.first_name),
-        multiple: 2,
+        multiple: 1,
       },
       ...getColumnSearchProps('first_name'),
     },
@@ -241,42 +401,84 @@ export const Users: React.FC = () => {
       dataIndex: 'last_name',
       sorter: {
         compare: (a, b) => a.last_name.localeCompare(b.last_name),
-        multiple: 1,
+        multiple: 2,
       },
       ...getColumnSearchProps('last_name'),
     },
     {
       title: t(UsersMessages.listEmailTitle()),
       dataIndex: 'email',
+      sorter: {
+        compare: (a, b) => a.email.localeCompare(b.email),
+        multiple: 3,
+      },
       ...getColumnSearchProps('email'),
     },
     {
       title: 'Phone Number',
       dataIndex: 'phone',
+      sorter: {
+        compare: (a, b) => a.phone.localeCompare(b.phone),
+        multiple: 4,
+      },
       ...getColumnSearchProps('phone'),
+    },
+    {
+      title: 'Code',
+      dataIndex: 'code',
+      sorter: {
+        compare: (a, b) => a.code.localeCompare(b.code),
+        multiple: 5,
+      },
+      ...getColumnSearchProps('code'),
+    },
+    {
+      title: 'Tags',
+      dataIndex: 'tags',
+      render: (text, record: Employee, index: number) => {
+        return (
+          <>
+            {text.map(tag => {
+              return (
+                <Tag color="geekblue" key={tag}>
+                  {tag.toUpperCase()}
+                </Tag>
+              );
+            })}
+          </>
+        );
+      },
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
     },
     {
       title: t(UsersMessages.listOptionsTitle()),
       dataIndex: 'id',
-      render: (text, record: UserProfile, index: number) => {
+      render: (text, record: Employee, index: number) => {
         return (
           <>
             <Tooltip title={t(UsersMessages.listViewTooltip())}>
               <IconButton
                 type="primary"
-                size="large"
                 shape="circle"
+                size="small"
                 icon={<EyeOutlined />}
                 onClick={() => {
-                  history.push(`users/${text}`);
+                  history.push(`/employees/${text}`);
                 }}
               />
             </Tooltip>
             <Tooltip title={t(UsersMessages.listEditTooltip())}>
               <IconButton
-                size="large"
                 shape="circle"
                 icon={<EditOutlined />}
+                size="small"
                 onClick={() => {
                   history.push({
                     pathname: '/employees/' + text,
@@ -288,8 +490,8 @@ export const Users: React.FC = () => {
             <Tooltip title={t(UsersMessages.listDeleteTooltip())}>
               <IconButton
                 danger
-                size="large"
                 shape="circle"
+                size="small"
                 icon={<DeleteOutlined />}
                 onClick={() => {
                   setDeleteModal({ open: true, id: text });
@@ -302,16 +504,11 @@ export const Users: React.FC = () => {
     },
   ];
 
-  const handleDelete = () => {
-    const userId = deleteModal.id;
-    if (userId) {
-      dispatch(actions.deleteUser(userId));
-    }
-  };
+  const handleDelete = () => {};
 
   const handleSelectedRows = (
     selectedRowKeys: Key[],
-    selectedRows: UserProfile[],
+    selectedRows: Employee[],
   ) => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
@@ -324,10 +521,14 @@ export const Users: React.FC = () => {
         <meta name="description" content={t(UsersMessages.description())} />
       </Helmet>
       <h1>{t(UsersMessages.title())}</h1>
-      <Collapse style={{ margin: '1em 0 1em 0' }}>
+      <Collapse
+        style={{ margin: '1em 0 1em 0' }}
+        defaultActiveKey={urlParams.search ? ['1'] : []}
+      >
         <Panel header={t(UsersMessages.searchTitle())} key="1">
           <SearchUsers
             form={searchForm}
+            loading={loading}
             onSearch={totalSearch}
             onReset={resetTotalSearch}
           />

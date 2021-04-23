@@ -31,4 +31,40 @@ export const GlobalStyle = createGlobalStyle`
     width: 1.5rem;
     height: 1.5rem;
   }
+
+  & .notification-box {
+    box-sizing: border-box;
+    padding: 0;
+    color: rgba(0,0,0,.85);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none; 
+    font-feature-settings: "tnum";
+    position: fixed;
+    z-index: 1010;
+    margin: 0 24px 0 0;
+  }
+    & .topLeft {
+      top: 10px;
+      left: 24px;
+    };
+
+    & .topRight {
+      top: 10px;
+      right: 24px;
+    };
+
+    & .bottomLeft {
+      bottom: 10px;
+      left: 15px;
+    };
+
+    & .bottomRight {
+      bottom: 10px;
+      right: 24px;
+    };
+    & .customClassname {
+      width: 500px,
+    }
 `;

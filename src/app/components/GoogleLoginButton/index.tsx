@@ -8,27 +8,19 @@ import {
 } from 'react-google-login';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
+import { useGoogleLogin } from './useGoogleLogin';
 
 interface Props {}
 
-interface Login {
-  tokenId: string;
-  googleId: string;
-}
-
 export const GoogleLoginButton = (props: Props) => {
   const { t } = useTranslation();
+  const { login } = useGoogleLogin();
 
-  const onSuccess = (
+  const onSuccess = async (
     response: GoogleLoginResponse | GoogleLoginResponseOffline,
   ) => {
     if ('googleId' in response) {
-      const data: Login = {
-        tokenId: response.tokenId,
-        googleId: response.googleId,
-      };
-      console.log('login google: ', data);
-      // dispatch(actions.loginWithGoogle(data));
+      await login({ access_token: response.tokenId });
     }
   };
   const onFailure = res => {
@@ -43,8 +35,6 @@ export const GoogleLoginButton = (props: Props) => {
         buttonText={t(LoginMessages.loginGoogleButton())}
         onSuccess={onSuccess}
         onFailure={onFailure}
-        cookiePolicy={'single_host_origin'}
-        isSignedIn={true}
       />
     </div>
   );
