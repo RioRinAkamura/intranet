@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Modal, Form, Input, Space, Button, Spin, Divider } from 'antd';
+import { Modal, Form, Input, Button } from 'antd';
 import { messages } from './messages';
 import { useTranslation } from 'react-i18next';
 import { ToastMessageType, useNotify } from '../ToastNotification';
@@ -21,7 +21,7 @@ export const ChangePasswordModal = (props: Props) => {
 
   useEffect(() => {
     form.resetFields();
-  }, [isModalVisible]);
+  }, [form, isModalVisible]);
 
   useEffect(() => {
     if (changePasswordState?.changePasswordSuccess) {
@@ -110,7 +110,7 @@ export const ChangePasswordModal = (props: Props) => {
             },
 
             {
-              pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,-.\/:;<=>?\\@[\]^_`{|}~]).{8,64}$/,
+              pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,-./:;<=>?\\@[\]^_`{|}~]).{8,64}$/,
               message:
                 '(*) Password includes letters, digits, capital characters, special characters',
             },
