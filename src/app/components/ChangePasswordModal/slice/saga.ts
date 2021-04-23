@@ -13,7 +13,7 @@ function* changePassword(
   try {
     //yield call api change Password
     const { oldpassword, newpassword } = action.payload;
-    yield call(() => api.auth.changePassword(oldpassword, newpassword));
+    yield call([api, api.auth.changePassword], oldpassword, newpassword);
     yield put({ type: actions.changeSuccess.type });
 
     yield put({ type: actions.resetState.type });
