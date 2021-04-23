@@ -1,5 +1,5 @@
 import { LockOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Row } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { RuleObject } from 'rc-field-form/lib/interface';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -116,10 +116,6 @@ const FormItem = styled(Form.Item)`
   label {
     font-weight: bold;
   }
-`;
-
-const WrapperButton = styled.div`
-  text-align: center;
 `;
 
 const Wrapper = styled.div`

@@ -6,8 +6,8 @@ export const config = {
   CREATE_USER_PATH: process.env.CREATE_USER_PATH || '/create-user',
   GOOGLE_CLIENT_ID:
     process.env.GOOGLE_CLIENT_ID ||
-    '416792283902-niarsbm6k01a26ak8o5sc7251j03f0b0.apps.googleusercontent.com',
-  FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID || '507582956840215',
+    '208470488520-tdm6q0i7m1aqve29qkorsija7rhgln48.apps.googleusercontent.com',
+  FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID || '295584335285632',
 };
 
 export default config;

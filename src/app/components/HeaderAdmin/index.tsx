@@ -17,6 +17,7 @@ import styled from 'styled-components/macro';
 import { BadgeList } from '../BadgeList';
 import { NavList } from '../NavList';
 import { NavItem } from '../NavList/NavItem';
+import { useNotify, ToastMessageType } from '../Notification';
 import { Logo } from '../Sidebar/Logo';
 
 interface Props {
@@ -25,6 +26,21 @@ interface Props {
 }
 
 const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
+  const { notify } = useNotify();
+
+  const openNotification = () => {
+    notify({
+      type: ToastMessageType.Info,
+      message: 'Add User Infor',
+      description: 'quang',
+      placement: 'bottomLeft',
+      className: 'customClassname',
+      style: {
+        background:
+          'lightblue url("https://designshack.net/wp-content/uploads/abstract-background.jpg") no-repeat fixed center',
+      },
+    });
+  };
   return (
     <>
       <Wrapper>
@@ -76,11 +92,12 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
             </NavItem>
 
             <NavItem>
-              <Icon>
-                <SettingOutlined />
-              </Icon>
-
-              <Link to="/">Setting</Link>
+              <Link to="/employees">Employees</Link>
+            </NavItem>
+            <NavItem>
+              <Link to="/" onClick={openNotification}>
+                Setting
+              </Link>
             </NavItem>
           </NavList>
         </SubHeader>

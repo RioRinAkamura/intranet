@@ -14,6 +14,10 @@ export const UserDetailMessages = {
     _t(translations.UserDetailPage.modal.form.avatar.upload, 'Upload'),
   formAvatarLabel: () =>
     _t(translations.UserDetailPage.modal.form.avatar.label, 'Avatar'),
+  formCodeLabel: () =>
+    _t(translations.UserDetailPage.modal.form.code.label, 'Code'),
+  formCodePlaceholder: () =>
+    _t(translations.UserDetailPage.modal.form.code.placeholder, "User's code"),
   formEmptyAvatar: () =>
     _t(
       translations.UserDetailPage.modal.form.avatar.empty,
@@ -80,6 +84,16 @@ export const UserDetailMessages = {
     _t(
       translations.UserDetailPage.modal.form.profile.gender.female.label,
       'Female',
+    ),
+  formGenderOtherLabel: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.gender.other.label,
+      'Other',
+    ),
+  formEmptyGender: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.gender.empty,
+      "Please select user's gender",
     ),
   formPhoneNumberLabel: () =>
     _t(
@@ -204,6 +218,13 @@ export const UserDetailMessages = {
     ),
   formTypeEtcLabel: () =>
     _t(translations.UserDetailPage.modal.form.job.type.etc.label, 'Etc'),
+  formJobTagsLabel: () =>
+    _t(translations.UserDetailPage.modal.form.job.jobTags.label, 'Tags'),
+  formJobTagsPlaceholder: () =>
+    _t(
+      translations.UserDetailPage.modal.form.job.jobTags.placeholder,
+      "User's tags",
+    ),
   formBankAccountsTitle: () =>
     _t(translations.UserDetailPage.modal.form.bank.title, 'Bank Accounts'),
   formBankNameLabel: () =>
@@ -303,4 +324,11 @@ export const UserDetailMessages = {
     _t(translations.UserDetailPage.modal.form.button.submit, 'Save'),
   formCancelButton: () =>
     _t(translations.UserDetailPage.modal.form.button.cancel, 'Cancel'),
+  formBackButton: () =>
+    _t(translations.UserDetailPage.modal.form.button.back, 'Back'),
+  updateSuccessMessage: () =>
+    _t(
+      translations.UserDetailPage.modal.message.sucess,
+      'Update employee successfully',
+    ),
 };

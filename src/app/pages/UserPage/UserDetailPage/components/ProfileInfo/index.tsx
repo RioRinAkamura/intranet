@@ -6,145 +6,310 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Col, DatePicker, Divider, Form, Input, Radio, Row } from 'antd';
+import {
+  Col,
+  DatePicker,
+  DatePickerProps,
+  Divider,
+  Form,
+  Input,
+  InputProps,
+  Radio,
+  Row,
+} from 'antd';
 import { UserDetailMessages } from '../../messages';
 
-interface Props {}
+interface ProfileInfoProps {
+  isView?: boolean;
+  isEdit?: boolean;
+}
 
-export const ProfileInfo = (props: Props) => {
+const inputProps: InputProps = {
+  bordered: false,
+  readOnly: true,
+};
+
+const datePickerProps: DatePickerProps = {
+  bordered: false,
+  inputReadOnly: true,
+  allowClear: false,
+  popupStyle: { display: 'none' },
+};
+
+export const ProfileInfo = (props: ProfileInfoProps) => {
+  const { isView, isEdit } = props;
   const { t } = useTranslation();
 
   return (
-    <Row gutter={[16, 16]}>
+    <>
       <Divider orientation="left">
         <b>{t(UserDetailMessages.formProfileTitle())}</b>
       </Divider>
-      <Col md={6} xs={24}>
-        <FormItem
-          label={t(UserDetailMessages.formFirstNameLabel())}
-          name="first_name"
-          rules={[
-            {
-              required: true,
-              message: t(UserDetailMessages.formEmptyFirstName()),
-            },
-          ]}
-        >
-          <Input
-            size="large"
-            placeholder={t(UserDetailMessages.formFirstNamePlaceholder())}
-          />
-        </FormItem>
-      </Col>
-      <Col md={6} xs={24}>
-        <FormItem
-          label={t(UserDetailMessages.formLastNameLabel())}
-          name="last_name"
-          rules={[
-            {
-              required: true,
-              message: t(UserDetailMessages.formEmptyLastName()),
-            },
-          ]}
-        >
-          <Input
-            size="large"
-            placeholder={t(UserDetailMessages.formLastNamePlaceholder())}
-          />
-        </FormItem>
-      </Col>
-      <Col md={6} xs={24}>
-        <FormItem name="dob" label={t(UserDetailMessages.formDOBLabel())}>
-          <DatePicker
-            size="large"
-            placeholder={t(UserDetailMessages.formDOBPlaceholder())}
-          />
-        </FormItem>
-      </Col>
-      <Col md={6} xs={24}>
-        <FormItem name="gender" label={t(UserDetailMessages.formGenderLabel())}>
-          <Radio.Group>
-            <Radio value="Male">
-              {t(UserDetailMessages.formGenderMaleLabel())}
-            </Radio>
-            <Radio value="Female">
-              {t(UserDetailMessages.formGenderFemaleLabel())}
-            </Radio>
-          </Radio.Group>
-        </FormItem>
-      </Col>
-      <Col md={6} xs={24}>
-        <FormItem
-          label={t(UserDetailMessages.formPhoneNumberLabel())}
-          name="phoneNumber"
-          rules={[
-            {
-              required: true,
-              message: t(UserDetailMessages.formEmptyPhoneNumber()),
-            },
-          ]}
-        >
-          <Input
-            size="large"
-            placeholder={t(UserDetailMessages.formPhoneNumberPlaceholder())}
-          />
-        </FormItem>
-      </Col>
-      <Col md={12} xs={24}>
-        <FormItem
-          label={t(UserDetailMessages.formEmailLabel())}
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: t(UserDetailMessages.formEmptyEmail()),
-            },
-            {
-              type: 'email',
-              message: t(UserDetailMessages.formInvalidEmail()),
-            },
-          ]}
-        >
-          <Input
-            size="large"
-            placeholder={t(UserDetailMessages.formEmailPlaceholder())}
-          />
-          <Row gutter={[16, 16]}></Row>
-        </FormItem>
-      </Col>
-      <Col md={6} xs={24}>
-        <FormItem label={t(UserDetailMessages.formStatusLabel())} name="status">
-          <Radio.Group defaultValue="Single">
-            <Radio value="Single">
-              {t(UserDetailMessages.formStatusSingleLabel())}
-            </Radio>
-            <Radio value="Married">
-              {t(UserDetailMessages.formStatusMarriedLabel())}
-            </Radio>
-          </Radio.Group>
-        </FormItem>
-      </Col>
-      <Col md={6} xs={24}>
-        <FormItem name="id_number" label="Id Number">
-          <Input size="large" />
-        </FormItem>
-      </Col>
-      <Col md={6} xs={24}>
-        <FormItem name="issued_date" label="Issued Date">
-          <DatePicker size="large" />
-        </FormItem>
-      </Col>
-      <Col md={6} xs={24}>
-        <FormItem name="issued_place" label="Issued Place">
-          <Input size="large" />
-        </FormItem>
-      </Col>
-      <Col md={6} xs={24}>
-        <FormItem name="social_insurance_no" label="Social Insurance No">
-          <Input size="large" />
-        </FormItem>
-      </Col>
-    </Row>
+      <Row gutter={[16, 16]}>
+        <Col md={24} xs={24}>
+          <FormItem
+            name="code"
+            label={t(UserDetailMessages.formCodeLabel())}
+            rules={
+              isView
+                ? []
+                : [
+                    {
+                      required: true,
+                      message: "Please input user's code",
+                    },
+                  ]
+            }
+          >
+            <Input
+              {...(isView ? inputProps : {})}
+              size="large"
+              placeholder={
+                isView ? '' : t(UserDetailMessages.formCodePlaceholder())
+              }
+            />
+          </FormItem>
+        </Col>
+        <Col md={12} xs={24}>
+          <FormItem
+            label={t(UserDetailMessages.formFirstNameLabel())}
+            name="first_name"
+            rules={
+              isView
+                ? []
+                : [
+                    {
+                      required: true,
+                      message: t(UserDetailMessages.formEmptyFirstName()),
+                    },
+                  ]
+            }
+          >
+            <Input
+              {...(isView ? inputProps : {})}
+              size="large"
+              placeholder={
+                isView ? '' : t(UserDetailMessages.formFirstNamePlaceholder())
+              }
+            />
+          </FormItem>
+        </Col>
+        <Col md={12} xs={24}>
+          <FormItem
+            label={t(UserDetailMessages.formLastNameLabel())}
+            name="last_name"
+            rules={
+              isView
+                ? []
+                : [
+                    {
+                      required: true,
+                      message: t(UserDetailMessages.formEmptyLastName()),
+                    },
+                  ]
+            }
+          >
+            <Input
+              {...(isView ? inputProps : {})}
+              size="large"
+              placeholder={
+                isView ? '' : t(UserDetailMessages.formLastNamePlaceholder())
+              }
+            />
+          </FormItem>
+        </Col>
+        <Col md={12} xs={24}>
+          <FormItem
+            name="dob"
+            label={t(UserDetailMessages.formDOBLabel())}
+            rules={
+              isView
+                ? []
+                : [
+                    {
+                      required: true,
+                      message: t(UserDetailMessages.formEmptyDOB()),
+                    },
+                  ]
+            }
+          >
+            <DatePicker
+              {...(isView ? datePickerProps : {})}
+              format="YYYY-MM-DD"
+              size="large"
+              placeholder={
+                isView ? '' : t(UserDetailMessages.formDOBPlaceholder())
+              }
+            />
+          </FormItem>
+        </Col>
+        <Col md={12} xs={24}>
+          <FormItem
+            name="gender"
+            label={t(UserDetailMessages.formGenderLabel())}
+            rules={
+              isView
+                ? []
+                : [
+                    {
+                      required: true,
+                      message: t(UserDetailMessages.formEmptyGender()),
+                    },
+                  ]
+            }
+            initialValue="Other"
+          >
+            {isView ? (
+              <Input {...inputProps} size="large" />
+            ) : (
+              <Radio.Group defaultValue="Other">
+                <Radio value="Male">
+                  {t(UserDetailMessages.formGenderMaleLabel())}
+                </Radio>
+                <Radio value="Female">
+                  {t(UserDetailMessages.formGenderFemaleLabel())}
+                </Radio>
+                <Radio value="Other">
+                  {t(UserDetailMessages.formGenderOtherLabel())}
+                </Radio>
+              </Radio.Group>
+            )}
+          </FormItem>
+        </Col>
+        <Col md={24} xs={24}>
+          <FormItem
+            label={t(UserDetailMessages.formEmailLabel())}
+            name="email"
+            rules={
+              isView
+                ? []
+                : [
+                    {
+                      required: true,
+                      message: t(UserDetailMessages.formEmptyEmail()),
+                    },
+                    {
+                      type: 'email',
+                      message: t(UserDetailMessages.formInvalidEmail()),
+                    },
+                  ]
+            }
+          >
+            <Input
+              {...(isView ? inputProps : {})}
+              disabled={isEdit}
+              size="large"
+              placeholder={
+                isView ? '' : t(UserDetailMessages.formEmailPlaceholder())
+              }
+            />
+          </FormItem>
+        </Col>
+        <Col md={24} xs={24}>
+          <FormItem
+            label={t(UserDetailMessages.formPhoneNumberLabel())}
+            name="phone"
+            rules={
+              isView
+                ? []
+                : [
+                    {
+                      required: true,
+                      message: t(UserDetailMessages.formEmptyPhoneNumber()),
+                    },
+                  ]
+            }
+          >
+            <Input
+              {...(isView ? inputProps : {})}
+              size="large"
+              placeholder={
+                isView ? '' : t(UserDetailMessages.formPhoneNumberPlaceholder())
+              }
+            />
+          </FormItem>
+        </Col>
+        <Col md={12} xs={24}>
+          <FormItem
+            label={t(UserDetailMessages.formStatusLabel())}
+            name="status"
+            initialValue="Single"
+          >
+            {isView ? (
+              <Input {...inputProps} size="large" />
+            ) : (
+              <Radio.Group defaultValue="Single">
+                <Radio value="Single">
+                  {t(UserDetailMessages.formStatusSingleLabel())}
+                </Radio>
+                <Radio value="Married">
+                  {t(UserDetailMessages.formStatusMarriedLabel())}
+                </Radio>
+              </Radio.Group>
+            )}
+          </FormItem>
+        </Col>
+        <Col md={12} xs={24}>
+          <FormItem
+            name="id_number"
+            label={t(UserDetailMessages.formIdNumberLabel())}
+          >
+            <Input
+              {...(isView ? inputProps : {})}
+              size="large"
+              placeholder={
+                isView ? '' : t(UserDetailMessages.formIdNumberPlaceholder())
+              }
+            />
+          </FormItem>
+        </Col>
+        <Col md={12} xs={24}>
+          <FormItem
+            name="issued_date"
+            label={t(UserDetailMessages.formIssuedDateLabel())}
+          >
+            <DatePicker
+              {...(isView ? datePickerProps : {})}
+              format="YYYY-MM-DD"
+              size="large"
+              placeholder={
+                isView ? '' : t(UserDetailMessages.formIssuedDatePlaceholder())
+              }
+            />
+          </FormItem>
+        </Col>
+        <Col md={12} xs={24}>
+          <FormItem
+            name="issued_place"
+            label={t(UserDetailMessages.formIssuedPlaceLabel())}
+          >
+            <Input
+              {...(isView ? inputProps : {})}
+              size="large"
+              placeholder={
+                isView ? '' : t(UserDetailMessages.formIssuedPlacePlaceholder())
+              }
+            />
+          </FormItem>
+        </Col>
+        <Col md={24} xs={24}>
+          <FormItem
+            name="social_insurance_no"
+            label={t(UserDetailMessages.formSocialInsuranceNoLabel())}
+          >
+            <Input
+              {...(isView ? inputProps : {})}
+              size="large"
+              placeholder={
+                isView
+                  ? ''
+                  : t(UserDetailMessages.formSocialInsuranceNoPlaceholder())
+              }
+            />
+          </FormItem>
+        </Col>
+      </Row>
+    </>
   );
 };
 

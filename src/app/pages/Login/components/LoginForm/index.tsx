@@ -18,12 +18,12 @@ export const LoginForm: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [form] = Form.useForm();
-  const emailRef = useRef<any>();
-  const passwordRef = useRef<any>();
+  const emailRef = useRef<Input>(null);
+  const passwordRef = useRef<Input>(null);
   const { login, loading } = useLogin();
 
   useEffect(() => {
-    emailRef.current.focus();
+    emailRef.current?.focus();
     let emailClicked = true;
     let passwordClicked = false;
     function handleClickOutside(event) {
