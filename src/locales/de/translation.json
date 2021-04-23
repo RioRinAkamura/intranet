@@ -58,7 +58,11 @@
         "notMatch": "Your new password and confirm password don't match!"
       },
       "resetButton": "Reset Password",
-      "backButton": "Back to login page"
+      "backButton": "Back to login page",
+      "otp": {
+        "label": "OTP",
+        "placeholder": "Input your OTP sent in your email"
+      }
     }
   },
   "UserDetailPage": {
