@@ -11,7 +11,7 @@ interface Props {
   handleCancel: () => void;
 }
 
-export const DeleteModal = (props: Props) => {
+export const DeleteModal = React.memo((props: Props) => {
   const {
     open,
     cancelText,
@@ -37,7 +37,7 @@ export const DeleteModal = (props: Props) => {
       <P>{content}</P>
     </Modal>
   );
-};
+});
 
 const P = styled.p`
   font-size: large;

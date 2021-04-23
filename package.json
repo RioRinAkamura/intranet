@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "4.6.2",
-    "@hdwebsoft/boilerplate-api-sdk": "0.0.1",
+    "@hdwebsoft/boilerplate-api-sdk": "0.0.2",
     "@reduxjs/toolkit": "1.4.0",
     "@testing-library/jest-dom": "5.11.4",
     "@testing-library/react": "11.0.2",
@@ -42,6 +42,7 @@
     "node-plop": "0.26.2",
     "plop": "2.7.4",
     "prettier": "2.1.1",
+    "query-string": "7.0.0",
     "react": "16.13.1",
     "react-app-polyfill": "1.0.6",
     "react-avatar": "3.10.0",

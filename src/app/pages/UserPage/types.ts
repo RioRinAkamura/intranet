@@ -1,3 +1,5 @@
+import { EmployeeQueryParams } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+
 export enum Gender {
   'Male' = 'Male',
   'Female' = 'Female',
@@ -22,32 +24,16 @@ export interface BankAccounts {
   branch: string;
 }
 
-export interface UserProfile {
-  id: string;
-  avatar: string;
-  code: string;
-  first_name: string;
-  last_name: string;
-  dob?: Date;
-  gender?: Gender;
-  phone: string;
-  email: string;
-  status: Status;
-  id_number?: string;
-  issued_date?: Date;
-  issued_place?: string;
-  social_insurance_no?: string;
-  job_title: string;
-  type: Type;
-  socials: {
-    skype: string;
-    twitter: string;
-    fb: string;
-    linkedin: string;
-    github: string;
-    gitlab: string;
-  };
-  bank_accounts: BankAccounts[];
+export interface ParamsPayload {
+  search?: string;
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
+  email?: string;
+  code?: string;
+  ordering?: string;
+  page?: number;
+  limit?: number;
 }
 
 export interface Pagination {
@@ -64,4 +50,11 @@ export interface Filters {
   first_name?: string | null;
   last_name?: string | null;
   phone?: string | null;
+  code?: string | null;
+}
+
+export interface TagType {
+  id: number;
+  name: string;
+  slug: string;
 }

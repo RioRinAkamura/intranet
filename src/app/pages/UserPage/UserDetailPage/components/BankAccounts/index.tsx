@@ -10,9 +10,12 @@ import { Button, Col, Divider, Form, Input, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { UserDetailMessages } from '../../messages';
 
-interface Props {}
+interface BankAccountsProps {
+  isView?: boolean;
+}
 
-export const BankAccounts = (props: Props) => {
+export const BankAccounts = (props: BankAccountsProps) => {
+  const { isView } = props;
   const { t } = useTranslation();
 
   return (
@@ -48,9 +51,11 @@ export const BankAccounts = (props: Props) => {
                     >
                       <Input
                         size="large"
-                        placeholder={t(
-                          UserDetailMessages.formBankNamePlaceholder(),
-                        )}
+                        placeholder={
+                          isView
+                            ? ''
+                            : t(UserDetailMessages.formBankNamePlaceholder())
+                        }
                       />
                     </FormItem>
                   </Col>
@@ -105,16 +110,19 @@ export const BankAccounts = (props: Props) => {
                   </Col>
                 </Row>
               ))}
-              <FormItem>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  icon={<PlusOutlined />}
-                >
-                  {t(UserDetailMessages.formBankAddButton())}
-                </Button>
-              </FormItem>
+              {!isView && (
+                <FormItem label="&nbsp;">
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    size="large"
+                    icon={<PlusOutlined />}
+                  >
+                    {t(UserDetailMessages.formBankAddButton())}
+                  </Button>
+                </FormItem>
+              )}
             </>
           )}
         </Form.List>
