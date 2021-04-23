@@ -1,7 +1,9 @@
-import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import * as React from 'react';
 import { api } from 'utils/api';
 import { Pagination, ParamsPayload } from '../types';
+
+type Employee = models.hr.Employee;
 
 export const useGetUserList = (
   pagination: Pagination,
