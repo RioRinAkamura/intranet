@@ -11,7 +11,7 @@ import styled from 'styled-components/macro';
 import { BadgeList } from '../BadgeList';
 import { NavList } from '../NavList';
 import { NavItem } from '../NavList/NavItem';
-import { useNotify, ToastMessageType } from '../Notification';
+import { useNotify, MessageType, PlacementType } from '../Notification';
 import { Logo } from '../Sidebar/Logo';
 
 interface Props {
@@ -24,10 +24,10 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
 
   const openNotification = () => {
     notify({
-      type: ToastMessageType.Info,
+      type: MessageType.Error,
       message: 'Add User Infor',
       description: 'quang',
-      placement: 'bottomLeft',
+      placement: PlacementType.BottomLeft,
       className: 'customClassname',
       style: {
         background:

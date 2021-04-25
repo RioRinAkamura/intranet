@@ -9,19 +9,26 @@ import {
   CloseOutlined,
 } from '@ant-design/icons';
 
-export enum ToastMessageType {
+export enum MessageType {
   Success = 'success',
   Info = 'info',
   Warn = 'warning',
   Error = 'error',
 }
 
+export enum PlacementType {
+  TopLeft = 'topLeft',
+  TopRight = 'topRight',
+  BottomLeft = 'bottomLeft',
+  BottomRight = 'bottomRight',
+}
+
 interface propTypes {
-  type?: ToastMessageType;
+  type?: MessageType | string;
   message?: string;
   description?: string;
   duration?: number;
-  placement?: string;
+  placement?: PlacementType | string;
   className?: string;
   style?: object;
   closable?: boolean;
@@ -32,12 +39,12 @@ interface Itheme {
 }
 
 const defaultProps = {
-  type: ToastMessageType.Success,
+  type: MessageType.Success,
   message: 'Notification Title',
   description:
     'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
   duration: 4500,
-  placement: 'topRight',
+  placement: PlacementType.TopRight,
   style: {},
   closable: false,
 };
@@ -108,25 +115,25 @@ export const useNotify = () => {
       );
     };
 
-    const renderTypeIcon = (type: ToastMessageType | undefined) => {
+    const renderTypeIcon = (type: MessageType | undefined | string) => {
       switch (type) {
-        case ToastMessageType.Success:
+        case MessageType.Success:
           return (
             <CheckCircleOutlined
               style={{ fontSize: '25px', color: '#52c41a' }}
             />
           );
-        case ToastMessageType.Info:
+        case MessageType.Info:
           return (
             <InfoCircleOutlined style={{ fontSize: '25px', color: '#08c' }} />
           );
-        case ToastMessageType.Warn:
+        case MessageType.Warn:
           return (
             <ExclamationCircleOutlined
               style={{ fontSize: '25px', color: '#faad14' }}
             />
           );
-        case ToastMessageType.Error:
+        case MessageType.Error:
           return (
             <CloseCircleOutlined
               style={{ fontSize: '25px', color: '#ff4d4f' }}
