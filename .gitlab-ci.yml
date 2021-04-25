@@ -90,7 +90,7 @@ deploy-dev:
 
   script:
     - echo "deploying to ${PROJECT_ROOT}"
-    - scp package.json "${SSH_USER}@${SSH_HOST}:${PROJECT_ROOT}"
+    # - scp package.json "${SSH_USER}@${SSH_HOST}:${PROJECT_ROOT}"
     - ssh "${SSH_USER}@${SSH_HOST}"  "cd ${PROJECT_ROOT}
       && rm -rf build
       && tar xvzf build.tar.gz
