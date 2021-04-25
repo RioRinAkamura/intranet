@@ -1,0 +1,55 @@
+image: node:14
+
+stages:
+  - analysis
+  - build
+  - test
+  - deploy
+
+before_script:
+  - npm install
+
+tsc:
+  stage: analysis
+  allow_failure: true
+  script:
+    - npm run checkTs
+  #when: manual
+
+lint:
+  stage: analysis
+  allow_failure: true
+  script:
+    - npm run lint
+
+lint-css:
+  stage: analysis
+  allow_failure: true
+  script:
+    - npm run lint:css
+
+test:
+  stage: test
+  allow_failure: true
+  script:
+    - npm run test
+
+build:
+  stage: build
+  only:
+    - develop
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - build
+
+deploy-dev:
+  stage: deploy
+  only:
+    - develop
+  script:
+    - echo "deploying"
+  needs:
+    - job: build
+      artifacts: true
