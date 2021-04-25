@@ -54,6 +54,7 @@ test:
   allow_failure: true
   script:
     - npm run test
+  when: manual
 
 build:
   stage: build
