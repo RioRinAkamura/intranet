@@ -17,6 +17,7 @@ before_script:
   - echo '//gitlab.example.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${SDK_DEPLOY_TOKEN}' >> .npmrc
   - npm install
 
+
 tsc:
   stage: analysis
   allow_failure: true
