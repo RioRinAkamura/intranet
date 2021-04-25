@@ -60,7 +60,6 @@ build:
   stage: build
   only:
     - develop
-  when: manual
   script:
     - npm install
     - npm run build
@@ -77,7 +76,7 @@ deploy-dev:
     SSH_HOST: $DEV_HOST
     SSH_USER: $DEV_SSH_USER
     SSH_PKEY: $DEV_SSH_KEY
-    PROJECT_ROOT: /var/www/html/react-boilerplate/
+    PROJECT_ROOT: $PROJECT_ROOT
     
   before_script:
     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
@@ -91,11 +90,11 @@ deploy-dev:
   script:
     - echo "deploying to ${PROJECT_ROOT}"
     - ls -la ~/.ssh
-    # - scp package.json "${SSH_USER}@${SSH_HOST}:${PROJECT_ROOT}"
+    - scp build.tar.gz "${SSH_USER}@${SSH_HOST}:${PROJECT_ROOT}"
     - ssh "$SSH_USER@$SSH_HOST" "cd ${PROJECT_ROOT}
       && rm -rf build
       && tar xvzf build.tar.gz
       && rm -f build.tar.gz"
-  # needs:
-  #   - job: build
-  #     artifacts: true
+  needs:
+    - job: build
+      artifacts: true
