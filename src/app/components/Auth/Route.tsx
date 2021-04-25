@@ -7,7 +7,6 @@ import { useAuthState } from './useAuthState';
 export const PrivateRoute = ({ component: Component, ...rest }) => {
   const { authenticated, loading } = useAuthState();
   if (loading) return null;
-
   return (
     // Show the component only when the user is logged in
     // Otherwise, redirect the user to /signin page

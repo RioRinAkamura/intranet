@@ -1,8 +1,7 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'types';
-import { State } from '../ChangePasswordModal/slice/types';
-import { useChangePasswordSlice } from '../ChangePasswordModal/slice';
+import { State } from './slice/types';
+import { useChangePasswordSlice } from './slice';
 
 export interface ChangePasswordPayload {
   oldpassword: string;

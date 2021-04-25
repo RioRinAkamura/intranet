@@ -1,0 +1,74 @@
+image: node:14
+
+stages:
+  - analysis
+  - test
+  - build
+  - deploy
+
+before_script:
+  - npm install
+  - echo '@hdwebsoft:registry https://gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/'>> .npmrc
+  - echo '//gitlab.example.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${SDK_DEPLOY_TOKEN}' >> .npmrc
+
+tsc:
+  stage: analysis
+  allow_failure: true
+  script:
+    - npm run checkTs
+  #when: manual
+
+lint:
+  stage: analysis
+  allow_failure: true
+  script:
+    - npm run lint
+
+lint-css:
+  stage: analysis
+  allow_failure: true
+  script:
+    - npm run lint:css
+
+test:
+  stage: test
+  allow_failure: true
+  script:
+    - npm run test
+
+build:
+  stage: build
+  only:
+    - develop
+  script:
+    - npm run build
+    - tar cvzf build.tar.gz build
+  artifacts:
+    paths:
+      - build.tar.gz
+
+deploy-dev:
+  stage: deploy
+  only:
+    - develop
+  variables:
+    SSH_HOST: $DEV_HOST
+    SSH_USER: $DEV_SSH_USER
+    SSH_PWD: $DEV_SSH_PWD
+    PROJECT_ROOT: "/var/www/html/react-boilerplate/" 
+    
+  before_script:
+    - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+    - ssh-keyscan -H "$SSH_HOST" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - echo "deploying"
+    - scp build.tar.gz "$SSH_USER:$SSH_PWD@$SSH_HOST:$PROJECT_ROOT"
+    - ssh "$SSH_USER:$SSH_PWD@$SSH_HOST"  "cd $PROJECT_ROOT
+      && rm -rf build
+      && tar xvzf build.tar.gz
+      && rm -f build.tar.gz"
+  needs:
+    - job: build
+      artifacts: true
