@@ -28,7 +28,7 @@ install_dependencies:
     changes:
       - package-lock.json
 
-tsc:
+checkts:
   stage: analysis
   allow_failure: true
   script:
@@ -89,7 +89,6 @@ deploy-dev:
 
   script:
     - echo "deploying to ${PROJECT_ROOT}"
-    - ls -la ~/.ssh
     - scp build.tar.gz "${SSH_USER}@${SSH_HOST}:${PROJECT_ROOT}"
     - ssh "$SSH_USER@$SSH_HOST" "cd ${PROJECT_ROOT}
       && rm -rf build
