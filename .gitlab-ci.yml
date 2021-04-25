@@ -41,6 +41,7 @@ build:
   only:
     - develop
   script:
+    - npm install
     - npm run build
     - tar cvzf build.tar.gz build
   artifacts:
