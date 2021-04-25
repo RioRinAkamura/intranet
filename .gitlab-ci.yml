@@ -86,7 +86,7 @@ deploy-dev:
 
   script:
     - echo "deploying"
-    - scp build.tar.gz "$SSH_USER:$SSH_PWD@$SSH_HOST:$PROJECT_ROOT"
+    - scp build.tar.gz "${SSH_USER}:${SSH_PWD}@${SSH_HOST}:${PROJECT_ROOT}"
     - ssh "${SSH_USER}:${SSH_PWD}@${SSH_HOST}"  "cd ${PROJECT_ROOT}
       && rm -rf build
       && tar xvzf build.tar.gz
