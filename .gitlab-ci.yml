@@ -13,8 +13,8 @@ stages:
   - deploy
   
 before_script:
-  - echo '@hdwebsoft:registry https://gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/'>> .npmrc
-  - echo '//gitlab.example.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/:_authToken=${SDK_DEPLOY_TOKEN}' >> .npmrc
+  # - echo '@hdwebsoft:registry https://gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/'>> .npmrc
+  # - echo '//gitlab.example.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/:_authToken=${SDK_DEPLOY_TOKEN}' >> .npmrc
   - npm config set @hdwebsoft:registry https://gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/
   - npm config set -- '//gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/:_authToken' ${SDK_DEPLOY_TOKEN}
 
@@ -87,7 +87,7 @@ deploy-dev:
   script:
     - echo "deploying"
     - scp build.tar.gz "$SSH_USER:$SSH_PWD@$SSH_HOST:$PROJECT_ROOT"
-    - ssh "$SSH_USER:$SSH_PWD@$SSH_HOST"  "cd $PROJECT_ROOT
+    - ssh "${SSH_USER}:${SSH_PWD}@${SSH_HOST}"  "cd ${PROJECT_ROOT}
       && rm -rf build
       && tar xvzf build.tar.gz
       && rm -f build.tar.gz"
