@@ -95,6 +95,6 @@ deploy-dev:
       && rm -rf build
       && tar xvzf build.tar.gz
       && rm -f build.tar.gz"
-  needs:
-    - job: build
-      artifacts: true
+  # needs:
+  #   - job: build
+  #     artifacts: true
