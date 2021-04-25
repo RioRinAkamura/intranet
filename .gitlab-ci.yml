@@ -80,6 +80,7 @@ deploy-dev:
     
   before_script:
     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+    - mkdir -p ~/.ssh
     - ssh-keyscan -H "$SSH_HOST" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
