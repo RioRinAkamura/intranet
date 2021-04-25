@@ -1,17 +1,11 @@
+import React from 'react';
 import {
   LineChartOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  SettingOutlined,
-  AppstoreOutlined,
-  ContainerOutlined,
-  MailOutlined,
-  PieChartOutlined,
-  TeamOutlined,
 } from '@ant-design/icons';
-import { Breadcrumb, Drawer, Menu } from 'antd';
-import SubMenu from 'antd/lib/menu/SubMenu';
-import * as React from 'react';
+import { Breadcrumb } from 'antd';
+
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { BadgeList } from '../BadgeList';
