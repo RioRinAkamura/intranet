@@ -1,46 +1,67 @@
 image: node:14
 
+cache:
+  key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
+  paths:
+    - .npm/
+
 stages:
+  - install_dependencies
   - analysis
   - test
   - build
   - deploy
-
+  
 before_script:
-  - npm install
-  - echo '@hdwebsoft:registry https://gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/'>> .npmrc
-  - echo '//gitlab.example.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${SDK_DEPLOY_TOKEN}' >> .npmrc
+  # - echo '@hdwebsoft:registry https://gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/'>> .npmrc
+  # - echo '//gitlab.example.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/:_authToken=${SDK_DEPLOY_TOKEN}' >> .npmrc
+  - npm config set @hdwebsoft:registry https://gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/
+  - npm config set -- '//gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/:_authToken' ${SDK_DEPLOY_TOKEN}
 
-tsc:
+  - npm ci --cache .npm --prefer-offline
+
+install_dependencies:
+  stage: install_dependencies
+  script:
+    - npm ci
+  only:
+    changes:
+      - package-lock.json
+
+checkts:
   stage: analysis
   allow_failure: true
   script:
     - npm run checkTs
-  #when: manual
+  when: manual
 
 lint:
   stage: analysis
   allow_failure: true
   script:
     - npm run lint
+  when: manual
 
 lint-css:
   stage: analysis
   allow_failure: true
   script:
     - npm run lint:css
+  when: manual
 
 test:
   stage: test
   allow_failure: true
   script:
     - npm run test
+  when: manual
 
 build:
   stage: build
   only:
     - develop
   script:
+    - npm install
     - npm run build
     - tar cvzf build.tar.gz build
   artifacts:
@@ -54,18 +75,22 @@ deploy-dev:
   variables:
     SSH_HOST: $DEV_HOST
     SSH_USER: $DEV_SSH_USER
-    SSH_PWD: $DEV_SSH_PWD
-    PROJECT_ROOT: "/var/www/html/react-boilerplate/" 
+    SSH_PKEY: $DEV_SSH_KEY
+    PROJECT_ROOT: $PROJECT_ROOT
     
   before_script:
     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
-    - ssh-keyscan -H "$SSH_HOST" > ~/.ssh/known_hosts
+    - eval $(ssh-agent -s)
+    - echo "${SSH_PKEY}" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H "${SSH_HOST}" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
   script:
-    - echo "deploying"
-    - scp build.tar.gz "$SSH_USER:$SSH_PWD@$SSH_HOST:$PROJECT_ROOT"
-    - ssh "$SSH_USER:$SSH_PWD@$SSH_HOST"  "cd $PROJECT_ROOT
+    - echo "deploying to ${PROJECT_ROOT}"
+    - scp build.tar.gz "${SSH_USER}@${SSH_HOST}:${PROJECT_ROOT}"
+    - ssh "$SSH_USER@$SSH_HOST" "cd ${PROJECT_ROOT}
       && rm -rf build
       && tar xvzf build.tar.gz
       && rm -f build.tar.gz"
