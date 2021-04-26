@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { Drawer, Layout, Menu } from 'antd';
 import React from 'react';
-import { isMobile } from 'react-device-detect';
+import { isMobile, isTablet } from 'react-device-detect';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Logo } from './Logo';
@@ -20,7 +20,9 @@ interface Props {
 const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
   const { Sider } = Layout;
   const { SubMenu } = Menu;
-  const [isSidebar, setIsSideBar] = React.useState(isMobile);
+  const [isSidebar] = React.useState(isMobile);
+  console.log('isMobile', isMobile);
+  console.log('isTablet', isTablet);
   return (
     <Wrapper style={{ width: collapsed ? 80 : 200 }}>
       {isMobile ? (
@@ -33,11 +35,15 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           width={250}
         >
           <Logo />
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1" icon={<PieChartOutlined />}>
+          <Menu
+            theme="dark"
+            defaultSelectedKeys={[window.location.pathname]}
+            mode="inline"
+          >
+            <Menu.Item key="/" icon={<PieChartOutlined />}>
               <Link to="/">Dashboard</Link>
             </Menu.Item>
-            <Menu.Item key="2" icon={<TeamOutlined />}>
+            <Menu.Item key="/employees" icon={<TeamOutlined />}>
               <Link to="/employees">Employess</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<ContainerOutlined />}>
@@ -73,11 +79,15 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           style={{ display: isSidebar ? 'none' : 'block' }}
         >
           <Logo />
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1" icon={<PieChartOutlined />}>
+          <Menu
+            theme="dark"
+            defaultSelectedKeys={[window.location.pathname]}
+            mode="inline"
+          >
+            <Menu.Item key="/" icon={<PieChartOutlined />}>
               <Link to="/">Dashboard</Link>
             </Menu.Item>
-            <Menu.Item key="2" icon={<TeamOutlined />}>
+            <Menu.Item key="/employees" icon={<TeamOutlined />}>
               <Link to="/employees">Employess</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<ContainerOutlined />}>
