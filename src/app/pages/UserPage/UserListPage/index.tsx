@@ -23,7 +23,7 @@ import {
 import Highlighter from 'react-highlight-words';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { isMobileOnly } from 'react-device-detect';
-import { isEqual } from 'lodash';
+import { isArray, isEmpty, isEqual } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { UsersMessages } from './messages';
@@ -34,10 +34,12 @@ import { HeaderButton } from './components/HeaderButton/Loadable';
 import { UserList } from './components/UserList/Loadable';
 import { Filters, Pagination, ParamsPayload } from '../types';
 import { useGetUserList } from './useGetUserList';
-import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { parse, stringify } from 'query-string';
+import { ColumnProps } from 'antd/lib/table';
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
 
 const { Panel } = Collapse;
+type Employee = models.hr.Employee;
 
 export const Users: React.FC = () => {
   const { t } = useTranslation();
@@ -61,11 +63,11 @@ export const Users: React.FC = () => {
     phone: null,
     code: null,
   });
+  const [tableSort, setTableSort] = useState({});
   const { users, loading, resPagination } = useGetUserList(
     tablePagination,
     urlParams,
   );
-  const [tableSort, setTableSort] = useState({});
   const [moreLoading, setMoreLoading] = useState(true);
   const [userList, setUserList] = useState<Employee[]>([]);
   const [isMore, setIsMore] = useState(true);
@@ -89,9 +91,55 @@ export const Users: React.FC = () => {
     if (filterChanges || sortChanges) {
       setTableFilters(filters);
       setTableSort(sorter);
+      if (!isEmpty(sorter)) {
+        if (isArray(sorter)) {
+          const orderingParams = sorter.map(item => {
+            if (item.order === 'ascend') {
+              return '+' + item.field;
+            } else if (item.order === 'descend') {
+              return '-' + item.field;
+            } else {
+              return '';
+            }
+          });
+          history.replace({
+            search: stringify(
+              {
+                ...urlParams,
+                ordering: orderingParams,
+              },
+              { arrayFormat: 'comma' },
+            ),
+          });
+        } else {
+          if (sorter.order === 'ascend') {
+            history.replace({
+              search: stringify({
+                ...urlParams,
+                ordering: '+' + sorter.field,
+              }),
+            });
+          } else if (sorter.order === 'descend') {
+            history.replace({
+              search: stringify({
+                ...urlParams,
+                ordering: '-' + sorter.field,
+              }),
+            });
+          } else {
+            if (urlParams.ordering) {
+              delete urlParams.ordering;
+              history.replace({
+                search: stringify({
+                  ...urlParams,
+                }),
+              });
+            }
+          }
+        }
+      }
     }
     if (!filterChanges && !sortChanges) {
-      console.log(urlParams);
       history.replace({
         search: stringify(
           {
@@ -138,6 +186,7 @@ export const Users: React.FC = () => {
   }, [isMore, moreLoading, resPagination.total, tablePagination, userList]);
 
   const getColumnSearchProps = (dataIndex: string) => ({
+    ellipsis: true,
     filterDropdown: ({ confirm }) => (
       <div style={{ padding: 8 }}>
         <Input
@@ -187,8 +236,8 @@ export const Users: React.FC = () => {
             .toLowerCase()
             .includes(value.toLowerCase())
         : '',
-    render: text =>
-      searchedColumn[dataIndex] || searchForm.getFieldValue('search') ? (
+    render: text => {
+      return searchedColumn[dataIndex] || searchForm.getFieldValue('search') ? (
         <Highlighter
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[
@@ -200,7 +249,8 @@ export const Users: React.FC = () => {
         />
       ) : (
         text
-      ),
+      );
+    },
   });
 
   const handleSearch = (dataIndex: string, confirm: () => void) => {
@@ -264,7 +314,7 @@ export const Users: React.FC = () => {
   const totalSearch = () => {
     const values = searchForm.getFieldValue('search');
     history.replace({
-      search: stringify({ search: values }),
+      search: stringify({ ...urlParams, search: values }),
     });
   };
 
@@ -273,106 +323,52 @@ export const Users: React.FC = () => {
     setSelectedKeys({});
     setSearchText('');
     setSearchedColumn('');
+    setTableSort({});
     history.replace({
       search: '',
     });
   };
 
   useEffect(() => {
-    // function setSearch(dataIndex: string) {
-    //   setSelectedKeys(prevState => ({
-    //     ...prevState,
-    //     code: urlParams.code,
-    //   }));
-    //   setSearchText(prevState => ({
-    //     ...prevState,
-    //     code: urlParams.code,
-    //   }));
-    //   setSearchedColumn(prevState => ({
-    //     ...prevState,
-    //     code: urlParams.code,
-    //   }));
-    // }
     if (urlParams.search) {
       searchForm.setFieldsValue({ search: urlParams.search });
     }
-    if (urlParams.limit) {
+    if (urlParams.limit || urlParams.page) {
       setTablePagination(prevState => ({
         ...prevState,
         pageSize: urlParams.limit,
         current: urlParams.page,
       }));
     }
-    if (urlParams.page) {
-      setTablePagination(prevState => ({
-        ...prevState,
-        pageSize: urlParams.limit,
-        current: urlParams.page,
-      }));
-    }
-    if (urlParams.first_name) {
-      setSearchText(prevState => ({
+    if (
+      urlParams.first_name ||
+      urlParams.last_name ||
+      urlParams.email ||
+      urlParams.phone ||
+      urlParams.code
+    ) {
+      setSelectedKeys(prevState => ({
         ...prevState,
         first_name: urlParams.first_name,
-      }));
-      setSearchedColumn(prevState => ({
-        ...prevState,
-        first_name: urlParams.first_name,
-      }));
-    }
-    if (urlParams.last_name) {
-      setSelectedKeys(prevState => ({
-        ...prevState,
         last_name: urlParams.last_name,
-      }));
-      setSearchText(prevState => ({
-        ...prevState,
-        last_name: urlParams.last_name,
-      }));
-      setSearchedColumn(prevState => ({
-        ...prevState,
-        last_name: urlParams.last_name,
-      }));
-    }
-    if (urlParams.phone) {
-      setSelectedKeys(prevState => ({
-        ...prevState,
         phone: urlParams.phone,
-      }));
-      setSearchText(prevState => ({
-        ...prevState,
-        phone: urlParams.phone,
-      }));
-      setSearchedColumn(prevState => ({
-        ...prevState,
-        phone: urlParams.phone,
-      }));
-    }
-    if (urlParams.email) {
-      setSelectedKeys(prevState => ({
-        ...prevState,
         email: urlParams.email,
-      }));
-      setSearchText(prevState => ({
-        ...prevState,
-        email: urlParams.email,
-      }));
-      setSearchedColumn(prevState => ({
-        ...prevState,
-        email: urlParams.email,
-      }));
-    }
-    if (urlParams.code) {
-      setSelectedKeys(prevState => ({
-        ...prevState,
         code: urlParams.code,
       }));
       setSearchText(prevState => ({
         ...prevState,
+        first_name: urlParams.first_name,
+        last_name: urlParams.last_name,
+        phone: urlParams.phone,
+        email: urlParams.email,
         code: urlParams.code,
       }));
       setSearchedColumn(prevState => ({
         ...prevState,
+        first_name: urlParams.first_name,
+        last_name: urlParams.last_name,
+        phone: urlParams.phone,
+        email: urlParams.email,
         code: urlParams.code,
       }));
     }
@@ -381,7 +377,6 @@ export const Users: React.FC = () => {
     urlParams.limit,
     urlParams.page,
     urlParams.search,
-    urlParams.ordering,
     urlParams.first_name,
     urlParams.last_name,
     urlParams.phone,
@@ -389,10 +384,11 @@ export const Users: React.FC = () => {
     urlParams.code,
   ]);
 
-  const columns = [
+  const columns: ColumnProps<Employee>[] = [
     {
       title: t(UsersMessages.listAvatarTitle()),
       dataIndex: 'avatar',
+      width: 100,
       render: (text, record: Employee) => (
         <Avatar
           size={50}
@@ -404,52 +400,77 @@ export const Users: React.FC = () => {
     {
       title: t(UsersMessages.listFirstNameTitle()),
       dataIndex: 'first_name',
+      width: 150,
       sorter: {
-        compare: (a, b) => a.first_name.localeCompare(b.first_name),
         multiple: 1,
       },
+      defaultSortOrder: urlParams.ordering?.includes('first_name')
+        ? urlParams.ordering.includes('-first_name')
+          ? 'descend'
+          : 'ascend'
+        : null,
       ...getColumnSearchProps('first_name'),
     },
     {
       title: t(UsersMessages.listLastNameTitle()),
       dataIndex: 'last_name',
+      width: 150,
       sorter: {
-        compare: (a, b) => a.last_name.localeCompare(b.last_name),
         multiple: 2,
       },
+      defaultSortOrder: urlParams.ordering?.includes('last_name')
+        ? urlParams.ordering.includes('-last_name')
+          ? 'descend'
+          : 'ascend'
+        : null,
       ...getColumnSearchProps('last_name'),
     },
     {
       title: t(UsersMessages.listEmailTitle()),
       dataIndex: 'email',
+      width: 250,
       sorter: {
-        compare: (a, b) => a.email.localeCompare(b.email),
         multiple: 3,
       },
+      defaultSortOrder: urlParams.ordering?.includes('email')
+        ? urlParams.ordering.includes('-email')
+          ? 'descend'
+          : 'ascend'
+        : null,
       ...getColumnSearchProps('email'),
     },
     {
       title: 'Phone Number',
       dataIndex: 'phone',
+      width: 170,
       sorter: {
-        compare: (a, b) => a.phone.localeCompare(b.phone),
         multiple: 4,
       },
+      defaultSortOrder: urlParams.ordering?.includes('phone')
+        ? urlParams.ordering.includes('-phone')
+          ? 'descend'
+          : 'ascend'
+        : null,
       ...getColumnSearchProps('phone'),
     },
     {
       title: 'Code',
       dataIndex: 'code',
+      width: 170,
       sorter: {
-        compare: (a, b) => a.code.localeCompare(b.code),
         multiple: 5,
       },
+      defaultSortOrder: urlParams.ordering?.includes('code')
+        ? urlParams.ordering.includes('-code')
+          ? 'descend'
+          : 'ascend'
+        : null,
       ...getColumnSearchProps('code'),
     },
     {
       title: 'Tags',
       dataIndex: 'tags',
-      width: '10%',
+      width: 230,
       render: (text, record: Employee, index: number) => {
         return (
           <>
@@ -467,14 +488,18 @@ export const Users: React.FC = () => {
     {
       title: 'Type',
       dataIndex: 'type',
+      width: 120,
     },
     {
       title: 'Status',
       dataIndex: 'status',
+      width: 120,
     },
     {
       title: t(UsersMessages.listOptionsTitle()),
       dataIndex: 'id',
+      fixed: 'right',
+      width: 120,
       render: (text, record: Employee, index: number) => {
         return (
           <>
@@ -589,10 +614,14 @@ export const Users: React.FC = () => {
               columns={columns}
               rowKey="id"
               dataSource={users}
-              pagination={resPagination}
+              pagination={{
+                ...resPagination,
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
+              }}
               loading={loading}
               onChange={handleTableChange}
-              scroll={{ x: 'max-content' }}
+              scroll={{ x: 2000 }}
             />
           </Col>
         </Row>
