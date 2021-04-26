@@ -25,7 +25,7 @@ export enum PlacementType {
 
 interface propTypes {
   type?: MessageType | string;
-  message?: string;
+  message?: React.ReactNode;
   description?: string;
   duration?: number;
   placement?: PlacementType | string;

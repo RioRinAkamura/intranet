@@ -1270,7 +1270,7 @@
     "@hapi/hoek" "^8.3.0"
 
 "@hdwebsoft/boilerplate-api-sdk@0.0.2":
-  "integrity" "sha1-Y7wRhh4ZMZ37v495VCPXo/MXC8g="
+  "integrity" "sha1-gmSROfgkSN8Gw1CLlXb6Jy4lAZo="
   "resolved" "https://gitlab.com/api/v4/projects/25975384/packages/npm/@hdwebsoft/boilerplate-api-sdk/-/@hdwebsoft/boilerplate-api-sdk-0.0.2.tgz"
   "version" "0.0.2"
   dependencies:

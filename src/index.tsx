@@ -28,6 +28,7 @@ import reportWebVitals from 'reportWebVitals';
 
 // Initialize languages
 import './locales/i18n';
+import { ToastContextProvider } from 'app/components/Toast/context';
 
 // Observe loading of Inter (to remove 'Inter', remove the <link> tag in
 // the index.html file and this observer)
@@ -45,9 +46,11 @@ ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider>
       <HelmetProvider>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
+        <ToastContextProvider>
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>
+        </ToastContextProvider>
       </HelmetProvider>
     </ThemeProvider>
   </Provider>,

@@ -45,6 +45,30 @@ export const GlobalStyle = createGlobalStyle`
     z-index: 1010;
     margin: 0 24px 0 0;
   }
+  & .toast-box{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    color: rgba(0,0,0,.85);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none; 
+    font-feature-settings: "tnum";
+    position: fixed;
+    z-index: 1010;
+    margin: 0 24px 0 0;
+  }
+    & .top {
+      top:0px;
+      left: 0px;
+    }
+    & .bottom {
+      bottom:0px;
+      left: 0px;
+    }
+
+
     & .topLeft {
       top: 10px;
       left: 24px;

@@ -13,6 +13,7 @@ import { NavList } from '../NavList';
 import { NavItem } from '../NavList/NavItem';
 import { useNotify, MessageType, PlacementType } from '../Notification';
 import { Logo } from '../Sidebar/Logo';
+import Toast from '../Toast';
 
 interface Props {
   collapsed: boolean;
@@ -23,17 +24,20 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
   const { notify } = useNotify();
 
   const openNotification = () => {
-    notify({
-      type: MessageType.Error,
-      message: 'Add User Infor',
-      description: 'quang',
-      placement: PlacementType.BottomLeft,
-      className: 'customClassname',
-      style: {
-        background:
-          'lightblue url("https://designshack.net/wp-content/uploads/abstract-background.jpg") no-repeat fixed center',
-      },
-    });
+    console.log('abc');
+
+    // notify({
+    //   type: MessageType.Error,
+    //   message: 'Add User Infor',
+    //   description: 'quang',
+    //   placement: PlacementType.BottomLeft,
+    //   className: 'customClassname',
+    //   style: {
+    //     background:
+    //       'lightblue url("https://designshack.net/wp-content/uploads/abstract-background.jpg") no-repeat fixed center',
+    //   },
+    // });
+    return Toast();
   };
   return (
     <>
