@@ -46,15 +46,12 @@ export const Users: React.FC = () => {
   const location = useLocation();
   const urlParams: ParamsPayload = parse(location.search, {
     sort: false,
-    parseNumbers: true,
   });
   const [tablePagination, setTablePagination] = useState<Pagination>({
     current: 1,
     pageSize: 20,
     total: 0,
     totalPage: 0,
-    pageSizeOptions: ['10', '20', '50', '100'],
-    showSizeChanger: true,
   });
   const [tableFilters, setTableFilters] = useState<Filters>({
     email: null,
@@ -64,10 +61,7 @@ export const Users: React.FC = () => {
     code: null,
   });
   const [tableSort, setTableSort] = useState({});
-  const { users, loading, resPagination } = useGetUserList(
-    tablePagination,
-    urlParams,
-  );
+  const { getUserListState, fetchUsers, columns } = useGetUserList();
   const [moreLoading, setMoreLoading] = useState(true);
   const [userList, setUserList] = useState<Employee[]>([]);
   const [isMore, setIsMore] = useState(true);
@@ -155,8 +149,10 @@ export const Users: React.FC = () => {
   };
 
   useEffect(() => {
-    setUserList(prev => prev.concat(users));
-  }, [users]);
+    setUserList(prev =>
+      prev.concat(getUserListState.users ? getUserListState.users : []),
+    );
+  }, [getUserListState.users]);
 
   useEffect(() => {
     const handleLoadMore = () => {
@@ -165,7 +161,7 @@ export const Users: React.FC = () => {
         document.scrollingElement?.scrollHeight
       ) {
         if (moreLoading) {
-          if (resPagination.total !== userList.length) {
+          if (getUserListState.params?.limit !== userList.length) {
             setTablePagination({
               ...tablePagination,
               current: tablePagination.current && tablePagination.current + 1,
@@ -183,133 +179,13 @@ export const Users: React.FC = () => {
         document.removeEventListener('scroll', handleLoadMore);
       };
     }
-  }, [isMore, moreLoading, resPagination.total, tablePagination, userList]);
-
-  const getColumnSearchProps = (dataIndex: string) => ({
-    ellipsis: true,
-    filterDropdown: ({ confirm }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder={`${t(
-            UsersMessages.filterInputPlaceholder(),
-          )} ${dataIndex}`}
-          value={selectedKeys[dataIndex]}
-          onChange={e => {
-            e.persist();
-            setSelectedKeys(prevState => ({
-              ...prevState,
-              [dataIndex]: e.target.value ? e.target.value : null,
-            }));
-          }}
-          onPressEnter={() => handleSearch(dataIndex, confirm)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(dataIndex, confirm)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-            loading={loading}
-          >
-            {t(UsersMessages.filterSearchButton())}
-          </Button>
-          <Button
-            onClick={() => handleReset(dataIndex, confirm)}
-            size="small"
-            loading={loading}
-            style={{ width: 90 }}
-          >
-            {t(UsersMessages.filterResetButton())}
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: filtered => (
-      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
-        : '',
-    render: text => {
-      return searchedColumn[dataIndex] || searchForm.getFieldValue('search') ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[
-            searchText[dataIndex],
-            searchForm.getFieldValue('search'),
-          ]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      );
-    },
-  });
-
-  const handleSearch = (dataIndex: string, confirm: () => void) => {
-    setSearchText(prevState => ({
-      ...prevState,
-      [dataIndex]: selectedKeys[dataIndex],
-    }));
-    setSearchedColumn(prevState => ({
-      ...prevState,
-      [dataIndex]: selectedKeys[dataIndex],
-    }));
-    if (selectedKeys[dataIndex]) {
-      history.replace({
-        search: stringify(
-          {
-            ...urlParams,
-            [dataIndex]: selectedKeys[dataIndex],
-          },
-          { sort: false },
-        ),
-      });
-    } else {
-      delete urlParams[dataIndex];
-      history.replace({
-        search: stringify(
-          {
-            ...urlParams,
-          },
-          { sort: false },
-        ),
-      });
-    }
-    confirm();
-  };
-
-  const handleReset = (dataIndex: string, confirm: () => void) => {
-    setSearchText(prevState => ({
-      ...prevState,
-      [dataIndex]: null,
-    }));
-    setSearchedColumn(prevState => ({
-      ...prevState,
-      [dataIndex]: null,
-    }));
-    setSelectedKeys(prevState => ({
-      ...prevState,
-      [dataIndex]: null,
-    }));
-    delete urlParams[dataIndex];
-    history.replace({
-      search: stringify(
-        {
-          ...urlParams,
-        },
-        { sort: false },
-      ),
-    });
-    confirm();
-  };
+  }, [
+    getUserListState.params.limit,
+    isMore,
+    moreLoading,
+    tablePagination,
+    userList,
+  ]);
 
   const totalSearch = () => {
     const values = searchForm.getFieldValue('search');
@@ -330,219 +206,8 @@ export const Users: React.FC = () => {
   };
 
   useEffect(() => {
-    if (urlParams.search) {
-      searchForm.setFieldsValue({ search: urlParams.search });
-    }
-    if (urlParams.limit || urlParams.page) {
-      setTablePagination(prevState => ({
-        ...prevState,
-        pageSize: urlParams.limit,
-        current: urlParams.page,
-      }));
-    }
-    if (
-      urlParams.first_name ||
-      urlParams.last_name ||
-      urlParams.email ||
-      urlParams.phone ||
-      urlParams.code
-    ) {
-      setSelectedKeys(prevState => ({
-        ...prevState,
-        first_name: urlParams.first_name,
-        last_name: urlParams.last_name,
-        phone: urlParams.phone,
-        email: urlParams.email,
-        code: urlParams.code,
-      }));
-      setSearchText(prevState => ({
-        ...prevState,
-        first_name: urlParams.first_name,
-        last_name: urlParams.last_name,
-        phone: urlParams.phone,
-        email: urlParams.email,
-        code: urlParams.code,
-      }));
-      setSearchedColumn(prevState => ({
-        ...prevState,
-        first_name: urlParams.first_name,
-        last_name: urlParams.last_name,
-        phone: urlParams.phone,
-        email: urlParams.email,
-        code: urlParams.code,
-      }));
-    }
-  }, [
-    searchForm,
-    urlParams.limit,
-    urlParams.page,
-    urlParams.search,
-    urlParams.first_name,
-    urlParams.last_name,
-    urlParams.phone,
-    urlParams.email,
-    urlParams.code,
-  ]);
-
-  const columns: ColumnProps<Employee>[] = [
-    {
-      title: t(UsersMessages.listAvatarTitle()),
-      dataIndex: 'avatar',
-      width: 100,
-      render: (text, record: Employee) => (
-        <Avatar
-          size={50}
-          src={text}
-          alt={record.first_name + ' ' + record.last_name}
-        />
-      ),
-    },
-    {
-      title: t(UsersMessages.listFirstNameTitle()),
-      dataIndex: 'first_name',
-      width: 150,
-      sorter: {
-        multiple: 1,
-      },
-      defaultSortOrder: urlParams.ordering?.includes('first_name')
-        ? urlParams.ordering.includes('-first_name')
-          ? 'descend'
-          : 'ascend'
-        : null,
-      ...getColumnSearchProps('first_name'),
-    },
-    {
-      title: t(UsersMessages.listLastNameTitle()),
-      dataIndex: 'last_name',
-      width: 150,
-      sorter: {
-        multiple: 2,
-      },
-      defaultSortOrder: urlParams.ordering?.includes('last_name')
-        ? urlParams.ordering.includes('-last_name')
-          ? 'descend'
-          : 'ascend'
-        : null,
-      ...getColumnSearchProps('last_name'),
-    },
-    {
-      title: t(UsersMessages.listEmailTitle()),
-      dataIndex: 'email',
-      width: 250,
-      sorter: {
-        multiple: 3,
-      },
-      defaultSortOrder: urlParams.ordering?.includes('email')
-        ? urlParams.ordering.includes('-email')
-          ? 'descend'
-          : 'ascend'
-        : null,
-      ...getColumnSearchProps('email'),
-    },
-    {
-      title: 'Phone Number',
-      dataIndex: 'phone',
-      width: 170,
-      sorter: {
-        multiple: 4,
-      },
-      defaultSortOrder: urlParams.ordering?.includes('phone')
-        ? urlParams.ordering.includes('-phone')
-          ? 'descend'
-          : 'ascend'
-        : null,
-      ...getColumnSearchProps('phone'),
-    },
-    {
-      title: 'Code',
-      dataIndex: 'code',
-      width: 170,
-      sorter: {
-        multiple: 5,
-      },
-      defaultSortOrder: urlParams.ordering?.includes('code')
-        ? urlParams.ordering.includes('-code')
-          ? 'descend'
-          : 'ascend'
-        : null,
-      ...getColumnSearchProps('code'),
-    },
-    {
-      title: 'Tags',
-      dataIndex: 'tags',
-      width: 230,
-      render: (text, record: Employee, index: number) => {
-        return (
-          <>
-            {text.map(tag => {
-              return (
-                <Tag color="geekblue" key={tag}>
-                  {tag.toUpperCase()}
-                </Tag>
-              );
-            })}
-          </>
-        );
-      },
-    },
-    {
-      title: 'Type',
-      dataIndex: 'type',
-      width: 120,
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      width: 120,
-    },
-    {
-      title: t(UsersMessages.listOptionsTitle()),
-      dataIndex: 'id',
-      fixed: 'right',
-      width: 120,
-      render: (text, record: Employee, index: number) => {
-        return (
-          <>
-            <Tooltip title={t(UsersMessages.listViewTooltip())}>
-              <IconButton
-                type="primary"
-                shape="circle"
-                size="small"
-                icon={<EyeOutlined />}
-                onClick={() => {
-                  history.push(`/employees/${text}`);
-                }}
-              />
-            </Tooltip>
-            <Tooltip title={t(UsersMessages.listEditTooltip())}>
-              <IconButton
-                shape="circle"
-                icon={<EditOutlined />}
-                size="small"
-                onClick={() => {
-                  history.push({
-                    pathname: '/employees/' + text,
-                    state: { edit: true },
-                  });
-                }}
-              />
-            </Tooltip>
-            <Tooltip title={t(UsersMessages.listDeleteTooltip())}>
-              <IconButton
-                danger
-                shape="circle"
-                size="small"
-                icon={<DeleteOutlined />}
-                onClick={() => {
-                  setDeleteModal({ open: true, id: text });
-                }}
-              />
-            </Tooltip>
-          </>
-        );
-      },
-    },
-  ];
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleDelete = () => {};
 
@@ -550,6 +215,7 @@ export const Users: React.FC = () => {
     selectedRowKeys: Key[],
     selectedRows: Employee[],
   ) => {
+    console.log(selectedRowKeys, selectedRows);
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
   };
@@ -568,7 +234,7 @@ export const Users: React.FC = () => {
         <Panel header={t(UsersMessages.searchTitle())} key="1">
           <SearchUsers
             form={searchForm}
-            loading={loading}
+            loading={getUserListState.loading ? true : false}
             onSearch={totalSearch}
             onReset={resetTotalSearch}
           />
@@ -576,7 +242,7 @@ export const Users: React.FC = () => {
       </Collapse>
       {isMobileOnly ? (
         <UserList
-          loading={loading}
+          loading={getUserListState.loading ? true : false}
           data={userList}
           isMore={isMore}
           moreLoading={moreLoading}
@@ -600,8 +266,8 @@ export const Users: React.FC = () => {
           </Col>
           <Col span={12}>
             <HeaderButton
-              pagination={resPagination}
-              data={users}
+              pagination={getUserListState.pagination}
+              data={getUserListState.users}
               selectedRows={selectedRows}
             />
           </Col>
@@ -613,13 +279,15 @@ export const Users: React.FC = () => {
               }}
               columns={columns}
               rowKey="id"
-              dataSource={users}
+              dataSource={getUserListState.users}
               pagination={{
-                ...resPagination,
+                ...getUserListState.pagination,
                 showTotal: (total, range) =>
                   `${range[0]}-${range[1]} of ${total} items`,
+                pageSizeOptions: ['10', '20', '50', '100'],
+                showSizeChanger: true,
               }}
-              loading={loading}
+              loading={getUserListState.loading}
               onChange={handleTableChange}
               scroll={{ x: 2000 }}
             />
