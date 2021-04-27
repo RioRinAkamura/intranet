@@ -35,7 +35,11 @@ const data = [
 export const Activities = () => {
   return (
     <>
-      <CardWrapper title={<Title>Activities</Title>}>
+      <CardWrapper
+        mainHeight="328px"
+        bodyHeight="250px"
+        title={<Title>Activities</Title>}
+      >
         {data &&
           data.map(item => {
             return (
@@ -53,5 +57,4 @@ export const Activities = () => {
 
 const RowItem = styled(Row)`
   height: 68px;
-  
-`
+`;

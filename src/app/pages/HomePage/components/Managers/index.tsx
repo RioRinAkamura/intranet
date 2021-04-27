@@ -7,7 +7,11 @@ import styled from 'styled-components/macro';
 export const Managers = () => {
   return (
     <>
-      <CardWrapper title={<Title>Managers</Title>}>
+      <CardWrapper
+        mainHeight="328px"
+        bodyHeight="250px"
+        title={<Title>Managers</Title>}
+      >
         <Row gutter={[32, 32]} align="middle" justify="space-between">
           <Col>
             <Avatar src="#" size={130} />
