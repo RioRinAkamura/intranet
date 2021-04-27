@@ -10,13 +10,16 @@ export interface UserspageState {
   isFilter?: boolean;
   params: QueryParams;
   pagination?: Pagination;
-  filterFolumns?: FilterColumns;
+  filterColumns?: FilterColumns;
   searchText?: string;
 }
 
 export interface FilterColumns {
-  searchTextColumns?: string[];
-  searchedColumns?: string[];
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
+  email?: string;
+  code?: string;
 }
 
 export interface UserResponse {

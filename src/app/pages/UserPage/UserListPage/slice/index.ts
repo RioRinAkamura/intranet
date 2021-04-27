@@ -3,7 +3,12 @@ import { stat } from 'fs';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { userspageSaga } from './saga';
-import { QueryParams, UserspageState, UserResponse } from './types';
+import {
+  QueryParams,
+  UserspageState,
+  UserResponse,
+  FilterColumns,
+} from './types';
 
 export const initialState: UserspageState = {
   users: [],
@@ -18,6 +23,7 @@ export const initialState: UserspageState = {
     current: 1,
     total: 20,
   },
+  filterColumns: {},
 };
 
 const slice = createSlice({
@@ -40,19 +46,18 @@ const slice = createSlice({
     },
     changeUsersState(state, action: PayloadAction<UserspageState>) {
       state.params = { ...state.params, ...action.payload.params };
+      state.filterColumns = {
+        ...state.filterColumns,
+        ...(action.payload.filterColumns as FilterColumns),
+      };
+      state.pagination = { ...state.pagination, ...action.payload.pagination };
       state.isFilter = false;
     },
     notQuery(state) {
       state.isFilter = false;
     },
-    filterColumns(
-      state,
-      action: PayloadAction<{
-        searchTextColumns: string[];
-        searchedColumns: string[];
-      }>,
-    ) {
-      state.filterFolumns = { ...action.payload };
+    filterColumns(state, action: PayloadAction<FilterColumns>) {
+      state.filterColumns = { ...state.filterColumns, ...action.payload };
     },
   },
 });

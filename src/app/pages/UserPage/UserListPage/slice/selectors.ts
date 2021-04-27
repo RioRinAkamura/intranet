@@ -14,7 +14,7 @@ export const selectUserspageIsFilter = createSelector(
 
 export const selectUserspageFilterColumns = createSelector(
   [selectSlice],
-  state => state.filterFolumns,
+  state => state.filterColumns,
 );
 export const selectUserspageSearchText = createSelector(
   [selectSlice],
