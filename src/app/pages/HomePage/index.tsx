@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Features } from './Features';
 import { PageWrapper } from 'app/components/PageWrapper';
 import { PieChartOutlined } from '@ant-design/icons';
 import styled from 'styled-components/macro';
@@ -11,6 +10,7 @@ import { Activities } from './components/Activities';
 import { PerformanceEmployees } from './components/PerformanceEmployees';
 import { NewEmployees } from './components/NewEmployees';
 import { Title } from 'app/components/Title';
+import { Recruitments } from './components/Recruitments';
 
 export const HomePage = () => {
   return (
@@ -27,13 +27,16 @@ export const HomePage = () => {
           <PieChartOutlined />
           <Title>Dashboard</Title>
         </TitleWrapper>
-        {/* <WrapperItem>
+        <WrapperItem>
           <Chart />
-        </WrapperItem> */}
+        </WrapperItem>
+        <WrapperItem>
+          <Managers />
+        </WrapperItem>
         <WrapperItem>
           <Row gutter={[32, 32]}>
             <Col span={12}>
-              <Managers />
+              <Recruitments />
             </Col>
             <Col span={12}>
               <Activities />
@@ -41,10 +44,14 @@ export const HomePage = () => {
           </Row>
         </WrapperItem>
         <WrapperItem>
-          <PerformanceEmployees />
-        </WrapperItem>
-        <WrapperItem>
-          <NewEmployees />
+          <Row gutter={[32, 32]}>
+            <Col span={12}>
+              <PerformanceEmployees />
+            </Col>
+            <Col span={12}>
+              <NewEmployees />
+            </Col>
+          </Row>
         </WrapperItem>
       </PageWrapper>
     </>

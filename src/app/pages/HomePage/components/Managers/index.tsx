@@ -1,8 +1,41 @@
-import { Avatar, Card, Col, Row } from 'antd';
+import { Avatar, Col, Row } from 'antd';
 import { CardWrapper } from 'app/components/CardWrapper';
 import { Title } from 'app/components/Title';
 import * as React from 'react';
 import styled from 'styled-components/macro';
+
+const managers = [
+  {
+    id: 1,
+    name: 'Hung Luu',
+    role: 'Director',
+    avatar: 'https://randomuser.me/api/portraits/men/17.jpg',
+  },
+  {
+    id: 2,
+    name: 'Dat Giang',
+    role: 'CEO',
+    avatar: 'https://randomuser.me/api/portraits/men/41.jpg',
+  },
+  {
+    id: 3,
+    name: 'Quynh Le',
+    role: 'CTO',
+    avatar: 'https://randomuser.me/api/portraits/men/79.jpg',
+  },
+  {
+    id: 4,
+    name: 'Son Huynh',
+    role: 'PM',
+    avatar: 'https://randomuser.me/api/portraits/men/29.jpg',
+  },
+  {
+    id: 5,
+    name: 'Vu Tran',
+    role: 'PM',
+    avatar: 'https://randomuser.me/api/portraits/men/42.jpg',
+  },
+];
 
 export const Managers = () => {
   return (
@@ -13,27 +46,18 @@ export const Managers = () => {
         title={<Title>Managers</Title>}
       >
         <Row gutter={[32, 32]} align="middle" justify="space-between">
-          <Col>
-            <Avatar src="#" size={130} />
-            <Info>
-              <Name>Hung Luu</Name>
-              <Role>Director</Role>
-            </Info>
-          </Col>
-          <Col>
-            <Avatar src="#" size={130} />
-            <Info>
-              <Name>Dat Giang</Name>
-              <Role>CEO</Role>
-            </Info>
-          </Col>
-          <Col>
-            <Avatar src="#" size={130} />
-            <Info>
-              <Name>Quynh Le</Name>
-              <Role>CTO</Role>
-            </Info>
-          </Col>
+          {managers &&
+            managers.map(manager => {
+              return (
+                <Col>
+                  <Avatar src={manager.avatar} size={130} />
+                  <Info>
+                    <Name>{manager.name}</Name>
+                    <Role>{manager.role}</Role>
+                  </Info>
+                </Col>
+              );
+            })}
         </Row>
       </CardWrapper>
     </>
