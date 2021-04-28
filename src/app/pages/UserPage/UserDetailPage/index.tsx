@@ -6,10 +6,7 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Avatar, Button, Col, Form, Input, message, Row, Upload } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { UploadChangeParam } from 'antd/lib/upload';
-import { UploadFile } from 'antd/lib/upload/interface';
+import { Button, Col, Divider, Form, Input, Row } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { JobInfo } from './components/JobInfo/Loadable';
@@ -19,30 +16,11 @@ import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
 import moment from 'moment';
 import { useUpdateUserDetail } from './useUpdateUserDetail';
+import { TitlePage } from 'app/components/TitlePage';
+import { AvatarPath } from './components/AvatarPath/Loadable';
+import { IdCardInfo } from './components/IdCardInfo/Loadable';
 
 interface Props {}
-
-const getBase64 = (img: Blob, callback: Function) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file: File) => {
-  const isJpgOrPng =
-    file.type === 'image/jpeg' ||
-    file.type === 'image/png' ||
-    file.type === 'image/jpg';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJpgOrPng && isLt2M;
-};
-
 interface LocationState {
   edit: boolean;
 }
@@ -57,8 +35,6 @@ export function UserDetailPage(props: Props) {
   const { user } = useGetUserDetail(id);
   const { update, loading } = useUpdateUserDetail();
 
-  const [imageURL, setImageURL] = React.useState('');
-  const [loadingUpload, setLoadingUpload] = React.useState(false);
   const [isCreate, setIsCreate] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
 
@@ -74,20 +50,6 @@ export function UserDetailPage(props: Props) {
       });
     }
   }, [form, user]);
-
-  const handleChange = (info: UploadChangeParam<UploadFile<any>>) => {
-    if (info.file.status === 'uploading') {
-      setLoadingUpload(true);
-      return;
-    }
-    if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, imageURL => {
-        setImageURL(imageURL);
-        setLoadingUpload(false);
-        form.setFieldsValue({ avatar: imageURL });
-      });
-    }
-  };
 
   React.useEffect(() => {
     if (!history.location.pathname.includes('create')) {
@@ -107,22 +69,14 @@ export function UserDetailPage(props: Props) {
     }
   }, [history, location]);
 
-  const uploadButton = (
-    <div>
-      {loadingUpload ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>
-        {t(UserDetailMessages.formAvatarUpload())}
-      </div>
-    </div>
-  );
-
   const isView = isCreate || isEdit ? false : true;
 
   const handleSubmit = () => {
     form
       .validateFields()
       .then(async values => {
-        values.dob = moment(values.dob).format('YYYY-MM-DD');
+        values.dob = moment(values.dob).format(dateFormat);
+        values.issued_date = moment(values.issued_date).format(dateFormat);
         if (isEdit) {
           delete values.email;
           const response = await update(values);
@@ -135,170 +89,166 @@ export function UserDetailPage(props: Props) {
   };
 
   return (
-    <Wrapper>
-      <WrapperButton>
-        <Row gutter={[8, 8]} justify="end">
-          <Col md={isCreate ? 2 : 4} xs={12}>
-            <Row gutter={[8, 8]}>
-              <Col span={isCreate ? 24 : 12}>
-                <Button
-                  block
-                  size="large"
-                  shape="round"
-                  onClick={() => history.push('/employees')}
-                >
-                  {t(UserDetailMessages.formBackButton())}
-                </Button>
-              </Col>
-              {isCreate ? (
-                <></>
-              ) : isEdit ? (
-                <Col span={12}>
-                  <Button
-                    block
-                    size="large"
-                    shape="round"
-                    onClick={() => {
-                      setIsEdit(false);
-                    }}
-                  >
-                    {t(UserDetailMessages.formCancelButton())}
-                  </Button>
-                </Col>
-              ) : (
-                <Col span={12}>
-                  <Button
-                    type="primary"
-                    block
-                    size="large"
-                    shape="round"
-                    loading={loading}
-                    onClick={() => setIsEdit(true)}
-                  >
-                    {t(UserDetailMessages.formEditButton())}
-                  </Button>
-                </Col>
-              )}
-            </Row>
-          </Col>
-        </Row>
-      </WrapperButton>
-      <Form form={form} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+    <>
+      <WrapperTitle>
+        <TitlePage>
+          {isView
+            ? 'Employee Details'
+            : isEdit
+            ? 'Edit Employess'
+            : 'Create Employee'}
+        </TitlePage>
+      </WrapperTitle>
+      <Form form={form} labelAlign="left">
         <Form.Item hidden name="id">
           <Input hidden />
         </Form.Item>
-        <WrapperItem>
-          <Row gutter={[32, 32]}>
-            <LeftScreen md={10}>
-              <Row gutter={[8, 8]} align="middle" justify="center">
-                <Col span={24}>
-                  <FormItemAvatar
-                    name="avatar"
-                    valuePropName="file"
-                    rules={[
-                      {
-                        required: true,
-                        message: t(UserDetailMessages.formEmptyAvatar()),
-                      },
-                    ]}
-                  >
-                    <WrapperImage style={{ textAlign: 'center' }}>
-                      <Upload
-                        name="avatar"
-                        listType="picture"
-                        showUploadList={false}
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        beforeUpload={beforeUpload}
-                        onChange={handleChange}
-                        accept="image/png, image/jpeg, image/jpg"
-                        disabled={!isCreate && !isEdit}
-                      >
-                        {imageURL || user?.avatar ? (
-                          <Avatar
-                            src={user?.avatar || imageURL}
-                            alt="avatar"
-                            size={100}
-                          />
-                        ) : (
-                          uploadButton
-                        )}
-                      </Upload>
-                    </WrapperImage>
-                  </FormItemAvatar>
-                </Col>
+        <WrapperMainItem>
+          {isView ? (
+            <>
+              <Row gutter={[32, 32]}>
+                <LeftScreen md={5}>
+                  <AvatarPath
+                    user={user}
+                    isView={isView}
+                    isEdit={isEdit}
+                    form={form}
+                  />
+                  <IdCardInfo isView={isView} isEdit={isEdit} />
+                </LeftScreen>
+                <RightScreen isView={isView} md={19}>
+                  <ProfileInfo isView={isView} isEdit={isEdit} />
+                  <BankAccounts isView={isView} isEdit={isEdit} form={form} />
+                </RightScreen>
               </Row>
-              <ProfileInfo isView={isView} isEdit={isEdit} />
-            </LeftScreen>
-            <RightScreen md={14}>
+            </>
+          ) : (
+            <>
+              <Row gutter={[32, 32]}>
+                <LeftScreen md={5}>
+                  <AvatarPath
+                    user={user}
+                    isView={isView}
+                    isEdit={isEdit}
+                    form={form}
+                  />
+                </LeftScreen>
+                <RightScreen md={19}>
+                  <ProfileInfo isView={isView} isEdit={isEdit} />
+                </RightScreen>
+              </Row>
+              <BankAccounts isView={isView} isEdit={isEdit} form={form} />
+              <Divider />
+              <IdCardInfo isView={isView} isEdit={isEdit} />
+            </>
+          )}
+        </WrapperMainItem>
+        <Row gutter={[64, 32]}>
+          <Col span={isView ? 12 : 8}>
+            <WrapperItem>
               <JobInfo isView={isView} />
+            </WrapperItem>
+          </Col>
+          <Col span={isView ? 12 : 16}>
+            <WrapperItem>
               <SocialNetwork isView={isView} />
-              <BankAccounts isView={isView} />
-            </RightScreen>
-          </Row>
-        </WrapperItem>
+            </WrapperItem>
+          </Col>
+        </Row>
       </Form>
       <WrapperButton>
         <Row gutter={[8, 8]} justify="end">
-          <Col md={2} xs={12}>
-            {(isCreate || isEdit) && (
-              <Button
-                type="primary"
-                block
-                size="large"
-                shape="round"
-                loading={loading}
-                onClick={() => {
+          <Col>
+            <PageButton
+              block
+              size="large"
+              shape="round"
+              onClick={() => {
+                if (isEdit) {
+                  setIsEdit(false);
+                } else if (isView) {
+                  history.push('/employees');
+                } else if (isCreate) {
+                  history.push('/employees');
+                }
+              }}
+            >
+              {t(UserDetailMessages.formBackButton())}
+            </PageButton>
+          </Col>
+          <Col>
+            <PageButton
+              loading={loading}
+              block
+              size="large"
+              shape="round"
+              type="primary"
+              onClick={() => {
+                if (isEdit) {
                   handleSubmit();
-                }}
-              >
-                {t(UserDetailMessages.formSubmitButton())}
-              </Button>
-            )}
+                } else if (isView) {
+                  setIsEdit(true);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else if (isCreate) {
+                  handleSubmit();
+                }
+              }}
+            >
+              {isView
+                ? t(UserDetailMessages.formEditButton())
+                : t(UserDetailMessages.formSubmitButton())}
+            </PageButton>
           </Col>
         </Row>
       </WrapperButton>
-    </Wrapper>
+    </>
   );
 }
 
-const LeftScreen = styled(Col)`
-  border-right: 8px solid #ececec;
+interface ScreenProps {
+  isView?: boolean;
+}
+
+const WrapperTitle = styled.div`
+  padding: 1rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  width: 100%;
 `;
+
+const LeftScreen = styled(Col)``;
 
 const RightScreen = styled(Col)`
-  border-left: 2px solid #ececec;
+  padding-left: ${(props: ScreenProps) =>
+    props.isView ? '5em !important' : '0'};
 `;
 
-const FormItemAvatar = styled(Form.Item)`
-  div {
-    width: 100%;
-    text-align: center;
-  }
-  label {
-    font-weight: 500;
-  }
-`;
-
-const Wrapper = styled.div`
-  padding: 1em;
-`;
-
-const WrapperItem = styled.div`
-  margin: 5px;
-  padding: 20px;
+const WrapperMainItem = styled.div`
+  margin-top: 2em;
+  padding: 3em;
+  width: 100%;
   height: 100%;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.3);
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+`;
+const WrapperItem = styled.div`
+  margin-top: 2em;
+  padding: 3em 3em 0 3em;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
 `;
 
 const WrapperButton = styled.div`
-  margin: 5px;
+  margin-top: 3em;
   padding: 10px;
   height: 100%;
 `;
 
-const WrapperImage = styled.div`
-  margin-top: 1em;
-  text-align: center;
+const PageButton = styled(Button)`
+  width: 120px;
 `;
