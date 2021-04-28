@@ -33,11 +33,15 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           width={250}
         >
           <Logo />
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1" icon={<PieChartOutlined />}>
+          <Menu
+            theme="dark"
+            defaultSelectedKeys={[window.location.pathname]}
+            mode="inline"
+          >
+            <Menu.Item key="/" icon={<PieChartOutlined />}>
               <Link to="/">Dashboard</Link>
             </Menu.Item>
-            <Menu.Item key="2" icon={<TeamOutlined />}>
+            <Menu.Item key="/employees" icon={<TeamOutlined />}>
               <Link to="/employees">Employess</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<ContainerOutlined />}>
@@ -73,11 +77,15 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           style={{ display: isSidebar ? 'none' : 'block' }}
         >
           <Logo />
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1" icon={<PieChartOutlined />}>
+          <Menu
+            theme="dark"
+            defaultSelectedKeys={[window.location.pathname]}
+            mode="inline"
+          >
+            <Menu.Item key="/" icon={<PieChartOutlined />}>
               <Link to="/">Dashboard</Link>
             </Menu.Item>
-            <Menu.Item key="2" icon={<TeamOutlined />}>
+            <Menu.Item key="/employees" icon={<TeamOutlined />}>
               <Link to="/employees">Employess</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<ContainerOutlined />}>
