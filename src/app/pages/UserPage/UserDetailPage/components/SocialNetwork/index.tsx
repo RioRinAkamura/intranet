@@ -6,7 +6,7 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Col, Divider, Form, Input, InputProps, Row } from 'antd';
+import { Col, Form, Input, InputProps, Row } from 'antd';
 import {
   FacebookFilled,
   GithubFilled,
@@ -16,6 +16,7 @@ import {
   TwitterCircleFilled,
 } from '@ant-design/icons';
 import { UserDetailMessages } from '../../messages';
+import { TitlePath } from '../TitlePath';
 
 interface SocialNetworkProps {
   isView?: boolean;
@@ -32,182 +33,287 @@ export const SocialNetwork = (props: SocialNetworkProps) => {
 
   return (
     <>
-      <Divider orientation="left">
+      <TitlePath>
         <b>{t(UserDetailMessages.formSocialNetworkTitle())}</b>
-      </Divider>
-      <Row gutter={[16, 16]}>
-        <Col lg={12} xs={24}>
-          <FormItem
-            name={['social', 'skype']}
-            label={t(UserDetailMessages.formSocialsSkypeLabel())}
-          >
-            <Input
-              {...(isView ? inputProps : {})}
-              size="large"
-              prefix={
-                isView ? null : (
-                  <SkypeFilled
-                    style={{
-                      color: '#00aff0',
-                      marginRight: 5,
-                      fontSize: 'large',
-                    }}
-                  />
-                )
-              }
-              placeholder={
-                isView
-                  ? ''
-                  : t(UserDetailMessages.formSocialsSkypePlaceholder())
-              }
-            />
-          </FormItem>
+      </TitlePath>
+      <Row gutter={[16, 12]}>
+        <Col lg={isView ? 24 : 12} xs={24}>
+          <Row gutter={[0, 12]} align="middle">
+            {isView ? (
+              <Col md={2} xs={24}>
+                <SkypeFilled
+                  style={{
+                    color: '#00aff0',
+                    marginRight: 5,
+                    fontSize: 'x-large',
+                  }}
+                />
+              </Col>
+            ) : (
+              <Col md={24} xs={24}>
+                {t(UserDetailMessages.formSocialsSkypeLabel())}
+              </Col>
+            )}
+            <Col lg={isView ? 20 : 24} xs={24}>
+              <FormItem isView={isView} name={['social', 'skype']}>
+                <Input
+                  {...(isView ? inputProps : {})}
+                  size="large"
+                  prefix={
+                    isView ? null : (
+                      <SkypeFilled
+                        style={{
+                          color: '#00aff0',
+                          marginRight: 5,
+                          fontSize: 'x-large',
+                        }}
+                      />
+                    )
+                  }
+                  placeholder={
+                    isView
+                      ? ''
+                      : t(UserDetailMessages.formSocialsSkypePlaceholder())
+                  }
+                />
+              </FormItem>
+            </Col>
+          </Row>
         </Col>
-        <Col lg={12} xs={24}>
-          <FormItem
-            name={['social', 'twitter']}
-            label={t(UserDetailMessages.formSocialsTwitterLabel())}
-          >
-            <Input
-              {...(isView ? inputProps : {})}
-              size="large"
-              prefix={
-                isView ? null : (
-                  <TwitterCircleFilled
-                    style={{
-                      color: '#00acee',
-                      marginRight: 5,
-                      fontSize: 'large',
-                    }}
-                  />
-                )
-              }
-              placeholder={
-                isView
-                  ? ''
-                  : t(UserDetailMessages.formSocialsTwitterPlaceholder())
-              }
-            />
-          </FormItem>
+
+        <Col lg={isView ? 24 : 12} xs={24}>
+          <Row gutter={[0, 12]} align="middle">
+            {isView ? (
+              <Col md={2} xs={24}>
+                <TwitterCircleFilled
+                  style={{
+                    color: '#00acee',
+                    marginRight: 5,
+                    fontSize: 'x-large',
+                  }}
+                />
+              </Col>
+            ) : (
+              <Col md={24} xs={24}>
+                {t(UserDetailMessages.formSocialsTwitterLabel())}
+              </Col>
+            )}
+            <Col lg={isView ? 20 : 24} xs={24}>
+              <FormItem isView={isView} name={['social', 'twitter']}>
+                <Input
+                  {...(isView ? inputProps : {})}
+                  size="large"
+                  prefix={
+                    isView ? null : (
+                      <TwitterCircleFilled
+                        style={{
+                          color: '#00acee',
+                          marginRight: 5,
+                          fontSize: 'x-large',
+                        }}
+                      />
+                    )
+                  }
+                  placeholder={
+                    isView
+                      ? ''
+                      : t(UserDetailMessages.formSocialsTwitterPlaceholder())
+                  }
+                />
+              </FormItem>
+            </Col>
+          </Row>
         </Col>
-        <Col lg={12} xs={24}>
-          <FormItem
-            name={['social', 'facebook']}
-            label={t(UserDetailMessages.formSocialsFacebookLabel())}
-          >
-            <Input
-              {...(isView ? inputProps : {})}
-              size="large"
-              prefix={
-                isView ? null : (
-                  <FacebookFilled
-                    style={{
-                      color: '#1378f3',
-                      marginRight: 5,
-                      fontSize: 'large',
-                    }}
-                  />
-                )
-              }
-              placeholder={
-                isView
-                  ? ''
-                  : t(UserDetailMessages.formSocialsFacebookPlaceholder())
-              }
-            />
-          </FormItem>
+        <Col lg={isView ? 24 : 12} xs={24}>
+          <Row gutter={[0, 12]} align="middle">
+            {isView ? (
+              <Col md={2} xs={24}>
+                <FacebookFilled
+                  style={{
+                    color: '#1378f3',
+                    marginRight: 5,
+                    fontSize: 'x-large',
+                  }}
+                />
+              </Col>
+            ) : (
+              <Col md={24} xs={24}>
+                {t(UserDetailMessages.formSocialsFacebookLabel())}
+              </Col>
+            )}
+            <Col lg={isView ? 20 : 24} xs={24}>
+              <FormItem isView={isView} name={['social', 'facebook']}>
+                <Input
+                  {...(isView ? inputProps : {})}
+                  size="large"
+                  prefix={
+                    isView ? null : (
+                      <FacebookFilled
+                        style={{
+                          color: '#1378f3',
+                          marginRight: 5,
+                          fontSize: 'x-large',
+                        }}
+                      />
+                    )
+                  }
+                  placeholder={
+                    isView
+                      ? ''
+                      : t(UserDetailMessages.formSocialsFacebookPlaceholder())
+                  }
+                />
+              </FormItem>
+            </Col>
+          </Row>
         </Col>
-        <Col lg={12} xs={24}>
-          <FormItem
-            name={['social', 'linkedin']}
-            label={t(UserDetailMessages.formSocialsLinkedinLabel())}
-          >
-            <Input
-              {...(isView ? inputProps : {})}
-              size="large"
-              prefix={
-                isView ? null : (
-                  <LinkedinFilled
-                    style={{
-                      color: '#0e76a8',
-                      marginRight: 5,
-                      fontSize: 'large',
-                    }}
-                  />
-                )
-              }
-              placeholder={
-                isView
-                  ? ''
-                  : t(UserDetailMessages.formSocialsLinkedinPlaceholder())
-              }
-            />
-          </FormItem>
+        <Col lg={isView ? 24 : 12} xs={24}>
+          <Row gutter={[0, 12]} align="middle">
+            {isView ? (
+              <Col md={2} xs={24}>
+                <LinkedinFilled
+                  style={{
+                    color: '#0e76a8',
+                    marginRight: 5,
+                    fontSize: 'x-large',
+                  }}
+                />
+              </Col>
+            ) : (
+              <Col md={24} xs={24}>
+                {t(UserDetailMessages.formSocialsLinkedinLabel())}
+              </Col>
+            )}
+            <Col lg={isView ? 20 : 24} xs={24}>
+              <FormItem isView={isView} name={['social', 'linkedin']}>
+                <Input
+                  {...(isView ? inputProps : {})}
+                  size="large"
+                  prefix={
+                    isView ? null : (
+                      <LinkedinFilled
+                        style={{
+                          color: '#0e76a8',
+                          marginRight: 5,
+                          fontSize: 'x-large',
+                        }}
+                      />
+                    )
+                  }
+                  placeholder={
+                    isView
+                      ? ''
+                      : t(UserDetailMessages.formSocialsLinkedinPlaceholder())
+                  }
+                />
+              </FormItem>
+            </Col>
+          </Row>
         </Col>
-        <Col lg={12} xs={24}>
-          <FormItem
-            name={['social', 'github']}
-            label={t(UserDetailMessages.formSocialsGithubLabel())}
-          >
-            <Input
-              {...(isView ? inputProps : {})}
-              size="large"
-              prefix={
-                isView ? null : (
-                  <GithubFilled
-                    style={{
-                      color: '#171515',
-                      marginRight: 5,
-                      fontSize: 'large',
-                    }}
-                  />
-                )
-              }
-              placeholder={
-                isView
-                  ? ''
-                  : t(UserDetailMessages.formSocialsGithubPlaceholder())
-              }
-            />
-          </FormItem>
+        <Col lg={isView ? 24 : 12} xs={24}>
+          <Row gutter={[0, 12]} align="middle">
+            {isView ? (
+              <Col md={2} xs={24}>
+                <GithubFilled
+                  style={{
+                    color: '#171515',
+                    marginRight: 5,
+                    fontSize: 'x-large',
+                  }}
+                />
+              </Col>
+            ) : (
+              <Col md={24} xs={24}>
+                {t(UserDetailMessages.formSocialsGithubLabel())}
+              </Col>
+            )}
+            <Col lg={isView ? 20 : 24} xs={24}>
+              <FormItem isView={isView} name={['social', 'github']}>
+                <Input
+                  {...(isView ? inputProps : {})}
+                  size="large"
+                  prefix={
+                    isView ? null : (
+                      <GithubFilled
+                        style={{
+                          color: '#171515',
+                          marginRight: 5,
+                          fontSize: 'x-large',
+                        }}
+                      />
+                    )
+                  }
+                  placeholder={
+                    isView
+                      ? ''
+                      : t(UserDetailMessages.formSocialsGithubPlaceholder())
+                  }
+                />
+              </FormItem>
+            </Col>
+          </Row>
         </Col>
-        <Col md={12} xs={24}>
-          <FormItem
-            name={['social', 'gitlab']}
-            label={t(UserDetailMessages.formSocialsGitlabLabel())}
-          >
-            <Input
-              {...(isView ? inputProps : {})}
-              size="large"
-              prefix={
-                isView ? null : (
-                  <GitlabFilled
-                    style={{
-                      color: '#fc6d26',
-                      marginRight: 5,
-                      fontSize: 'large',
-                    }}
-                  />
-                )
-              }
-              placeholder={
-                isView
-                  ? ''
-                  : t(UserDetailMessages.formSocialsGitlabPlaceholder())
-              }
-            />
-          </FormItem>
+        <Col lg={isView ? 24 : 12} xs={24}>
+          <Row gutter={[0, 12]} align="middle">
+            {isView ? (
+              <Col md={2} xs={24}>
+                <GitlabFilled
+                  style={{
+                    color: '#fc6d26',
+                    marginRight: 5,
+                    fontSize: 'x-large',
+                  }}
+                />
+              </Col>
+            ) : (
+              <Col md={24} xs={24}>
+                {t(UserDetailMessages.formSocialsGitlabLabel())}
+              </Col>
+            )}
+            <Col lg={isView ? 20 : 24} xs={24}>
+              <FormItem isView={isView} name={['social', 'gitlab']}>
+                <Input
+                  {...(isView ? inputProps : {})}
+                  size="large"
+                  prefix={
+                    isView ? null : (
+                      <GitlabFilled
+                        style={{
+                          color: '#fc6d26',
+                          marginRight: 5,
+                          fontSize: 'x-large',
+                        }}
+                      />
+                    )
+                  }
+                  placeholder={
+                    isView
+                      ? ''
+                      : t(UserDetailMessages.formSocialsGitlabPlaceholder())
+                  }
+                />
+              </FormItem>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </>
   );
 };
 
+interface ScreenProps {
+  isView?: boolean;
+}
+
 const FormItem = styled(Form.Item)`
+  margin-bottom: ${(props: ScreenProps) => (props.isView ? '0' : '24px')};
   div {
     width: 100%;
   }
   label {
     font-weight: 500;
+  }
+  input {
+    font-weight: ${(props: ScreenProps) => props.isView && 500};
   }
 `;
