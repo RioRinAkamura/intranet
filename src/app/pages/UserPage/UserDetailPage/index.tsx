@@ -19,6 +19,7 @@ import { useUpdateUserDetail } from './useUpdateUserDetail';
 import { TitlePage } from 'app/components/TitlePage';
 import { AvatarPath } from './components/AvatarPath/Loadable';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
+import { AddBankModal } from './components/AddBankModal/Loadable';
 
 interface Props {}
 interface LocationState {
@@ -132,6 +133,9 @@ export function UserDetailPage(props: Props) {
                     isEdit={isEdit}
                     form={form}
                   />
+                  <WrapperAddBank>
+                    <AddBankModal isView={isView} form={form} />
+                  </WrapperAddBank>
                 </LeftScreen>
                 <RightScreen md={19}>
                   <ProfileInfo isView={isView} isEdit={isEdit} />
@@ -251,4 +255,8 @@ const WrapperButton = styled.div`
 
 const PageButton = styled(Button)`
   width: 120px;
+`;
+
+const WrapperAddBank = styled.div`
+  margin-top: 2em;
 `;

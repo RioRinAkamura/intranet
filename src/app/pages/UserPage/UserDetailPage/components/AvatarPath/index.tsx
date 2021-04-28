@@ -3,7 +3,7 @@
  * AvatarPath
  *
  */
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,17 +16,14 @@ import {
   InputProps,
   message,
   Row,
-  Select,
   Upload,
 } from 'antd';
 import { UserDetailMessages } from '../../messages';
 import { CameraOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
-import { DialogModal } from 'app/components/DialogModal';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 
-const { Option } = Select;
 type Employee = models.hr.Employee;
 
 interface Props {
@@ -62,47 +59,12 @@ const beforeUpload = (file: File) => {
   return isJpgOrPng && isLt2M;
 };
 
-const bank = [
-  {
-    id: 1,
-    name: 'Vietcombank',
-  },
-  {
-    id: 2,
-    name: 'Sacombank',
-  },
-  {
-    id: 3,
-    name: 'Techcombank',
-  },
-  {
-    id: 4,
-    name: 'ACB',
-  },
-  {
-    id: 5,
-    name: 'TPBank',
-  },
-];
-
 export const AvatarPath = memo((props: Props) => {
   const { isView, form, user } = props;
   const { t } = useTranslation();
-  const [bankForm] = Form.useForm();
 
   const [imageURL, setImageURL] = useState('');
   const [loadingUpload, setLoadingUpload] = useState(false);
-  const [modalAddBank, setModalAddBank] = useState(false);
-  const [isAddBank, setIsAddBank] = useState(true);
-
-  useEffect(() => {
-    if (form.getFieldValue('bank_accounts')) {
-      bankForm.setFieldsValue({
-        bank_accounts: { ...form.getFieldValue('bank_accounts') },
-      });
-      setIsAddBank(false);
-    }
-  }, [bankForm, form]);
 
   const handleChange = (info: UploadChangeParam<UploadFile<any>>) => {
     if (info.file.status === 'uploading') {
@@ -116,20 +78,6 @@ export const AvatarPath = memo((props: Props) => {
         form.setFieldsValue({ avatar: imageURL });
       });
     }
-  };
-
-  const handleAddBank = values => {
-    form.setFieldsValue({
-      bank_accounts: [
-        {
-          bank_name: values.bank_accounts[0]['bank_name'],
-          number: values.bank_accounts[0]['number'],
-          branch: values.bank_accounts[0]['branch'],
-        },
-      ],
-    });
-    setIsAddBank(false);
-    setModalAddBank(false);
   };
 
   return (
@@ -150,7 +98,7 @@ export const AvatarPath = memo((props: Props) => {
               <Avatar
                 src={user?.avatar || imageURL}
                 alt="avatar"
-                icon={isView && <CameraOutlined />}
+                icon={!isView && <CameraOutlined />}
                 size={170}
               />
             </FormItemAvatar>
@@ -203,102 +151,6 @@ export const AvatarPath = memo((props: Props) => {
             />
           </FormItem>
         </Col>
-        <Col span={24}>
-          {!isView && (
-            <>
-              <Button
-                type="primary"
-                block
-                size="large"
-                onClick={() => setModalAddBank(true)}
-              >
-                {isAddBank
-                  ? t(UserDetailMessages.formAddBankButton())
-                  : t(UserDetailMessages.formEditBankButton())}
-              </Button>
-              <DialogModal
-                title={
-                  isAddBank
-                    ? t(UserDetailMessages.formAddBankButton())
-                    : t(UserDetailMessages.formEditBankButton())
-                }
-                isOpen={modalAddBank}
-                handleCancel={() => {
-                  setModalAddBank(false);
-                  if (isAddBank) {
-                    bankForm.resetFields();
-                  }
-                }}
-              >
-                <Form
-                  form={bankForm}
-                  labelCol={{ span: 24 }}
-                  wrapperCol={{ span: 24 }}
-                  onFinish={handleAddBank}
-                >
-                  <FormSearchItem
-                    name={['bank_accounts', 0, 'bank_name']}
-                    label={t(UserDetailMessages.formBankNameLabel())}
-                  >
-                    <Select
-                      size="large"
-                      placeholder={t(
-                        UserDetailMessages.formBankNamePlaceholder(),
-                      )}
-                    >
-                      {bank &&
-                        bank.map(item => {
-                          return (
-                            <Option key={item.id} value={item.name}>
-                              {item.name}
-                            </Option>
-                          );
-                        })}
-                    </Select>
-                  </FormSearchItem>
-                  <FormSearchItem
-                    name={['bank_accounts', 0, 'number']}
-                    label={t(UserDetailMessages.formBankNumberLabel())}
-                  >
-                    <Input
-                      {...(isView ? inputProps : {})}
-                      size="large"
-                      placeholder={
-                        isView
-                          ? ''
-                          : t(UserDetailMessages.formBankNumberPlaceholder())
-                      }
-                    />
-                  </FormSearchItem>
-                  <FormSearchItem
-                    name={['bank_accounts', 0, 'branch']}
-                    label={t(UserDetailMessages.formBankBranchLabel())}
-                  >
-                    <Input
-                      {...(isView ? inputProps : {})}
-                      size="large"
-                      placeholder={
-                        isView
-                          ? ''
-                          : t(UserDetailMessages.formBankBranchPlaceholder())
-                      }
-                    />
-                  </FormSearchItem>
-                  <ModalButton>
-                    <Button
-                      htmlType="submit"
-                      type="primary"
-                      shape="round"
-                      size="large"
-                    >
-                      {t(UserDetailMessages.formSubmitAddBankButton())}
-                    </Button>
-                  </ModalButton>
-                </Form>
-              </DialogModal>
-            </>
-          )}
-        </Col>
       </Row>
     </>
   );
@@ -334,8 +186,6 @@ const FormItem = styled(Form.Item)`
   }
 `;
 
-const FormSearchItem = styled(Form.Item)``;
-
 const WrapperAvatar = styled.div`
   width: 100%;
   background-color: #f5f5f5;
@@ -352,12 +202,5 @@ const WrapperUpload = styled.div`
     button {
       color: #c5c4c5;
     }
-  }
-`;
-
-const ModalButton = styled.div`
-  text-align: center;
-  button {
-    padding: 0 2em !important;
   }
 `;
