@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/charts": "1.1.2",
     "@ant-design/icons": "4.6.2",
     "@hdwebsoft/boilerplate-api-sdk": "0.0.2",
     "@reduxjs/toolkit": "1.4.0",
