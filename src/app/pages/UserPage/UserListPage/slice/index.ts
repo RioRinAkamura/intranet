@@ -1,14 +1,13 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { stat } from 'fs';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { userspageSaga } from './saga';
-import {
-  QueryParams,
-  UserspageState,
-  UserResponse,
-  FilterColumns,
-} from './types';
+import { UserspageState, UserResponse, FilterColumns } from './types';
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { Key } from 'react';
+import { Pagination } from '../../types';
+
+type Employee = models.hr.Employee;
 
 export const initialState: UserspageState = {
   users: [],
@@ -24,6 +23,7 @@ export const initialState: UserspageState = {
     total: 20,
   },
   filterColumns: {},
+  selectedRowKeys: [],
 };
 
 const slice = createSlice({
@@ -58,6 +58,37 @@ const slice = createSlice({
     },
     filterColumns(state, action: PayloadAction<FilterColumns>) {
       state.filterColumns = { ...state.filterColumns, ...action.payload };
+      state.params = { ...state.params, ...action.payload };
+    },
+    selectedRows(
+      state,
+      action: PayloadAction<{
+        selectedRowKeys?: Key[];
+        selectedRows?: Employee[];
+      }>,
+    ) {
+      state.selectedRowKeys = action.payload.selectedRowKeys;
+      state.selectedRows = action.payload.selectedRows;
+    },
+    setSearchText(state, action: PayloadAction<{ text: string }>) {
+      state.params.search = action.payload.text;
+      if (state.params.page && state.params.page > 1) {
+        state.params.page = 1;
+      }
+    },
+    resetSearch(state) {
+      state.filterColumns = {};
+      state.params = {
+        limit: 20,
+        page: 1,
+      };
+    },
+    setOrdering(state, action: PayloadAction<string | undefined>) {
+      state.params.ordering = action.payload;
+    },
+    setPagination(state, action: PayloadAction<Pagination>) {
+      state.params.limit = action.payload.pageSize;
+      state.params.page = action.payload.current;
     },
   },
 });

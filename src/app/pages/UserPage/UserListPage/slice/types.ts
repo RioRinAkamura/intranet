@@ -1,4 +1,5 @@
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { Key } from 'react';
 
 type Employee = models.hr.Employee;
 
@@ -11,7 +12,8 @@ export interface UserspageState {
   params: QueryParams;
   pagination?: Pagination;
   filterColumns?: FilterColumns;
-  searchText?: string;
+  selectedRowKeys?: Key[];
+  selectedRows?: Employee[];
 }
 
 export interface FilterColumns {

@@ -18,7 +18,7 @@ export const selectUserspageFilterColumns = createSelector(
 );
 export const selectUserspageSearchText = createSelector(
   [selectSlice],
-  state => state.searchText,
+  state => state.params.search,
 );
 
 export const selectUserspageParams = createSelector(
