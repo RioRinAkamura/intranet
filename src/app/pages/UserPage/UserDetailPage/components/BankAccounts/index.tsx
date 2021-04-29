@@ -6,12 +6,14 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Button, Col, Divider, Form, Input, Row } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Col, Divider, Form, FormInstance, Input, Row } from 'antd';
 import { UserDetailMessages } from '../../messages';
+import { TitlePath } from '../TitlePath';
 
 interface BankAccountsProps {
   isView?: boolean;
+  isEdit?: boolean;
+  form: FormInstance;
 }
 
 export const BankAccounts = (props: BankAccountsProps) => {
@@ -20,147 +22,100 @@ export const BankAccounts = (props: BankAccountsProps) => {
 
   return (
     <>
-      <Divider orientation="left">
-        <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
-      </Divider>
-      <WrapperBank>
-        <Form.List name="bank_accounts">
-          {(fields, { add, remove }) => (
-            <>
-              {fields.map(({ key, name, fieldKey, ...restField }) => (
-                <Row
-                  gutter={[16, 16]}
-                  key={key}
-                  justify="center"
-                  align="middle"
-                >
-                  <Col md={11} xs={24}>
-                    <FormItem
-                      {...restField}
-                      label={`${t(
-                        UserDetailMessages.formBankAccountsTitle(),
-                      )} ${name + 1}`}
-                      name={[name, 'bank_name']}
-                      fieldKey={[fieldKey, 'bank_name']}
-                      rules={[
-                        {
-                          required: true,
-                          message: t(UserDetailMessages.formEmptyBankName()),
-                        },
-                      ]}
-                    >
-                      <Input
-                        size="large"
-                        placeholder={
-                          isView
-                            ? ''
-                            : t(UserDetailMessages.formBankNamePlaceholder())
-                        }
-                      />
-                    </FormItem>
-                  </Col>
-                  <Col md={11} xs={24}>
-                    <FormItem
-                      {...restField}
-                      label={`${t(UserDetailMessages.formBankNumberLabel())} ${
-                        name + 1
-                      }`}
-                      name={[name, 'number']}
-                      fieldKey={[fieldKey, 'number']}
-                      rules={[
-                        {
-                          required: true,
-                          message: t(UserDetailMessages.formEmptyBankNumber()),
-                        },
-                      ]}
-                    >
-                      <Input
-                        size="large"
-                        placeholder={t(
-                          UserDetailMessages.formBankNumberPlaceholder(),
-                        )}
-                      />
-                    </FormItem>
-                  </Col>
-                  <Col md={2} xs={24}>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
-                  </Col>
-                  <Col md={24} xs={24}>
-                    <FormItem
-                      {...restField}
-                      label={`${t(UserDetailMessages.formBankBranchLabel())} ${
-                        name + 1
-                      }`}
-                      name={[name, 'branch']}
-                      fieldKey={[fieldKey, 'branch']}
-                      rules={[
-                        {
-                          required: true,
-                          message: t(UserDetailMessages.formEmptyBankBranch()),
-                        },
-                      ]}
-                    >
-                      <Input
-                        size="large"
-                        placeholder={t(
-                          UserDetailMessages.formBankBranchPlaceholder(),
-                        )}
-                      />
-                    </FormItem>
-                  </Col>
-                </Row>
-              ))}
-              {!isView && (
-                <FormItem label="&nbsp;">
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    block
-                    size="large"
-                    icon={<PlusOutlined />}
-                  >
-                    {t(UserDetailMessages.formBankAddButton())}
-                  </Button>
-                </FormItem>
-              )}
-            </>
-          )}
-        </Form.List>
-      </WrapperBank>
+      <Form.List name="bank_accounts">
+        {(fields, { add, remove }) => (
+          <>
+            {fields.length > 0 && (
+              <>
+                <DividerWrapper isView={isView}>
+                  <Divider />
+                </DividerWrapper>
+                <TitlePath>
+                  <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
+                </TitlePath>
+              </>
+            )}
+            {fields.map(({ key, name, fieldKey, ...restField }) => (
+              <Row gutter={[32, 0]} key={key}>
+                <Col md={isView ? 24 : 8} xs={24}>
+                  <Row gutter={[0, 12]} align="middle">
+                    <Col md={isView ? 8 : 24} xs={24}>
+                      {t(UserDetailMessages.formBankNameLabel())}
+                    </Col>
+                    <Col md={isView ? 16 : 24} xs={24}>
+                      <FormItem
+                        isView={isView}
+                        {...restField}
+                        name={[name, 'bank_name']}
+                        fieldKey={[fieldKey, 'bank_name']}
+                      >
+                        <Input bordered={false} readOnly={true} size="large" />
+                      </FormItem>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col md={isView ? 24 : 8} xs={24}>
+                  <Row gutter={[0, 12]} align="middle">
+                    <Col md={isView ? 8 : 24} xs={24}>
+                      {t(UserDetailMessages.formBankNumberLabel())}
+                    </Col>
+                    <Col md={isView ? 16 : 24} xs={24}>
+                      <FormItem
+                        isView={isView}
+                        {...restField}
+                        name={[name, 'number']}
+                        fieldKey={[fieldKey, 'number']}
+                      >
+                        <Input bordered={false} readOnly={true} size="large" />
+                      </FormItem>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col md={isView ? 24 : 8} xs={24}>
+                  <Row gutter={[0, 12]} align="middle">
+                    <Col md={isView ? 8 : 24} xs={24}>
+                      {t(UserDetailMessages.formBankBranchLabel())}
+                    </Col>
+                    <Col md={isView ? 16 : 24} xs={24}>
+                      <FormItem
+                        isView={isView}
+                        {...restField}
+                        name={[name, 'branch']}
+                        fieldKey={[fieldKey, 'branch']}
+                      >
+                        <Input bordered={false} readOnly={true} size="large" />
+                      </FormItem>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            ))}
+          </>
+        )}
+      </Form.List>
     </>
   );
 };
 
+interface FormItemProps {
+  isView?: boolean;
+}
+
 const FormItem = styled(Form.Item)`
+  align-items: center;
+  margin-bottom: ${(props: FormItemProps) => (props.isView ? '0px' : '12px')};
   div {
     width: 100%;
   }
   label {
     font-weight: 500;
   }
+  input {
+    padding: 0;
+    font-weight: 500;
+  }
 `;
 
-const WrapperBank = styled.div`
-  height: 35vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 5px;
-  ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    background-color: #f5f5f5;
-    margin-left: 5px;
-  }
-
-  ::-webkit-scrollbar {
-    width: 10px;
-    background-color: #f5f5f5;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    background-color: #ececec;
-    margin-left: 5px;
-  }
+const DividerWrapper = styled.div`
+  margin: ${(props: FormItemProps) => (props.isView ? '35px 0 53px 0' : '0px')};
 `;
