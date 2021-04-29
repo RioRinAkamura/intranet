@@ -36,6 +36,22 @@
   "translations": {
     "someThing": "default value"
   },
+  "ForgotPasswordPage": {
+    "title": "Forgot Password",
+    "description": "Forgot Password Page",
+    "form": {
+      "title": "Forgot Your Password",
+      "description": "Enter your registered email below to receive password reset instruction.",
+      "email": {
+        "label": "Email Address",
+        "placeholder": "Your email",
+        "invalid": "Your email is invalid!",
+        "empty": "Please input your email address!"
+      },
+      "forgotButton": "Send Request",
+      "backButton": "Back to login page"
+    }
+  },
   "LoginPage": {
     "title": "Login",
     "description": "Login Page",
@@ -74,12 +90,12 @@
         "empty": "Please confirm your new password!",
         "notMatch": "Your new password and confirm password don't match!"
       },
-      "resetButton": "Reset Password",
-      "backButton": "Back to login page",
       "otp": {
         "label": "OTP",
         "placeholder": "Input your OTP sent in your email"
-      }
+      },
+      "resetButton": "Reset Password",
+      "backButton": "Back to login page"
     }
   },
   "UserDetailPage": {
@@ -89,26 +105,31 @@
     "modal": {
       "form": {
         "avatar": {
-          "upload": "Upload",
+          "upload": "Upload Image",
           "label": "Avatar",
-          "empty": "Please upload user's avatar!"
+          "empty": "Please upload Employee avatar!"
+        },
+        "code": {
+          "label": "Employee Code",
+          "placeholder": "Enter employee code",
+          "empty": "Please enter employee code"
         },
         "profile": {
           "title": "Profile Infomation",
           "firstName": {
             "label": "First Name",
-            "placeholder": "User's first name",
-            "empty": "Please input user first name!"
+            "placeholder": "Enter Employee First Name",
+            "empty": "Please Enter Employee First Name!"
           },
           "lastName": {
             "label": "Last Name",
-            "placeholder": "User's last name",
-            "empty": "Please input user last name!"
+            "placeholder": "Employee Last Name",
+            "empty": "Please Enter Employee Last Name!"
           },
           "DOB": {
             "label": "Date of Birth",
-            "placeholder": "Select user's DOB",
-            "empty": "Please input user's date of birth!"
+            "placeholder": "Select Employee DOB",
+            "empty": "Please Enter Employee Date of Birth!"
           },
           "gender": {
             "label": "Gender",
@@ -118,22 +139,22 @@
             "female": {
               "label": "Female"
             },
-            "empty": "Please select user's gender",
             "other": {
               "label": "Other"
-            }
+            },
+            "empty": "Please Select Employee Gender"
           },
           "phoneNumber": {
             "label": "Phone Number",
-            "placeholder": "User's phone number",
-            "empty": "Please input user's phone number!",
-            "invalid": "User's phone number is invalid!"
+            "placeholder": "Employee Phone Number",
+            "empty": "Please Enter Employee Phone Number!",
+            "invalid": "Employee Phone Number Is Invalid!"
           },
           "email": {
             "label": "Email",
-            "placeholder": "User's email",
-            "empty": "Please input user's email!",
-            "invalid": "User's email is invalid!"
+            "placeholder": "Employee Email",
+            "empty": "Please Enter Employee Email!",
+            "invalid": "Employee Email Is Invalid!"
           },
           "status": {
             "label": "Status",
@@ -144,29 +165,32 @@
               "label": "Married"
             }
           },
+          "idCard": {
+            "title": "Id Card Information"
+          },
           "idNumber": {
             "label": "Id Number",
-            "placeholder": "User's id number"
+            "placeholder": "Employee Id Number"
           },
           "issuedDate": {
             "label": "Issued Date",
-            "placeholder": "User's issued date"
+            "placeholder": "Employee Issued Date"
           },
           "issuedPlace": {
             "label": "Issued Place",
-            "placeholder": "User's issued place"
+            "placeholder": "Employee Issued Place"
           },
           "socialInsuranceNo": {
             "label": "Social Insurance No",
-            "placeholder": "User's social insurance no"
+            "placeholder": "Employee Social Insurance No"
           }
         },
         "job": {
           "title": "Job Infomation",
           "jobTitle": {
             "label": "Job Title",
-            "placeholder": "Input user's job title!",
-            "empty": "Please input user's job title!"
+            "placeholder": "Input Employee Job Title!",
+            "empty": "Please Enter Employee Job Title!"
           },
           "type": {
             "label": "Type",
@@ -185,25 +209,25 @@
           },
           "jobTags": {
             "label": "Tags",
-            "placeholder": "User's tags"
+            "placeholder": "Employee Tags"
           }
         },
         "bank": {
-          "title": "Bank Accounts",
+          "title": "Bank Informations",
           "name": {
             "label": "Bank Name",
-            "placeholder": "User's bank name",
-            "empty": "Please input user's bank name"
+            "placeholder": "Select Bank Name",
+            "empty": "Please Enter Employee Bank Name"
           },
           "number": {
-            "label": "Bank Number",
-            "placeholder": "User's bank number",
-            "empty": "Please input user's bank number"
+            "label": "Account Number/ Card Number",
+            "placeholder": "Enter Account Number/ Card Number",
+            "empty": "Please Enter Employee bank number"
           },
           "branch": {
-            "label": "Branch",
-            "placeholder": "User's bank branch",
-            "empty": "Please input user's bank branch"
+            "label": "Account Owner",
+            "placeholder": "Enter Account Owner's Name",
+            "empty": "Please Enter Employee Bank Branch"
           },
           "button": {
             "add": "Add Bank Account"
@@ -213,38 +237,37 @@
           "title": "Social Network",
           "skype": {
             "label": "Skype",
-            "placeholder": "Input user's Skype"
+            "placeholder": "Input Employee Skype"
           },
           "twitter": {
             "label": "Twitter",
-            "placeholder": "Input user's Twitter"
+            "placeholder": "Input Employee Twitter"
           },
           "facebook": {
             "label": "Facebook",
-            "placeholder": "Input user's Facebook"
+            "placeholder": "Input Employee Facebook"
           },
           "linkedin": {
             "label": "Linkedin",
-            "placeholder": "Input user's Linkedin"
+            "placeholder": "Input Employee Linkedin"
           },
           "github": {
             "label": "Github",
-            "placeholder": "Input user's Github"
+            "placeholder": "Input Employee Github"
           },
           "gitlab": {
             "label": "Gitlab",
-            "placeholder": "Input user's Gitlab"
+            "placeholder": "Input Employee Gitlab"
           }
         },
         "button": {
           "edit": "Edit",
           "submit": "Save",
           "cancel": "Cancel",
-          "back": "Back"
-        },
-        "code": {
-          "label": "Code",
-          "placeholder": "User's code"
+          "back": "Back",
+          "addBank": "Add Bank Account",
+          "editBank": "Edit Bank Account",
+          "submitAddBank": "Submit"
         }
       },
       "message": {
@@ -279,20 +302,12 @@
     },
     "search": {
       "title": "Search",
-      "firstName": "First Name",
-      "firstNamePlaceholder": "Search by first name",
-      "lastName": "Last Name",
-      "lastNamePlaceholder": "Search by last name",
-      "email": "Email",
-      "emailPlaceholder": "Search by email",
-      "phoneNumber": "Phone Number",
-      "phoneNumberPlaceholder": "Search by phone number",
-      "searchButton": "Search",
-      "resetButton": "Reset",
       "search": {
         "label": "Search",
         "placeholder": "Search user's first name, last name, email and phone number"
-      }
+      },
+      "searchButton": "Search",
+      "resetButton": "Reset"
     },
     "modal": {
       "createTitle": "Create User",
@@ -305,22 +320,33 @@
         "cancelButton": "Cancel",
         "submitButton": "Save"
       }
+    },
+    "ForgotPasswordPage": {
+      "title": "Forgot Password",
+      "description": "Forgot Password Page",
+      "form": {
+        "title": "Forgot Your Password?",
+        "description": "Enter your registered email below to receive password reset instruction.",
+        "email": {
+          "label": "Email Address",
+          "placeholder": "Your email",
+          "invalid": "Your email is invalid!",
+          "empty": "Please input your email address!"
+        },
+        "forgotButton": "Send Request",
+        "backButton": "Back to login page"
+      }
     }
   },
-  "ForgotPasswordPage": {
-    "title": "Forgot Password",
-    "description": "Forgot Password Page",
-    "form": {
-      "title": "Forgot Your Password?",
-      "description": "Enter your registered email below to receive password reset instruction.",
-      "email": {
-        "label": "Email Address",
-        "placeholder": "Your email",
-        "invalid": "Your email is invalid!",
-        "empty": "Please input your email address!"
-      },
-      "forgotButton": "Send Request",
-      "backButton": "Back to login page"
-    }
+  "deleteConfirmModal": {
+    "title": "Delete",
+    "desc": "This will permanently delete and CANNOT be undone.",
+    "answer": "DO IT",
+    "isRequired":"(*) This field is required",
+    "delete":"Delete",
+    "cancel":"Cancel",
+    "success":"Delete Success",
+    "failed":"Delete Failed"
+
   }
 }

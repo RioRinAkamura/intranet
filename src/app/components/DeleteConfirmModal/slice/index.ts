@@ -4,12 +4,6 @@ import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { Saga } from './saga';
 import { DeleteConfirmState } from './types';
 
-// const defaultParam = {
-//   titleDefault: 'Delete',
-//   descriptionDefault: 'This will permanently delete and CANNOT be undone.',
-//   answerDefault: 'DO IT',
-// };
-
 export const initialState: DeleteConfirmState = {
   loading: false,
   isDeleteModalVisible: false,
@@ -26,6 +20,8 @@ const slice = createSlice({
   reducers: {
     deleteEmployee(state, action: PayloadAction<{ id: string }>) {
       state.loading = true;
+      state.deleteSuccess = false;
+      state.deleteFailed = false;
     },
     showModalDeleteConfirm(
       state,

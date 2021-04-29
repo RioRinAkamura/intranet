@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Modal, Button, Input, Form, Space } from 'antd';
 import { useDeleteConfirmModal } from './useDeleteConfirmModal';
+import { useTranslation } from 'react-i18next';
+import { messages } from './messages';
 
 const layout = {
   labelCol: { span: 8 },
@@ -24,14 +26,16 @@ interface Props {
 export const DeleteConfirmModal = (props: Props) => {
   const { deleteModalState, deleteEmployee } = useDeleteConfirmModal();
   const { handleCancel, isDeleteModalVisible, idDelete } = props;
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const title = deleteModalState?.title;
   const description = deleteModalState?.description;
   const answer = deleteModalState?.answer;
+  const loading = deleteModalState?.loading;
   const defaultParam = {
-    titleDefault: 'Delete',
-    descriptionDefault: 'This will permanently delete and CANNOT be undone.',
-    answerDefault: 'DO IT',
+    titleDefault: `${t(messages.deleteModalTitle())}`,
+    descriptionDefault: `${t(messages.deleteModalDesc())}`,
+    answerDefault: `${t(messages.deleteModalAnswer())}`,
   };
 
   const onFinish = () => {
@@ -73,7 +77,10 @@ export const DeleteConfirmModal = (props: Props) => {
           name="confirmDelete"
           style={{ width: 300 }}
           rules={[
-            { required: true, message: 'This field is required' },
+            {
+              required: true,
+              message: `${t(messages.deleteModalIsRequired())}`,
+            },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (
@@ -92,10 +99,12 @@ export const DeleteConfirmModal = (props: Props) => {
 
         <Form.Item {...tailLayout} style={{ marginBottom: 0 }}>
           <Space>
-            <Button type="primary" danger htmlType="submit">
-              Delete
+            <Button type="primary" danger htmlType="submit" loading={loading}>
+              {t(messages.deleteModalDelete())}
             </Button>
-            <Button onClick={handleCancel}>Cancel</Button>
+            <Button onClick={handleCancel}>
+              {t(messages.deleteModalCancel())}
+            </Button>
           </Space>
         </Form.Item>
       </Form>

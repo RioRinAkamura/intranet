@@ -8,7 +8,6 @@ import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import {
   Col,
-  Divider,
   Form,
   Input,
   InputProps,
@@ -22,6 +21,7 @@ import { SelectValue } from 'antd/lib/select';
 import Link from 'antd/lib/typography/Link';
 import { useGetUserTags } from '../../useGetUserTags';
 import { TagType } from 'app/pages/UserPage/types';
+import { TitlePath } from '../TitlePath';
 
 const { Option } = Select;
 
@@ -48,15 +48,21 @@ export const JobInfo = (props: JobInfoProps) => {
 
   return (
     <>
-      <Divider orientation="left">
+      <TitlePath>
         <b>{t(UserDetailMessages.formJobTitle())}</b>
-      </Divider>
-      <Row gutter={[16, 16]}>
-        <Col md={12} xs={24}>
-          <FormItem
-            label={t(UserDetailMessages.formJobTitleLabel())}
-            name="job_title"
-          >
+      </TitlePath>
+      <Row gutter={[0, 12]} align="top">
+        <Col md={isView ? 4 : 24} xs={24}>
+          {isView ? (
+            <LabelWrapper>
+              {t(UserDetailMessages.formJobTitleLabel())}
+            </LabelWrapper>
+          ) : (
+            t(UserDetailMessages.formJobTitleLabel())
+          )}
+        </Col>
+        <Col md={isView ? 20 : 24} xs={24}>
+          <FormItem isView={isView} name="job_title">
             <Input
               {...(isView ? inputProps : {})}
               size="large"
@@ -66,8 +72,15 @@ export const JobInfo = (props: JobInfoProps) => {
             />
           </FormItem>
         </Col>
-        <Col md={12} xs={24}>
-          <FormItem label={t(UserDetailMessages.formTypeLabel())} name="type">
+        <Col md={isView ? 4 : 24} xs={24}>
+          {isView ? (
+            <LabelWrapper>{t(UserDetailMessages.formTypeLabel())}</LabelWrapper>
+          ) : (
+            t(UserDetailMessages.formTypeLabel())
+          )}
+        </Col>
+        <Col md={isView ? 20 : 24} xs={24}>
+          <FormItem isView={isView} name="type">
             {isView ? (
               <Input {...inputProps} size="large" />
             ) : (
@@ -88,22 +101,23 @@ export const JobInfo = (props: JobInfoProps) => {
             )}
           </FormItem>
         </Col>
-        <Col md={24} xs={24}>
-          <FormItem
-            name="tags"
-            label={t(UserDetailMessages.formJobTagsLabel())}
-          >
+        <Col md={isView ? 4 : 24} xs={24}>
+          {t(UserDetailMessages.formJobTagsLabel())}
+        </Col>
+        <Col md={isView ? 20 : 24} xs={24}>
+          <FormItem isView={isView} name="tags">
             <WrapperSelect
               {...(isView ? selectProps : {})}
+              isView={isView}
               mode="tags"
               placeholder={
                 isView ? '' : t(UserDetailMessages.formJobTagsPlaceholder())
               }
               size="large"
-              maxTagCount="responsive"
               loading={loading}
+              className="selectTags"
               tagRender={props => (
-                <TagOption color="blue" style={{ padding: '6px 12px' }}>
+                <TagOption color="blue">
                   {props.label}
                   {!isView && <Link onClick={() => props.onClose()}>x</Link>}
                 </TagOption>
@@ -122,24 +136,46 @@ export const JobInfo = (props: JobInfoProps) => {
     </>
   );
 };
+interface ScreenProps {
+  isView?: boolean;
+}
 
 const WrapperSelect = styled(Select)`
   span {
     align-items: center;
   }
+
+  .ant-select-selection-overflow {
+    align-content: start;
+    height: ${(props: ScreenProps) => (props.isView ? '160px' : '100px')};
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 `;
 
 const FormItem = styled(Form.Item)`
+  margin-bottom: ${(props: ScreenProps) => (props.isView ? '0' : '24px')};
+
   label {
     font-weight: 500;
+  }
+
+  input {
+    font-weight: ${(props: ScreenProps) => props.isView && 500};
   }
 `;
 
 const TagOption = styled(Tag)`
   padding: 6px 12px;
+  margin: 5px;
+
   a {
     margin: 0px 2px 0px 5px !important;
     padding: 0 !important;
     color: black;
   }
+`;
+
+const LabelWrapper = styled.div`
+  margin: 7px 0;
 `;
