@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Dropdown, Menu } from 'antd';
+import { Badge, Dropdown, Menu, Button } from 'antd';
 import styled from 'styled-components';
 import { BellOutlined } from '@ant-design/icons';
 import { ToastMessageType, useNotify } from '../ToastNotification';
@@ -10,6 +10,8 @@ import {
   useChangePassword,
   ChangePasswordPayload,
 } from '../ChangePasswordModal/useChangePassword';
+import { useDeleteConfirmModal } from '../DeleteConfirmModal/useDeleteConfirmModal';
+import { DeleteConfirmModal } from '../DeleteConfirmModal';
 
 export function Badges() {
   const { notify } = useNotify();
@@ -24,6 +26,28 @@ export function Badges() {
   const isModalVisible: boolean | undefined =
     changePasswordState?.isModalVisible;
 
+  const {
+    showModalDeleteConfirm,
+    deleteModalState,
+    resetModalDeleteState,
+  } = useDeleteConfirmModal();
+  const isDeleteModalVisible = deleteModalState?.isDeleteModalVisible;
+
+  const showModalDelete = () => {
+    showModalDeleteConfirm({ title: 'alo' });
+  };
+
+  const showModalDelete2 = () => {
+    showModalDeleteConfirm({
+      description: '43256',
+      title: 'phuong',
+      answer: '12345',
+    });
+  };
+
+  const handleCancelDeleteModal = () => {
+    resetModalDeleteState();
+  };
   const showModal = () => {
     showModalChangePassword();
   };
@@ -113,6 +137,16 @@ export function Badges() {
         isModalVisible={isModalVisible}
         handleOk={handleOk}
         handleCancel={handleCancel}
+      />
+      <Button type="primary" onClick={showModalDelete}>
+        Open
+      </Button>
+      <Button type="primary" onClick={showModalDelete2}>
+        Open2
+      </Button>
+      <DeleteConfirmModal
+        isDeleteModalVisible={isDeleteModalVisible}
+        handleCancel={handleCancelDeleteModal}
       />
     </Wrapper>
   );

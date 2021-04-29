@@ -36,6 +36,8 @@ import { Filters, Pagination, ParamsPayload } from '../types';
 import { useGetUserList } from './useGetUserList';
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { parse, stringify } from 'query-string';
+import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import { useDeleteConfirmModal } from 'app/components/DeleteConfirmModal/useDeleteConfirmModal';
 
 const { Panel } = Collapse;
 
@@ -75,9 +77,20 @@ export const Users: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [selectedRows, setSelectedRows] = useState<Employee[]>([]);
   const [selectedKeys, setSelectedKeys] = useState({});
+  const [idDelete, setIdDelete] = useState({
+    type: '',
+    id: '',
+  });
 
   const [searchForm] = Form.useForm();
   const history = useHistory();
+
+  const {
+    deleteModalState,
+    showModalDeleteConfirm,
+    resetModalDeleteState,
+  } = useDeleteConfirmModal();
+  const isDeleteModalVisible = deleteModalState?.isDeleteModalVisible;
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -494,7 +507,9 @@ export const Users: React.FC = () => {
                 size="small"
                 icon={<DeleteOutlined />}
                 onClick={() => {
-                  setDeleteModal({ open: true, id: text });
+                  // setDeleteModal({ open: true, id: text });
+                  showModalDeleteConfirm({});
+                  setIdDelete({ type: 'deleteEmployee', id: text });
                 }}
               />
             </Tooltip>
@@ -512,6 +527,10 @@ export const Users: React.FC = () => {
   ) => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
+  };
+
+  const handleCancelDeleteModal = () => {
+    resetModalDeleteState();
   };
 
   return (
@@ -582,13 +601,18 @@ export const Users: React.FC = () => {
           </Col>
         </Row>
       )}
-      <DeleteModal
+      {/* <DeleteModal
         open={deleteModal.open}
         cancelText={t(UsersMessages.modalFormCancelButton())}
         deleteText={t(UsersMessages.modalFormDeleteButton())}
         content={t(UsersMessages.modalFormDeleteContent())}
         handleCancel={() => setDeleteModal({ open: false, id: '' })}
         handleDelete={handleDelete}
+      /> */}
+      <DeleteConfirmModal
+        handleCancel={handleCancelDeleteModal}
+        isDeleteModalVisible={isDeleteModalVisible}
+        idDelete={idDelete}
       />
     </>
   );

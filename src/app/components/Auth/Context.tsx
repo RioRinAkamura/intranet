@@ -17,7 +17,7 @@ interface AuthContextValues {
 export const AuthContext = React.createContext<AuthContextValues>({
   authProvider: defaultProvider,
   loading: true,
-  authenticated: false,
+  authenticated: true,
   identity: null,
   setAuthState: (
     _authenticated: boolean,
@@ -30,7 +30,7 @@ export const useAuthContextProvider = (
 ): AuthContextValues => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(undefined);
-  const [authenticated, setAuthenticated] = React.useState(false);
+  const [authenticated, setAuthenticated] = React.useState(true);
   const [identity, setIdentity] = React.useState<UserIdentity | null>();
 
   const setAuthState = React.useCallback(
