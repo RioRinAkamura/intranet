@@ -41,15 +41,15 @@ export const Managers = () => {
   return (
     <>
       <CardWrapper
-        mainHeight="328px"
-        bodyHeight="250px"
+        mainheight="328px"
+        bodyheight="250px"
         title={<Title>Managers</Title>}
       >
         <Row gutter={[32, 32]} align="middle" justify="space-between">
           {managers &&
             managers.map(manager => {
               return (
-                <Col>
+                <Col key={manager.id}>
                   <Avatar src={manager.avatar} size={130} />
                   <Info>
                     <Name>{manager.name}</Name>

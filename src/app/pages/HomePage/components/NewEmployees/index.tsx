@@ -80,13 +80,13 @@ export const NewEmployees = () => {
   return (
     <>
       <CardWrapper
-        mainHeight="463px"
-        bodyHeight="385px"
+        mainheight="463px"
+        bodyheight="385px"
         title={
           <>
             <Row justify="space-between">
               <Col>
-                <Title>Top Performance Employees</Title>
+                <Title>New Employees</Title>
               </Col>
               <Col>
                 <CustomDatePicker
@@ -102,7 +102,12 @@ export const NewEmployees = () => {
           </>
         }
       >
-        <Table dataSource={data} columns={columns} pagination={false} />
+        <Table
+          dataSource={data}
+          rowKey="id"
+          columns={columns}
+          pagination={false}
+        />
       </CardWrapper>
     </>
   );

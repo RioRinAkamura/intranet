@@ -80,8 +80,8 @@ export const PerformanceEmployees = () => {
   return (
     <>
       <CardWrapper
-        mainHeight="463px"
-        bodyHeight="385px"
+        mainheight="463px"
+        bodyheight="385px"
         title={
           <>
             <Row justify="space-between">
@@ -101,7 +101,12 @@ export const PerformanceEmployees = () => {
           </>
         }
       >
-        <Table dataSource={data} columns={columns} pagination={false} />
+        <Table
+          dataSource={data}
+          rowKey="id"
+          columns={columns}
+          pagination={false}
+        />
       </CardWrapper>
     </>
   );

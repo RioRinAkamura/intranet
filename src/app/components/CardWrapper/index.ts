@@ -2,18 +2,23 @@ import { Card } from 'antd';
 import styled from 'styled-components/macro';
 
 interface CardProps {
-  mainHeight: string;
-  bodyHeight: string;
+  mainheight: string;
+  bodyheight: string;
+  backgroundimg?: string;
 }
 
 export const CardWrapper = styled(Card)`
   background-color: white;
   box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
   border-radius: 12px;
-  height: ${(props: CardProps) => props.mainHeight};
+  height: ${(props: CardProps) => props.mainheight};
+  background: ${(props: CardProps) =>
+    props.backgroundimg ? `url(${props.backgroundimg})` : ''};
+  background-position-x: ${(props: CardProps) =>
+    props.backgroundimg ? '-7px' : ''};
 
   .ant-card-body {
-    height: ${(props: CardProps) => props.bodyHeight};
+    height: ${(props: CardProps) => props.bodyheight};
     overflow-y: auto;
     overflow-x: hidden;
     ::-webkit-scrollbar-track {
