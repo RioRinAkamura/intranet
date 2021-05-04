@@ -1,6 +1,6 @@
 import { Avatar, Col, DatePicker, Row, Table } from 'antd';
 import { CardWrapper } from 'app/components/CardWrapper';
-import { Title } from 'app/components/Title';
+import { TitlePage } from 'app/components/TitlePage';
 import moment from 'moment';
 import * as React from 'react';
 import styled from 'styled-components/macro';
@@ -86,7 +86,7 @@ export const NewEmployees = () => {
           <>
             <Row justify="space-between">
               <Col>
-                <Title>Top Performance Employees</Title>
+                <TitlePage>Top Performance Employees</TitlePage>
               </Col>
               <Col>
                 <CustomDatePicker

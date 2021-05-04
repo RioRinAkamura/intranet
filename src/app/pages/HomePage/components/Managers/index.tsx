@@ -1,6 +1,6 @@
 import { Avatar, Col, Row } from 'antd';
 import { CardWrapper } from 'app/components/CardWrapper';
-import { Title } from 'app/components/Title';
+import { TitlePage } from 'app/components/TitlePage';
 import * as React from 'react';
 import styled from 'styled-components/macro';
 
@@ -43,7 +43,7 @@ export const Managers = () => {
       <CardWrapper
         mainHeight="328px"
         bodyHeight="250px"
-        title={<Title>Managers</Title>}
+        title={<TitlePage>Managers</TitlePage>}
       >
         <Row gutter={[32, 32]} align="middle" justify="space-between">
           {managers &&

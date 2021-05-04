@@ -1,120 +1,61 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-  SearchOutlined,
-} from '@ant-design/icons';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
-import { Avatar, Button, Input, Space, Tag, Tooltip } from 'antd';
-import { ColumnProps } from 'antd/lib/table';
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, Input, Space } from 'antd';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
-import { Pagination, ParamsPayload } from '../types';
+import { Pagination } from '../types';
 import { UsersMessages } from './messages';
 import { useUserspageSlice } from './slice';
-import {
-  selectUserspage,
-  selectUserspageFilterColumns,
-  selectUserspageIsFilter,
-  selectUserspageParams,
-  selectUserspageSearchText,
-} from './slice/selectors';
-import { UserspageState } from './slice/types';
 import Highlighter from 'react-highlight-words';
 import { useTranslation } from 'react-i18next';
 import { Key, SorterResult } from 'antd/lib/table/interface';
-import styled from 'styled-components/macro';
 import { has, identity, isArray, isEmpty, pickBy } from 'lodash';
 
-type Employee = models.hr.Employee;
 interface GetUsersListHook {
-  getUserListState: UserspageState;
-  fetchUsers: () => void;
   setSearchText: (text: string) => void;
   resetSearch: () => void;
-  setSelectedRows: (selectedRowKeys: Key[], selectedRows: Employee[]) => void;
-  setOrdering: (
-    sorter: SorterResult<Employee> | SorterResult<Employee>[],
-  ) => void;
+  setSelectedRows: <T>(selectedRowKeys: Key[], selectedRows: T[]) => void;
+  setOrdering: <T>(sorter: SorterResult<T> | SorterResult<T>[]) => void;
   setPagination: (pagination: Pagination) => void;
+  getColumnSorterProps: (dataIndex: string, columnPriority: number) => {};
+  getColumnSearchProps: (dataIndex: string) => {};
 }
 
-export const useHandleDataTable = (): GetUsersListHook => {
+export const useHandleDataTable = (state: any): GetUsersListHook => {
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
-  const urlParams: ParamsPayload = parse(location.search, {
+  const urlParams = parse(location.search, {
     sort: false,
   });
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
-
-  const params = useSelector(selectUserspageParams);
-  const isFilter = useSelector(selectUserspageIsFilter);
-  const getUserListState = useSelector(selectUserspage);
-  const filterColumns = useSelector(selectUserspageFilterColumns);
-  const searchText = useSelector(selectUserspageSearchText);
+  const { filterColumns } = state;
+  const { search, ordering } = state.params;
 
   const [selectedKeys, setSelectedKeys] = React.useState({});
 
   React.useLayoutEffect(() => {
-    if (
-      urlParams.code ||
-      urlParams.email ||
-      urlParams.first_name ||
-      urlParams.last_name ||
-      urlParams.limit ||
-      urlParams.ordering ||
-      urlParams.page ||
-      urlParams.phone ||
-      urlParams.search
-    ) {
-      const changedParams = {
-        code: urlParams.code,
-        email: urlParams.email,
-        first_name: urlParams.first_name,
-        last_name: urlParams.last_name,
-        limit: urlParams.limit,
-        ordering: urlParams.ordering,
-        page: urlParams.page,
-        phone: urlParams.phone,
-        search: urlParams.search,
-      };
+    if (location.search) {
+      let params = parse(location.search, {
+        sort: false,
+      });
       dispatch(
         actions.changeUsersState({
-          params: pickBy(changedParams, identity),
-          filterColumns: pickBy(changedParams, identity),
-          pagination: pickBy(changedParams, identity),
+          params: pickBy(params, identity),
+          filterColumns: pickBy(params, identity),
+          pagination: pickBy({ ...params }, identity),
         }),
       );
       setSelectedKeys(prevState => ({
         ...prevState,
-        ...changedParams,
+        ...params,
       }));
     } else {
       dispatch(actions.notQuery());
     }
-  }, [
-    actions,
-    dispatch,
-    urlParams.code,
-    urlParams.email,
-    urlParams.first_name,
-    urlParams.last_name,
-    urlParams.limit,
-    urlParams.ordering,
-    urlParams.page,
-    urlParams.phone,
-    urlParams.search,
-  ]);
-
-  const fetchUsers = React.useCallback(async () => {
-    if (!isFilter) {
-      dispatch(actions.fetchUsers({ params: params }));
-    }
-  }, [actions, dispatch, isFilter, params]);
+  }, [actions, dispatch, location.search]);
 
   const handleSearch = (dataIndex: string, confirm: () => void) => {
     dispatch(
@@ -129,7 +70,7 @@ export const useHandleDataTable = (): GetUsersListHook => {
           {
             ...urlParams,
             [dataIndex]: selectedKeys[dataIndex],
-            page: urlParams.page && urlParams.page > 1 ? 1 : undefined,
+            page: urlParams.page ? 1 : undefined,
           },
           { sort: false },
         ),
@@ -171,16 +112,23 @@ export const useHandleDataTable = (): GetUsersListHook => {
     confirm();
   };
 
-  const getColumnFilterProps = (dataIndex: string, columnPriority) => ({
-    sorter: {
-      multiple: columnPriority,
-    },
-    defaultSortOrder: urlParams.ordering?.includes(dataIndex)
-      ? urlParams.ordering.includes('-' + dataIndex)
-        ? ('descend' as 'descend')
-        : ('ascend' as 'ascend')
-      : null,
-  });
+  const getColumnSorterProps = (dataIndex: string, columnPriority: number) => {
+    const ordering = {
+      sorter: {
+        multiple: columnPriority,
+      },
+    };
+    if (state.params.ordering) {
+      ordering['sortOrder'] = state.params.ordering.includes(dataIndex)
+        ? state.params.ordering.includes('-' + dataIndex)
+          ? ('descend' as 'descend')
+          : ('ascend' as 'ascend')
+        : null;
+    } else if (state.params.ordering === '') {
+      ordering['sortOrder'] = null;
+    }
+    return ordering;
+  };
 
   const getColumnSearchProps = (dataIndex: string) => ({
     ellipsis: true,
@@ -208,14 +156,14 @@ export const useHandleDataTable = (): GetUsersListHook => {
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
-            loading={getUserListState.loading}
+            loading={state.loading}
           >
             {t(UsersMessages.filterSearchButton())}
           </Button>
           <Button
             onClick={() => handleReset(dataIndex, confirm)}
             size="small"
-            loading={getUserListState.loading}
+            loading={state.loading}
             style={{ width: 90 }}
           >
             {t(UsersMessages.filterResetButton())}
@@ -234,13 +182,12 @@ export const useHandleDataTable = (): GetUsersListHook => {
             .includes(value.toLowerCase())
         : '',
     render: text => {
-      return has(filterColumns, dataIndex) ||
-        (searchText && searchText.length > 0) ? (
+      return has(filterColumns, dataIndex) || (search && search.length > 0) ? (
         <Highlighter
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[
             filterColumns![dataIndex],
-            searchText && searchText.length > 0 && searchText,
+            search && search.length > 0 && search,
           ]}
           autoEscape
           textToHighlight={text ? text.toString() : ''}
@@ -251,9 +198,9 @@ export const useHandleDataTable = (): GetUsersListHook => {
     },
   });
 
-  const setSelectedRows = (
+  const setSelectedRows = <T,>(
     selectedRowKeys: Key[],
-    selectedRows: Employee[],
+    selectedRows: T[],
   ): void => {
     dispatch(actions.selectedRows({ selectedRowKeys, selectedRows }));
   };
@@ -276,14 +223,15 @@ export const useHandleDataTable = (): GetUsersListHook => {
   };
 
   const resetSearch = () => {
+    setSelectedKeys({});
     history.replace({
       search: '',
     });
     dispatch(actions.resetSearch());
   };
 
-  const setOrdering = (
-    sorter: SorterResult<Employee> | SorterResult<Employee>[],
+  const setOrdering = <T,>(
+    sorter: SorterResult<T> | SorterResult<T>[],
   ): void => {
     if (!isEmpty(sorter)) {
       if (isArray(sorter)) {
@@ -297,30 +245,36 @@ export const useHandleDataTable = (): GetUsersListHook => {
           }
         });
 
-        history.replace({
-          search: stringify({
-            ...urlParams,
-            ordering: orderingParams.toString(),
-          }),
-        });
-        dispatch(actions.setOrdering(orderingParams.toString()));
+        if (ordering !== orderingParams.toString()) {
+          history.replace({
+            search: stringify({
+              ...urlParams,
+              ordering: orderingParams.toString(),
+            }),
+          });
+          dispatch(actions.setOrdering(orderingParams.toString()));
+        }
       } else {
         if (sorter.order === 'ascend') {
-          history.replace({
-            search: stringify({
-              ...urlParams,
-              ordering: '+' + sorter.field,
-            }),
-          });
-          dispatch(actions.setOrdering('+' + sorter.field));
+          if (ordering !== '+' + sorter.field) {
+            history.replace({
+              search: stringify({
+                ...urlParams,
+                ordering: '+' + sorter.field,
+              }),
+            });
+            dispatch(actions.setOrdering('+' + sorter.field));
+          }
         } else if (sorter.order === 'descend') {
-          history.replace({
-            search: stringify({
-              ...urlParams,
-              ordering: '-' + sorter.field,
-            }),
-          });
-          dispatch(actions.setOrdering('-' + sorter.field));
+          if (ordering !== '-' + sorter.field) {
+            history.replace({
+              search: stringify({
+                ...urlParams,
+                ordering: '-' + sorter.field,
+              }),
+            });
+            dispatch(actions.setOrdering('-' + sorter.field));
+          }
         } else {
           if (urlParams.ordering) {
             delete urlParams.ordering;
@@ -351,13 +305,12 @@ export const useHandleDataTable = (): GetUsersListHook => {
   };
 
   return {
-    getUserListState,
-    fetchUsers,
     setSearchText,
     setSelectedRows,
     resetSearch,
     setOrdering,
     setPagination,
+    getColumnSorterProps,
+    getColumnSearchProps,
   };
 };
-

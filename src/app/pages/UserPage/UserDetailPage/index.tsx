@@ -20,6 +20,7 @@ import { TitlePage } from 'app/components/TitlePage';
 import { AvatarPath } from './components/AvatarPath/Loadable';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
 import { AddBankModal } from './components/AddBankModal/Loadable';
+import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
 
 interface Props {}
 interface LocationState {
@@ -91,7 +92,7 @@ export function UserDetailPage(props: Props) {
 
   return (
     <>
-      <WrapperTitle>
+      <WrapperTitlePage>
         <TitlePage>
           {isView
             ? 'Employee Details'
@@ -99,7 +100,7 @@ export function UserDetailPage(props: Props) {
             ? 'Edit Employess'
             : 'Create Employee'}
         </TitlePage>
-      </WrapperTitle>
+      </WrapperTitlePage>
       <Form form={form} labelAlign="left">
         <Form.Item hidden name="id">
           <Input hidden />
@@ -212,14 +213,6 @@ export function UserDetailPage(props: Props) {
 interface ScreenProps {
   isView?: boolean;
 }
-
-const WrapperTitle = styled.div`
-  padding: 1rem;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-  width: 100%;
-`;
 
 const LeftScreen = styled(Col)``;
 

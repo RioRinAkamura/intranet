@@ -6,6 +6,9 @@ import {
   Form,
   Collapse,
   TablePaginationConfig,
+  Avatar,
+  Tag,
+  Tooltip,
 } from 'antd';
 import React, { Key, useEffect, useState } from 'react';
 import { DeleteModal } from 'app/components/DeleteModal';
@@ -20,33 +23,63 @@ import { UserList } from './components/UserList/Loadable';
 import { Pagination } from '../types';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { useHandleDataTable } from './useHandleDataTable';
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router';
+import styled from 'styled-components/macro';
+import { ColumnProps } from 'antd/lib/table';
+import { useUserspageSlice } from './slice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectUserspage,
+  selectUserspageIsFilter,
+  selectUserspageParams,
+} from './slice/selectors';
 
 const { Panel } = Collapse;
 type Employee = models.hr.Employee;
 
 export const Users: React.FC = () => {
   const { t } = useTranslation();
+  const history = useHistory();
   const [tablePagination, setTablePagination] = useState<Pagination>({
     current: 1,
     pageSize: 20,
     total: 0,
     totalPage: 0,
   });
-  const {
-    getUserListState,
-    fetchUsers,
-    columns,
-    setSelectedRows,
-    setSearchText,
-    resetSearch,
-    setOrdering,
-    setPagination,
-  } = useHandleDataTable();
+
   const [moreLoading, setMoreLoading] = useState(true);
   const [userList, setUserList] = useState<Employee[]>([]);
   const [isMore, setIsMore] = useState(true);
   const [deleteModal, setDeleteModal] = useState({ open: false, id: '' });
   const [searchForm] = Form.useForm();
+
+  const { actions } = useUserspageSlice();
+  const dispatch = useDispatch();
+
+  const params = useSelector(selectUserspageParams);
+  const isFilter = useSelector(selectUserspageIsFilter);
+  const getUserListState = useSelector(selectUserspage);
+
+  const {
+    setSelectedRows,
+    setSearchText,
+    resetSearch,
+    setOrdering,
+    setPagination,
+    getColumnSorterProps,
+    getColumnSearchProps,
+  } = useHandleDataTable(getUserListState);
+
+  const fetchUsers = React.useCallback(async () => {
+    if (!isFilter) {
+      dispatch(actions.fetchUsers({ params: params }));
+    }
+  }, [actions, dispatch, isFilter, params]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -54,7 +87,6 @@ export const Users: React.FC = () => {
     sorter: SorterResult<any> | SorterResult<any>[],
   ) => {
     setOrdering(sorter);
-    setPagination(pagination);
   };
 
   useEffect(() => {
@@ -102,13 +134,9 @@ export const Users: React.FC = () => {
   };
 
   const resetTotalSearch = () => {
-    searchForm.resetFields();
+    searchForm.setFieldsValue({ search: undefined });
     resetSearch();
   };
-
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
 
   const handleDelete = () => {};
 
@@ -119,6 +147,131 @@ export const Users: React.FC = () => {
     setSelectedRows(selectedRowKeys, selectedRows);
   };
 
+  const columns: ColumnProps<Employee>[] = [
+    {
+      title: t(UsersMessages.listAvatarTitle()),
+      dataIndex: 'avatar',
+      width: 80,
+      render: (text, record: Employee) => (
+        <Avatar
+          size={50}
+          src={text}
+          alt={record.first_name + ' ' + record.last_name}
+        />
+      ),
+    },
+    {
+      title: t(UsersMessages.listFirstNameTitle()),
+      dataIndex: 'first_name',
+      width: 150,
+      ...getColumnSorterProps('first_name', 1),
+      ...getColumnSearchProps('first_name'),
+    },
+    {
+      title: t(UsersMessages.listLastNameTitle()),
+      dataIndex: 'last_name',
+      width: 150,
+      ...getColumnSorterProps('last_name', 2),
+      ...getColumnSearchProps('last_name'),
+    },
+    {
+      title: t(UsersMessages.listEmailTitle()),
+      dataIndex: 'email',
+      width: 250,
+      ...getColumnSorterProps('email', 3),
+      ...getColumnSearchProps('email'),
+    },
+    {
+      title: 'Phone Number',
+      dataIndex: 'phone',
+      width: 200,
+      ...getColumnSorterProps('phone', 4),
+      ...getColumnSearchProps('phone'),
+    },
+    {
+      title: 'Code',
+      dataIndex: 'code',
+      width: 150,
+      ...getColumnSorterProps('code', 5),
+      ...getColumnSearchProps('code'),
+    },
+    {
+      title: 'Tags',
+      dataIndex: 'tags',
+      width: 250,
+      render: (text, record: Employee, index: number) => {
+        return (
+          <>
+            {text.map(tag => {
+              return (
+                <Tag style={{ margin: 5 }} color="geekblue" key={tag}>
+                  {tag.toUpperCase()}
+                </Tag>
+              );
+            })}
+          </>
+        );
+      },
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      width: 130,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      width: 130,
+    },
+    {
+      title: t(UsersMessages.listOptionsTitle()),
+      dataIndex: 'id',
+      width: 130,
+      fixed: 'right',
+      render: (text, record: Employee, index: number) => {
+        return (
+          <>
+            <Tooltip title={t(UsersMessages.listViewTooltip())}>
+              <IconButton
+                type="primary"
+                shape="circle"
+                size="small"
+                icon={<EyeOutlined />}
+                onClick={() => {
+                  history.push(`/employees/${text}`);
+                }}
+              />
+            </Tooltip>
+            <Tooltip title={t(UsersMessages.listEditTooltip())}>
+              <IconButton
+                shape="circle"
+                icon={<EditOutlined />}
+                size="small"
+                onClick={() => {
+                  history.push({
+                    pathname: '/employees/' + text,
+                    state: { edit: true },
+                  });
+                }}
+              />
+            </Tooltip>
+            <Tooltip title={t(UsersMessages.listDeleteTooltip())}>
+              <IconButton
+                danger
+                shape="circle"
+                size="small"
+                icon={<DeleteOutlined />}
+                onClick={() => {
+                  setDeleteModal({ open: true, id: text });
+                }}
+              />
+            </Tooltip>
+          </>
+        );
+      },
+    },
+  ];
+
   return (
     <>
       <Helmet>
@@ -128,7 +281,7 @@ export const Users: React.FC = () => {
       <h1>{t(UsersMessages.title())}</h1>
       <Collapse
         style={{ margin: '1em 0 1em 0' }}
-        defaultActiveKey={getUserListState?.params.search ? ['1'] : []}
+        defaultActiveKey={getUserListState.params.search ? ['1'] : []}
       >
         <Panel header={t(UsersMessages.searchTitle())} key="1">
           <SearchUsers
@@ -155,12 +308,15 @@ export const Users: React.FC = () => {
               <Button
                 danger
                 size="large"
-                disabled={getUserListState?.selectedRowKeys?.length === 0}
+                disabled={
+                  !getUserListState?.selectedRowKeys?.length ||
+                  getUserListState?.selectedRowKeys?.length === 0
+                }
                 onClick={() => {
                   console.log('Call Deleted');
                 }}
               >
-                Delete {getUserListState?.selectedRowKeys?.length} data
+                Delete {getUserListState?.selectedRowKeys?.length || 0} data
               </Button>
             </Row>
           </Col>
@@ -174,6 +330,7 @@ export const Users: React.FC = () => {
           <Col span={24}>
             <Table
               rowSelection={{
+                selectedRowKeys: getUserListState.selectedRowKeys,
                 onChange: handleSelectedRows,
               }}
               columns={columns}
@@ -181,6 +338,9 @@ export const Users: React.FC = () => {
               dataSource={getUserListState.users}
               pagination={{
                 ...getUserListState.pagination,
+                onChange: (page: number, pageSize?: number) => {
+                  setPagination({ current: page, pageSize });
+                },
                 showTotal: (total, range) =>
                   `${range[0]}-${range[1]} of ${total} items`,
                 pageSizeOptions: ['10', '20', '50', '100'],
@@ -205,4 +365,14 @@ export const Users: React.FC = () => {
   );
 };
 
-export default Users;
+const IconButton = styled(Button)`
+  margin: 5px;
+  span {
+    position: absolute !important;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+`;

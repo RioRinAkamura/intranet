@@ -3,11 +3,8 @@ import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { userspageSaga } from './saga';
 import { UserspageState, UserResponse, FilterColumns } from './types';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { Key } from 'react';
 import { Pagination } from '../../types';
-
-type Employee = models.hr.Employee;
 
 export const initialState: UserspageState = {
   users: [],
@@ -60,11 +57,11 @@ const slice = createSlice({
       state.filterColumns = { ...state.filterColumns, ...action.payload };
       state.params = { ...state.params, ...action.payload };
     },
-    selectedRows(
+    selectedRows<T>(
       state,
       action: PayloadAction<{
         selectedRowKeys?: Key[];
-        selectedRows?: Employee[];
+        selectedRows?: T[];
       }>,
     ) {
       state.selectedRowKeys = action.payload.selectedRowKeys;
@@ -81,7 +78,10 @@ const slice = createSlice({
       state.params = {
         limit: 20,
         page: 1,
+        ordering: '',
       };
+      state.selectedRowKeys = undefined;
+      state.selectedRows = undefined;
     },
     setOrdering(state, action: PayloadAction<string | undefined>) {
       state.params.ordering = action.payload;

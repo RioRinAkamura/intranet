@@ -9,8 +9,8 @@ import { Managers } from './components/Managers';
 import { Activities } from './components/Activities';
 import { PerformanceEmployees } from './components/PerformanceEmployees';
 import { NewEmployees } from './components/NewEmployees';
-import { Title } from 'app/components/Title';
 import { Recruitments } from './components/Recruitments';
+import { TitlePage } from 'app/components/TitlePage';
 
 export const HomePage = () => {
   return (
@@ -25,7 +25,7 @@ export const HomePage = () => {
       <PageWrapper>
         <TitleWrapper>
           <PieChartOutlined />
-          <Title>Dashboard</Title>
+          <TitlePage>Dashboard</TitlePage>
         </TitleWrapper>
         <WrapperItem>
           <Chart />

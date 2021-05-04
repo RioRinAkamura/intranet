@@ -1,6 +1,6 @@
 import { Col, Row } from 'antd';
 import { CardWrapper } from 'app/components/CardWrapper';
-import { Title } from 'app/components/Title';
+import { TitlePage } from 'app/components/TitlePage';
 import moment from 'moment';
 import * as React from 'react';
 import styled from 'styled-components/macro';
@@ -38,7 +38,7 @@ export const Activities = () => {
       <CardWrapper
         mainHeight="328px"
         bodyHeight="250px"
-        title={<Title>Activities</Title>}
+        title={<TitlePage>Activities</TitlePage>}
       >
         {data &&
           data.map(item => {
