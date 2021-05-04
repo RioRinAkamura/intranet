@@ -22,10 +22,6 @@ export const SearchUsers = memo((props: Props) => {
   const { form, onSearch, onReset, loading, value } = props;
   const { t } = useTranslation();
 
-  useEffect(() => {
-    console.log(form.getFieldValue('search'));
-  }, [form]);
-
   return (
     <Form form={form}>
       <Row gutter={[8, 8]} align="middle">
