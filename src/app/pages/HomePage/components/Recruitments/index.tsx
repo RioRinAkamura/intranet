@@ -1,6 +1,6 @@
 import { Col, Row } from 'antd';
 import { CardWrapper } from 'app/components/CardWrapper';
-import { Title } from 'app/components/Title';
+import { PageTitle } from 'app/components/PageTitle';
 import * as React from 'react';
 import styled from 'styled-components/macro';
 
@@ -37,7 +37,9 @@ export const Recruitments = () => {
       <CardWrapper
         mainHeight="328px"
         bodyHeight="250px"
-        title={<Title style={{ textAlign: 'right' }}>Recruitment News</Title>}
+        title={
+          <PageTitle style={{ textAlign: 'right' }}>Recruitment News</PageTitle>
+        }
       >
         <RowItem gutter={[32, 0]} align="middle">
           <Col offset={8} span={3}>

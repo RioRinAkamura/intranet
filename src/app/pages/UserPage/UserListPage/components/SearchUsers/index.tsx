@@ -13,11 +13,12 @@ interface Props {
   onSearch: () => void;
   onReset: () => void;
   form: FormInstance;
+  value?: string;
   loading: boolean;
 }
 
 export const SearchUsers = memo((props: Props) => {
-  const { form, onSearch, onReset, loading } = props;
+  const { form, onSearch, onReset, loading, value } = props;
   const { t } = useTranslation();
 
   return (
@@ -28,7 +29,11 @@ export const SearchUsers = memo((props: Props) => {
     >
       <Row gutter={[8, 8]}>
         <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-          <FormItem name="search" label={t(UsersMessages.searchLabel())}>
+          <FormItem
+            name="search"
+            label={t(UsersMessages.searchLabel())}
+            initialValue={value}
+          >
             <Input placeholder={t(UsersMessages.searchPlaceholder())} />
           </FormItem>
         </Col>

@@ -16,10 +16,11 @@ import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
 import moment from 'moment';
 import { useUpdateUserDetail } from './useUpdateUserDetail';
-import { TitlePage } from 'app/components/TitlePage';
+import { PageTitle } from 'app/components/PageTitle';
 import { AvatarPath } from './components/AvatarPath/Loadable';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
 import { AddBankModal } from './components/AddBankModal/Loadable';
+import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
 
 interface Props {}
 interface LocationState {
@@ -91,15 +92,15 @@ export function UserDetailPage(props: Props) {
 
   return (
     <>
-      <WrapperTitle>
-        <TitlePage>
+      <WrapperTitlePage>
+        <PageTitle>
           {isView
             ? 'Employee Details'
             : isEdit
             ? 'Edit Employess'
             : 'Create Employee'}
-        </TitlePage>
-      </WrapperTitle>
+        </PageTitle>
+      </WrapperTitlePage>
       <Form form={form} labelAlign="left">
         <Form.Item hidden name="id">
           <Input hidden />
@@ -212,14 +213,6 @@ export function UserDetailPage(props: Props) {
 interface ScreenProps {
   isView?: boolean;
 }
-
-const WrapperTitle = styled.div`
-  padding: 1rem;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-  width: 100%;
-`;
 
 const LeftScreen = styled(Col)``;
 
