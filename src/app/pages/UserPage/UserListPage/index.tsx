@@ -69,7 +69,7 @@ export const Users: React.FC = () => {
     setPagination,
     getColumnSorterProps,
     getColumnSearchProps,
-  } = useHandleDataTable(getUserListState);
+  } = useHandleDataTable(getUserListState, actions);
 
   const fetchUsers = React.useCallback(async () => {
     if (!isFilter) {

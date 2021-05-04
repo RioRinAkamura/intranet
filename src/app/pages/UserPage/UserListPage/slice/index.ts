@@ -41,7 +41,7 @@ const slice = createSlice({
       state.error = action.payload.error;
       state.loading = false;
     },
-    changeUsersState(state, action: PayloadAction<UserspageState>) {
+    changeState(state, action: PayloadAction<UserspageState>) {
       state.params = { ...state.params, ...action.payload.params };
       state.filterColumns = {
         ...state.filterColumns,

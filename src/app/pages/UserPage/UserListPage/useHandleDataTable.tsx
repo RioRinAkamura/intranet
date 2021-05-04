@@ -6,13 +6,12 @@ import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import { Pagination } from '../types';
 import { UsersMessages } from './messages';
-import { useUserspageSlice } from './slice';
 import Highlighter from 'react-highlight-words';
 import { useTranslation } from 'react-i18next';
 import { Key, SorterResult } from 'antd/lib/table/interface';
 import { has, identity, isArray, isEmpty, pickBy } from 'lodash';
 
-interface GetUsersListHook {
+interface useDataTable {
   setSearchText: (text: string) => void;
   resetSearch: () => void;
   setSelectedRows: <T>(selectedRowKeys: Key[], selectedRows: T[]) => void;
@@ -22,14 +21,14 @@ interface GetUsersListHook {
   getColumnSearchProps: (dataIndex: string) => {};
 }
 
-export const useHandleDataTable = (state: any): GetUsersListHook => {
+export const useHandleDataTable = (state: any, actions: any): useDataTable => {
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
   const urlParams = parse(location.search, {
     sort: false,
   });
-  const { actions } = useUserspageSlice();
+
   const dispatch = useDispatch();
   const { filterColumns } = state;
   const { search, ordering } = state.params;
@@ -42,7 +41,7 @@ export const useHandleDataTable = (state: any): GetUsersListHook => {
         sort: false,
       });
       dispatch(
-        actions.changeUsersState({
+        actions.changeState({
           params: pickBy(params, identity),
           filterColumns: pickBy(params, identity),
           pagination: pickBy({ ...params }, identity),

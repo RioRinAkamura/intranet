@@ -16,7 +16,7 @@ import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
 import moment from 'moment';
 import { useUpdateUserDetail } from './useUpdateUserDetail';
-import { TitlePage } from 'app/components/TitlePage';
+import { PageTitle } from 'app/components/PageTitle';
 import { AvatarPath } from './components/AvatarPath/Loadable';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
 import { AddBankModal } from './components/AddBankModal/Loadable';
@@ -93,13 +93,13 @@ export function UserDetailPage(props: Props) {
   return (
     <>
       <WrapperTitlePage>
-        <TitlePage>
+        <PageTitle>
           {isView
             ? 'Employee Details'
             : isEdit
             ? 'Edit Employess'
             : 'Create Employee'}
-        </TitlePage>
+        </PageTitle>
       </WrapperTitlePage>
       <Form form={form} labelAlign="left">
         <Form.Item hidden name="id">
