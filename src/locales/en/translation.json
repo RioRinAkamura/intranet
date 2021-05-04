@@ -346,7 +346,8 @@
     "delete":"Delete",
     "cancel":"Cancel",
     "success":"Delete Success",
-    "failed":"Delete Failed"
+    "failed":"Delete Failed",
+    "typeEmail":"Type email address below to delete your user"
 
   }
 }

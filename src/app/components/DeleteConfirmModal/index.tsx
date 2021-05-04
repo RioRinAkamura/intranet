@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { Modal, Button, Input, Form, Space } from 'antd';
-import { useDeleteConfirmModal } from './useDeleteConfirmModal';
+import { Modal, Button, Input, Form } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { messages } from './messages';
 
@@ -8,74 +7,63 @@ const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
-const tailLayout = {
-  wrapperCol: { span: 16 },
-};
-
-interface IdDeleteEmployee {
-  type: string | undefined;
-  id: string | undefined;
-}
 
 interface Props {
+  visible: boolean;
+  handleOk: () => void;
   handleCancel: () => void;
-  isDeleteModalVisible: boolean | undefined;
-  idDelete?: IdDeleteEmployee;
+  title?: string;
+  description?: string | JSX.Element;
+  answer?: string;
 }
 
 export const DeleteConfirmModal = (props: Props) => {
-  const { deleteModalState, deleteEmployee } = useDeleteConfirmModal();
-  const { handleCancel, isDeleteModalVisible, idDelete } = props;
+  const { handleCancel, handleOk, title, description, answer, visible } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const title = deleteModalState?.title;
-  const description = deleteModalState?.description;
-  const answer = deleteModalState?.answer;
-  const loading = deleteModalState?.loading;
   const defaultParam = {
     titleDefault: `${t(messages.deleteModalTitle())}`,
     descriptionDefault: `${t(messages.deleteModalDesc())}`,
     answerDefault: `${t(messages.deleteModalAnswer())}`,
   };
 
-  const onFinish = () => {
-    if (idDelete) {
-      const { type, id } = idDelete;
-      if (type === 'deleteEmployee') {
-        deleteEmployee(id);
-      }
-    }
-  };
-
   useEffect(() => {
     form.resetFields();
-  }, [form, isDeleteModalVisible]);
+  }, [form, visible]);
 
   return (
     <Modal
-      visible={isDeleteModalVisible}
+      visible={visible}
       title={title || defaultParam.titleDefault}
-      footer={null}
+      footer={[
+        <Button key="back" onClick={handleCancel}>
+          {t(messages.deleteModalCancel())}
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          danger
+          form="deleteConfirmModal"
+          htmlType="submit"
+        >
+          {t(messages.deleteModalDelete())}
+        </Button>,
+      ]}
       onCancel={handleCancel}
     >
-      <p>
-        <strong>{description || defaultParam.descriptionDefault}</strong>
-      </p>
-      <p>
-        If you're sure, type{' '}
-        <strong>{answer || defaultParam.answerDefault}</strong> in the box below
-        to confirm
-      </p>
+      <p>{description || defaultParam.descriptionDefault}</p>
+      <p>{t(messages.deleteModalTypeEmail())}</p>
       <Form
         {...layout}
         form={form}
         name="basic"
         initialValues={{ remember: true }}
-        onFinish={onFinish}
+        onFinish={handleOk}
+        id="deleteConfirmModal"
       >
         <Form.Item
           name="confirmDelete"
-          style={{ width: 300 }}
+          style={{ width: '100%', marginBottom: 0 }}
           rules={[
             {
               required: true,
@@ -94,18 +82,10 @@ export const DeleteConfirmModal = (props: Props) => {
             }),
           ]}
         >
-          <Input />
-        </Form.Item>
-
-        <Form.Item {...tailLayout} style={{ marginBottom: 0 }}>
-          <Space>
-            <Button type="primary" danger htmlType="submit" loading={loading}>
-              {t(messages.deleteModalDelete())}
-            </Button>
-            <Button onClick={handleCancel}>
-              {t(messages.deleteModalCancel())}
-            </Button>
-          </Space>
+          <Input
+            placeholder={answer || defaultParam.answerDefault}
+            style={{ height: 40 }}
+          />
         </Form.Item>
       </Form>
     </Modal>

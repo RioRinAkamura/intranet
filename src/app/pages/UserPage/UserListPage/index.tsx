@@ -21,7 +21,6 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { DeleteModal } from 'app/components/DeleteModal';
 import { isMobileOnly } from 'react-device-detect';
 import { isEqual } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -37,13 +36,19 @@ import { useGetUserList } from './useGetUserList';
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { parse, stringify } from 'query-string';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
-import { useDeleteConfirmModal } from 'app/components/DeleteConfirmModal/useDeleteConfirmModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { useUserspageSlice } from './slice/';
+import { RootState } from 'types';
+import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 
 const { Panel } = Collapse;
 
 export const Users: React.FC = () => {
   const { t } = useTranslation();
   const location = useLocation();
+  const dispatch = useDispatch();
+  const { actions } = useUserspageSlice();
+  const { notify } = useNotify();
   const urlParams: ParamsPayload = parse(location.search, {
     sort: false,
     parseNumbers: true,
@@ -73,24 +78,55 @@ export const Users: React.FC = () => {
   const [isMore, setIsMore] = useState(true);
   const [searchText, setSearchText] = useState({});
   const [searchedColumn, setSearchedColumn] = useState({});
-  const [deleteModal, setDeleteModal] = useState({ open: false, id: '' });
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [selectedRows, setSelectedRows] = useState<Employee[]>([]);
   const [selectedKeys, setSelectedKeys] = useState({});
-  const [idDelete, setIdDelete] = useState({
-    type: '',
-    id: '',
-  });
+  const [idUserDelete, setIdUserDelete] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [deleteEmployee, setDeleteEmployee] = useState<Employee>();
+  const deleteModalState = useSelector((state: RootState) => state.userspage);
+  const deleteSuccess = deleteModalState?.deleteSuccess;
+  const deleteFailed = deleteModalState?.deleteFailed;
 
   const [searchForm] = Form.useForm();
   const history = useHistory();
 
-  const {
-    deleteModalState,
-    showModalDeleteConfirm,
-    resetModalDeleteState,
-  } = useDeleteConfirmModal();
-  const isDeleteModalVisible = deleteModalState?.isDeleteModalVisible;
+  const showDeleteModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setIsModalVisible(false);
+    dispatch(actions.deleteUser(idUserDelete));
+  };
+
+  const handleCancelDeleteModal = () => {
+    setIsModalVisible(false);
+  };
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      notify({
+        type: ToastMessageType.Info,
+        message: 'Delete Success',
+        duration: 2,
+      });
+    } else if (deleteFailed) {
+      notify({
+        type: ToastMessageType.Error,
+        message: 'Delete Failed',
+        duration: 2,
+      });
+    }
+  }, [deleteFailed, deleteModalState, deleteSuccess, notify]);
+
+  const descriptionDelete = (
+    <p>
+      You're about to permanently delete your user{' '}
+      <strong>{`${deleteEmployee?.email}`}</strong>. This will also delete any
+      references to your user.
+    </p>
+  );
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -507,9 +543,9 @@ export const Users: React.FC = () => {
                 size="small"
                 icon={<DeleteOutlined />}
                 onClick={() => {
-                  // setDeleteModal({ open: true, id: text });
-                  showModalDeleteConfirm({});
-                  setIdDelete({ type: 'deleteEmployee', id: text });
+                  showDeleteModal();
+                  setIdUserDelete(text);
+                  setDeleteEmployee(record);
                 }}
               />
             </Tooltip>
@@ -519,18 +555,12 @@ export const Users: React.FC = () => {
     },
   ];
 
-  const handleDelete = () => {};
-
   const handleSelectedRows = (
     selectedRowKeys: Key[],
     selectedRows: Employee[],
   ) => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
-  };
-
-  const handleCancelDeleteModal = () => {
-    resetModalDeleteState();
   };
 
   return (
@@ -559,7 +589,7 @@ export const Users: React.FC = () => {
           data={userList}
           isMore={isMore}
           moreLoading={moreLoading}
-          onDelete={(id: string) => setDeleteModal({ open: true, id: id })}
+          onDelete={(id: string) => showDeleteModal()}
         />
       ) : (
         <Row align="middle" justify="center">
@@ -601,18 +631,13 @@ export const Users: React.FC = () => {
           </Col>
         </Row>
       )}
-      {/* <DeleteModal
-        open={deleteModal.open}
-        cancelText={t(UsersMessages.modalFormCancelButton())}
-        deleteText={t(UsersMessages.modalFormDeleteButton())}
-        content={t(UsersMessages.modalFormDeleteContent())}
-        handleCancel={() => setDeleteModal({ open: false, id: '' })}
-        handleDelete={handleDelete}
-      /> */}
       <DeleteConfirmModal
+        visible={isModalVisible}
+        handleOk={handleConfirmDelete}
         handleCancel={handleCancelDeleteModal}
-        isDeleteModalVisible={isDeleteModalVisible}
-        idDelete={idDelete}
+        title={`Remove ${deleteEmployee?.first_name} ${deleteEmployee?.last_name} from the team`}
+        description={descriptionDelete}
+        answer={`${deleteEmployee?.email}`}
       />
     </>
   );

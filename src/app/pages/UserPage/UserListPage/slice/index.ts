@@ -7,6 +7,8 @@ import { UserspageState } from './types';
 export const initialState: UserspageState = {
   users: [],
   loading: false,
+  deleteSuccess: false,
+  deleteFailed: false,
 };
 
 const slice = createSlice({
@@ -25,9 +27,26 @@ const slice = createSlice({
     editUser(state, action: PayloadAction<any>) {},
     editUserSuccess() {},
     editUserFailure() {},
-    deleteUser(state, action: PayloadAction<any>) {},
-    deleteUserSuccess() {},
-    deleteUserFailure() {},
+    deleteUser(state, action: PayloadAction<string>) {
+      state.loading = true;
+      state.deleteSuccess = false;
+      state.deleteFailed = false;
+    },
+    deleteUserSuccess(state) {
+      state.loading = false;
+      state.deleteSuccess = true;
+      state.deleteFailed = false;
+    },
+    deleteUserFailure(state) {
+      state.loading = false;
+      state.deleteSuccess = false;
+      state.deleteFailed = true;
+    },
+    resetStateDeleteModal(state) {
+      state.loading = false;
+      state.deleteSuccess = false;
+      state.deleteFailed = false;
+    },
     importUsers(state, action: PayloadAction<any>) {},
     importUsersSuccess() {},
     importUsersFailure() {},

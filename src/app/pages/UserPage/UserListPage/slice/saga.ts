@@ -1,5 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { userspageActions as actions } from '.';
+import { PayloadAction } from '@reduxjs/toolkit';
 
 function* getUsers() {
   try {
@@ -37,12 +38,17 @@ function* editUser(action) {
   }
 }
 
-function* deleteUser(action) {
+function* deleteUser(
+  action: PayloadAction<{
+    id: string;
+  }>,
+) {
   try {
-    yield put(actions.deleteUserSuccess);
+    yield put(actions.deleteUserSuccess());
   } catch (err) {
-    console.log(err);
-    yield put(actions.deleteUserFailure);
+    yield put(actions.deleteUserFailure());
+  } finally {
+    yield put(actions.resetStateDeleteModal());
   }
 }
 
