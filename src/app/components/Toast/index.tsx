@@ -23,10 +23,9 @@ export enum PlacementType {
 
 const ANIMATION_TIME = 300;
 
-interface propTypes {
+export interface toastTypes {
   type?: MessageType | string;
   message?: React.ReactNode;
-  description?: React.ReactNode;
   duration?: number;
   placement?: PlacementType | string;
   className?: string;
@@ -35,19 +34,18 @@ interface propTypes {
 }
 
 interface Itheme {
-  placement?: string;
+  background?: string;
 }
 const defaultProps = {
-  type: MessageType.Error,
+  type: MessageType.Success,
   message: 'Toast Title',
-  description: '',
   duration: 2000,
-  placement: PlacementType.Top,
+  placement: PlacementType.Bottom,
   style: {},
   closable: false,
 };
 
-const Toast = (props?: propTypes): any => {
+const Toast = (props?: toastTypes): any => {
   if (!props) {
     props = defaultProps;
   } else {
@@ -81,7 +79,7 @@ const Toast = (props?: propTypes): any => {
       <NotificationBox
         className={props?.className}
         style={props?.style}
-        placement={props?.placement}
+        background={props?.type}
       >
         <LabelTitle>
           <NotificationMessage>
@@ -98,7 +96,6 @@ const Toast = (props?: propTypes): any => {
             />
           )}
         </LabelTitle>
-        {/* <NotificationDescription>{props?.description}</NotificationDescription> */}
       </NotificationBox>
     );
   };
@@ -106,23 +103,13 @@ const Toast = (props?: propTypes): any => {
   const renderTypeIcon = (type: MessageType | undefined | string) => {
     switch (type) {
       case MessageType.Success:
-        return (
-          <CheckCircleOutlined style={{ fontSize: '25px', color: '#52c41a' }} />
-        );
+        return <CheckCircleOutlined style={{ fontSize: '25px' }} />;
       case MessageType.Info:
-        return (
-          <InfoCircleOutlined style={{ fontSize: '25px', color: '#08c' }} />
-        );
+        return <InfoCircleOutlined style={{ fontSize: '25px' }} />;
       case MessageType.Warn:
-        return (
-          <ExclamationCircleOutlined
-            style={{ fontSize: '25px', color: '#faad14' }}
-          />
-        );
+        return <ExclamationCircleOutlined style={{ fontSize: '25px' }} />;
       case MessageType.Error:
-        return (
-          <CloseCircleOutlined style={{ fontSize: '25px', color: '#ff4d4f' }} />
-        );
+        return <CloseCircleOutlined style={{ fontSize: '25px' }} />;
       default:
         break;
     }
@@ -142,8 +129,6 @@ const Toast = (props?: propTypes): any => {
 
   const renderToast = () => {
     if (count.length === 0) {
-      console.log('chay 1');
-
       const container = getContainer();
       ReactDOM.render(Toast(), newElement, () => {
         container
@@ -170,36 +155,26 @@ const NotificationBox = styled.div`
   margin-left: auto;
   overflow: hidden;
   word-wrap: break-word;
-  background: #52c41a;
   border-radius: 2px;
   box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%),
     0 9px 28px 8px rgb(0 0 0 / 5%);
-  animation-duration: 0.5s;
-  /* animation-name: ${(props: Itheme) =>
-    props.placement};
-  @keyframes top {
-    from {
-      left: -400px;
+  background-color: ${(props: Itheme) => {
+    switch (props.background) {
+      case MessageType.Success:
+        return '#52c41a';
+      case MessageType.Warn:
+        return '#faad14';
+      case MessageType.Info:
+        return '#08c';
+      case MessageType.Error:
+        return '#f46b6b';
     }
-    to {
-      left: 0px;
-    }
-  }
-
-  @keyframes bottom {
-    from {
-      left: -400px;
-    }
-    to {
-      left: 0px;
-    }
-  } */
+  }};
 `;
 
 const NotificationMessage = styled.div`
   width: 100%;
   text-align: center;
-  color: rgba(0, 0, 0, 0.85);
   font-size: 15px;
   line-height: 24px;
 `;
@@ -214,6 +189,7 @@ const ToastIconType = styled.span`
 
 const ToastMessage = styled.span`
   margin-top: 5px;
+  font-weight: 500;
 `;
 
 export default Toast;

@@ -49,7 +49,7 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     box-sizing: border-box;
     padding: 0;
-    color: rgba(0,0,0,.85);
+    color: #ffff;
     font-size: 14px;
     font-variant: tabular-nums;
     line-height: 1.5715;

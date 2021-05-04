@@ -30,7 +30,7 @@ export const useAuthContextProvider = (
 ): AuthContextValues => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(undefined);
-  const [authenticated, setAuthenticated] = React.useState(true);
+  const [authenticated, setAuthenticated] = React.useState(false);
   const [identity, setIdentity] = React.useState<UserIdentity | null>();
 
   const setAuthState = React.useCallback(

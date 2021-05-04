@@ -26,7 +26,7 @@ export enum PlacementType {
 interface propTypes {
   type?: MessageType | string;
   message?: React.ReactNode;
-  description?: string;
+  description?: React.ReactNode;
   duration?: number;
   placement?: PlacementType | string;
   className?: string;
@@ -43,7 +43,7 @@ const defaultProps = {
   message: 'Notification Title',
   description:
     'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-  duration: 4500,
+  duration: 0,
   placement: PlacementType.TopRight,
   style: {},
   closable: false,

@@ -14,6 +14,7 @@ import { NavItem } from '../NavList/NavItem';
 import { useNotify, MessageType, PlacementType } from '../Notification';
 import { Logo } from '../Sidebar/Logo';
 import Toast from '../Toast';
+import { useToast } from '../Toast/useToast';
 
 interface Props {
   collapsed: boolean;
@@ -22,10 +23,9 @@ interface Props {
 
 const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
   const { notify } = useNotify();
+  const { toast } = useToast();
 
   const openNotification = () => {
-    console.log('abc');
-
     // notify({
     //   type: MessageType.Error,
     //   message: 'Add User Infor',
@@ -37,7 +37,7 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
     //       'lightblue url("https://designshack.net/wp-content/uploads/abstract-background.jpg") no-repeat fixed center',
     //   },
     // });
-    return Toast();
+    return toast();
   };
   return (
     <>

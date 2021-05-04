@@ -1,21 +1,39 @@
 import React from 'react';
+import { PlacementType, toastTypes, MessageType } from '..';
 
 interface ToastContextValues {
-  data: any;
-  setDataToast: (data: any) => void;
+  data: toastTypes;
+  setDataToast: (data: toastTypes | null) => void;
 }
 
 export const ToastContext = React.createContext<ToastContextValues>({
-  data: null,
-  setDataToast: (_data: any) => {},
+  data: {
+    type: MessageType.Success,
+    message: 'Toast Title',
+    duration: 2000,
+    placement: PlacementType.Bottom,
+    style: {},
+    closable: false,
+  },
+  setDataToast: (_data: toastTypes | null) => {},
 });
 
 const useToastContextProvider = (): ToastContextValues => {
-  const [data, setData] = React.useState<any | null>();
+  const [data, setData] = React.useState<toastTypes>({
+    type: MessageType.Success,
+    message: 'Toast Title',
+    duration: 2000,
+    placement: PlacementType.Bottom,
+    style: {},
+    closable: false,
+  });
 
-  const setDataToast = React.useCallback((data: any) => {
-    setData(data);
-  }, []);
+  const setDataToast = React.useCallback(
+    (newData: toastTypes | null) => {
+      setData({ ...data, ...newData });
+    },
+    [data],
+  );
 
   return {
     data,

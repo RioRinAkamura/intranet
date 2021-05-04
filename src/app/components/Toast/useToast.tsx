@@ -1,15 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import styled from 'styled-components/macro';
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
-  InfoCircleOutlined,
-  CloseOutlined,
-} from '@ant-design/icons';
+import { useContext } from 'react';
+import Toast, { toastTypes } from '.';
+import { ToastContext } from './context';
+
 export const useToast = () => {
-  const toast = props => {};
+  const { setDataToast, data } = useContext(ToastContext);
+  console.log('data', data);
+
+  const toast = (props?: toastTypes) => {
+    if (props) {
+      setDataToast(props);
+    }
+    return Toast();
+  };
 
   return { toast };
 };
