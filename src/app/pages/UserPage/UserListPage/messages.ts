@@ -23,6 +23,7 @@ export const UsersMessages = {
     ),
   importCSV: () => _t(translations.UsersPage.importCSV, 'Import CSV'),
   listAvatarTitle: () => _t(translations.UsersPage.list.avatar, 'Avatar'),
+  listNameTitle: () => _t(translations.UsersPage.list.name, 'Name'),
   listFirstNameTitle: () =>
     _t(translations.UsersPage.list.firstName, 'First Name'),
   listLastNameTitle: () =>

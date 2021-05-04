@@ -4,11 +4,13 @@ import {
   Row,
   Table,
   Form,
-  Collapse,
   TablePaginationConfig,
   Avatar,
   Tag,
   Tooltip,
+  Popover,
+  Input,
+  Space,
 } from 'antd';
 import React, { Key, useEffect, useState } from 'react';
 import { DeleteModal } from 'app/components/DeleteModal';
@@ -20,10 +22,15 @@ import { Helmet } from 'react-helmet-async';
 import { SearchUsers } from './components/SearchUsers/Loadable';
 import { HeaderButton } from './components/HeaderButton/Loadable';
 import { UserList } from './components/UserList/Loadable';
-import { Pagination } from '../types';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { useHandleDataTable } from './useHandleDataTable';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  MoreOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 import { ColumnProps } from 'antd/lib/table';
@@ -34,24 +41,21 @@ import {
   selectUserspageIsFilter,
   selectUserspageParams,
 } from './slice/selectors';
+import { PageTitle } from 'app/components/PageTitle';
+import { has } from 'lodash';
+import Highlighter from 'react-highlight-words';
 
-const { Panel } = Collapse;
 type Employee = models.hr.Employee;
 
 export const Users: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [tablePagination, setTablePagination] = useState<Pagination>({
-    current: 1,
-    pageSize: 20,
-    total: 0,
-    totalPage: 0,
-  });
 
   const [moreLoading, setMoreLoading] = useState(true);
   const [userList, setUserList] = useState<Employee[]>([]);
   const [isMore, setIsMore] = useState(true);
   const [deleteModal, setDeleteModal] = useState({ open: false, id: '' });
+  const [selectedKeys, setSelectedKeys] = useState([]);
   const [searchForm] = Form.useForm();
 
   const { actions } = useUserspageSlice();
@@ -67,8 +71,8 @@ export const Users: React.FC = () => {
     resetSearch,
     setOrdering,
     setPagination,
-    getColumnSorterProps,
-    getColumnSearchProps,
+    setFilterText,
+    resetFilter,
   } = useHandleDataTable(getUserListState, actions);
 
   const fetchUsers = React.useCallback(async () => {
@@ -76,6 +80,12 @@ export const Users: React.FC = () => {
       dispatch(actions.fetchUsers({ params: params }));
     }
   }, [actions, dispatch, isFilter, params]);
+
+  useEffect(() => {
+    if (getUserListState.filterColumns) {
+      setSelectedKeys(prev => ({ ...prev, ...getUserListState.filterColumns }));
+    }
+  }, [getUserListState.filterColumns]);
 
   useEffect(() => {
     fetchUsers();
@@ -102,10 +112,11 @@ export const Users: React.FC = () => {
         document.scrollingElement?.scrollHeight
       ) {
         if (moreLoading) {
-          if (getUserListState.params?.limit !== userList.length) {
-            setTablePagination({
-              ...tablePagination,
-              current: tablePagination.current && tablePagination.current + 1,
+          if (getUserListState.pagination?.total !== userList.length) {
+            setPagination({
+              current:
+                getUserListState.pagination?.current &&
+                getUserListState.pagination.current + 1,
             });
           } else {
             setIsMore(false);
@@ -121,10 +132,11 @@ export const Users: React.FC = () => {
       };
     }
   }, [
+    getUserListState.pagination,
     getUserListState.params.limit,
     isMore,
     moreLoading,
-    tablePagination,
+    setPagination,
     userList,
   ]);
 
@@ -140,6 +152,125 @@ export const Users: React.FC = () => {
 
   const handleDelete = () => {};
 
+  const handleSearch = (dataIndex: string, confirm: () => void) => {
+    setFilterText(dataIndex, selectedKeys[dataIndex]);
+    confirm();
+  };
+
+  const handleReset = (dataIndex: string, confirm: () => void) => {
+    setSelectedKeys(prevState => ({
+      ...prevState,
+      [dataIndex]: undefined,
+    }));
+    resetFilter(dataIndex);
+    confirm();
+  };
+
+  const getColumnSorterProps = (dataIndex: string, columnPriority: number) => {
+    const ordering = {
+      sorter: {
+        multiple: columnPriority,
+      },
+    };
+    if (getUserListState.params.ordering) {
+      ordering['sortOrder'] = getUserListState.params.ordering.includes(
+        dataIndex,
+      )
+        ? getUserListState.params.ordering.includes('-' + dataIndex)
+          ? ('descend' as 'descend')
+          : ('ascend' as 'ascend')
+        : null;
+    } else if (getUserListState.params.ordering === '') {
+      ordering['sortOrder'] = null;
+    }
+    return ordering;
+  };
+
+  const getColumnSearchProps = (dataIndex: string[], filterIndex?: number) => ({
+    ellipsis: true,
+    filterDropdown: ({ confirm }) => {
+      return (
+        <div style={{ padding: 8 }}>
+          <Input
+            placeholder={`${t(
+              UsersMessages.filterInputPlaceholder(),
+            )} ${dataIndex}`}
+            value={selectedKeys[dataIndex[filterIndex || 0]]}
+            onChange={e => {
+              e.persist();
+              setSelectedKeys(prevState => ({
+                ...prevState,
+                [dataIndex[filterIndex || 0]]: e.target.value
+                  ? e.target.value
+                  : null,
+              }));
+            }}
+            onPressEnter={() =>
+              handleSearch(dataIndex[filterIndex || 0], confirm)
+            }
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(dataIndex[filterIndex || 0], confirm)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+              loading={getUserListState.loading}
+            >
+              {t(UsersMessages.filterSearchButton())}
+            </Button>
+            <Button
+              onClick={() => handleReset(dataIndex[filterIndex || 0], confirm)}
+              size="small"
+              loading={getUserListState.loading}
+              style={{ width: 90 }}
+            >
+              {t(UsersMessages.filterResetButton())}
+            </Button>
+          </Space>
+        </div>
+      );
+    },
+    filterIcon: filtered => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex[filterIndex || 0]]
+        ? record[dataIndex[filterIndex || 0]]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : '',
+    render: (text, record) => {
+      let dataText = '';
+      dataIndex.map(data => {
+        if (record[data]) {
+          dataText += record[data] + ' ';
+        }
+        return data;
+      });
+      return has(getUserListState.filterColumns, dataIndex[filterIndex || 0]) ||
+        (getUserListState.params.search &&
+          getUserListState.params.search.length > 0) ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[
+            getUserListState.filterColumns![dataIndex[filterIndex || 0]],
+            getUserListState.params.search &&
+              getUserListState.params.search.length > 0 &&
+              getUserListState.params.search,
+          ]}
+          autoEscape
+          textToHighlight={text ? dataText.trim().toString() : ''}
+        />
+      ) : (
+        dataText.trim()
+      );
+    },
+  });
+
   const handleSelectedRows = (
     selectedRowKeys: Key[],
     selectedRows: Employee[],
@@ -147,11 +278,51 @@ export const Users: React.FC = () => {
     setSelectedRows(selectedRowKeys, selectedRows);
   };
 
+  const moreButton = (text: string) => (
+    <>
+      <Tooltip title={t(UsersMessages.listViewTooltip())}>
+        <IconButton
+          type="primary"
+          shape="circle"
+          size="small"
+          icon={<EyeOutlined />}
+          onClick={() => {
+            history.push(`/employees/${text}`);
+          }}
+        />
+      </Tooltip>
+      <Tooltip title={t(UsersMessages.listEditTooltip())}>
+        <IconButton
+          shape="circle"
+          icon={<EditOutlined />}
+          size="small"
+          onClick={() => {
+            history.push({
+              pathname: '/employees/' + text,
+              state: { edit: true },
+            });
+          }}
+        />
+      </Tooltip>
+      <Tooltip title={t(UsersMessages.listDeleteTooltip())}>
+        <IconButton
+          danger
+          shape="circle"
+          size="small"
+          icon={<DeleteOutlined />}
+          onClick={() => {
+            setDeleteModal({ open: true, id: text });
+          }}
+        />
+      </Tooltip>
+    </>
+  );
+
   const columns: ColumnProps<Employee>[] = [
     {
       title: t(UsersMessages.listAvatarTitle()),
       dataIndex: 'avatar',
-      width: 80,
+      width: 40,
       render: (text, record: Employee) => (
         <Avatar
           size={50}
@@ -161,44 +332,37 @@ export const Users: React.FC = () => {
       ),
     },
     {
-      title: t(UsersMessages.listFirstNameTitle()),
+      title: t(UsersMessages.listNameTitle()),
       dataIndex: 'first_name',
-      width: 150,
+      width: 80,
       ...getColumnSorterProps('first_name', 1),
-      ...getColumnSearchProps('first_name'),
-    },
-    {
-      title: t(UsersMessages.listLastNameTitle()),
-      dataIndex: 'last_name',
-      width: 150,
-      ...getColumnSorterProps('last_name', 2),
-      ...getColumnSearchProps('last_name'),
-    },
-    {
-      title: t(UsersMessages.listEmailTitle()),
-      dataIndex: 'email',
-      width: 250,
-      ...getColumnSorterProps('email', 3),
-      ...getColumnSearchProps('email'),
-    },
-    {
-      title: 'Phone Number',
-      dataIndex: 'phone',
-      width: 200,
-      ...getColumnSorterProps('phone', 4),
-      ...getColumnSearchProps('phone'),
+      ...getColumnSearchProps(['first_name', 'last_name']),
     },
     {
       title: 'Code',
       dataIndex: 'code',
-      width: 150,
+      width: 70,
       ...getColumnSorterProps('code', 5),
-      ...getColumnSearchProps('code'),
+      ...getColumnSearchProps(['code']),
+    },
+    {
+      title: t(UsersMessages.listEmailTitle()),
+      dataIndex: 'email',
+      width: 150,
+      ...getColumnSorterProps('email', 3),
+      ...getColumnSearchProps(['email']),
+    },
+    {
+      title: 'Phone Number',
+      dataIndex: 'phone',
+      width: 80,
+      ...getColumnSorterProps('phone', 4),
+      ...getColumnSearchProps(['phone']),
     },
     {
       title: 'Tags',
       dataIndex: 'tags',
-      width: 250,
+      width: 120,
       render: (text, record: Employee, index: number) => {
         return (
           <>
@@ -216,56 +380,24 @@ export const Users: React.FC = () => {
     {
       title: 'Type',
       dataIndex: 'type',
-      width: 130,
+      width: 50,
     },
     {
       title: 'Status',
       dataIndex: 'status',
-      width: 130,
+      width: 50,
     },
     {
       title: t(UsersMessages.listOptionsTitle()),
       dataIndex: 'id',
-      width: 130,
+      width: 40,
       fixed: 'right',
       render: (text, record: Employee, index: number) => {
         return (
           <>
-            <Tooltip title={t(UsersMessages.listViewTooltip())}>
-              <IconButton
-                type="primary"
-                shape="circle"
-                size="small"
-                icon={<EyeOutlined />}
-                onClick={() => {
-                  history.push(`/employees/${text}`);
-                }}
-              />
-            </Tooltip>
-            <Tooltip title={t(UsersMessages.listEditTooltip())}>
-              <IconButton
-                shape="circle"
-                icon={<EditOutlined />}
-                size="small"
-                onClick={() => {
-                  history.push({
-                    pathname: '/employees/' + text,
-                    state: { edit: true },
-                  });
-                }}
-              />
-            </Tooltip>
-            <Tooltip title={t(UsersMessages.listDeleteTooltip())}>
-              <IconButton
-                danger
-                shape="circle"
-                size="small"
-                icon={<DeleteOutlined />}
-                onClick={() => {
-                  setDeleteModal({ open: true, id: text });
-                }}
-              />
-            </Tooltip>
+            <Popover content={() => moreButton(text)} placement="bottom">
+              <IconButton shape="circle" size="small" icon={<MoreOutlined />} />
+            </Popover>
           </>
         );
       },
@@ -278,21 +410,22 @@ export const Users: React.FC = () => {
         <title>{t(UsersMessages.title())}</title>
         <meta name="description" content={t(UsersMessages.description())} />
       </Helmet>
-      <h1>{t(UsersMessages.title())}</h1>
-      <Collapse
-        style={{ margin: '1em 0 1em 0' }}
-        defaultActiveKey={getUserListState.params.search ? ['1'] : []}
-      >
-        <Panel header={t(UsersMessages.searchTitle())} key="1">
-          <SearchUsers
-            form={searchForm}
-            value={getUserListState.params.search}
-            loading={getUserListState.loading ? true : false}
-            onSearch={totalSearch}
-            onReset={resetTotalSearch}
-          />
-        </Panel>
-      </Collapse>
+      <Wrapper>
+        <Row align="middle" justify="space-between">
+          <Col>
+            <PageTitle>{t(UsersMessages.title())}</PageTitle>
+          </Col>
+          <Col span={8}>
+            <SearchUsers
+              form={searchForm}
+              value={getUserListState.params.search}
+              loading={getUserListState.loading ? true : false}
+              onSearch={totalSearch}
+              onReset={resetTotalSearch}
+            />
+          </Col>
+        </Row>
+      </Wrapper>
       {isMobileOnly ? (
         <UserList
           loading={getUserListState.loading ? true : false}
@@ -302,56 +435,65 @@ export const Users: React.FC = () => {
           onDelete={(id: string) => setDeleteModal({ open: true, id: id })}
         />
       ) : (
-        <Row align="middle" justify="center">
-          <Col span={12}>
-            <Row justify="start">
-              <Button
-                danger
-                size="large"
-                disabled={
-                  !getUserListState?.selectedRowKeys?.length ||
-                  getUserListState?.selectedRowKeys?.length === 0
-                }
-                onClick={() => {
-                  console.log('Call Deleted');
-                }}
-              >
-                Delete {getUserListState?.selectedRowKeys?.length || 0} data
-              </Button>
-            </Row>
-          </Col>
-          <Col span={12}>
-            <HeaderButton
-              pagination={getUserListState.pagination}
-              data={getUserListState.users}
-              selectedRows={getUserListState.selectedRows}
-            />
-          </Col>
-          <Col span={24}>
-            <Table
-              rowSelection={{
-                selectedRowKeys: getUserListState.selectedRowKeys,
-                onChange: handleSelectedRows,
-              }}
-              columns={columns}
-              rowKey="id"
-              dataSource={getUserListState.users}
-              pagination={{
-                ...getUserListState.pagination,
-                onChange: (page: number, pageSize?: number) => {
-                  setPagination({ current: page, pageSize });
-                },
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                pageSizeOptions: ['10', '20', '50', '100'],
-                showSizeChanger: true,
-              }}
-              loading={getUserListState.loading}
-              onChange={handleTableChange}
-              scroll={{ x: 2000 }}
-            />
-          </Col>
-        </Row>
+        <Wrapper>
+          <Row align="middle" justify="center">
+            <Col span={12}>
+              <Row justify="start">
+                <Button
+                  danger
+                  size="large"
+                  disabled={
+                    !getUserListState?.selectedRowKeys?.length ||
+                    getUserListState?.selectedRowKeys?.length === 0
+                  }
+                  icon={<DeleteOutlined />}
+                  onClick={() => {
+                    console.log('Call Deleted');
+                  }}
+                />
+              </Row>
+            </Col>
+            <Col span={12}>
+              <HeaderButton
+                pagination={getUserListState.pagination}
+                data={getUserListState.users}
+                selectedRows={getUserListState.selectedRows}
+              />
+            </Col>
+            <Col span={24}>
+              <TableWrapper>
+                <Table
+                  rowSelection={{
+                    selectedRowKeys: getUserListState.selectedRowKeys,
+                    onChange: handleSelectedRows,
+                  }}
+                  columns={columns}
+                  rowKey="id"
+                  dataSource={getUserListState.users}
+                  pagination={{
+                    ...getUserListState.pagination,
+                    onChange: (page: number, pageSize?: number) => {
+                      setPagination({ current: page, pageSize });
+                    },
+                    showTotal: (total, range) => (
+                      <div>
+                        Showing{' '}
+                        <span>
+                          {range[0]}-{range[1]}
+                        </span>{' '}
+                        of {total} items
+                      </div>
+                    ),
+                    pageSizeOptions: ['10', '20', '50', '100'],
+                    showSizeChanger: true,
+                  }}
+                  loading={getUserListState.loading}
+                  onChange={handleTableChange}
+                />
+              </TableWrapper>
+            </Col>
+          </Row>
+        </Wrapper>
       )}
       <DeleteModal
         open={deleteModal.open}
@@ -374,5 +516,28 @@ const IconButton = styled(Button)`
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+  }
+`;
+
+const Wrapper = styled.div`
+  background-color: white;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  border-radius: 12px;
+`;
+
+const TableWrapper = styled.div`
+  .ant-pagination-options {
+    order: -1;
+    margin-right: 1em;
+    margin-left: 0;
+  }
+
+  .ant-pagination-total-text {
+    margin-inline-end: auto;
+    span {
+      color: blue;
+    }
   }
 `;
