@@ -24,9 +24,9 @@ import { request } from 'utils/request';
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 interface HeaderButtonProps {
-  pagination: TablePaginationConfig;
+  pagination?: TablePaginationConfig;
   data?: Employee[];
-  selectedRows: Employee[];
+  selectedRows?: Employee[];
 }
 
 export const HeaderButton = (props: HeaderButtonProps) => {
@@ -115,7 +115,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
       <Col span={24}>
         <Button block>
           <CSVLink
-            filename={'users-page-' + pagination.current + '.csv'}
+            filename={'users-page-' + pagination?.current + '.csv'}
             data={data}
           >
             {t(UsersMessages.exportPerPage())}
@@ -123,7 +123,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         </Button>
       </Col>
       <Col span={24}>
-        <Button block disabled={selectedRows.length === 0}>
+        <Button block disabled={selectedRows?.length === 0}>
           <CSVLink filename={'users-page-select.csv'} data={selectedRows}>
             {t(UsersMessages.exportSelected())}
           </CSVLink>
