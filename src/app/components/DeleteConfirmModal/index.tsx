@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Modal, Button, Input, Form } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { messages } from './messages';
+import { RuleObject } from 'rc-field-form/lib/interface';
 
 const layout = {
   labelCol: { span: 8 },
@@ -21,6 +22,7 @@ export const DeleteConfirmModal = (props: Props) => {
   const { handleCancel, handleOk, title, description, answer, visible } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const [disabledButton, setDisabledButton] = React.useState(true);
   const defaultParam = {
     titleDefault: `${t(messages.deleteModalTitle())}`,
     descriptionDefault: `${t(messages.deleteModalDesc())}`,
@@ -29,7 +31,22 @@ export const DeleteConfirmModal = (props: Props) => {
 
   useEffect(() => {
     form.resetFields();
+    setDisabledButton(true);
   }, [form, visible]);
+
+  const validateAnswer = (
+    rule: RuleObject,
+    value: string,
+    callback: (message?: string) => void,
+  ) => {
+    if (value === (answer || defaultParam.answerDefault)) {
+      setDisabledButton(false);
+      callback();
+    } else {
+      setDisabledButton(true);
+      callback();
+    }
+  };
 
   return (
     <Modal
@@ -45,6 +62,7 @@ export const DeleteConfirmModal = (props: Props) => {
           danger
           form="deleteConfirmModal"
           htmlType="submit"
+          disabled={disabledButton}
         >
           {t(messages.deleteModalDelete())}
         </Button>,
@@ -70,17 +88,9 @@ export const DeleteConfirmModal = (props: Props) => {
               required: true,
               message: `${t(messages.deleteModalIsRequired())}`,
             },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (
-                  !value ||
-                  getFieldValue('confirmDelete') ===
-                    (answer || defaultParam.answerDefault)
-                ) {
-                  return Promise.resolve();
-                }
-              },
-            }),
+            {
+              validator: validateAnswer,
+            },
           ]}
         >
           <Input
