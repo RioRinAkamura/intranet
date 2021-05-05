@@ -275,10 +275,21 @@
       }
     }
   },
+  "deleteConfirmModal": {
+    "title": "Delete",
+    "desc": "This will permanently delete and cannot be undone.",
+    "answer": "DO IT",
+    "isRequired": "(*) This field is required",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "success": "Delete Success",
+    "failed": "Delete Failed",
+    "typeEmail": "Type email address below to delete your employee"
+  },
   "UsersPage": {
-    "title": "User Page",
-    "description": "User Page",
-    "createUserButton": "Create User",
+    "title": "Employees Page",
+    "description": "Employees Page",
+    "createUserButton": "Create Employee",
     "exportCSV": "Export as CSV",
     "exportAllUser": "Export as CSV for all",
     "exportPerPage": "Export as CSV this page",
@@ -286,6 +297,7 @@
     "importCSV": "Import CSV",
     "list": {
       "avatar": "Avatar",
+      "name": "Name",
       "firstName": "First Name",
       "lastName": "Last Name",
       "email": "Email",
@@ -298,8 +310,7 @@
         "searchButton": "Search",
         "resetButton": "Reset",
         "filterButton": "Filter"
-      },
-      "name": "Name"
+      }
     },
     "search": {
       "title": "Search",
@@ -311,9 +322,9 @@
       "resetButton": "Reset"
     },
     "modal": {
-      "createTitle": "Create User",
-      "editTitle": "Edit User",
-      "profileTitle": "User Profile",
+      "createTitle": "Create Employee",
+      "editTitle": "Edit Employee",
+      "profileTitle": "Employee Profile",
       "previewCSVTitle": "Preview Import File",
       "form": {
         "deleteButton": "Delete",
@@ -321,34 +332,6 @@
         "cancelButton": "Cancel",
         "submitButton": "Save"
       }
-    },
-    "ForgotPasswordPage": {
-      "title": "Forgot Password",
-      "description": "Forgot Password Page",
-      "form": {
-        "title": "Forgot Your Password?",
-        "description": "Enter your registered email below to receive password reset instruction.",
-        "email": {
-          "label": "Email Address",
-          "placeholder": "Your email",
-          "invalid": "Your email is invalid!",
-          "empty": "Please input your email address!"
-        },
-        "forgotButton": "Send Request",
-        "backButton": "Back to login page"
-      }
     }
-  },
-  "deleteConfirmModal": {
-    "title": "Delete",
-    "desc": "This will permanently delete and cannot be undone.",
-    "answer": "DO IT",
-    "isRequired":"(*) This field is required",
-    "delete":"Delete",
-    "cancel":"Cancel",
-    "success":"Delete Success",
-    "failed":"Delete Failed",
-    "typeEmail":"Type email address below to delete your employee"
-
   }
 }
