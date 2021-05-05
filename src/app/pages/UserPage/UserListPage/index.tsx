@@ -12,7 +12,7 @@ import {
   Input,
   Space,
 } from 'antd';
-import React, { Key, useEffect, useState } from 'react';
+import React, { Key, useCallback, useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
@@ -89,11 +89,15 @@ export const Users: React.FC = () => {
     }
   }, [getUserListState.filterColumns]);
 
-  useEffect(() => {
+  const fetchUsers = useCallback(() => {
     if (!isFilter) {
       dispatch(actions.fetchUsers({ params: params }));
     }
   }, [actions, dispatch, isFilter, params]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
@@ -362,7 +366,9 @@ export const Users: React.FC = () => {
   const columns: ColumnProps<Employee>[] = [
     {
       dataIndex: 'avatar',
-      width: 40,
+      width: 25,
+      align: 'center',
+      className: 'avatar',
       render: (text, record: Employee) => (
         <Avatar
           size={50}
@@ -454,11 +460,11 @@ export const Users: React.FC = () => {
         <meta name="description" content={t(UsersMessages.description())} />
       </Helmet>
       <Wrapper>
-        <Row align="middle" justify="space-between">
-          <Col>
+        <Row gutter={[16, 16]} align="middle" justify="space-between">
+          <Col sm={16} xs={24}>
             <PageTitle>{t(UsersMessages.title())}</PageTitle>
           </Col>
-          <Col span={8}>
+          <Col sm={8} xs={24}>
             <SearchUsers
               form={searchForm}
               value={getUserListState.params.search}
@@ -486,20 +492,21 @@ export const Users: React.FC = () => {
           <Row align="middle" justify="center">
             <Col span={8}>
               <Row justify="start">
-                {getUserListState!.selectedRowKeys!.length > 0 && (
-                  <Button
-                    danger
-                    size="large"
-                    disabled={
-                      !getUserListState?.selectedRowKeys?.length ||
-                      getUserListState?.selectedRowKeys?.length === 0
-                    }
-                    icon={<DeleteOutlined />}
-                    onClick={() => {
-                      console.log('Call Deleted');
-                    }}
-                  />
-                )}
+                {getUserListState.selectedRowKeys &&
+                  getUserListState.selectedRowKeys.length > 0 && (
+                    <Button
+                      danger
+                      size="large"
+                      disabled={
+                        !getUserListState?.selectedRowKeys?.length ||
+                        getUserListState?.selectedRowKeys?.length === 0
+                      }
+                      icon={<DeleteOutlined />}
+                      onClick={() => {
+                        console.log('Call Deleted');
+                      }}
+                    />
+                  )}
               </Row>
             </Col>
             <Col span={16}>
@@ -513,6 +520,7 @@ export const Users: React.FC = () => {
               <TableWrapper>
                 <Table
                   rowSelection={{
+                    columnWidth: 20,
                     selectedRowKeys: getUserListState.selectedRowKeys,
                     onChange: handleSelectedRows,
                   }}
@@ -538,6 +546,7 @@ export const Users: React.FC = () => {
                   }}
                   loading={getUserListState.loading}
                   onChange={handleTableChange}
+                  scroll={{ x: 1200 }}
                 />
               </TableWrapper>
             </Col>
@@ -577,6 +586,10 @@ const Wrapper = styled.div`
 `;
 
 const TableWrapper = styled.div`
+  .avatar {
+    padding: 1em 0;
+  }
+
   .ant-pagination-options {
     order: -1;
     margin-right: 1em;

@@ -22,7 +22,11 @@ import { UsersMessages } from '../../messages';
 import { CSVLink } from 'react-csv';
 import { request } from 'utils/request';
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
-import { ExportOutlined, ImportOutlined, UserAddOutlined } from '@ant-design/icons';
+import {
+  ExportOutlined,
+  ImportOutlined,
+  UserAddOutlined,
+} from '@ant-design/icons';
 
 interface HeaderButtonProps {
   pagination?: TablePaginationConfig;
@@ -117,14 +121,17 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         <Button block>
           <CSVLink
             filename={'users-page-' + pagination?.current + '.csv'}
-            data={data || []}
+            data={data}
           >
             {t(UsersMessages.exportPerPage())}
           </CSVLink>
         </Button>
       </Col>
       <Col span={24}>
-        <Button block disabled={selectedRows && selectedRows?.length === 0}>
+        <Button
+          block
+          disabled={selectedRows && selectedRows?.length > 0 ? false : true}
+        >
           <CSVLink filename={'users-page-select.csv'} data={selectedRows || []}>
             {t(UsersMessages.exportSelected())}
           </CSVLink>

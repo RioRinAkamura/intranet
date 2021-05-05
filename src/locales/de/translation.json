@@ -20,21 +20,21 @@
     "someThing": "default value"
   },
   "changPassword": {
-    "title": "",
-    "cancel": "",
-    "oldPassword": "",
-    "newPassword": "",
-    "retypePassword": "",
-    "isRequired": "",
-    "minLength": "",
-    "complexPassword": "",
-    "isNotMatch": "",
-    "changePassSuccess": "",
-    "changePassFailed": "",
-    "wrongOldPassword": "",
-    "inputOldPassword": "",
-    "inputNewPassword": "",
-    "inputRetypePassword": ""
+    "title": "Change Password",
+    "cancel": "Cancel",
+    "oldPassword": "Old Password",
+    "newPassword": "New Password",
+    "retypePassword": "Confirm Password",
+    "isRequired": "(*) This field is required",
+    "minLength": "(*) Min length 8",
+    "complexPassword": "(*) Password includes letters, digits, capital characters, special characters, at least 8 characters",
+    "isNotMatch": "(*) The two passwords that you entered do not match!",
+    "changePassSuccess": "Change password success",
+    "changePassFailed": "Change password failed",
+    "wrongOldPassword": "Wrong Old Password",
+    "inputOldPassword": "Please input old password!",
+    "inputNewPassword": "Please input new password!",
+    "inputRetypePassword": "Please input retype password!"
   },
   "ForgotPasswordPage": {
     "title": "Forgot Password",
@@ -274,6 +274,17 @@
         "sucess": "Update employee successfully"
       }
     }
+  },
+  "deleteConfirmModal": {
+    "title": "Delete",
+    "desc": "This will permanently delete and cannot be undone.",
+    "answer": "DO IT",
+    "isRequired": "(*) This field is required",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "success": "Delete Success",
+    "failed": "Delete Failed",
+    "typeEmail": "Type email address below to delete your employee"
   },
   "UsersPage": {
     "title": "Employees Page",
