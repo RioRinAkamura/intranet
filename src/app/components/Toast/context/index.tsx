@@ -3,19 +3,21 @@ import { PlacementType, toastTypes, MessageType } from '..';
 
 interface ToastContextValues {
   data: toastTypes;
-  setDataToast: (data: toastTypes | null) => void;
+  clicked: boolean;
+  setDataToast: (clicked: boolean, message?: toastTypes) => void;
 }
 
 export const ToastContext = React.createContext<ToastContextValues>({
   data: {
-    type: MessageType.Success,
+    type: 'success',
     message: 'Toast Title',
     duration: 2000,
-    placement: PlacementType.Bottom,
+    placement: 'bottom',
     style: {},
     closable: false,
   },
-  setDataToast: (_data: toastTypes | null) => {},
+  clicked: false,
+  setDataToast: (_clicked: boolean, _message?: toastTypes) => {},
 });
 
 const useToastContextProvider = (): ToastContextValues => {
@@ -28,15 +30,19 @@ const useToastContextProvider = (): ToastContextValues => {
     closable: false,
   });
 
+  const [clicked, setClicked] = React.useState<boolean>(false);
+
   const setDataToast = React.useCallback(
-    (newData: toastTypes | null) => {
-      setData({ ...data, ...newData });
+    (clicked: boolean, message?: toastTypes) => {
+      setData({ ...data, ...message });
+      setClicked(clicked);
     },
-    [data],
+    [],
   );
 
   return {
     data,
+    clicked,
     setDataToast,
   };
 };

@@ -1,17 +1,24 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import Toast, { toastTypes } from '.';
 import { ToastContext } from './context';
 
-export const useToast = () => {
-  const { setDataToast, data } = useContext(ToastContext);
-  console.log('data', data);
+interface ToastHook {
+  message: (message?: toastTypes) => void;
+}
 
-  const toast = (props?: toastTypes) => {
-    if (props) {
-      setDataToast(props);
+export const useToast = (): ToastHook => {
+  const { setDataToast, data, clicked } = useContext(ToastContext);
+  useEffect(() => {
+    if (clicked) {
+      Toast(data);
     }
-    return Toast();
+  }, [data, clicked]);
+  const message = (message?: toastTypes): void => {
+    if (message) {
+      setDataToast(true, message);
+    } else {
+      setDataToast(true);
+    }
   };
-
-  return { toast };
+  return { message };
 };

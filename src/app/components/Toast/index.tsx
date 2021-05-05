@@ -36,118 +36,93 @@ export interface toastTypes {
 interface Itheme {
   background?: string;
 }
-const defaultProps = {
-  type: MessageType.Success,
-  message: 'Toast Title',
-  duration: 2000,
-  placement: PlacementType.Bottom,
-  style: {},
-  closable: false,
-};
 
-const Toast = (props?: toastTypes): any => {
-  if (!props) {
-    props = defaultProps;
-  } else {
-    const newProps = { ...props };
-    props = { ...defaultProps, ...newProps };
-  }
-  let count = document.getElementsByClassName('toast-box');
-
-  const getContainer = () => {
-    const body = document.body;
-
-    const container = document.createElement('div');
-
-    const div = document.createElement('div');
-
-    div.classList.add('toast-box');
-
-    if (props?.placement) {
-      div.classList.add(props.placement);
-    }
-
-    container.appendChild(div);
-
-    body.appendChild(container);
-
-    return container;
-  };
-
-  const Toast = () => {
-    return (
-      <NotificationBox
-        className={props?.className}
-        style={props?.style}
-        background={props?.type}
-      >
-        <LabelTitle>
-          <NotificationMessage>
-            <ToastIconType>{renderTypeIcon(props?.type)}</ToastIconType>
-            <ToastMessage>{props?.message}</ToastMessage>
-          </NotificationMessage>
-          {props?.closable && (
-            <CloseOutlined
-              style={{
-                fontSize: '15px',
-                marginTop: '2px',
-                color: 'rgba(0,0,0,.45)',
-              }}
-            />
-          )}
-        </LabelTitle>
-      </NotificationBox>
-    );
-  };
-
-  const renderTypeIcon = (type: MessageType | undefined | string) => {
-    switch (type) {
-      case MessageType.Success:
-        return <CheckCircleOutlined style={{ fontSize: '25px' }} />;
-      case MessageType.Info:
-        return <InfoCircleOutlined style={{ fontSize: '25px' }} />;
-      case MessageType.Warn:
-        return <ExclamationCircleOutlined style={{ fontSize: '25px' }} />;
-      case MessageType.Error:
-        return <CloseCircleOutlined style={{ fontSize: '25px' }} />;
-      default:
-        break;
-    }
-  };
-
-  let newElement = document.createElement('div');
-
-  const close = (el: HTMLDivElement) => {
-    setTimeout(() => {
-      if (el) {
-        document.getElementsByClassName('toast-box')[0].parentElement?.remove();
-        ReactDOM.unmountComponentAtNode(el);
-        el.remove();
+const Toast = (props: toastTypes) => {
+  if (props) {
+    let count = document.getElementsByClassName('toast-box');
+    const getContainer = () => {
+      const body = document.body;
+      const container = document.createElement('div');
+      const div = document.createElement('div');
+      div.classList.add('toast-box');
+      if (props?.placement) {
+        div.classList.add(props.placement);
       }
-    }, ANIMATION_TIME);
-  };
-
-  const renderToast = () => {
-    if (count.length === 0) {
-      const container = getContainer();
-      ReactDOM.render(Toast(), newElement, () => {
-        container
-          .getElementsByClassName('toast-box')[0]
-          .appendChild(newElement);
-
-        if (props?.duration && props?.duration > 0) {
-          setTimeout(() => {
-            close(newElement);
-          }, props?.duration);
+      container.appendChild(div);
+      body.appendChild(container);
+      return container;
+    };
+    const Toast = () => {
+      return (
+        <ToastBox
+          className={props?.className}
+          style={props?.style}
+          background={props?.type}
+        >
+          <LabelTitle>
+            <ToastLabel>
+              <ToastIconType>{renderTypeIcon(props?.type)}</ToastIconType>
+              <ToastMessage>{props?.message}</ToastMessage>
+            </ToastLabel>
+            {props?.closable && (
+              <CloseOutlined
+                style={{
+                  fontSize: '15px',
+                  marginTop: '2px',
+                  color: 'rgba(0,0,0,.45)',
+                }}
+              />
+            )}
+          </LabelTitle>
+        </ToastBox>
+      );
+    };
+    const renderTypeIcon = (type: MessageType | undefined | string) => {
+      switch (type) {
+        case MessageType.Success:
+          return <CheckCircleOutlined style={{ fontSize: '25px' }} />;
+        case MessageType.Info:
+          return <InfoCircleOutlined style={{ fontSize: '25px' }} />;
+        case MessageType.Warn:
+          return <ExclamationCircleOutlined style={{ fontSize: '25px' }} />;
+        case MessageType.Error:
+          return <CloseCircleOutlined style={{ fontSize: '25px' }} />;
+        default:
+          break;
+      }
+    };
+    let newElement = document.createElement('div');
+    const close = (el: HTMLDivElement) => {
+      setTimeout(() => {
+        if (el) {
+          document
+            .getElementsByClassName('toast-box')[0]
+            .parentElement?.remove();
+          ReactDOM.unmountComponentAtNode(el);
+          el.remove();
         }
-      });
-    }
-  };
-
-  return renderToast();
+      }, ANIMATION_TIME);
+    };
+    const renderToast = () => {
+      if (count.length === 0) {
+        const container = getContainer();
+        ReactDOM.render(Toast(), newElement, () => {
+          container
+            .getElementsByClassName('toast-box')[0]
+            .appendChild(newElement);
+          if (props?.duration && props?.duration > 0) {
+            setTimeout(() => {
+              close(newElement);
+            }, props?.duration);
+          }
+        });
+      }
+    };
+    return renderToast();
+  }
 };
 
-const NotificationBox = styled.div`
+const ToastBox = styled.div`
   padding: 10px 24px;
   line-height: 1.5715;
   position: relative;
@@ -172,7 +147,7 @@ const NotificationBox = styled.div`
   }};
 `;
 
-const NotificationMessage = styled.div`
+const ToastLabel = styled.div`
   width: 100%;
   text-align: center;
   font-size: 15px;

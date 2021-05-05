@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   LineChartOutlined,
   MenuFoldOutlined,
@@ -11,10 +11,11 @@ import styled from 'styled-components/macro';
 import { BadgeList } from '../BadgeList';
 import { NavList } from '../NavList';
 import { NavItem } from '../NavList/NavItem';
-import { useNotify, MessageType, PlacementType } from '../Notification';
+// import { useNotify, MessageType, PlacementType } from '../Notification';
 import { Logo } from '../Sidebar/Logo';
-import Toast from '../Toast';
+import Toast, { toastTypes, PlacementType } from '../Toast';
 import { useToast } from '../Toast/useToast';
+import { ToastContext } from '../Toast/context';
 
 interface Props {
   collapsed: boolean;
@@ -22,10 +23,14 @@ interface Props {
 }
 
 const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
-  const { notify } = useNotify();
-  const { toast } = useToast();
+  // const { notify } = useNotify();
+  const { message } = useToast();
 
   const openNotification = () => {
+    message({
+      placement: PlacementType.Top,
+    });
+
     // notify({
     //   type: MessageType.Error,
     //   message: 'Add User Infor',
@@ -37,7 +42,9 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
     //       'lightblue url("https://designshack.net/wp-content/uploads/abstract-background.jpg") no-repeat fixed center',
     //   },
     // });
-    return toast();
+    // await toast({
+    //   duration: 0,
+    // });
   };
   return (
     <>
