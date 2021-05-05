@@ -6,50 +6,40 @@
 import React, { memo } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Button, Col, Form, FormInstance, Input, Row } from 'antd';
+import { Col, Form, FormInstance, Input, Row } from 'antd';
 import { UsersMessages } from '../../messages';
-
+import { SearchOutlined } from '@ant-design/icons';
 interface Props {
   onSearch: () => void;
   onReset: () => void;
   form: FormInstance;
+  value?: string;
   loading: boolean;
 }
 
 export const SearchUsers = memo((props: Props) => {
-  const { form, onSearch, onReset, loading } = props;
+  const { form, onSearch, onReset, value } = props;
   const { t } = useTranslation();
 
   return (
-    <Form
-      form={form}
-      labelCol={{ xxl: 6, xl: 8, lg: 6, md: 8, xs: 6 }}
-      wrapperCol={{ xxl: 18, xl: 16, lg: 18, md: 16, xs: 18 }}
-    >
-      <Row gutter={[8, 8]}>
-        <Col xl={6} lg={12} md={12} sm={24} xs={24}>
-          <FormItem name="search" label={t(UsersMessages.searchLabel())}>
-            <Input placeholder={t(UsersMessages.searchPlaceholder())} />
+    <Form form={form}>
+      <Row gutter={[8, 8]} align="middle" justify="end">
+        <Col xl={18} lg={24} md={24} sm={24} xs={24}>
+          <FormItem name="search" initialValue={value}>
+            <Input
+              placeholder={t(UsersMessages.searchPlaceholder())}
+              allowClear
+              size="large"
+              onChange={e => e.type === 'click' && onReset()}
+              onPressEnter={onSearch}
+              suffix={
+                <SearchOutlined
+                  style={{ color: '#1890ff', fontSize: 'x-large' }}
+                  onClick={onSearch}
+                />
+              }
+            />
           </FormItem>
-        </Col>
-        <Col>
-          <Row gutter={[8, 8]} justify="end">
-            <Col>
-              <Button
-                loading={loading}
-                type="primary"
-                htmlType="submit"
-                onClick={onSearch}
-              >
-                {t(UsersMessages.searchSearchButton())}
-              </Button>
-            </Col>
-            <Col>
-              <Button loading={loading} onClick={onReset}>
-                {t(UsersMessages.searchResetButton())}
-              </Button>
-            </Col>
-          </Row>
         </Col>
       </Row>
     </Form>
@@ -57,6 +47,8 @@ export const SearchUsers = memo((props: Props) => {
 });
 
 const FormItem = styled(Form.Item)`
+  padding: 0;
+  margin: 0;
   div {
     width: 100%;
   }

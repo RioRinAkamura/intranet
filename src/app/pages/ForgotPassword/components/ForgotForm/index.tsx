@@ -60,7 +60,9 @@ export const ForgotForm: React.FC = () => {
         </FormItem>
         <LoginPath>
           Did you remember your password?{' '}
-          <a href="/login">{t(ForgotPageMessages.backtButton())}</a>
+          <div>
+            <a href="/login">{t(ForgotPageMessages.backtButton())}</a>
+          </div>
         </LoginPath>
       </Form>
     </Wrapper>

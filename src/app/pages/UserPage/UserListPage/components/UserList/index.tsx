@@ -23,7 +23,7 @@ interface Props {
   data: Employee[];
   isMore: boolean;
   moreLoading: boolean;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, user: Employee) => void;
 }
 
 export const UserList = React.memo((props: Props) => {
@@ -86,7 +86,7 @@ export const UserList = React.memo((props: Props) => {
                       danger
                       shape="circle"
                       icon={<DeleteOutlined />}
-                      onClick={() => onDelete(user.id)}
+                      onClick={() => onDelete(user.id, user)}
                     />
                   </Col>
                 </Row>
