@@ -42,7 +42,6 @@ export const ResetForm: React.FC = () => {
         callback();
       }
     } else {
-      console.log('callback value1 false');
       callback();
     }
   };

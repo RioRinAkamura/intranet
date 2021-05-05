@@ -18,6 +18,8 @@ import {
 } from 'antd';
 import { UserDetailMessages } from '../../messages';
 import { TitlePath } from '../TitlePath';
+import { RuleObject } from 'rc-field-form/lib/interface';
+import moment from 'moment';
 
 interface ProfileInfoProps {
   isView?: boolean;
@@ -40,6 +42,22 @@ const datePickerProps: DatePickerProps = {
 export const ProfileInfo = (props: ProfileInfoProps) => {
   const { isView, isEdit } = props;
   const { t } = useTranslation();
+
+  const validateDob = (
+    rule: RuleObject,
+    value: string,
+    callback: (message?: string) => void,
+  ) => {
+    if (value) {
+      if (moment().diff(value, 'year') < 16) {
+        callback(t(UserDetailMessages.formInvalidDOB()));
+      } else {
+        callback();
+      }
+    } else {
+      callback();
+    }
+  };
 
   return (
     <>
@@ -97,6 +115,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                           required: true,
                           message: t(UserDetailMessages.formEmptyDOB()),
                         },
+                        { validator: validateDob },
                       ]
                 }
               >

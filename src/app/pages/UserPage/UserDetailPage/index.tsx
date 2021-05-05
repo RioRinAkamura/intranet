@@ -21,11 +21,14 @@ import { AvatarPath } from './components/AvatarPath/Loadable';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
 import { AddBankModal } from './components/AddBankModal/Loadable';
 import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
 
 interface Props {}
 interface LocationState {
   edit: boolean;
 }
+
+type Employee = models.hr.Employee;
 
 export function UserDetailPage(props: Props) {
   const { id } = useParams<Record<string, string>>();
@@ -35,23 +38,32 @@ export function UserDetailPage(props: Props) {
   const history = useHistory();
 
   const { user } = useGetUserDetail(id);
-  const { update, loading } = useUpdateUserDetail();
+  const { create, update, loading } = useUpdateUserDetail();
 
+  const [data, setData] = React.useState<Employee>();
   const [isCreate, setIsCreate] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
+
+  const isView = isCreate || isEdit ? false : true;
 
   const dateFormat = 'YYYY-MM-DD';
 
   React.useEffect(() => {
     if (user) {
+      setData(user);
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    if (data) {
       form.setFieldsValue({
-        ...user,
-        id: user.id,
-        dob: user.dob && moment(user.dob, dateFormat),
-        issued_date: user.issued_date && moment(user.issued_date, dateFormat),
+        ...data,
+        id: data.id,
+        dob: data.dob && moment(data.dob, dateFormat),
+        issued_date: data.issued_date && moment(data.issued_date, dateFormat),
       });
     }
-  }, [form, user]);
+  }, [data, form, isEdit]);
 
   React.useEffect(() => {
     if (!history.location.pathname.includes('create')) {
@@ -71,8 +83,6 @@ export function UserDetailPage(props: Props) {
     }
   }, [history, location]);
 
-  const isView = isCreate || isEdit ? false : true;
-
   const handleSubmit = () => {
     form
       .validateFields()
@@ -83,8 +93,14 @@ export function UserDetailPage(props: Props) {
           delete values.email;
           const response = await update(values);
           if (response) {
+            setData(response);
             setIsEdit(false);
           }
+        }
+        if (isCreate) {
+          values.password1 = '123456@aA';
+          values.password2 = '123456@aA';
+          await create(values);
         }
       })
       .catch(err => console.log(err));
@@ -111,7 +127,7 @@ export function UserDetailPage(props: Props) {
               <Row gutter={[32, 32]}>
                 <LeftScreen md={5}>
                   <AvatarPath
-                    user={user}
+                    user={data}
                     isView={isView}
                     isEdit={isEdit}
                     form={form}
@@ -129,7 +145,7 @@ export function UserDetailPage(props: Props) {
               <Row gutter={[32, 32]}>
                 <LeftScreen md={5}>
                   <AvatarPath
-                    user={user}
+                    user={data}
                     isView={isView}
                     isEdit={isEdit}
                     form={form}

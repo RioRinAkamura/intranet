@@ -85,16 +85,7 @@ export const AvatarPath = memo((props: Props) => {
       <Row gutter={[32, 32]} align="middle">
         <Col span={24}>
           <WrapperAvatar>
-            <FormItemAvatar
-              name="avatar"
-              valuePropName="file"
-              rules={[
-                {
-                  required: true,
-                  message: t(UserDetailMessages.formEmptyAvatar()),
-                },
-              ]}
-            >
+            <FormItemAvatar name="avatar" valuePropName="file">
               <Avatar
                 src={user?.avatar || imageURL}
                 alt="avatar"

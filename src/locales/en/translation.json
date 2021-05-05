@@ -129,7 +129,8 @@
           "DOB": {
             "label": "Date of Birth",
             "placeholder": "Select Employee DOB",
-            "empty": "Please Enter Employee Date of Birth!"
+            "empty": "Please Enter Employee Date of Birth!",
+            "invalid": "Only allow 16+ years old!"
           },
           "gender": {
             "label": "Gender",
