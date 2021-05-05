@@ -3,15 +3,8 @@
  * HeaderButton
  *
  */
-import {
-  Avatar,
-  Button,
-  Col,
-  Popover,
-  Row,
-  Table,
-  TablePaginationConfig,
-} from 'antd';
+import { Button, Col, Popover, Row, Table, TablePaginationConfig } from 'antd';
+import { Avatar } from 'app/components/Avatar/Loadable';
 import { DialogModal } from 'app/components/DialogModal';
 import * as React from 'react';
 import CSVReader from 'react-csv-reader';
@@ -78,6 +71,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
           size={100}
           src={text}
           alt={record.first_name + ' ' + record.last_name}
+          name={record.first_name + ' ' + record.last_name}
         />
       ),
     },

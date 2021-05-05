@@ -1,4 +1,5 @@
-import { Avatar, Col, DatePicker, Row, Table } from 'antd';
+import { Col, DatePicker, Row, Table } from 'antd';
+import { Avatar } from 'app/components/Avatar/Loadable';
 import { CardWrapper } from 'app/components/CardWrapper';
 import { PageTitle } from 'app/components/PageTitle';
 import moment from 'moment';
@@ -10,7 +11,7 @@ export const PerformanceEmployees = () => {
     {
       dataIndex: 'avatar',
       key: 'avatar',
-      render: text => <Avatar src={text} />,
+      render: text => <Avatar src={text} name={''} />,
     },
     {
       title: 'NAME',
