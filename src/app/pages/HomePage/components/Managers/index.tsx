@@ -1,4 +1,5 @@
-import { Avatar, Col, Row } from 'antd';
+import { Col, Row } from 'antd';
+import { Avatar } from 'app/components/Avatar/Loadable';
 import { CardWrapper } from 'app/components/CardWrapper';
 import { PageTitle } from 'app/components/PageTitle';
 import * as React from 'react';
@@ -50,7 +51,12 @@ export const Managers = () => {
             managers.map(manager => {
               return (
                 <Col>
-                  <Avatar src={manager.avatar} size={130} />
+                  <Avatar
+                    src={manager.avatar}
+                    size={130}
+                    alt={manager.name}
+                    name={manager.name}
+                  />
                   <Info>
                     <Name>{manager.name}</Name>
                     <Role>{manager.role}</Role>

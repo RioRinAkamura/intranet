@@ -7,7 +7,6 @@ import React, { memo, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import {
-  Avatar,
   Button,
   Col,
   Form,
@@ -18,6 +17,7 @@ import {
   Row,
   Upload,
 } from 'antd';
+import { Avatar } from 'app/components/Avatar/Loadable';
 import { UserDetailMessages } from '../../messages';
 import { CameraOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/lib/upload';
@@ -91,6 +91,7 @@ export const AvatarPath = memo((props: Props) => {
                 alt="avatar"
                 icon={!isView && <CameraOutlined />}
                 size={170}
+                name={user?.first_name + ' ' + user?.last_name}
               />
             </FormItemAvatar>
             {!isView && (
@@ -181,6 +182,9 @@ const WrapperAvatar = styled.div`
   width: 100%;
   background-color: #f5f5f5;
   padding: 1em;
+  .ant-avatar-string {
+    font-size: 44px;
+  }
 `;
 
 const WrapperUpload = styled.div`
