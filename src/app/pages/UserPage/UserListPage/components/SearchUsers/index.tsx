@@ -3,7 +3,7 @@
  * SearchUsers
  *
  */
-import React, { memo, useEffect } from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { Button, Col, Form, FormInstance, Input, Row } from 'antd';
