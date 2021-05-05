@@ -5,13 +5,13 @@ import {
   Table,
   Form,
   TablePaginationConfig,
-  Avatar,
   Tag,
   Tooltip,
   Popover,
   Input,
   Space,
 } from 'antd';
+import { Avatar } from 'app/components/Avatar/Loadable';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
@@ -374,6 +374,7 @@ export const Users: React.FC = () => {
           size={50}
           src={text}
           alt={record.first_name + ' ' + record.last_name}
+          name={record.first_name + ' ' + record.last_name}
         />
       ),
     },
