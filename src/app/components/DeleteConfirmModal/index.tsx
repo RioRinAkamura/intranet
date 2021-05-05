@@ -31,6 +31,7 @@ export const DeleteConfirmModal = (props: Props) => {
 
   useEffect(() => {
     form.resetFields();
+    setDisabledButton(true);
   }, [form, visible]);
 
   const validateAnswer = (
