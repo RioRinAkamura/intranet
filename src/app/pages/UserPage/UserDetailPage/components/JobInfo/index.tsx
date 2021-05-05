@@ -151,6 +151,10 @@ const WrapperSelect = styled(Select)`
     overflow-y: auto;
     overflow-x: hidden;
   }
+
+  #tags {
+    display: ${(props: ScreenProps) => (props.isView ? 'none' : 'block')};
+  }
 `;
 
 const FormItem = styled(Form.Item)`
