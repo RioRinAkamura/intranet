@@ -83,12 +83,6 @@ export const Users: React.FC = () => {
     resetFilter,
   } = useHandleDataTable(getUserListState, actions);
 
-  const fetchUsers = React.useCallback(async () => {
-    if (!isFilter) {
-      dispatch(actions.fetchUsers({ params: params }));
-    }
-  }, [actions, dispatch, isFilter, params]);
-
   useEffect(() => {
     if (getUserListState.filterColumns) {
       setSelectedKeys(prev => ({ ...prev, ...getUserListState.filterColumns }));
@@ -96,8 +90,10 @@ export const Users: React.FC = () => {
   }, [getUserListState.filterColumns]);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    if (!isFilter) {
+      dispatch(actions.fetchUsers({ params: params }));
+    }
+  }, [actions, dispatch, isFilter, params]);
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
@@ -130,9 +126,9 @@ export const Users: React.FC = () => {
 
   const descriptionDelete = (
     <p>
-      You're about to permanently delete your user{' '}
+      You're about to permanently delete your employee{' '}
       <strong>{`${deleteEmployee?.email}`}</strong>. This will also delete any
-      references to your user.
+      references to your employee.
     </p>
   );
 
@@ -551,7 +547,7 @@ export const Users: React.FC = () => {
         visible={isModalVisible}
         handleOk={handleConfirmDelete}
         handleCancel={handleCancelDeleteModal}
-        title={`Remove ${deleteEmployee?.first_name} ${deleteEmployee?.last_name} from the team`}
+        title={`Remove ${deleteEmployee?.first_name} ${deleteEmployee?.last_name}`}
         description={descriptionDelete}
         answer={`${deleteEmployee?.email}`}
       />

@@ -57,6 +57,7 @@ export const DeleteConfirmModal = (props: Props) => {
         {...layout}
         form={form}
         name="basic"
+        wrapperCol={{ span: 24 }}
         initialValues={{ remember: true }}
         onFinish={handleOk}
         id="deleteConfirmModal"

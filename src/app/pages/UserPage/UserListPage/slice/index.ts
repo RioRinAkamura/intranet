@@ -93,22 +93,20 @@ const slice = createSlice({
       state.params.page = action.payload.current;
     },
     deleteUser(state, action: PayloadAction<string>) {
-      state.loading = true;
+      state.isFilter = true;
       state.deleteSuccess = false;
       state.deleteFailed = false;
     },
     deleteUserSuccess(state) {
-      state.loading = false;
+      state.isFilter = false;
       state.deleteSuccess = true;
       state.deleteFailed = false;
     },
     deleteUserFailure(state) {
-      state.loading = false;
       state.deleteSuccess = false;
       state.deleteFailed = true;
     },
     resetStateDeleteModal(state) {
-      state.loading = false;
       state.deleteSuccess = false;
       state.deleteFailed = false;
     },
