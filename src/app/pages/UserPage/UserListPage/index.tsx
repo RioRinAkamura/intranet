@@ -13,7 +13,6 @@ import {
   Space,
 } from 'antd';
 import React, { Key, useEffect, useState } from 'react';
-import { DeleteModal } from 'app/components/DeleteModal';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
@@ -44,6 +43,9 @@ import {
 import { PageTitle } from 'app/components/PageTitle';
 import { has } from 'lodash';
 import Highlighter from 'react-highlight-words';
+import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import { RootState } from 'types';
+import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 
 type Employee = models.hr.Employee;
 
@@ -54,9 +56,15 @@ export const Users: React.FC = () => {
   const [moreLoading, setMoreLoading] = useState(true);
   const [userList, setUserList] = useState<Employee[]>([]);
   const [isMore, setIsMore] = useState(true);
-  const [deleteModal, setDeleteModal] = useState({ open: false, id: '' });
+  const { notify } = useNotify();
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [searchForm] = Form.useForm();
+  const [idUserDelete, setIdUserDelete] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [deleteEmployee, setDeleteEmployee] = useState<Employee>();
+  const deleteModalState = useSelector((state: RootState) => state.userspage);
+  const deleteSuccess = deleteModalState?.deleteSuccess;
+  const deleteFailed = deleteModalState?.deleteFailed;
 
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
@@ -75,12 +83,6 @@ export const Users: React.FC = () => {
     resetFilter,
   } = useHandleDataTable(getUserListState, actions);
 
-  const fetchUsers = React.useCallback(async () => {
-    if (!isFilter) {
-      dispatch(actions.fetchUsers({ params: params }));
-    }
-  }, [actions, dispatch, isFilter, params]);
-
   useEffect(() => {
     if (getUserListState.filterColumns) {
       setSelectedKeys(prev => ({ ...prev, ...getUserListState.filterColumns }));
@@ -88,8 +90,47 @@ export const Users: React.FC = () => {
   }, [getUserListState.filterColumns]);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    if (!isFilter) {
+      dispatch(actions.fetchUsers({ params: params }));
+    }
+  }, [actions, dispatch, isFilter, params]);
+
+  const showDeleteModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setIsModalVisible(false);
+    dispatch(actions.deleteUser(idUserDelete));
+  };
+
+  const handleCancelDeleteModal = () => {
+    setIsModalVisible(false);
+  };
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      notify({
+        type: ToastMessageType.Info,
+        message: 'Delete Success',
+        duration: 2,
+      });
+    } else if (deleteFailed) {
+      notify({
+        type: ToastMessageType.Error,
+        message: 'Delete Failed',
+        duration: 2,
+      });
+    }
+  }, [deleteFailed, deleteModalState, deleteSuccess, notify]);
+
+  const descriptionDelete = (
+    <p>
+      You're about to permanently delete your employee{' '}
+      <strong>{`${deleteEmployee?.email}`}</strong>. This will also delete any
+      references to your employee.
+    </p>
+  );
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -149,8 +190,6 @@ export const Users: React.FC = () => {
     searchForm.setFieldsValue({ search: undefined });
     resetSearch();
   };
-
-  const handleDelete = () => {};
 
   const handleSearch = (dataIndex: string, confirm: () => void) => {
     setFilterText(dataIndex, selectedKeys[dataIndex]);
@@ -278,7 +317,7 @@ export const Users: React.FC = () => {
     setSelectedRows(selectedRowKeys, selectedRows);
   };
 
-  const moreButton = (text: string) => (
+  const moreButton = (text: string, record: Employee) => (
     <>
       <Tooltip title={t(UsersMessages.listViewTooltip())}>
         <IconButton
@@ -311,7 +350,9 @@ export const Users: React.FC = () => {
           size="small"
           icon={<DeleteOutlined />}
           onClick={() => {
-            setDeleteModal({ open: true, id: text });
+            showDeleteModal();
+            setIdUserDelete(text);
+            setDeleteEmployee(record);
           }}
         />
       </Tooltip>
@@ -395,7 +436,10 @@ export const Users: React.FC = () => {
       render: (text, record: Employee, index: number) => {
         return (
           <>
-            <Popover content={() => moreButton(text)} placement="bottom">
+            <Popover
+              content={() => moreButton(text, record)}
+              placement="bottom"
+            >
               <IconButton shape="circle" size="small" icon={<MoreOutlined />} />
             </Popover>
           </>
@@ -432,7 +476,11 @@ export const Users: React.FC = () => {
           data={userList}
           isMore={isMore}
           moreLoading={moreLoading}
-          onDelete={(id: string) => setDeleteModal({ open: true, id: id })}
+          onDelete={(id: string, user: Employee) => {
+            showDeleteModal();
+            setIdUserDelete(id);
+            setDeleteEmployee(user);
+          }}
         />
       ) : (
         <Wrapper>
@@ -495,13 +543,13 @@ export const Users: React.FC = () => {
           </Row>
         </Wrapper>
       )}
-      <DeleteModal
-        open={deleteModal.open}
-        cancelText={t(UsersMessages.modalFormCancelButton())}
-        deleteText={t(UsersMessages.modalFormDeleteButton())}
-        content={t(UsersMessages.modalFormDeleteContent())}
-        handleCancel={() => setDeleteModal({ open: false, id: '' })}
-        handleDelete={handleDelete}
+      <DeleteConfirmModal
+        visible={isModalVisible}
+        handleOk={handleConfirmDelete}
+        handleCancel={handleCancelDeleteModal}
+        title={`Remove ${deleteEmployee?.first_name} ${deleteEmployee?.last_name}`}
+        description={descriptionDelete}
+        answer={`${deleteEmployee?.email}`}
       />
     </>
   );

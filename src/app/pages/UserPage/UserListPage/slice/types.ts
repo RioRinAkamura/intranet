@@ -14,6 +14,8 @@ export interface UserspageState {
   filterColumns?: FilterColumns;
   selectedRowKeys?: Key[];
   selectedRows?: Employee[];
+  deleteSuccess?: boolean;
+  deleteFailed?: boolean;
 }
 
 export interface FilterColumns {

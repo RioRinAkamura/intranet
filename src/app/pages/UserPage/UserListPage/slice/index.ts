@@ -9,6 +9,8 @@ import { Pagination } from '../../types';
 export const initialState: UserspageState = {
   users: [],
   loading: false,
+  deleteSuccess: false,
+  deleteFailed: false,
   isFilter: true,
   params: {
     limit: 20,
@@ -89,6 +91,24 @@ const slice = createSlice({
     setPagination(state, action: PayloadAction<Pagination>) {
       state.params.limit = action.payload.pageSize;
       state.params.page = action.payload.current;
+    },
+    deleteUser(state, action: PayloadAction<string>) {
+      state.isFilter = true;
+      state.deleteSuccess = false;
+      state.deleteFailed = false;
+    },
+    deleteUserSuccess(state) {
+      state.isFilter = false;
+      state.deleteSuccess = true;
+      state.deleteFailed = false;
+    },
+    deleteUserFailure(state) {
+      state.deleteSuccess = false;
+      state.deleteFailed = true;
+    },
+    resetStateDeleteModal(state) {
+      state.deleteSuccess = false;
+      state.deleteFailed = false;
     },
   },
 });
