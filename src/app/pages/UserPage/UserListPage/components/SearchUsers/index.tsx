@@ -3,13 +3,11 @@
  * SearchUsers
  *
  */
-import React, { memo, useEffect } from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Button, Col, Form, FormInstance, Input, Row } from 'antd';
+import { Col, Form, FormInstance, Input, Row } from 'antd';
 import { UsersMessages } from '../../messages';
-import { SearchOutlined } from '@ant-design/icons';
-
 interface Props {
   onSearch: () => void;
   onReset: () => void;
@@ -23,40 +21,19 @@ export const SearchUsers = memo((props: Props) => {
   const { t } = useTranslation();
 
   return (
-    <Form form={form}>
-      <Row gutter={[8, 8]} align="middle">
-        <Col xl={18} lg={12} md={12} sm={24} xs={24}>
+    <Form form={form} onFinish={onSearch}>
+      <Row gutter={[8, 8]} align="middle" justify="end">
+        <Col xl={18} lg={24} md={24} sm={24} xs={24}>
           <FormItem name="search" initialValue={value}>
-            <Input
-              prefix={
-                <SearchOutlined
-                  style={{
-                    fontSize: 'xx-large',
-                    color: 'rgb(112 112 112)',
-                  }}
-                />
-              }
-              size="large"
-              bordered={false}
+            <Input.Search
               placeholder={t(UsersMessages.searchPlaceholder())}
               allowClear
+              size="large"
               onChange={e => e.type === 'click' && onReset()}
+              enterButton
+              loading={loading}
             />
           </FormItem>
-        </Col>
-        <Col>
-          <Row gutter={[8, 8]} justify="end">
-            <Col>
-              <Button
-                loading={loading}
-                type="primary"
-                htmlType="submit"
-                onClick={onSearch}
-              >
-                {t(UsersMessages.searchSearchButton())}
-              </Button>
-            </Col>
-          </Row>
         </Col>
       </Row>
     </Form>

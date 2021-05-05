@@ -320,7 +320,6 @@ export const Users: React.FC = () => {
 
   const columns: ColumnProps<Employee>[] = [
     {
-      title: t(UsersMessages.listAvatarTitle()),
       dataIndex: 'avatar',
       width: 40,
       render: (text, record: Employee) => (
@@ -437,23 +436,25 @@ export const Users: React.FC = () => {
       ) : (
         <Wrapper>
           <Row align="middle" justify="center">
-            <Col span={12}>
+            <Col span={8}>
               <Row justify="start">
-                <Button
-                  danger
-                  size="large"
-                  disabled={
-                    !getUserListState?.selectedRowKeys?.length ||
-                    getUserListState?.selectedRowKeys?.length === 0
-                  }
-                  icon={<DeleteOutlined />}
-                  onClick={() => {
-                    console.log('Call Deleted');
-                  }}
-                />
+                {getUserListState!.selectedRowKeys!.length > 0 && (
+                  <Button
+                    danger
+                    size="large"
+                    disabled={
+                      !getUserListState?.selectedRowKeys?.length ||
+                      getUserListState?.selectedRowKeys?.length === 0
+                    }
+                    icon={<DeleteOutlined />}
+                    onClick={() => {
+                      console.log('Call Deleted');
+                    }}
+                  />
+                )}
               </Row>
             </Col>
-            <Col span={12}>
+            <Col span={16}>
               <HeaderButton
                 pagination={getUserListState.pagination}
                 data={getUserListState.users}

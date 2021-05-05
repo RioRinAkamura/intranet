@@ -7,10 +7,10 @@ import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
 export const UsersMessages = {
-  title: () => _t(translations.UsersPage.title, 'User Page'),
-  description: () => _t(translations.UsersPage.description, 'User Page'),
+  title: () => _t(translations.UsersPage.title, 'Employees Page'),
+  description: () => _t(translations.UsersPage.description, 'Employees Page'),
   createUserButton: () =>
-    _t(translations.UsersPage.createUserButton, 'Create User'),
+    _t(translations.UsersPage.createUserButton, 'Create Employee'),
   exportCSV: () => _t(translations.UsersPage.exportCSV, 'Export as CSV'),
   exportAllUser: () =>
     _t(translations.UsersPage.exportAllUser, 'Export as CSV for all'),
@@ -54,10 +54,11 @@ export const UsersMessages = {
   searchResetButton: () =>
     _t(translations.UsersPage.search.resetButton, 'Reset'),
   modalCreateTitle: () =>
-    _t(translations.UsersPage.modal.createTitle, 'Create User'),
-  modalEditTitle: () => _t(translations.UsersPage.modal.editTitle, 'Edit User'),
+    _t(translations.UsersPage.modal.createTitle, 'Create Employee'),
+  modalEditTitle: () =>
+    _t(translations.UsersPage.modal.editTitle, 'Edit Employee'),
   modalProfileTitle: () =>
-    _t(translations.UsersPage.modal.profileTitle, 'User Profile'),
+    _t(translations.UsersPage.modal.profileTitle, 'Employee Profile'),
   modalPreviewCSVTitle: () =>
     _t(translations.UsersPage.modal.previewCSVTitle, 'Preview Import File'),
   modalFormDeleteButton: () =>
