@@ -8,7 +8,7 @@ const apiConfig = {
   authSessionKey: 'AUTH_SESSION_KEY',
   session: sessionStorage,
   socketUrl: 'http://template-ws.dev.goldfishcode.com',
-  enableCache: false,
+  enableCache: true,
 };
 
 const client = createApiClient(apiConfig);
