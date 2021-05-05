@@ -298,7 +298,8 @@
         "searchButton": "Search",
         "resetButton": "Reset",
         "filterButton": "Filter"
-      }
+      },
+      "name": "Name"
     },
     "search": {
       "title": "Search",
