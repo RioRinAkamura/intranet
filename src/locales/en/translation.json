@@ -322,5 +322,17 @@
         "submitButton": "Save"
       }
     }
+  },
+  "deleteConfirmModal": {
+    "title": "Delete",
+    "desc": "This will permanently delete and cannot be undone.",
+    "answer": "DO IT",
+    "isRequired":"(*) This field is required",
+    "delete":"Delete",
+    "cancel":"Cancel",
+    "success":"Delete Success",
+    "failed":"Delete Failed",
+    "typeEmail":"Type email address below to delete your employee"
+
   }
 }
