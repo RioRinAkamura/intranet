@@ -42,7 +42,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
               <Link to="/">Dashboard</Link>
             </Menu.Item>
             <Menu.Item key="/employees" icon={<TeamOutlined />}>
-              <Link to="/employees">Employess</Link>
+              <Link to="/employees">Employees</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<ContainerOutlined />}>
               Option 3
@@ -86,7 +86,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
               <Link to="/">Dashboard</Link>
             </Menu.Item>
             <Menu.Item key="/employees" icon={<TeamOutlined />}>
-              <Link to="/employees">Employess</Link>
+              <Link to="/employees">Employees</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<ContainerOutlined />}>
               Option 3

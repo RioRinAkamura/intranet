@@ -5,13 +5,13 @@ import {
   Table,
   Form,
   TablePaginationConfig,
-  Avatar,
   Tag,
   Tooltip,
   Popover,
   Input,
   Space,
 } from 'antd';
+import { Avatar } from 'app/components/Avatar/Loadable';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
@@ -65,6 +65,7 @@ export const Users: React.FC = () => {
   const deleteModalState = useSelector((state: RootState) => state.userspage);
   const deleteSuccess = deleteModalState?.deleteSuccess;
   const deleteFailed = deleteModalState?.deleteFailed;
+  const [textCopy, setTextCopy] = useState(false);
 
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
@@ -131,8 +132,23 @@ export const Users: React.FC = () => {
   const descriptionDelete = (
     <p>
       You're about to permanently delete your employee{' '}
-      <strong>{`${deleteEmployee?.email}`}</strong>. This will also delete any
-      references to your employee.
+      <Tooltip
+        title={<div>{textCopy ? 'Copied!' : 'Click to copy!'}</div>}
+        onVisibleChange={visible => visible === true && setTextCopy(false)}
+      >
+        <strong
+          id="deletedEmail"
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            let copyText = document.getElementById('deletedEmail')?.innerText;
+            if (copyText) {
+              navigator.clipboard.writeText(copyText);
+              setTextCopy(true);
+            }
+          }}
+        >{`${deleteEmployee?.email}`}</strong>
+      </Tooltip>
+      . This will also delete any references to your employee.
     </p>
   );
 
@@ -374,6 +390,7 @@ export const Users: React.FC = () => {
           size={50}
           src={text}
           alt={record.first_name + ' ' + record.last_name}
+          name={record.first_name + ' ' + record.last_name}
         />
       ),
     },
