@@ -1,5 +1,4 @@
-import { Col, DatePicker, Row, Table } from 'antd';
-import { Avatar } from 'app/components/Avatar/Loadable';
+import { Avatar, Col, DatePicker, Row, Table } from 'antd';
 import { CardWrapper } from 'app/components/CardWrapper';
 import { PageTitle } from 'app/components/PageTitle';
 import moment from 'moment';
@@ -11,7 +10,7 @@ export const NewEmployees = () => {
     {
       dataIndex: 'avatar',
       key: 'avatar',
-      render: text => <Avatar src={text} name={''} />,
+      render: text => <Avatar src={text} size={50} />,
     },
     {
       title: 'NAME',
@@ -81,13 +80,13 @@ export const NewEmployees = () => {
   return (
     <>
       <CardWrapper
-        mainHeight="463px"
-        bodyHeight="385px"
+        mainheight="500px"
+        bodyheight="435px"
         title={
           <>
             <Row justify="space-between">
               <Col>
-                <PageTitle>Top Performance Employees</PageTitle>
+                <PageTitle>New Employees</PageTitle>
               </Col>
               <Col>
                 <CustomDatePicker
@@ -103,7 +102,12 @@ export const NewEmployees = () => {
           </>
         }
       >
-        <Table dataSource={data} columns={columns} pagination={false} />
+        <Table
+          dataSource={data}
+          rowKey="id"
+          columns={columns}
+          pagination={false}
+        />
       </CardWrapper>
     </>
   );

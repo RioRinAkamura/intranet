@@ -7,8 +7,8 @@ import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
 export const UsersMessages = {
-  title: () => _t(translations.UsersPage.title, 'Employees Page'),
-  description: () => _t(translations.UsersPage.description, 'Employees Page'),
+  title: () => _t(translations.UsersPage.title, 'Employees'),
+  description: () => _t(translations.UsersPage.description, 'Employees'),
   createUserButton: () =>
     _t(translations.UsersPage.createUserButton, 'Create Employee'),
   exportCSV: () => _t(translations.UsersPage.exportCSV, 'Export as CSV'),
