@@ -36,6 +36,7 @@ export interface toastTypes {
 interface Itheme {
   placement?: string;
   duration?: number | null;
+  background?: string;
 }
 
 const Toast = (props: toastTypes | any) => {
@@ -68,27 +69,33 @@ const Toast = (props: toastTypes | any) => {
         <ToastBox
           className={props?.className}
           style={props?.style}
+          background={props?.type}
           duration={formatDuration()}
           placement={props?.placement}
         >
           <LabelTitle>
             <ToastLabel>
-              <ToastIconType>{renderTypeIcon(props?.type)}</ToastIconType>
+              {/* <ToastIconType>{renderTypeIcon(props?.type)}</ToastIconType> */}
               <ToastMessage>{props?.message}</ToastMessage>
             </ToastLabel>
             {props?.closable && (
               <CloseOutlined
                 style={{
-                  fontSize: '15px',
-                  marginTop: '2px',
-                  color: 'rgba(0,0,0,.45)',
+                  fontSize: 'large',
+                  marginTop: '3px',
+                  color: '#fff',
                 }}
+                onClick={onClickRemoveToast}
               />
             )}
           </LabelTitle>
         </ToastBox>
       );
     };
+    const onClickRemoveToast = () => {
+      close();
+    };
+
     const renderTypeIcon = (type: MessageType | undefined | string) => {
       switch (type) {
         case MessageType.Success:
@@ -118,16 +125,15 @@ const Toast = (props: toastTypes | any) => {
       }
     };
     let newElement = document.createElement('div');
-    const close = (el: HTMLDivElement) => {
-      setTimeout(() => {
-        if (el) {
-          document
-            .getElementsByClassName('toast-box')[0]
-            .parentElement?.remove();
-          ReactDOM.unmountComponentAtNode(el);
-          el.remove();
-        }
-      }, ANIMATION_TIME);
+    const close = () => {
+      if (document.getElementsByClassName('toast-box')[0] !== undefined) {
+        setTimeout(() => {
+          document.getElementsByClassName('toast-box')[0].parentElement &&
+            document
+              .getElementsByClassName('toast-box')[0]
+              .parentElement?.remove();
+        }, ANIMATION_TIME);
+      }
     };
     const renderToast = () => {
       if (count.length === 0) {
@@ -138,7 +144,7 @@ const Toast = (props: toastTypes | any) => {
             .appendChild(newElement);
           if (props?.duration && props?.duration > 0) {
             setTimeout(() => {
-              close(newElement);
+              close();
             }, props?.duration);
           }
         });
@@ -152,31 +158,42 @@ const ToastBox = styled.div`
   padding: 10px 24px;
   line-height: 1.5715;
   position: relative;
-  width: 200px;
+  width: 100%;
   overflow: hidden;
   word-wrap: break-word;
   border-radius: 2px;
   box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%),
     0 9px 28px 8px rgb(0 0 0 / 5%);
-  background-color: #fff;
+  background-color: ${(props: Itheme) => {
+    switch (props.background) {
+      case MessageType.Success:
+        return '#52c41a';
+      case MessageType.Warn:
+        return '#faad14';
+      case MessageType.Info:
+        return '#08c';
+      case MessageType.Error:
+        return '#f46b6b';
+    }
+  }};
   animation: ${(props: Itheme) => props.placement + 'start'} 0.5s
     ${(props: Itheme) =>
       props.duration &&
       ', ' + props.placement + 'destroy 0.5s ' + props.duration + 's'};
   @keyframes topstart {
     from {
-      top: -200px;
+      top: -20px;
     }
     to {
-      top: 2px;
+      top: 0px;
     }
   }
   @keyframes topdestroy {
     from {
-      top: 2px;
+      top: 0px;
     }
     to {
-      top: -200px;
+      top: -20px;
     }
   }
   @keyframes bottomstart {

@@ -50,7 +50,7 @@ export const GlobalStyle = createGlobalStyle`
     text-align: -webkit-center;
     box-sizing: border-box;
     padding: 0;
-    color: rgba(0,0,0,.85);
+    color: #fff;
     font-size: 14px;
     font-variant: tabular-nums;
     line-height: 1.5715;
@@ -60,11 +60,11 @@ export const GlobalStyle = createGlobalStyle`
     z-index: 1010;
   }
     & .top {
-      top:15px;
+      top:120px;
       left: 0px;
     }
     & .bottom {
-      bottom:15px;
+      bottom:0px;
       left: 0px;
     }
 

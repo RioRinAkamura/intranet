@@ -15,6 +15,7 @@ import { NavItem } from '../NavList/NavItem';
 import { Logo } from '../Sidebar/Logo';
 import { PlacementType, MessageType } from '../Toast';
 import { useToast } from '../Toast/useToast';
+import TestComponent from '../Toast/testComponet';
 
 interface Props {
   collapsed: boolean;
@@ -28,6 +29,11 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
     message({
       type: MessageType.Success,
       placement: PlacementType.Top,
+      message: <TestComponent message={'message'} />,
+      // style: {
+      //   background:
+      //     'linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 100%, rgba(252,176,69,1) 100%)',
+      // },
       // className: 'customClassname',
     });
 

@@ -27,7 +27,7 @@ const useToastContextProvider = (): ToastContextValues => {
     duration: 2000,
     placement: PlacementType.Bottom,
     style: {},
-    closable: false,
+    closable: true,
   });
 
   const [clicked, setClicked] = React.useState<boolean>(false);
