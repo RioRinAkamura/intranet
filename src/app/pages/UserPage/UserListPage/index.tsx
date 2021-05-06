@@ -8,8 +8,6 @@ import {
   Tag,
   Tooltip,
   Popover,
-  Input,
-  Space,
 } from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import React, { Key, useCallback, useEffect, useState } from 'react';
@@ -28,7 +26,6 @@ import {
   EditOutlined,
   EyeOutlined,
   MoreOutlined,
-  SearchOutlined,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
@@ -41,11 +38,10 @@ import {
   selectUserspageParams,
 } from './slice/selectors';
 import { PageTitle } from 'app/components/PageTitle';
-import { has } from 'lodash';
-import Highlighter from 'react-highlight-words';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
+import { useTableConfig } from 'utils/tableConfig';
 
 type Employee = models.hr.Employee;
 
@@ -57,7 +53,6 @@ export const Users: React.FC = () => {
   const [userList, setUserList] = useState<Employee[]>([]);
   const [isMore, setIsMore] = useState(true);
   const { notify } = useNotify();
-  const [selectedKeys, setSelectedKeys] = useState([]);
   const [searchForm] = Form.useForm();
   const [idUserDelete, setIdUserDelete] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -84,11 +79,12 @@ export const Users: React.FC = () => {
     resetFilter,
   } = useHandleDataTable(getUserListState, actions);
 
-  useEffect(() => {
-    if (getUserListState.filterColumns) {
-      setSelectedKeys(prev => ({ ...prev, ...getUserListState.filterColumns }));
-    }
-  }, [getUserListState.filterColumns]);
+  const { getColumnSorterProps, getColumnSearchInputProps } = useTableConfig(
+    getUserListState,
+    UsersMessages,
+    setFilterText,
+    resetFilter,
+  );
 
   const fetchUsers = useCallback(() => {
     if (!isFilter) {
@@ -211,125 +207,6 @@ export const Users: React.FC = () => {
     resetSearch();
   };
 
-  const handleSearch = (dataIndex: string, confirm: () => void) => {
-    setFilterText(dataIndex, selectedKeys[dataIndex]);
-    confirm();
-  };
-
-  const handleReset = (dataIndex: string, confirm: () => void) => {
-    setSelectedKeys(prevState => ({
-      ...prevState,
-      [dataIndex]: undefined,
-    }));
-    resetFilter(dataIndex);
-    confirm();
-  };
-
-  const getColumnSorterProps = (dataIndex: string, columnPriority: number) => {
-    const ordering = {
-      sorter: {
-        multiple: columnPriority,
-      },
-    };
-    if (getUserListState.params.ordering) {
-      ordering['sortOrder'] = getUserListState.params.ordering.includes(
-        dataIndex,
-      )
-        ? getUserListState.params.ordering.includes('-' + dataIndex)
-          ? ('descend' as 'descend')
-          : ('ascend' as 'ascend')
-        : null;
-    } else if (getUserListState.params.ordering === '') {
-      ordering['sortOrder'] = null;
-    }
-    return ordering;
-  };
-
-  const getColumnSearchProps = (dataIndex: string[], filterIndex?: number) => ({
-    ellipsis: true,
-    filterDropdown: ({ confirm }) => {
-      return (
-        <div style={{ padding: 8 }}>
-          <Input
-            placeholder={`${t(
-              UsersMessages.filterInputPlaceholder(),
-            )} ${dataIndex}`}
-            value={selectedKeys[dataIndex[filterIndex || 0]]}
-            onChange={e => {
-              e.persist();
-              setSelectedKeys(prevState => ({
-                ...prevState,
-                [dataIndex[filterIndex || 0]]: e.target.value
-                  ? e.target.value
-                  : null,
-              }));
-            }}
-            onPressEnter={() =>
-              handleSearch(dataIndex[filterIndex || 0], confirm)
-            }
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
-          />
-          <Space>
-            <Button
-              type="primary"
-              onClick={() => handleSearch(dataIndex[filterIndex || 0], confirm)}
-              icon={<SearchOutlined />}
-              size="small"
-              style={{ width: 90 }}
-              loading={getUserListState.loading}
-            >
-              {t(UsersMessages.filterSearchButton())}
-            </Button>
-            <Button
-              onClick={() => handleReset(dataIndex[filterIndex || 0], confirm)}
-              size="small"
-              loading={getUserListState.loading}
-              style={{ width: 90 }}
-            >
-              {t(UsersMessages.filterResetButton())}
-            </Button>
-          </Space>
-        </div>
-      );
-    },
-    filterIcon: filtered => (
-      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex[filterIndex || 0]]
-        ? record[dataIndex[filterIndex || 0]]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
-        : '',
-    render: (text, record) => {
-      let dataText = '';
-      dataIndex.map(data => {
-        if (record[data]) {
-          dataText += record[data] + ' ';
-        }
-        return data;
-      });
-      return has(getUserListState.filterColumns, dataIndex[filterIndex || 0]) ||
-        (getUserListState.params.search &&
-          getUserListState.params.search.length > 0) ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[
-            getUserListState.filterColumns![dataIndex[filterIndex || 0]],
-            getUserListState.params.search &&
-              getUserListState.params.search.length > 0 &&
-              getUserListState.params.search,
-          ]}
-          autoEscape
-          textToHighlight={text ? dataText.trim().toString() : ''}
-        />
-      ) : (
-        dataText.trim()
-      );
-    },
-  });
-
   const handleSelectedRows = (
     selectedRowKeys: Key[],
     selectedRows: Employee[],
@@ -399,28 +276,28 @@ export const Users: React.FC = () => {
       dataIndex: 'first_name',
       width: 80,
       ...getColumnSorterProps('first_name', 1),
-      ...getColumnSearchProps(['first_name', 'last_name']),
+      ...getColumnSearchInputProps(['first_name', 'last_name']),
     },
     {
       title: 'Code',
       dataIndex: 'code',
       width: 70,
       ...getColumnSorterProps('code', 5),
-      ...getColumnSearchProps(['code']),
+      ...getColumnSearchInputProps(['code']),
     },
     {
       title: t(UsersMessages.listEmailTitle()),
       dataIndex: 'email',
       width: 150,
       ...getColumnSorterProps('email', 3),
-      ...getColumnSearchProps(['email']),
+      ...getColumnSearchInputProps(['email']),
     },
     {
       title: 'Phone Number',
       dataIndex: 'phone',
       width: 80,
       ...getColumnSorterProps('phone', 4),
-      ...getColumnSearchProps(['phone']),
+      ...getColumnSearchInputProps(['phone']),
     },
     {
       title: 'Tags',
