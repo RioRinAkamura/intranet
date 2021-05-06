@@ -77,7 +77,6 @@ const Toast = (props: toastTypes | any) => {
         >
           <LabelTitle>
             <ToastLabel>
-              {/* <ToastIconType>{renderTypeIcon(props?.type)}</ToastIconType> */}
               <ToastMessage>{props?.message}</ToastMessage>
             </ToastLabel>
             {props?.closable && (
@@ -96,35 +95,6 @@ const Toast = (props: toastTypes | any) => {
     };
     const onClickRemoveToast = () => {
       close();
-    };
-
-    const renderTypeIcon = (type: MessageType | undefined | string) => {
-      switch (type) {
-        case MessageType.Success:
-          return (
-            <CheckCircleOutlined
-              style={{ fontSize: '25px', color: '#52c41a' }}
-            />
-          );
-        case MessageType.Info:
-          return (
-            <InfoCircleOutlined style={{ fontSize: '25px', color: '#08c' }} />
-          );
-        case MessageType.Warn:
-          return (
-            <ExclamationCircleOutlined
-              style={{ fontSize: '25px', color: '#faad14' }}
-            />
-          );
-        case MessageType.Error:
-          return (
-            <CloseCircleOutlined
-              style={{ fontSize: '25px', color: '#ff4d4f' }}
-            />
-          );
-        default:
-          break;
-      }
     };
     let newElement = document.createElement('div');
     const close = () => {
@@ -228,10 +198,6 @@ const ToastLabel = styled.div`
 
 const LabelTitle = styled.div`
   display: flex;
-`;
-
-const ToastIconType = styled.span`
-  margin-right: 10px;
 `;
 
 const ToastMessage = styled.span`

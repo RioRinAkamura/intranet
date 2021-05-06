@@ -30,27 +30,7 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
       type: MessageType.Error,
       placement: PlacementType.Top,
       message: <TestComponent message={'message'} />,
-      // style: {
-      //   background:
-      //     'linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 100%, rgba(252,176,69,1) 100%)',
-      // },
-      // className: 'customClassname',
     });
-
-    // notify({
-    //   type: MessageType.Error,
-    //   message: 'Add User Infor',
-    //   description: 'quang',
-    //   placement: PlacementType.BottomLeft,
-    //   className: 'customClassname',
-    //   style: {
-    //     background:
-    //       'lightblue url("https://designshack.net/wp-content/uploads/abstract-background.jpg") no-repeat fixed center',
-    //   },
-    // });
-    // await toast({
-    //   duration: 0,
-    // });
   };
   return (
     <>
