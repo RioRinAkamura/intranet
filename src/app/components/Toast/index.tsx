@@ -40,13 +40,15 @@ interface Itheme {
 }
 
 const Toast = (props: toastTypes | any) => {
+  const idClass = Math.random();
   if (props) {
-    let count = document.getElementsByClassName('toast-box');
+    let count = document.getElementsByClassName(`toast-box-${idClass}`);
     const getContainer = () => {
       const body = document.body;
       const container = document.createElement('div');
       const div = document.createElement('div');
       div.classList.add('toast-box');
+      div.classList.add(`toast-box-${idClass}`);
       if (props?.placement) {
         div.classList.add(props.placement);
       }
@@ -126,11 +128,14 @@ const Toast = (props: toastTypes | any) => {
     };
     let newElement = document.createElement('div');
     const close = () => {
-      if (document.getElementsByClassName('toast-box')[0] !== undefined) {
+      if (
+        document.getElementsByClassName(`toast-box-${idClass}`)[0] !== undefined
+      ) {
         setTimeout(() => {
-          document.getElementsByClassName('toast-box')[0].parentElement &&
+          document.getElementsByClassName(`toast-box-${idClass}`)[0]
+            .parentElement &&
             document
-              .getElementsByClassName('toast-box')[0]
+              .getElementsByClassName(`toast-box-${idClass}`)[0]
               .parentElement?.remove();
         }, ANIMATION_TIME);
       }
@@ -140,7 +145,7 @@ const Toast = (props: toastTypes | any) => {
         const container = getContainer();
         ReactDOM.render(Toast(), newElement, () => {
           container
-            .getElementsByClassName('toast-box')[0]
+            .getElementsByClassName(`toast-box-${idClass}`)[0]
             .appendChild(newElement);
           if (props?.duration && props?.duration > 0) {
             setTimeout(() => {

@@ -27,7 +27,7 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
 
   const openNotification = () => {
     message({
-      type: MessageType.Success,
+      type: MessageType.Error,
       placement: PlacementType.Top,
       message: <TestComponent message={'message'} />,
       // style: {
