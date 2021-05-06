@@ -1,5 +1,4 @@
-import { Col, Row } from 'antd';
-import { Avatar } from 'app/components/Avatar/Loadable';
+import { Avatar, Col, Row } from 'antd';
 import { CardWrapper } from 'app/components/CardWrapper';
 import { PageTitle } from 'app/components/PageTitle';
 import * as React from 'react';
@@ -42,21 +41,16 @@ export const Managers = () => {
   return (
     <>
       <CardWrapper
-        mainHeight="328px"
-        bodyHeight="250px"
+        mainheight="328px"
+        bodyheight="250px"
         title={<PageTitle>Managers</PageTitle>}
       >
         <Row gutter={[32, 32]} align="middle" justify="space-between">
           {managers &&
             managers.map(manager => {
               return (
-                <Col>
-                  <Avatar
-                    src={manager.avatar}
-                    size={130}
-                    alt={manager.name}
-                    name={manager.name}
-                  />
+                <Col key={manager.id}>
+                  <Avatar src={manager.avatar} size={130} />
                   <Info>
                     <Name>{manager.name}</Name>
                     <Role>{manager.role}</Role>

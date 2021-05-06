@@ -13,16 +13,14 @@ import {
   FormInstance,
   Input,
   InputProps,
-  message,
   Row,
   Upload,
 } from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { UserDetailMessages } from '../../messages';
 import { CameraOutlined } from '@ant-design/icons';
-import { UploadChangeParam } from 'antd/lib/upload';
-import { UploadFile } from 'antd/lib/upload/interface';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { api } from 'utils/api';
 
 type Employee = models.hr.Employee;
 
@@ -38,27 +36,6 @@ const inputProps: InputProps = {
   readOnly: true,
 };
 
-const getBase64 = (img: Blob, callback: Function) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file: File) => {
-  const isJpgOrPng =
-    file.type === 'image/jpeg' ||
-    file.type === 'image/png' ||
-    file.type === 'image/jpg';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJpgOrPng && isLt2M;
-};
-
 export const AvatarPath = memo((props: Props) => {
   const { isView, form, user } = props;
   const { t } = useTranslation();
@@ -66,17 +43,22 @@ export const AvatarPath = memo((props: Props) => {
   const [imageURL, setImageURL] = useState('');
   const [loadingUpload, setLoadingUpload] = useState(false);
 
-  const handleChange = (info: UploadChangeParam<UploadFile<any>>) => {
-    if (info.file.status === 'uploading') {
-      setLoadingUpload(true);
-      return;
-    }
-    if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, imageURL => {
-        setImageURL(imageURL);
-        setLoadingUpload(false);
-        form.setFieldsValue({ avatar: imageURL });
+  const handleChange = async info => {
+    setLoadingUpload(true);
+    const formData = new FormData();
+    formData.append('file', info.file);
+    const response = await api.uploadFile.uploadImage(formData);
+    if (response) {
+      setLoadingUpload(false);
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        if (reader.result) {
+          setImageURL(reader.result.toString());
+        }
       });
+      reader.readAsDataURL(info.file);
+
+      form.setFieldsValue({ avatar: response.file_path });
     }
   };
 
@@ -100,8 +82,7 @@ export const AvatarPath = memo((props: Props) => {
                   name="avatar"
                   listType="picture"
                   showUploadList={false}
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  beforeUpload={beforeUpload}
+                  beforeUpload={() => false}
                   onChange={handleChange}
                   accept="image/png, image/jpeg, image/jpg"
                   disabled={isView}
@@ -156,13 +137,10 @@ const FormItemAvatar = styled(Form.Item)`
   div {
     text-align: center;
   }
-  #avatar {
-    background-color: white;
+  .ant-avatar {
     span {
       display: contents;
       svg {
-        font-size: 50px;
-        color: gray;
         margin-bottom: 10px;
       }
     }

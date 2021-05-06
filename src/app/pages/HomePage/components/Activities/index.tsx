@@ -36,17 +36,17 @@ export const Activities = () => {
   return (
     <>
       <CardWrapper
-        mainHeight="328px"
-        bodyHeight="250px"
+        mainheight="328px"
+        bodyheight="250px"
         title={<PageTitle>Activities</PageTitle>}
       >
         {data &&
           data.map(item => {
             return (
               <RowItem key={item.id} gutter={[32, 32]} align="middle">
-                <Col span={3}>{item.type}</Col>
-                <Col span={4}>{moment(item.date).format('D MMMM')}</Col>
-                <Col span={17}>{item.content}</Col>
+                <Col span={4}>{item.type}</Col>
+                <Col span={6}>{moment(item.date).format('D MMMM')}</Col>
+                <Col span={14}>{item.content}</Col>
               </RowItem>
             );
           })}

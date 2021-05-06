@@ -100,7 +100,7 @@ export function UserDetailPage(props: Props) {
         if (isCreate) {
           values.password1 = '123456@aA';
           values.password2 = '123456@aA';
-          await create(values);
+          create(values);
         }
       })
       .catch(err => console.log(err));

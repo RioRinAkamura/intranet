@@ -288,8 +288,8 @@
     "typeEmail": "Type email address below to delete your employee"
   },
   "UsersPage": {
-    "title": "Employees Page",
-    "description": "Employees Page",
+    "title": "Employees",
+    "description": "Employees",
     "createUserButton": "Create Employee",
     "exportCSV": "Export as CSV",
     "exportAllUser": "Export as CSV for all",
