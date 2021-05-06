@@ -71,7 +71,7 @@ export const AvatarPath = memo((props: Props) => {
               <Avatar
                 src={user?.avatar || imageURL}
                 alt="avatar"
-                icon={!isView && <CameraOutlined />}
+                icon={!isView && !user?.first_name && <CameraOutlined />}
                 size={170}
                 name={user?.first_name + ' ' + user?.last_name}
               />
