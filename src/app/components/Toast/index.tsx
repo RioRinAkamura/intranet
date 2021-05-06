@@ -34,10 +34,11 @@ export interface toastTypes {
 }
 
 interface Itheme {
-  background?: string;
+  placement?: string;
+  duration?: number | null;
 }
 
-const Toast = (props: toastTypes) => {
+const Toast = (props: toastTypes | any) => {
   if (props) {
     let count = document.getElementsByClassName('toast-box');
     const getContainer = () => {
@@ -52,12 +53,23 @@ const Toast = (props: toastTypes) => {
       body.appendChild(container);
       return container;
     };
+
+    const formatDuration = () => {
+      if (props?.duration > 0) {
+        const newDuration = props?.duration / 1000 - 0.2;
+        return newDuration;
+      } else {
+        return null;
+      }
+    };
+
     const Toast = () => {
       return (
         <ToastBox
           className={props?.className}
           style={props?.style}
-          background={props?.type}
+          duration={formatDuration()}
+          placement={props?.placement}
         >
           <LabelTitle>
             <ToastLabel>
@@ -80,13 +92,27 @@ const Toast = (props: toastTypes) => {
     const renderTypeIcon = (type: MessageType | undefined | string) => {
       switch (type) {
         case MessageType.Success:
-          return <CheckCircleOutlined style={{ fontSize: '25px' }} />;
+          return (
+            <CheckCircleOutlined
+              style={{ fontSize: '25px', color: '#52c41a' }}
+            />
+          );
         case MessageType.Info:
-          return <InfoCircleOutlined style={{ fontSize: '25px' }} />;
+          return (
+            <InfoCircleOutlined style={{ fontSize: '25px', color: '#08c' }} />
+          );
         case MessageType.Warn:
-          return <ExclamationCircleOutlined style={{ fontSize: '25px' }} />;
+          return (
+            <ExclamationCircleOutlined
+              style={{ fontSize: '25px', color: '#faad14' }}
+            />
+          );
         case MessageType.Error:
-          return <CloseCircleOutlined style={{ fontSize: '25px' }} />;
+          return (
+            <CloseCircleOutlined
+              style={{ fontSize: '25px', color: '#ff4d4f' }}
+            />
+          );
         default:
           break;
       }
@@ -126,25 +152,49 @@ const ToastBox = styled.div`
   padding: 10px 24px;
   line-height: 1.5715;
   position: relative;
-  width: 100%;
-  margin-left: auto;
+  width: 200px;
   overflow: hidden;
   word-wrap: break-word;
   border-radius: 2px;
   box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%),
     0 9px 28px 8px rgb(0 0 0 / 5%);
-  background-color: ${(props: Itheme) => {
-    switch (props.background) {
-      case MessageType.Success:
-        return '#52c41a';
-      case MessageType.Warn:
-        return '#faad14';
-      case MessageType.Info:
-        return '#08c';
-      case MessageType.Error:
-        return '#f46b6b';
+  background-color: #fff;
+  animation: ${(props: Itheme) => props.placement + 'start'} 0.5s
+    ${(props: Itheme) =>
+      props.duration &&
+      ', ' + props.placement + 'destroy 0.5s ' + props.duration + 's'};
+  @keyframes topstart {
+    from {
+      top: -200px;
     }
-  }};
+    to {
+      top: 2px;
+    }
+  }
+  @keyframes topdestroy {
+    from {
+      top: 2px;
+    }
+    to {
+      top: -200px;
+    }
+  }
+  @keyframes bottomstart {
+    from {
+      bottom: -200px;
+    }
+    to {
+      bottom: 2px;
+    }
+  }
+  @keyframes bottomdestroy {
+    from {
+      bottom: 2px;
+    }
+    to {
+      bottom: -200px;
+    }
+  }
 `;
 
 const ToastLabel = styled.div`

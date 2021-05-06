@@ -47,9 +47,10 @@ export const GlobalStyle = createGlobalStyle`
   }
   & .toast-box{
     width: 100%;
+    text-align: -webkit-center;
     box-sizing: border-box;
     padding: 0;
-    color: #ffff;
+    color: rgba(0,0,0,.85);
     font-size: 14px;
     font-variant: tabular-nums;
     line-height: 1.5715;
@@ -57,14 +58,13 @@ export const GlobalStyle = createGlobalStyle`
     font-feature-settings: "tnum";
     position: fixed;
     z-index: 1010;
-    margin: 0 24px 0 0;
   }
     & .top {
-      top:0px;
+      top:15px;
       left: 0px;
     }
     & .bottom {
-      bottom:0px;
+      bottom:15px;
       left: 0px;
     }
 
@@ -89,6 +89,6 @@ export const GlobalStyle = createGlobalStyle`
       right: 24px;
     };
     & .customClassname {
-      width: 500px,
+      width: 500px;
     }
 `;

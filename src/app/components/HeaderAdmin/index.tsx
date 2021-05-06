@@ -13,9 +13,8 @@ import { NavList } from '../NavList';
 import { NavItem } from '../NavList/NavItem';
 // import { useNotify, MessageType, PlacementType } from '../Notification';
 import { Logo } from '../Sidebar/Logo';
-import Toast, { toastTypes, PlacementType } from '../Toast';
+import { PlacementType, MessageType } from '../Toast';
 import { useToast } from '../Toast/useToast';
-import { ToastContext } from '../Toast/context';
 
 interface Props {
   collapsed: boolean;
@@ -23,12 +22,13 @@ interface Props {
 }
 
 const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
-  // const { notify } = useNotify();
   const { message } = useToast();
 
   const openNotification = () => {
     message({
+      type: MessageType.Success,
       placement: PlacementType.Top,
+      // className: 'customClassname',
     });
 
     // notify({
