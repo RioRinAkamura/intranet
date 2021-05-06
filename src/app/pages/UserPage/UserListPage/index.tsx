@@ -10,6 +10,7 @@ import {
   Popover,
   Input,
   Space,
+  Select,
 } from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import React, { Key, useCallback, useEffect, useState } from 'react';
@@ -46,8 +47,12 @@ import Highlighter from 'react-highlight-words';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
+import Link from 'antd/lib/typography/Link';
+import { TagType } from 'app/pages/UserPage/types';
+import { useGetUserTags } from '../UserDetailPage/useGetUserTags';
 
 type Employee = models.hr.Employee;
+const { Option } = Select;
 
 export const Users: React.FC = () => {
   const { t } = useTranslation();
@@ -83,6 +88,7 @@ export const Users: React.FC = () => {
     setFilterText,
     resetFilter,
   } = useHandleDataTable(getUserListState, actions);
+  const { tags } = useGetUserTags();
 
   useEffect(() => {
     if (getUserListState.filterColumns) {
@@ -250,25 +256,55 @@ export const Users: React.FC = () => {
     filterDropdown: ({ confirm }) => {
       return (
         <div style={{ padding: 8 }}>
-          <Input
-            placeholder={`${t(
-              UsersMessages.filterInputPlaceholder(),
-            )} ${dataIndex}`}
-            value={selectedKeys[dataIndex[filterIndex || 0]]}
-            onChange={e => {
-              e.persist();
-              setSelectedKeys(prevState => ({
-                ...prevState,
-                [dataIndex[filterIndex || 0]]: e.target.value
-                  ? e.target.value
-                  : null,
-              }));
-            }}
-            onPressEnter={() =>
-              handleSearch(dataIndex[filterIndex || 0], confirm)
-            }
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
-          />
+          {dataIndex.includes('tags') ? (
+            <WrapperSelect
+              mode="tags"
+              placeholder={`${t(
+                UsersMessages.filterInputPlaceholder(),
+              )} ${dataIndex}`}
+              size="large"
+              value={selectedKeys[dataIndex[filterIndex || 0]]}
+              onChange={e => {
+                setSelectedKeys(prevState => ({
+                  ...prevState,
+                  [dataIndex[filterIndex || 0]]: e ? e : null,
+                }));
+              }}
+              tagRender={props => (
+                <TagOption color="blue" style={{ padding: '6px 6px' }}>
+                  {props.label}
+                  {<Link onClick={() => props.onClose()}>x</Link>}
+                </TagOption>
+              )}
+            >
+              {tags &&
+                tags.map((tag: TagType) => (
+                  <Option key={tag.id} value={tag.name}>
+                    {tag.name}
+                  </Option>
+                ))}
+            </WrapperSelect>
+          ) : (
+            <Input
+              placeholder={`${t(
+                UsersMessages.filterInputPlaceholder(),
+              )} ${dataIndex}`}
+              value={selectedKeys[dataIndex[filterIndex || 0]]}
+              onChange={e => {
+                e.persist();
+                setSelectedKeys(prevState => ({
+                  ...prevState,
+                  [dataIndex[filterIndex || 0]]: e.target.value
+                    ? e.target.value
+                    : null,
+                }));
+              }}
+              onPressEnter={() =>
+                handleSearch(dataIndex[filterIndex || 0], confirm)
+              }
+              style={{ width: 188, marginBottom: 8, display: 'block' }}
+            />
+          )}
           <Space>
             <Button
               type="primary"
@@ -426,6 +462,7 @@ export const Users: React.FC = () => {
       title: 'Tags',
       dataIndex: 'tags',
       width: 120,
+      ...getColumnSearchProps(['tags']),
       render: (text, record: Employee, index: number) => {
         return (
           <>
@@ -618,5 +655,32 @@ const TableWrapper = styled.div`
     span {
       color: blue;
     }
+  }
+`;
+
+const WrapperSelect = styled(Select)`
+  display: block;
+  margin-bottom: 10px;
+  span {
+    align-items: center;
+  }
+
+  .ant-select-selection-overflow {
+    align-content: start;
+    height: 80px;
+    width: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+`;
+
+const TagOption = styled(Tag)`
+  padding: 6px 12px;
+  margin: 5px;
+
+  a {
+    margin: 0px 2px 0px 5px !important;
+    padding: 0 !important;
+    color: black;
   }
 `;
