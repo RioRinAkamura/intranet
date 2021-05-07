@@ -10,7 +10,6 @@ import {
   Popover,
   Input,
   Space,
-  Select,
 } from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import React, { Key, useCallback, useEffect, useState } from 'react';
@@ -47,12 +46,10 @@ import Highlighter from 'react-highlight-words';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
-import Link from 'antd/lib/typography/Link';
-import { TagType } from 'app/pages/UserPage/types';
-import { useGetUserTags } from '../UserDetailPage/useGetUserTags';
+import { TagsInput } from 'app/components/Tags';
+import { colours, findColourIndex } from 'app/components/Tags';
 
 type Employee = models.hr.Employee;
-const { Option } = Select;
 
 export const Users: React.FC = () => {
   const { t } = useTranslation();
@@ -88,7 +85,6 @@ export const Users: React.FC = () => {
     setFilterText,
     resetFilter,
   } = useHandleDataTable(getUserListState, actions);
-  const { tags } = useGetUserTags();
 
   useEffect(() => {
     if (getUserListState.filterColumns) {
@@ -257,33 +253,15 @@ export const Users: React.FC = () => {
       return (
         <div style={{ padding: 8 }}>
           {dataIndex.includes('tags') ? (
-            <WrapperSelect
-              mode="tags"
-              placeholder={`${t(
-                UsersMessages.filterInputPlaceholder(),
-              )} ${dataIndex}`}
-              size="large"
+            <TagsInput
               value={selectedKeys[dataIndex[filterIndex || 0]]}
-              onChange={e => {
+              callback={e => {
                 setSelectedKeys(prevState => ({
                   ...prevState,
                   [dataIndex[filterIndex || 0]]: e ? e : null,
                 }));
               }}
-              tagRender={props => (
-                <TagOption color="blue" style={{ padding: '6px 6px' }}>
-                  {props.label}
-                  {<Link onClick={() => props.onClose()}>x</Link>}
-                </TagOption>
-              )}
-            >
-              {tags &&
-                tags.map((tag: TagType) => (
-                  <Option key={tag.id} value={tag.name}>
-                    {tag.name}
-                  </Option>
-                ))}
-            </WrapperSelect>
+            />
           ) : (
             <Input
               placeholder={`${t(
@@ -467,8 +445,15 @@ export const Users: React.FC = () => {
         return (
           <>
             {text.map(tag => {
+              let colourIndex = findColourIndex(tag);
               return (
-                <Tag style={{ margin: 5 }} color="geekblue" key={tag}>
+                <Tag
+                  style={{ margin: 5 }}
+                  color={
+                    colours[colourIndex] ? colours[colourIndex] : 'geekblue'
+                  }
+                  key={tag}
+                >
                   {tag.toUpperCase()}
                 </Tag>
               );
@@ -655,32 +640,5 @@ const TableWrapper = styled.div`
     span {
       color: blue;
     }
-  }
-`;
-
-const WrapperSelect = styled(Select)`
-  display: block;
-  margin-bottom: 10px;
-  span {
-    align-items: center;
-  }
-
-  .ant-select-selection-overflow {
-    align-content: start;
-    height: 80px;
-    width: 280px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-`;
-
-const TagOption = styled(Tag)`
-  padding: 6px 12px;
-  margin: 5px;
-
-  a {
-    margin: 0px 2px 0px 5px !important;
-    padding: 0 !important;
-    color: black;
   }
 `;
