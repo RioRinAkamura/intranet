@@ -16,9 +16,28 @@ interface useTableProps {
   getColumnSearchTagProps: (dataIndex: string, tags?: TagType[]) => {};
 }
 
+type MessageTranslate = {
+  [key: string]: Function;
+};
+
+export interface TableStateProps {
+  loading?: boolean;
+  params: Params;
+  filterColumns?: FilterColumns;
+}
+
+interface Params {
+  [key: string]: string | number | undefined;
+  ordering?: string;
+  search?: string;
+}
+interface FilterColumns {
+  [key: string]: string | undefined;
+}
+
 export const useTableConfig = (
-  state: any,
-  messageTrans: any,
+  state: TableStateProps,
+  messageTrans: MessageTranslate,
   setFilterText: (dataIndex: string, data: string) => void,
   resetFilter: (dataIndex: string) => void,
 ): useTableProps => {
