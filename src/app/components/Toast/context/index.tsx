@@ -37,7 +37,7 @@ const useToastContextProvider = (): ToastContextValues => {
       setData({ ...data, ...message });
       setClicked(clicked);
     },
-    [],
+    [data],
   );
 
   return {
