@@ -129,7 +129,8 @@
           "DOB": {
             "label": "Date of Birth",
             "placeholder": "Select Employee DOB",
-            "empty": "Please Enter Employee Date of Birth!"
+            "empty": "Please Enter Employee Date of Birth!",
+            "invalid": "Only allow 16+ years old!"
           },
           "gender": {
             "label": "Gender",
@@ -287,8 +288,8 @@
     "typeEmail": "Type email address below to delete your employee"
   },
   "UsersPage": {
-    "title": "Employees Page",
-    "description": "Employees Page",
+    "title": "Employees",
+    "description": "Employees",
     "createUserButton": "Create Employee",
     "exportCSV": "Export as CSV",
     "exportAllUser": "Export as CSV for all",

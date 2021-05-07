@@ -42,6 +42,7 @@ import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { useTableConfig } from 'utils/tableConfig';
+import { useGetUserTags } from '../UserDetailPage/useGetUserTags';
 
 type Employee = models.hr.Employee;
 
@@ -78,8 +79,13 @@ export const Users: React.FC = () => {
     setFilterText,
     resetFilter,
   } = useHandleDataTable(getUserListState, actions);
+  const { tags } = useGetUserTags();
 
-  const { getColumnSorterProps, getColumnSearchInputProps } = useTableConfig(
+  const {
+    getColumnSorterProps,
+    getColumnSearchInputProps,
+    getColumnSearchTagProps,
+  } = useTableConfig(
     getUserListState,
     UsersMessages,
     setFilterText,
@@ -303,6 +309,7 @@ export const Users: React.FC = () => {
       title: 'Tags',
       dataIndex: 'tags',
       width: 120,
+      ...getColumnSearchTagProps('tags', tags),
       render: (text, record: Employee, index: number) => {
         return (
           <>
