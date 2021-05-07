@@ -82,6 +82,11 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.profile.DOB.empty,
       'Please Enter Employee Date of Birth!',
     ),
+  formInvalidDOB: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.DOB.invalid,
+      'Only allow 16+ years old!',
+    ),
   formGenderLabel: () =>
     _t(translations.UserDetailPage.modal.form.profile.gender.label, 'Gender'),
   formGenderMaleLabel: () =>
