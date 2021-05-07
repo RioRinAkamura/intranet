@@ -22,6 +22,7 @@ import { IdCardInfo } from './components/IdCardInfo/Loadable';
 import { AddBankModal } from './components/AddBankModal/Loadable';
 import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { config } from 'config';
 
 interface Props {}
 interface LocationState {
@@ -29,6 +30,8 @@ interface LocationState {
 }
 
 type Employee = models.hr.Employee;
+
+const DATE_FORMAT = config.DATE_FORMAT;
 
 export function UserDetailPage(props: Props) {
   const { id } = useParams<Record<string, string>>();
@@ -46,8 +49,6 @@ export function UserDetailPage(props: Props) {
 
   const isView = isCreate || isEdit ? false : true;
 
-  const dateFormat = 'YYYY-MM-DD';
-
   React.useEffect(() => {
     if (user) {
       setData(user);
@@ -59,8 +60,8 @@ export function UserDetailPage(props: Props) {
       form.setFieldsValue({
         ...data,
         id: data.id,
-        dob: data.dob && moment(data.dob, dateFormat),
-        issued_date: data.issued_date && moment(data.issued_date, dateFormat),
+        dob: data.dob && moment(data.dob, DATE_FORMAT),
+        issued_date: data.issued_date && moment(data.issued_date, DATE_FORMAT),
       });
     }
   }, [data, form, isEdit]);
@@ -87,8 +88,10 @@ export function UserDetailPage(props: Props) {
     form
       .validateFields()
       .then(async values => {
-        values.dob = moment(values.dob).format(dateFormat);
-        values.issued_date = moment(values.issued_date).format(dateFormat);
+        values.dob = moment(values.dob).format(DATE_FORMAT);
+        if (values.issued_date) {
+          values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
+        }
         if (isEdit) {
           delete values.email;
           const response = await update(values);
@@ -98,8 +101,6 @@ export function UserDetailPage(props: Props) {
           }
         }
         if (isCreate) {
-          values.password1 = '123456@aA';
-          values.password2 = '123456@aA';
           create(values);
         }
       })
