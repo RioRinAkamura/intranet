@@ -1,13 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components/macro';
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
-  InfoCircleOutlined,
-  CloseOutlined,
-} from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 
 export enum MessageType {
   Success = 'success',

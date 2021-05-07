@@ -19,11 +19,7 @@ export interface UserspageState {
 }
 
 export interface FilterColumns {
-  first_name?: string;
-  last_name?: string;
-  phone?: string;
-  email?: string;
-  code?: string;
+  [key: string]: string | undefined;
 }
 
 export interface UserResponse {
@@ -32,15 +28,7 @@ export interface UserResponse {
 }
 
 export interface QueryParams {
-  search?: string;
-  first_name?: string;
-  last_name?: string;
-  phone?: string;
-  email?: string;
-  code?: string;
-  ordering?: string;
-  page?: number;
-  limit?: number;
+  [key: string]: string | number | undefined;
 }
 
 interface Pagination {
