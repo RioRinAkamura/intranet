@@ -20,6 +20,7 @@ import { UserDetailMessages } from '../../messages';
 import { TitlePath } from '../TitlePath';
 import { RuleObject } from 'rc-field-form/lib/interface';
 import moment from 'moment';
+import config from 'config';
 
 interface ProfileInfoProps {
   isView?: boolean;
@@ -38,6 +39,8 @@ const datePickerProps: DatePickerProps = {
   suffixIcon: null,
   popupStyle: { display: 'none' },
 };
+
+const DATE_FORMAT = config.DATE_FORMAT;
 
 export const ProfileInfo = (props: ProfileInfoProps) => {
   const { isView, isEdit } = props;
@@ -121,7 +124,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               >
                 <DatePicker
                   {...(isView ? datePickerProps : {})}
-                  format="DD-MM-YYYY"
+                  format={DATE_FORMAT}
                   size="large"
                   placeholder={
                     isView ? '' : t(UserDetailMessages.formDOBPlaceholder())

@@ -8,6 +8,7 @@ export const config = {
     process.env.GOOGLE_CLIENT_ID ||
     '208470488520-tdm6q0i7m1aqve29qkorsija7rhgln48.apps.googleusercontent.com',
   FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID || '295584335285632',
+  DATE_FORMAT: 'YYYY-MM-DD',
 };
 
 export default config;
