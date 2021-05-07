@@ -21,11 +21,17 @@ import { AvatarPath } from './components/AvatarPath/Loadable';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
 import { AddBankModal } from './components/AddBankModal/Loadable';
 import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { config } from 'config';
 
 interface Props {}
 interface LocationState {
   edit: boolean;
 }
+
+type Employee = models.hr.Employee;
+
+const DATE_FORMAT = config.DATE_FORMAT;
 
 export function UserDetailPage(props: Props) {
   const { id } = useParams<Record<string, string>>();
@@ -35,23 +41,30 @@ export function UserDetailPage(props: Props) {
   const history = useHistory();
 
   const { user } = useGetUserDetail(id);
-  const { update, loading } = useUpdateUserDetail();
+  const { create, update, loading } = useUpdateUserDetail();
 
+  const [data, setData] = React.useState<Employee>();
   const [isCreate, setIsCreate] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
 
-  const dateFormat = 'YYYY-MM-DD';
+  const isView = isCreate || isEdit ? false : true;
 
   React.useEffect(() => {
     if (user) {
+      setData(user);
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    if (data) {
       form.setFieldsValue({
-        ...user,
-        id: user.id,
-        dob: user.dob && moment(user.dob, dateFormat),
-        issued_date: user.issued_date && moment(user.issued_date, dateFormat),
+        ...data,
+        id: data.id,
+        dob: data.dob && moment(data.dob, DATE_FORMAT),
+        issued_date: data.issued_date && moment(data.issued_date, DATE_FORMAT),
       });
     }
-  }, [form, user]);
+  }, [data, form, isEdit]);
 
   React.useEffect(() => {
     if (!history.location.pathname.includes('create')) {
@@ -71,20 +84,24 @@ export function UserDetailPage(props: Props) {
     }
   }, [history, location]);
 
-  const isView = isCreate || isEdit ? false : true;
-
   const handleSubmit = () => {
     form
       .validateFields()
       .then(async values => {
-        values.dob = moment(values.dob).format(dateFormat);
-        values.issued_date = moment(values.issued_date).format(dateFormat);
+        values.dob = moment(values.dob).format(DATE_FORMAT);
+        if (values.issued_date) {
+          values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
+        }
         if (isEdit) {
           delete values.email;
           const response = await update(values);
           if (response) {
+            setData(response);
             setIsEdit(false);
           }
+        }
+        if (isCreate) {
+          create(values);
         }
       })
       .catch(err => console.log(err));
@@ -111,7 +128,7 @@ export function UserDetailPage(props: Props) {
               <Row gutter={[32, 32]}>
                 <LeftScreen md={5}>
                   <AvatarPath
-                    user={user}
+                    user={data}
                     isView={isView}
                     isEdit={isEdit}
                     form={form}
@@ -129,7 +146,7 @@ export function UserDetailPage(props: Props) {
               <Row gutter={[32, 32]}>
                 <LeftScreen md={5}>
                   <AvatarPath
-                    user={user}
+                    user={data}
                     isView={isView}
                     isEdit={isEdit}
                     form={form}

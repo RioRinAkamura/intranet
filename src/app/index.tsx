@@ -24,6 +24,7 @@ import { authProvider } from './components/Auth/defaultAuthProvider';
 import { AuthContextProvider } from './components/Auth/Context';
 import { ForgotPassword } from './pages/ForgotPassword/Loadable';
 import { ResetPassword } from './pages/ResetPassword/Loadable';
+import { ToastContextProvider } from './components/Toast/context';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -37,46 +38,48 @@ export function App() {
         <meta name="description" content="A Staff Management application" />
       </Helmet>
       <AuthContextProvider authProvider={authProvider}>
-        <Switch>
-          <PublicRoute
-            restricted={true}
-            exact
-            path={config.LOGIN_PATH}
-            component={Login}
-          />
-          <PublicRoute
-            restricted={true}
-            exact
-            path="/forgot-password"
-            component={ForgotPassword}
-          />
-          <PublicRoute
-            restricted={true}
-            exact
-            path="/reset-password"
-            component={ResetPassword}
-          />
-          <AppLayout>
-            <PrivateRoute
+        <ToastContextProvider>
+          <Switch>
+            <PublicRoute
+              restricted={true}
               exact
-              path={config.DASHBOARD_PATH}
-              component={HomePage}
+              path={config.LOGIN_PATH}
+              component={Login}
             />
-            <PrivateRoute exact path={config.USERS_PATH} component={Users} />
-            <PrivateRoute
+            <PublicRoute
+              restricted={true}
               exact
-              path={`${config.USERS_PATH}/:id`}
-              component={UserDetailPage}
+              path="/forgot-password"
+              component={ForgotPassword}
             />
-            <PrivateRoute
+            <PublicRoute
+              restricted={true}
               exact
-              path={`${config.CREATE_USER_PATH}`}
-              component={UserDetailPage}
+              path="/reset-password"
+              component={ResetPassword}
             />
-          </AppLayout>
+            <AppLayout>
+              <PrivateRoute
+                exact
+                path={config.DASHBOARD_PATH}
+                component={HomePage}
+              />
+              <PrivateRoute exact path={config.USERS_PATH} component={Users} />
+              <PrivateRoute
+                exact
+                path={`${config.USERS_PATH}/:id`}
+                component={UserDetailPage}
+              />
+              <PrivateRoute
+                exact
+                path={`${config.CREATE_USER_PATH}`}
+                component={UserDetailPage}
+              />
+            </AppLayout>
 
-          <Route component={NotFoundPage} />
-        </Switch>
+            <Route component={NotFoundPage} />
+          </Switch>
+        </ToastContextProvider>
       </AuthContextProvider>
       <GlobalStyle />
     </BrowserRouter>

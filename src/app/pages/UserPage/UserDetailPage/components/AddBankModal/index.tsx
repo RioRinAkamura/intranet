@@ -114,6 +114,12 @@ export const AddBankModal = memo((props: Props) => {
           <FormSearchItem
             name={['bank_accounts', 0, 'bank_name']}
             label={t(UserDetailMessages.formBankNameLabel())}
+            rules={[
+              {
+                required: true,
+                message: t(UserDetailMessages.formEmptyBankName()),
+              },
+            ]}
           >
             <Select
               size="large"
@@ -132,6 +138,12 @@ export const AddBankModal = memo((props: Props) => {
           <FormSearchItem
             name={['bank_accounts', 0, 'number']}
             label={t(UserDetailMessages.formBankNumberLabel())}
+            rules={[
+              {
+                required: true,
+                message: t(UserDetailMessages.formEmptyBankNumber()),
+              },
+            ]}
           >
             <Input
               {...(isView ? inputProps : {})}
@@ -144,6 +156,12 @@ export const AddBankModal = memo((props: Props) => {
           <FormSearchItem
             name={['bank_accounts', 0, 'branch']}
             label={t(UserDetailMessages.formBankBranchLabel())}
+            rules={[
+              {
+                required: true,
+                message: t(UserDetailMessages.formEmptyBankBranch()),
+              },
+            ]}
           >
             <Input
               {...(isView ? inputProps : {})}

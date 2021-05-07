@@ -11,8 +11,11 @@ import styled from 'styled-components/macro';
 import { BadgeList } from '../BadgeList';
 import { NavList } from '../NavList';
 import { NavItem } from '../NavList/NavItem';
-import { useNotify, ToastMessageType } from '../Notification';
+// import { useNotify, MessageType, PlacementType } from '../Notification';
 import { Logo } from '../Sidebar/Logo';
+import { PlacementType, MessageType } from '../Toast';
+import { useToast } from '../Toast/useToast';
+import TestComponent from '../Toast/testComponet';
 
 interface Props {
   collapsed: boolean;
@@ -20,19 +23,13 @@ interface Props {
 }
 
 const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
-  const { notify } = useNotify();
+  const { message } = useToast();
 
   const openNotification = () => {
-    notify({
-      type: ToastMessageType.Info,
-      message: 'Add User Infor',
-      description: 'quang',
-      placement: 'bottomLeft',
-      className: 'customClassname',
-      style: {
-        background:
-          'lightblue url("https://designshack.net/wp-content/uploads/abstract-background.jpg") no-repeat fixed center',
-      },
+    message({
+      type: MessageType.Error,
+      placement: PlacementType.Top,
+      message: <TestComponent message={'message'} />,
     });
   };
   return (

@@ -13,7 +13,7 @@ interface Props {
   onSearch: () => void;
   onReset: () => void;
   form: FormInstance;
-  value?: string;
+  value?: string | number;
   loading: boolean;
 }
 

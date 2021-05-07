@@ -17,7 +17,9 @@ import {
 } from 'antd';
 import { UserDetailMessages } from '../../messages';
 import { TitlePath } from '../TitlePath';
+import config from 'config';
 
+const DATE_FORMAT = config.DATE_FORMAT;
 interface IdCardProps {
   isView: boolean;
   isEdit: boolean;
@@ -74,7 +76,7 @@ export const IdCardInfo = memo((props: IdCardProps) => {
               <FormItem isView={isView} name="issued_date">
                 <DatePicker
                   {...(isView ? datePickerProps : {})}
-                  format="YYYY-MM-DD"
+                  format={DATE_FORMAT}
                   size="large"
                   placeholder={
                     isView

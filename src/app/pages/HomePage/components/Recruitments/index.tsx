@@ -1,8 +1,9 @@
-import { Col, Row } from 'antd';
+import { Badge, Col, Row } from 'antd';
 import { CardWrapper } from 'app/components/CardWrapper';
 import { PageTitle } from 'app/components/PageTitle';
 import * as React from 'react';
 import styled from 'styled-components/macro';
+import background from '../../assets/BG.png';
 
 const data = [
   {
@@ -35,27 +36,27 @@ export const Recruitments = () => {
   return (
     <>
       <CardWrapper
-        mainHeight="328px"
-        bodyHeight="250px"
-        title={
-          <PageTitle style={{ textAlign: 'right' }}>Recruitment News</PageTitle>
-        }
+        backgroundimg={background}
+        mainheight="328px"
+        bodyheight="250px"
+        title={<PageTitle>Recruitment News</PageTitle>}
       >
-        <RowItem gutter={[32, 0]} align="middle">
-          <Col offset={8} span={3}>
-            QTY
-          </Col>
-          <Col span={10}>POSITION</Col>
+        <RowHeader gutter={[32, 0]} align="middle">
+          <Col offset={10} span={3}></Col>
+          <Col span={8}>POSITION</Col>
           <Col span={3}>BONUS</Col>
-        </RowItem>
+        </RowHeader>
         {data &&
           data.map(item => {
             return (
               <RowItem key={item.id} gutter={[32, 0]} align="middle">
-                <Col offset={8} span={3}>
-                  {item.qty}
+                <Col offset={10} span={3}>
+                  <Badge
+                    style={{ backgroundColor: '#1fa9e0' }}
+                    count={item.qty}
+                  />
                 </Col>
-                <Col span={10}>{item.position}</Col>
+                <Col span={8}>{item.position}</Col>
                 <Col span={3}>{item.bonus}</Col>
               </RowItem>
             );
@@ -65,4 +66,10 @@ export const Recruitments = () => {
   );
 };
 
-const RowItem = styled(Row)``;
+const RowHeader = styled(Row)`
+  color: rgb(31 169 224);
+  font-weight: bold;
+`;
+const RowItem = styled(Row)`
+  margin: 1em 0;
+`;
