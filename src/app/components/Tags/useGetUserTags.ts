@@ -19,7 +19,6 @@ export const useGetUserTags = (): {
       try {
         const response = await api.hr.employee.listTags();
         setTags(response);
-        console.log(response);
       } catch (error) {
         setError(error);
       } finally {
