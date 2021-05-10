@@ -177,15 +177,6 @@ export function UserDetailPage(props: Props) {
               <SocialNetwork isView={isView} />
             </WrapperItem>
           </Col>
-          <Col span={24}>
-            <WrapperItem>
-              <DraftEditor
-                hashtag
-                data="**abc**"
-                onSubmit={e => console.log(e)}
-              />
-            </WrapperItem>
-          </Col>
         </Row>
       </Form>
       <WrapperButton>
