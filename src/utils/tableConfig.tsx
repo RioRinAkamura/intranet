@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Highlighter from 'react-highlight-words';
 import { TagType } from 'app/pages/UserPage/types';
 import { TagsInput } from 'app/components/Tags';
+import { TableStateProps } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
 
 interface useTableProps {
   getColumnSorterProps: (dataIndex: string, columnPriority: number) => {};
@@ -16,21 +17,6 @@ interface useTableProps {
 type MessageTranslate = {
   [key: string]: Function;
 };
-
-export interface TableStateProps {
-  loading?: boolean;
-  params: Params;
-  filterColumns?: FilterColumns;
-}
-
-interface Params {
-  [key: string]: string | number | undefined;
-  ordering?: string;
-  search?: string;
-}
-interface FilterColumns {
-  [key: string]: string | undefined;
-}
 
 export const useTableConfig = (
   state: TableStateProps,
