@@ -7,6 +7,7 @@ import Highlighter from 'react-highlight-words';
 import styled from 'styled-components/macro';
 import { TagType } from 'app/pages/UserPage/types';
 import Link from 'antd/lib/typography/Link';
+import { TableStateProps } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
 
 const Option = Select;
 
@@ -19,21 +20,6 @@ interface useTableProps {
 type MessageTranslate = {
   [key: string]: Function;
 };
-
-export interface TableStateProps {
-  loading?: boolean;
-  params: Params;
-  filterColumns?: FilterColumns;
-}
-
-interface Params {
-  [key: string]: string | number | undefined;
-  ordering?: string;
-  search?: string;
-}
-interface FilterColumns {
-  [key: string]: string | undefined;
-}
 
 export const useTableConfig = (
   state: TableStateProps,

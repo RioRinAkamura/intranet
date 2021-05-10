@@ -16,7 +16,29 @@ interface useDataTable {
   setPagination: (pagination: Pagination) => void;
 }
 
-export const useHandleDataTable = (state: any, actions: any): useDataTable => {
+export interface TableStateProps {
+  loading?: boolean;
+  params: Params;
+  filterColumns?: FilterColumns;
+}
+
+interface Params {
+  [key: string]: string | number | undefined;
+  ordering?: string;
+  search?: string;
+}
+interface FilterColumns {
+  [key: string]: string | undefined;
+}
+
+interface TableActions {
+  [key: string]: Function;
+}
+
+export const useHandleDataTable = (
+  state: TableStateProps,
+  actions: TableActions,
+): useDataTable => {
   const history = useHistory();
   const location = useLocation();
   const urlParams = parse(location.search, {
