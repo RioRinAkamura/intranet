@@ -40,7 +40,6 @@ import { PageTitle } from 'app/components/PageTitle';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
-import { colours, findColourIndex } from 'app/components/Tags';
 import { useTableConfig } from 'utils/tableConfig';
 import { TagComponent } from 'app/components/Tags/components/Tag';
 
