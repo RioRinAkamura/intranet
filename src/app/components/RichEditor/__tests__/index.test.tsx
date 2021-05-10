@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
 
-import { DraftEditor } from '..';
+import { RichEditor } from '..';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -14,9 +14,9 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
-describe('<DraftEditor  />', () => {
+describe('<RichEditor  />', () => {
   it('should match snapshot', () => {
-    const loadingIndicator = render(<DraftEditor />);
+    const loadingIndicator = render(<RichEditor onSubmit={() => {}} />);
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });
