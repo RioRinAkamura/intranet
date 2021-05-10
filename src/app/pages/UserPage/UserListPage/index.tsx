@@ -5,7 +5,6 @@ import {
   Table,
   Form,
   TablePaginationConfig,
-  Tag,
   Tooltip,
   Popover,
 } from 'antd';
@@ -43,6 +42,7 @@ import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { colours, findColourIndex } from 'app/components/Tags';
 import { useTableConfig } from 'utils/tableConfig';
+import { TagComponent } from 'app/components/Tags/components/Tag';
 
 type Employee = models.hr.Employee;
 
@@ -313,18 +313,7 @@ export const Users: React.FC = () => {
         return (
           <>
             {text.map(tag => {
-              let colourIndex = findColourIndex(tag);
-              return (
-                <Tag
-                  style={{ margin: 5 }}
-                  color={
-                    colours[colourIndex] ? colours[colourIndex] : 'geekblue'
-                  }
-                  key={tag}
-                >
-                  {tag.toUpperCase()}
-                </Tag>
-              );
+              return <TagComponent tag={tag} key={tag} />;
             })}
           </>
         );
