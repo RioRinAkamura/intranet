@@ -23,6 +23,8 @@ import { AddBankModal } from './components/AddBankModal/Loadable';
 import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { config } from 'config';
+import { DraftEditor } from 'app/components/DraftEditor/Loadable';
+import { TitlePath } from './components/TitlePath';
 
 interface Props {}
 interface LocationState {
@@ -174,6 +176,18 @@ export function UserDetailPage(props: Props) {
           <Col span={isView ? 12 : 16}>
             <WrapperItem>
               <SocialNetwork isView={isView} />
+            </WrapperItem>
+          </Col>
+          <Col span={24}>
+            <WrapperItem>
+              <DraftEditor
+                title={
+                  <TitlePath>
+                    <b>Employee Note</b>
+                  </TitlePath>
+                }
+                hashtag
+              />
             </WrapperItem>
           </Col>
         </Row>
