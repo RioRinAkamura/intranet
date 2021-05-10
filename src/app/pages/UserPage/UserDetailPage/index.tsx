@@ -170,7 +170,7 @@ export function UserDetailPage(props: Props) {
         <Row gutter={[64, 32]}>
           <Col span={isView ? 12 : 8}>
             <WrapperItem>
-              <JobInfo isView={isView} />
+              <JobInfo form={form} isView={isView} />
             </WrapperItem>
           </Col>
           <Col span={isView ? 12 : 16}>

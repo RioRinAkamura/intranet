@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { has } from 'lodash';
-import { Button, Input, Select, Space, Tag } from 'antd';
+import { Button, Input, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Highlighter from 'react-highlight-words';
-import styled from 'styled-components/macro';
 import { TagType } from 'app/pages/UserPage/types';
-import Link from 'antd/lib/typography/Link';
+import { TagsInput } from 'app/components/Tags';
 import { TableStateProps } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
-
-const Option = Select;
 
 interface useTableProps {
   getColumnSorterProps: (dataIndex: string, columnPriority: number) => {};
@@ -156,56 +153,20 @@ export const useTableConfig = (
     confirm();
   };
 
-  const getColumnSearchTagProps = (dataIndex: string, tags?: TagType[]) => ({
+  const getColumnSearchTagProps = (dataIndex: string) => ({
     ellipsis: true,
     filterDropdown: ({ confirm }) => {
       return (
         <div style={{ padding: 8 }}>
-          {dataIndex.includes('tags') ? (
-            <WrapperSelect
-              mode="tags"
-              placeholder={`${t(
-                messageTrans.filterInputPlaceholder(),
-              )} ${dataIndex}`}
-              size="large"
-              value={selectedKeys[dataIndex]}
-              onChange={e => {
-                setSelectedKeys(prevState => ({
-                  ...prevState,
-                  [dataIndex]: e ? e : null,
-                }));
-              }}
-              tagRender={props => (
-                <TagOption color="blue" style={{ padding: '6px 6px' }}>
-                  {props.label}
-                  {<Link onClick={() => props.onClose()}>x</Link>}
-                </TagOption>
-              )}
-            >
-              {tags &&
-                tags.map((tag: TagType) => (
-                  <Option key={tag.id} value={tag.name}>
-                    {tag.name}
-                  </Option>
-                ))}
-            </WrapperSelect>
-          ) : (
-            <Input
-              placeholder={`${t(
-                messageTrans.filterInputPlaceholder(),
-              )} ${dataIndex}`}
-              value={selectedKeys[dataIndex]}
-              onChange={e => {
-                e.persist();
-                setSelectedKeys(prevState => ({
-                  ...prevState,
-                  [dataIndex]: e.target.value ? e.target.value : null,
-                }));
-              }}
-              onPressEnter={() => handleSearch(dataIndex, confirm)}
-              style={{ width: 188, marginBottom: 8, display: 'block' }}
-            />
-          )}
+          <TagsInput
+            value={selectedKeys[dataIndex]}
+            callback={e => {
+              setSelectedKeys(prevState => ({
+                ...prevState,
+                [dataIndex]: e ? e : null,
+              }));
+            }}
+          />
           <Space>
             <Button
               type="primary"
@@ -247,30 +208,3 @@ export const useTableConfig = (
     getColumnSearchTagProps,
   };
 };
-
-const WrapperSelect = styled(Select)`
-  display: block;
-  margin-bottom: 10px;
-  span {
-    align-items: center;
-  }
-
-  .ant-select-selection-overflow {
-    align-content: start;
-    height: 80px;
-    width: 280px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-`;
-
-const TagOption = styled(Tag)`
-  padding: 6px 12px;
-  margin: 5px;
-
-  a {
-    margin: 0px 2px 0px 5px !important;
-    padding: 0 !important;
-    color: black;
-  }
-`;
