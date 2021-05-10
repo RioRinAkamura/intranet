@@ -5,7 +5,6 @@ import {
   Table,
   Form,
   TablePaginationConfig,
-  Tag,
   Tooltip,
   Popover,
 } from 'antd';
@@ -41,8 +40,9 @@ import { PageTitle } from 'app/components/PageTitle';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
+import { colours, findColourIndex } from 'app/components/Tags';
 import { useTableConfig } from 'utils/tableConfig';
-import { useGetUserTags } from '../UserDetailPage/useGetUserTags';
+import { TagComponent } from 'app/components/Tags/components/Tag';
 
 type Employee = models.hr.Employee;
 
@@ -79,7 +79,6 @@ export const Users: React.FC = () => {
     setFilterText,
     resetFilter,
   } = useHandleDataTable(getUserListState, actions);
-  const { tags } = useGetUserTags();
 
   const {
     getColumnSorterProps,
@@ -309,16 +308,12 @@ export const Users: React.FC = () => {
       title: 'Tags',
       dataIndex: 'tags',
       width: 120,
-      ...getColumnSearchTagProps('tags', tags),
+      ...getColumnSearchTagProps('tags'),
       render: (text, record: Employee, index: number) => {
         return (
           <>
             {text.map(tag => {
-              return (
-                <Tag style={{ margin: 5 }} color="geekblue" key={tag}>
-                  {tag.toUpperCase()}
-                </Tag>
-              );
+              return <TagComponent tag={tag} key={tag} />;
             })}
           </>
         );

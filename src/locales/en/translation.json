@@ -334,5 +334,10 @@
         "submitButton": "Save"
       }
     }
+  },
+  "tagsInput": {
+    "validate": "Please input more 1 word",
+    "searchTags":"Search Tags"
+
   }
 }

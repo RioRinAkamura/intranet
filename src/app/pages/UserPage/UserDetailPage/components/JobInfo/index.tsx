@@ -9,24 +9,23 @@ import { useTranslation } from 'react-i18next';
 import {
   Col,
   Form,
+  FormInstance,
   Input,
   InputProps,
   Row,
   Select,
   SelectProps,
-  Tag,
 } from 'antd';
 import { UserDetailMessages } from '../../messages';
 import { SelectValue } from 'antd/lib/select';
-import Link from 'antd/lib/typography/Link';
-import { useGetUserTags } from '../../useGetUserTags';
-import { TagType } from 'app/pages/UserPage/types';
 import { TitlePath } from '../TitlePath';
+import { TagsInput } from 'app/components/Tags';
 
 const { Option } = Select;
 
 interface JobInfoProps {
   isView?: boolean;
+  form: FormInstance;
 }
 
 const inputProps: InputProps = {
@@ -42,9 +41,8 @@ const selectProps: SelectProps<SelectValue> = {
 };
 
 export const JobInfo = (props: JobInfoProps) => {
-  const { isView } = props;
+  const { isView, form } = props;
   const { t } = useTranslation();
-  const { tags, loading } = useGetUserTags();
 
   return (
     <>
@@ -106,7 +104,7 @@ export const JobInfo = (props: JobInfoProps) => {
         </Col>
         <Col md={isView ? 20 : 24} xs={24}>
           <FormItem isView={isView} name="tags">
-            <WrapperSelect
+            {/* <WrapperSelect
               {...(isView ? selectProps : {})}
               isView={isView}
               mode="tags"
@@ -129,7 +127,18 @@ export const JobInfo = (props: JobInfoProps) => {
                     {tag.name}
                   </Option>
                 ))}
-            </WrapperSelect>
+            </WrapperSelect> */}
+            <TagsInput
+              selectProps={selectProps}
+              isView={isView}
+              placeholder={
+                isView ? '' : t(UserDetailMessages.formJobTagsPlaceholder())
+              }
+              callback={e => {
+                form.setFieldsValue({ tags: e });
+              }}
+              className="selectTags"
+            />
           </FormItem>
         </Col>
       </Row>
@@ -140,23 +149,6 @@ interface ScreenProps {
   isView?: boolean;
 }
 
-const WrapperSelect = styled(Select)`
-  span {
-    align-items: center;
-  }
-
-  .ant-select-selection-overflow {
-    align-content: start;
-    height: ${(props: ScreenProps) => (props.isView ? '160px' : '100px')};
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
-  #tags {
-    display: ${(props: ScreenProps) => (props.isView ? 'none' : 'block')};
-  }
-`;
-
 const FormItem = styled(Form.Item)`
   margin-bottom: ${(props: ScreenProps) => (props.isView ? '0' : '24px')};
 
@@ -166,17 +158,6 @@ const FormItem = styled(Form.Item)`
 
   input {
     font-weight: ${(props: ScreenProps) => props.isView && 500};
-  }
-`;
-
-const TagOption = styled(Tag)`
-  padding: 6px 12px;
-  margin: 5px;
-
-  a {
-    margin: 0px 2px 0px 5px !important;
-    padding: 0 !important;
-    color: black;
   }
 `;
 
