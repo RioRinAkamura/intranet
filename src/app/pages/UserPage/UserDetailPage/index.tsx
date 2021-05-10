@@ -23,7 +23,6 @@ import { AddBankModal } from './components/AddBankModal/Loadable';
 import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { config } from 'config';
-import { DraftEditor } from 'app/components/DraftEditor/Loadable';
 
 interface Props {}
 interface LocationState {
