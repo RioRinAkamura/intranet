@@ -3,44 +3,47 @@
  * DraftEditor
  *
  */
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
-import { messages } from './messages';
-import { ContentState, convertToRaw, EditorState } from 'draft-js';
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import draftToMarkdown from 'draftjs-to-markdown';
+import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
 import { Button } from 'antd';
-import { TitlePath } from 'app/pages/UserPage/UserDetailPage/components/TitlePath';
-import { NormalModuleReplacementPlugin } from 'webpack';
 
 interface Props {
-  mentionSuggest?: [];
+  mentionSuggest?: Mention[];
   hashtag?: boolean;
   toolbar?: object;
   data?: string;
   onSubmit: (content: string) => void;
 }
 
+interface Mention {
+  text: string;
+  value: string;
+  url: string;
+}
+
 export const DraftEditor = memo((props: Props) => {
   const { mentionSuggest, hashtag, data, onSubmit } = props;
-  const { t, i18n } = useTranslation();
   const [editorState, setEditorState] = useState(() =>
-    data
-      ? EditorState.createWithContent(ContentState.createFromText(data))
-      : EditorState.createEmpty(),
+    EditorState.createEmpty(),
   );
-  const rawContentState = convertToRaw(editorState.getCurrentContent());
-  const hashConfig = {
-    trigger: '#',
-    separator: ' ',
-  };
-  const markup = draftToMarkdown(rawContentState, hashConfig);
+
+  useMemo(() => {
+    if (data) {
+      const markdownString = data;
+      const rawData = markdownToDraft(markdownString);
+      const contentState = convertFromRaw(rawData);
+      const newEditorState = EditorState.createWithContent(contentState);
+      setEditorState(newEditorState);
+    }
+  }, [data]);
 
   const editorProps = {
     mention: mentionSuggest
-      ? { separator: '', trigger: '@', suggestions: mentionSuggest }
+      ? { separator: ' ', trigger: '@', suggestions: mentionSuggest }
       : null,
     hashtag: hashtag
       ? {
@@ -49,6 +52,7 @@ export const DraftEditor = memo((props: Props) => {
         }
       : null,
   };
+
   return (
     <Wrapper>
       <Editor
@@ -61,11 +65,19 @@ export const DraftEditor = memo((props: Props) => {
         {...editorProps}
       />
       <Button
+        size="large"
+        type="primary"
         onClick={() => {
+          const rawContentState = convertToRaw(editorState.getCurrentContent());
+          const hashConfig = {
+            trigger: '#',
+            separator: ' ',
+          };
+          const markup = draftToMarkdown(rawContentState, hashConfig);
           onSubmit(markup);
         }}
       >
-        Check
+        Save
       </Button>
     </Wrapper>
   );
@@ -75,6 +87,7 @@ const Wrapper = styled.div`
   .wrapper-class {
     padding: 5px;
     border: 1px solid #ccc;
+    margin-bottom: 1em;
   }
   .editor-class {
     padding: 1rem;
@@ -83,5 +96,12 @@ const Wrapper = styled.div`
   }
   .toolbar-class {
     border: 1px solid #ccc;
+  }
+  .rdw-mention-link {
+    color: red;
+    background-color: rgba(255, 0, 0, 0.1);
+  }
+
+  .rdw-hashtag-link {
   }
 `;
