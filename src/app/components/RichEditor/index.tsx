@@ -25,7 +25,7 @@ interface Mention {
   url: string;
 }
 
-export const DraftEditor = memo((props: Props) => {
+export const RichEditor = memo((props: Props) => {
   const { mentionSuggest, hashtag, data, onSubmit } = props;
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty(),
