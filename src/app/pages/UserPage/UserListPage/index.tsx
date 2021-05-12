@@ -42,7 +42,6 @@ import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { useTableConfig } from 'utils/tableConfig';
 import { TagComponent } from 'app/components/Tags/components/Tag';
-import { RichEditor } from 'app/components/RichEditor';
 
 type Employee = models.hr.Employee;
 
@@ -411,9 +410,6 @@ export const Users: React.FC = () => {
                 selectedRows={getUserListState.selectedRows}
               />
             </Col>
-            <>
-              <RichEditor mentionSuggest={[{ name: '' }]} onSubmit={() => {}} />
-            </>
             <Col span={24}>
               <TableWrapper>
                 <Table
