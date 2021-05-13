@@ -161,9 +161,8 @@ export const Users: React.FC = () => {
   };
 
   useEffect(() => {
-    setUserList(prev =>
-      prev.concat(getUserListState.users ? getUserListState.users : []),
-    );
+    const users = getUserListState.users;
+    setUserList(prev => prev.concat(users ? users : []));
   }, [getUserListState.users]);
 
   useEffect(() => {
