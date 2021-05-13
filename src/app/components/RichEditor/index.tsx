@@ -12,24 +12,17 @@ import React, {
   useState,
 } from 'react';
 import styled from 'styled-components/macro';
-import {
-  convertFromRaw,
-  convertToRaw,
-  EditorState,
-  RawDraftEntityRange,
-} from 'draft-js';
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
 import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
-import { Button, Col, Row } from 'antd';
+import { Button } from 'antd';
 import createMentionPlugin, {
-  defaultSuggestionsFilter,
   MentionPluginTheme,
 } from '@draft-js-plugins/mention';
 import createHashtagPlugin from '@draft-js-plugins/hashtag';
 import createLinkPlugin from '@draft-js-plugins/anchor';
 
 import { MentionData } from '@draft-js-plugins/mention';
-import { Avatar } from '../Avatar/Loadable';
 
 import createToolbarPlugin, {
   Separator,
@@ -52,22 +45,19 @@ import '@draft-js-plugins/static-toolbar/lib/plugin.css';
 import '@draft-js-plugins/inline-toolbar/lib/plugin.css';
 
 import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
+import { api } from 'utils/api';
+import { Env } from 'remarkable/lib';
+import { EntryMention } from './components/EntryMention';
 const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
 
 interface Props {
-  mentionSuggest?: Mention[];
   hashtag?: boolean;
   toolbar?: object;
   data?: string;
   width?: number;
   height?: number;
-  onSubmit: (content: string) => void;
-}
-
-interface Mention {
-  name: string;
-  [key: string]: string;
+  onSubmit: (content: any) => void;
 }
 
 export interface EntryComponentProps {
@@ -83,31 +73,6 @@ export interface EntryComponentProps {
   onMouseUp(event: MouseEvent): void;
   onMouseEnter(event: MouseEvent): void;
 }
-
-const Entry = (props: EntryComponentProps) => {
-  const {
-    mention,
-    theme,
-    searchValue, // eslint-disable-line @typescript-eslint/no-unused-vars
-    isFocused, // eslint-disable-line @typescript-eslint/no-unused-vars
-    ...parentProps
-  } = props;
-  return (
-    <div {...parentProps}>
-      <Row gutter={[8, 8]} align="middle">
-        <Col>
-          <Avatar
-            size={30}
-            src={mention.avatar}
-            alt={mention.name.split(' ')[0] + ' ' + mention.name.split(' ')[1]}
-            name={mention.name.split(' ')[0] + ' ' + mention.name.split(' ')[1]}
-          />
-        </Col>
-        <Col>{mention.name}</Col>
-      </Row>
-    </div>
-  );
-};
 
 const hashtagPlugin = createHashtagPlugin({
   theme: { hashtag: 'hashtag' },
@@ -125,84 +90,74 @@ const toolbarPlugin = createToolbarPlugin({
 const linkPlugin = createLinkPlugin();
 const { Toolbar } = toolbarPlugin;
 
-const getIndicesOf = (searchStr, str, caseSensitive?) => {
-  let tempStr = str;
-  let tempSearchStr = searchStr;
-  const searchStrLen = tempSearchStr.length;
-  if (searchStrLen === 0) {
-    return [];
-  }
-  let startIndex = 0;
-  let index;
-  const indices: number[] = [];
-  if (!caseSensitive) {
-    tempStr = tempStr.toLowerCase();
-    tempSearchStr = tempSearchStr.toLowerCase();
-  }
+const mentionRegexp = /@+([\w ]+)+\(([\w+-]+)\)+\[([/+\w+]+[\w+-]+)\]/;
+const mentionRemakePlugin = (remarkable: Env) => {
+  remarkable.inline.ruler.push('mention', (state: Env, silent: boolean) => {
+    if (!state.src) {
+      return false;
+    }
 
-  while ((index = tempStr.indexOf(tempSearchStr, startIndex)) > -1) {
-    indices.push(index);
-    startIndex = index + searchStrLen;
-  }
-  return indices;
-};
+    if (state.src[state.pos] !== '@') {
+      return false;
+    }
+    var match = mentionRegexp.exec(state.src.slice(state.pos));
+    if (!match) {
+      return false;
+    }
 
-const getEntityRanges = (text, mentionName, mentionKey) => {
-  const indices = getIndicesOf(mentionName, text);
-  if (indices.length > 0) {
-    return indices.map(offset => ({
-      key: mentionKey,
-      length: mentionName.length,
-      offset,
-    }));
-  }
+    if (!silent) {
+      state.push({
+        type: 'mention_open',
+        name: match[1],
+        id: match[2],
+        link: match[3],
+        level: state.level,
+      });
 
-  return null;
+      state.push({
+        type: 'text',
+        content: '@' + match[1],
+        level: state.level + 1,
+      });
+
+      state.push({
+        type: 'mention_close',
+        level: state.level,
+      });
+    }
+    state.pos += match[0].length;
+
+    return true;
+  });
 };
 
 export const RichEditor = memo((props: Props) => {
-  const { mentionSuggest, width, height, data, onSubmit } = props;
+  const { width, height, data, onSubmit } = props;
   const ref = useRef<Editor>(null);
   const [open, setOpen] = useState(false);
-  const [suggestions, setSuggestions] = useState<MentionData[]>(
-    mentionSuggest && mentionSuggest['@'],
-  );
+  const [suggestions, setSuggestions] = useState<MentionData[]>();
 
   const [editorState, setEditorState] = useState(() => {
     if (data) {
       const markdownString = data;
-      const rawData = markdownToDraft(markdownString);
-      if (mentionSuggest) {
-        const rawState = mentionSuggest.map((mention, index) => ({
-          [`${index}`]: {
-            type: 'mention',
-            mutability: 'IMMUTABLE',
-            data: {
-              name: mention.name,
-              avatar: mention.avatar,
-            },
+      const rawData = markdownToDraft(markdownString, {
+        remarkablePlugins: [mentionRemakePlugin],
+        blockEntities: {
+          mention_open: function (item: any) {
+            return {
+              type: 'mention',
+              mutability: 'IMMUTABLE',
+              data: {
+                mention: {
+                  id: item.id,
+                  name: item.name,
+                  link: item.link,
+                },
+              },
+            };
           },
-        }));
-
-        const entity = Object.assign({}, ...rawState);
-        rawData.entityMap = entity;
-
-        rawData.blocks = rawData.blocks.map(block => {
-          const ranges: RawDraftEntityRange[] = [];
-          mentionSuggest.forEach((mention, index) => {
-            const entityRanges = getEntityRanges(
-              block.text,
-              '@' + mention.name,
-              index,
-            );
-            if (entityRanges) {
-              ranges.push(...entityRanges);
-            }
-          });
-
-          return { ...block, entityRanges: ranges };
-        });
-      }
+        },
+      });
       const contentState = convertFromRaw(rawData);
       return EditorState.createWithContent(contentState);
     } else {
@@ -217,7 +172,16 @@ export const RichEditor = memo((props: Props) => {
       supportWhitespace: true,
       mentionComponent: mentionProps => {
         return (
-          <span className={mentionProps.className}>
+          <span
+            className={mentionProps.className}
+            onClick={() => {
+              window.open(
+                mentionProps.mention.link,
+                '_blank',
+                'noopener,noreferrer',
+              );
+            }}
+          >
             {mentionProps.children}
           </span>
         );
@@ -235,18 +199,26 @@ export const RichEditor = memo((props: Props) => {
     setOpen(_open);
   }, []);
   const onSearchChange = useCallback(
-    ({ trigger, value }: { trigger: string; value: string }) => {
-      if (mentionSuggest) {
-        setSuggestions(
-          defaultSuggestionsFilter(
-            value,
-            mentionSuggest,
-            trigger,
-          ) as MentionData[],
-        );
+    async ({ trigger, value }: { trigger: string; value: string }) => {
+      const response = await api.hr.employee.list(
+        value,
+        undefined,
+        undefined,
+        undefined,
+        6,
+      );
+      if (response) {
+        let suggest = response.results.map(response => ({
+          id: response.id,
+          name: response.first_name + ' ' + response.last_name,
+          avatar: response.avatar,
+          email: response.email,
+          link: '/employees/' + response.id,
+        }));
+        setSuggestions(suggest);
       }
     },
-    [mentionSuggest],
+    [],
   );
 
   const MyToolbar = memo(() => {
@@ -297,16 +269,14 @@ export const RichEditor = memo((props: Props) => {
             </React.Fragment>
           )}
         </InlineToolbar>
-        {mentionSuggest && (
-          <MentionSuggestions
-            open={open}
-            onOpenChange={onOpenChange}
-            suggestions={suggestions || []}
-            onSearchChange={onSearchChange}
-            onAddMention={mention => {}}
-            entryComponent={Entry}
-          />
-        )}
+        <MentionSuggestions
+          open={open}
+          onOpenChange={onOpenChange}
+          suggestions={suggestions || []}
+          onSearchChange={onSearchChange}
+          onAddMention={mention => {}}
+          entryComponent={EntryMention}
+        />
       </div>
       <Button
         size="large"
@@ -314,7 +284,20 @@ export const RichEditor = memo((props: Props) => {
         onClick={() => {
           const content = editorState.getCurrentContent();
           const rawObject = convertToRaw(content);
-          const markdownString = draftToMarkdown(rawObject);
+          const markdownString = draftToMarkdown(rawObject, {
+            entityItems: {
+              mention: {
+                open: function (entity: any) {
+                  console.log(entity);
+                  return ``;
+                },
+
+                close: function (entity: any) {
+                  return `(${entity.data.mention.id})[${entity.data.mention.link}]`;
+                },
+              },
+            },
+          });
 
           onSubmit(markdownString);
         }}
@@ -398,5 +381,9 @@ const Wrapper = styled.div`
   .hashtag {
     color: rgb(28, 65, 167);
     background-color: rgba(28, 65, 167, 0.1);
+  }
+
+  blockquote {
+    margin: 1em;
   }
 `;
