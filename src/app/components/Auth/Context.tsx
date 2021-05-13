@@ -16,7 +16,7 @@ interface AuthContextValues {
 
 export const AuthContext = React.createContext<AuthContextValues>({
   authProvider: defaultProvider,
-  loading: false,
+  loading: true,
   authenticated: false,
   identity: null,
   setAuthState: (

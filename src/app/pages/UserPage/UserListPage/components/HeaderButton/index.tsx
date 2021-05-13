@@ -3,15 +3,8 @@
  * HeaderButton
  *
  */
-import {
-  Avatar,
-  Button,
-  Col,
-  Popover,
-  Row,
-  Table,
-  TablePaginationConfig,
-} from 'antd';
+import { Button, Col, Popover, Row, Table, TablePaginationConfig } from 'antd';
+import { Avatar } from 'app/components/Avatar/Loadable';
 import { DialogModal } from 'app/components/DialogModal';
 import * as React from 'react';
 import CSVReader from 'react-csv-reader';
@@ -22,11 +15,16 @@ import { UsersMessages } from '../../messages';
 import { CSVLink } from 'react-csv';
 import { request } from 'utils/request';
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import {
+  ExportOutlined,
+  ImportOutlined,
+  UserAddOutlined,
+} from '@ant-design/icons';
 
 interface HeaderButtonProps {
-  pagination: TablePaginationConfig;
+  pagination?: TablePaginationConfig;
   data?: Employee[];
-  selectedRows: Employee[];
+  selectedRows?: Employee[];
 }
 
 export const HeaderButton = (props: HeaderButtonProps) => {
@@ -73,6 +71,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
           size={100}
           src={text}
           alt={record.first_name + ' ' + record.last_name}
+          name={record.first_name + ' ' + record.last_name}
         />
       ),
     },
@@ -115,7 +114,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
       <Col span={24}>
         <Button block>
           <CSVLink
-            filename={'users-page-' + pagination.current + '.csv'}
+            filename={'users-page-' + pagination?.current + '.csv'}
             data={data}
           >
             {t(UsersMessages.exportPerPage())}
@@ -123,8 +122,11 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         </Button>
       </Col>
       <Col span={24}>
-        <Button block disabled={selectedRows.length === 0}>
-          <CSVLink filename={'users-page-select.csv'} data={selectedRows}>
+        <Button
+          block
+          disabled={selectedRows && selectedRows?.length > 0 ? false : true}
+        >
+          <CSVLink filename={'users-page-select.csv'} data={selectedRows || []}>
             {t(UsersMessages.exportSelected())}
           </CSVLink>
         </Button>
@@ -139,20 +141,27 @@ export const HeaderButton = (props: HeaderButtonProps) => {
           size="large"
           type="primary"
           onClick={() => history.push('/create-user')}
+          icon={<UserAddOutlined />}
         >
           {t(UsersMessages.createUserButton())}
         </Button>
       </OptionButton>
       <OptionButton>
         <Popover placement="bottom" content={exportCSVType}>
-          <Button size="large">{t(UsersMessages.exportCSV())}</Button>
+          <Button size="large" icon={<ExportOutlined />}>
+            {t(UsersMessages.exportCSV())}
+          </Button>
         </Popover>
       </OptionButton>
       <OptionButton>
         <ButtonImport size="large">
           <CSVReader
             cssClass="react-csv-input"
-            label={t(UsersMessages.importCSV())}
+            label={
+              <>
+                <ImportOutlined /> {t(UsersMessages.importCSV())}
+              </>
+            }
             inputStyle={{ display: 'none' }}
             onFileLoaded={handleForce}
             parserOptions={papaparseOptions}
@@ -184,9 +193,21 @@ export const HeaderButton = (props: HeaderButtonProps) => {
 const OptionButton = styled(Col)`
   margin-left: 1em;
   margin-bottom: 1em;
+
+  button {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const ButtonImport = styled(Button)`
+  label {
+    display: flex;
+    align-items: center;
+    span {
+      margin-right: 10px;
+    }
+  }
   label:hover {
     cursor: pointer;
   }

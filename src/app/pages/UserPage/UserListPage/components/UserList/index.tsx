@@ -5,7 +5,8 @@
  */
 import * as React from 'react';
 import styled from 'styled-components/macro';
-import { Avatar, Button, Col, List, Row, Spin } from 'antd';
+import { Button, Col, List, Row, Spin } from 'antd';
+import { Avatar } from 'app/components/Avatar/Loadable';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -23,7 +24,7 @@ interface Props {
   data: Employee[];
   isMore: boolean;
   moreLoading: boolean;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, user: Employee) => void;
 }
 
 export const UserList = React.memo((props: Props) => {
@@ -40,7 +41,12 @@ export const UserList = React.memo((props: Props) => {
           <ListItem key={index}>
             <Row gutter={[8, 8]}>
               <Col style={{ textAlign: 'center' }} span={10}>
-                <Avatar size={{ xs: 90 }} src={user.avatar} />
+                <Avatar
+                  size={90}
+                  src={user.avatar}
+                  alt={user.first_name + ' ' + user.last_name}
+                  name={user.first_name + ' ' + user.last_name}
+                />
               </Col>
               <Col span={14}>
                 <h2>{user.first_name + ' ' + user.last_name}</h2>
@@ -86,7 +92,7 @@ export const UserList = React.memo((props: Props) => {
                       danger
                       shape="circle"
                       icon={<DeleteOutlined />}
-                      onClick={() => onDelete(user.id)}
+                      onClick={() => onDelete(user.id, user)}
                     />
                   </Col>
                 </Row>

@@ -2,15 +2,14 @@ import React, { useEffect } from 'react';
 
 import { useNotify } from './index';
 
-type NotificationVariant = 'info' | 'warning' | 'error' | 'success';
+const NotificationVariant = ['info', 'warning', 'error', 'success'];
 
 interface NotificationProps {
-  variant?: NotificationVariant;
+  variant?: string;
 }
 
 const Notification: React.FC<NotificationProps> = ({
-  variant = 'info',
-  ...restProps
+  variant = NotificationVariant[0],
 }) => {
   const { notify } = useNotify();
 
@@ -30,6 +29,14 @@ const Notification: React.FC<NotificationProps> = ({
 export default {
   title: 'Components/Notification',
   component: Notification,
+  argTypes: {
+    variant: {
+      control: {
+        type: 'radio',
+        options: NotificationVariant,
+      },
+    },
+  },
 } as any;
 
 export const Default = args => <Notification {...args} />;

@@ -5,6 +5,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { ResetPageMessages } from '../../messages';
+import { useSendReset } from '../../useSendReset';
 
 const layout = {
   labelCol: { span: 24 },
@@ -12,25 +13,33 @@ const layout = {
 };
 
 interface FormPayload {
-  newPassword: string;
-  retypePassword: string;
+  new_password1: string;
+  new_password2: string;
+  otp: string;
 }
+
+const regex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
 export const ResetForm: React.FC = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const { send, loading } = useSendReset();
 
-  const onFinish = (values: FormPayload) => {};
+  const onFinish = async (values: FormPayload) => {
+    console.log(values);
+    await send(values);
+  };
 
   const checkNewPassword = (
     rule: RuleObject,
     value: string,
     callback: (message?: string) => void,
   ) => {
-    const regex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
     if (value) {
       if (!regex.test(value)) {
         callback(t(ResetPageMessages.invalidNewPassword()));
+      } else {
+        callback();
       }
     } else {
       callback();
@@ -42,8 +51,7 @@ export const ResetForm: React.FC = () => {
     value: string,
     callback: (message?: string) => void,
   ) => {
-    const password = form.getFieldValue('newPassword');
-    const regex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    const password = form.getFieldValue('new_password1');
     if (value) {
       if (password) {
         if (!regex.test(value)) {
@@ -51,9 +59,11 @@ export const ResetForm: React.FC = () => {
         } else {
           if (value !== password) {
             callback(t(ResetPageMessages.notMatchRetypePassword()));
+          } else {
+            callback();
           }
         }
-      } else {
+      } else if (password.length === 0 || password === undefined) {
         callback(t(ResetPageMessages.emptyPasswordRetypePassword()));
       }
     } else {
@@ -65,7 +75,7 @@ export const ResetForm: React.FC = () => {
     <Wrapper>
       <Form {...layout} onFinish={onFinish} form={form}>
         <FormItem
-          name="newPassword"
+          name="new_password1"
           label={t(ResetPageMessages.newPassword())}
           rules={[
             {
@@ -84,7 +94,7 @@ export const ResetForm: React.FC = () => {
           />
         </FormItem>
         <FormItem
-          name="retypePassword"
+          name="new_password2"
           label={t(ResetPageMessages.retypePassword())}
           rules={[
             {
@@ -102,8 +112,30 @@ export const ResetForm: React.FC = () => {
             size="large"
           />
         </FormItem>
+        <FormItem
+          name="otp"
+          label={t(ResetPageMessages.otpLabel())}
+          rules={[
+            {
+              required: true,
+              message: t(ResetPageMessages.otpEmpty()),
+            },
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined />}
+            placeholder={t(ResetPageMessages.otpPlaceholder())}
+            size="large"
+          />
+        </FormItem>
         <FormItem>
-          <Button type="primary" block size="large" htmlType="submit">
+          <Button
+            type="primary"
+            loading={loading}
+            block
+            size="large"
+            htmlType="submit"
+          >
             {t(ResetPageMessages.resetButton())}
           </Button>
         </FormItem>

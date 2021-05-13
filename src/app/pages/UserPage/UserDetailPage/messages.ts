@@ -11,17 +11,26 @@ export const UserDetailMessages = {
   description: () => _t(translations.UserDetailPage.description, 'User Detail'),
   createTitle: () => _t(translations.UserDetailPage.createTitle, 'Create User'),
   formAvatarUpload: () =>
-    _t(translations.UserDetailPage.modal.form.avatar.upload, 'Upload'),
+    _t(translations.UserDetailPage.modal.form.avatar.upload, 'Upload Image'),
   formAvatarLabel: () =>
     _t(translations.UserDetailPage.modal.form.avatar.label, 'Avatar'),
   formCodeLabel: () =>
-    _t(translations.UserDetailPage.modal.form.code.label, 'Code'),
+    _t(translations.UserDetailPage.modal.form.code.label, 'Employee Code'),
   formCodePlaceholder: () =>
-    _t(translations.UserDetailPage.modal.form.code.placeholder, "User's code"),
+    _t(
+      translations.UserDetailPage.modal.form.code.placeholder,
+      'Enter employee code',
+    ),
+  formCodeEmpty: () =>
+    _t(
+      translations.UserDetailPage.modal.form.code.empty,
+      'Please enter employee code',
+    ),
+
   formEmptyAvatar: () =>
     _t(
       translations.UserDetailPage.modal.form.avatar.empty,
-      "Please upload user's avatar!",
+      'Please upload Employee avatar!',
     ),
   formProfileTitle: () =>
     _t(
@@ -36,12 +45,12 @@ export const UserDetailMessages = {
   formFirstNamePlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.firstName.placeholder,
-      "User's first name",
+      'Enter Employee First Name',
     ),
   formEmptyFirstName: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.firstName.empty,
-      'Please input user first name!',
+      'Please Enter Employee First Name!',
     ),
   formLastNameLabel: () =>
     _t(
@@ -51,12 +60,12 @@ export const UserDetailMessages = {
   formLastNamePlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.lastName.placeholder,
-      "User's last name",
+      'Employee Last Name',
     ),
   formEmptyLastName: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.lastName.empty,
-      'Please input user last name!',
+      'Please Enter Employee Last Name!',
     ),
   formDOBLabel: () =>
     _t(
@@ -66,12 +75,17 @@ export const UserDetailMessages = {
   formDOBPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.DOB.placeholder,
-      "Select user's DOB",
+      'Select Employee DOB',
     ),
   formEmptyDOB: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.DOB.empty,
-      "Please input user's date of birth!",
+      'Please Enter Employee Date of Birth!',
+    ),
+  formInvalidDOB: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.DOB.invalid,
+      'Only allow 16+ years old!',
     ),
   formGenderLabel: () =>
     _t(translations.UserDetailPage.modal.form.profile.gender.label, 'Gender'),
@@ -93,7 +107,7 @@ export const UserDetailMessages = {
   formEmptyGender: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.gender.empty,
-      "Please select user's gender",
+      'Please Select Employee Gender',
     ),
   formPhoneNumberLabel: () =>
     _t(
@@ -103,34 +117,34 @@ export const UserDetailMessages = {
   formPhoneNumberPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.phoneNumber.placeholder,
-      "User's phone number",
+      'Employee Phone Number',
     ),
   formEmptyPhoneNumber: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.phoneNumber.empty,
-      "Please input user's phone number!",
+      'Please Enter Employee Phone Number!',
     ),
   formInvalidPhoneNumber: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.phoneNumber.invalid,
-      "User's phone number is invalid!",
+      'Employee Phone Number Is Invalid!',
     ),
   formEmailLabel: () =>
     _t(translations.UserDetailPage.modal.form.profile.email.label, 'Email'),
   formEmailPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.email.placeholder,
-      "User's email",
+      'Employee Email',
     ),
   formEmptyEmail: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.email.empty,
-      "Please input user's email!",
+      'Please Enter Employee Email!',
     ),
   formInvalidEmail: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.email.invalid,
-      "User's email is invalid!",
+      'Employee Email Is Invalid!',
     ),
   formStatusLabel: () =>
     _t(translations.UserDetailPage.modal.form.profile.status.label, 'Status'),
@@ -144,6 +158,11 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.profile.status.married.label,
       'Married',
     ),
+  formIDCardTitle: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.idCard.title,
+      'Id Card Information',
+    ),
   formIdNumberLabel: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.idNumber.label,
@@ -152,7 +171,7 @@ export const UserDetailMessages = {
   formIdNumberPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.idNumber.placeholder,
-      "User's id number",
+      'Employee Id Number',
     ),
   formIssuedDateLabel: () =>
     _t(
@@ -162,7 +181,7 @@ export const UserDetailMessages = {
   formIssuedDatePlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.issuedDate.placeholder,
-      "User's issued date",
+      'Employee Issued Date',
     ),
   formIssuedPlaceLabel: () =>
     _t(
@@ -172,7 +191,7 @@ export const UserDetailMessages = {
   formIssuedPlacePlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.issuedPlace.placeholder,
-      "User's issued place",
+      'Employee Issued Place',
     ),
   formSocialInsuranceNoLabel: () =>
     _t(
@@ -183,7 +202,7 @@ export const UserDetailMessages = {
     _t(
       translations.UserDetailPage.modal.form.profile.socialInsuranceNo
         .placeholder,
-      "User's social insurance no",
+      'Employee Social Insurance No',
     ),
   formJobTitle: () =>
     _t(translations.UserDetailPage.modal.form.job.title, 'Job Infomation'),
@@ -192,12 +211,12 @@ export const UserDetailMessages = {
   formJobTitlePlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.job.jobTitle.placeholder,
-      "Input user's job title!",
+      'Input Employee Job Title!',
     ),
   formEmptyJobTitle: () =>
     _t(
       translations.UserDetailPage.modal.form.job.jobTitle.empty,
-      "Please input user's job title!",
+      'Please Enter Employee Job Title!',
     ),
   formTypeLabel: () =>
     _t(translations.UserDetailPage.modal.form.job.type.label, 'Type'),
@@ -223,45 +242,51 @@ export const UserDetailMessages = {
   formJobTagsPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.job.jobTags.placeholder,
-      "User's tags",
+      'Employee Tags',
     ),
   formBankAccountsTitle: () =>
-    _t(translations.UserDetailPage.modal.form.bank.title, 'Bank Accounts'),
+    _t(translations.UserDetailPage.modal.form.bank.title, 'Bank Informations'),
   formBankNameLabel: () =>
     _t(translations.UserDetailPage.modal.form.bank.name.label, 'Bank Name'),
   formBankNamePlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.bank.name.placeholder,
-      "User's bank name",
+      'Select Bank Name',
     ),
   formEmptyBankName: () =>
     _t(
       translations.UserDetailPage.modal.form.bank.name.empty,
-      "Please input user's bank name",
+      'Please Enter Employee Bank Name',
     ),
   formBankNumberLabel: () =>
-    _t(translations.UserDetailPage.modal.form.bank.number.label, 'Bank Number'),
+    _t(
+      translations.UserDetailPage.modal.form.bank.number.label,
+      'Account Number/ Card Number',
+    ),
   formBankNumberPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.bank.number.placeholder,
-      "User's bank number",
+      'Enter Account Number/ Card Number',
     ),
   formEmptyBankNumber: () =>
     _t(
       translations.UserDetailPage.modal.form.bank.number.empty,
-      "Please input user's bank number",
+      'Please Enter Employee bank number',
     ),
   formBankBranchLabel: () =>
-    _t(translations.UserDetailPage.modal.form.bank.branch.label, 'Branch'),
+    _t(
+      translations.UserDetailPage.modal.form.bank.branch.label,
+      'Account Owner',
+    ),
   formBankBranchPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.bank.branch.placeholder,
-      "User's bank branch",
+      "Enter Account Owner's Name",
     ),
   formEmptyBankBranch: () =>
     _t(
       translations.UserDetailPage.modal.form.bank.branch.empty,
-      "Please input user's bank branch",
+      'Please Enter Employee Bank Branch',
     ),
   formBankAddButton: () =>
     _t(
@@ -275,14 +300,14 @@ export const UserDetailMessages = {
   formSocialsSkypePlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.social.skype.placeholder,
-      "Input user's Skype",
+      'Input Employee Skype',
     ),
   formSocialsTwitterLabel: () =>
     _t(translations.UserDetailPage.modal.form.social.twitter.label, 'Twitter'),
   formSocialsTwitterPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.social.twitter.placeholder,
-      "Input user's Twitter",
+      'Input Employee Twitter',
     ),
   formSocialsFacebookLabel: () =>
     _t(
@@ -292,7 +317,7 @@ export const UserDetailMessages = {
   formSocialsFacebookPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.social.facebook.placeholder,
-      "Input user's Facebook",
+      'Input Employee Facebook',
     ),
   formSocialsLinkedinLabel: () =>
     _t(
@@ -302,21 +327,21 @@ export const UserDetailMessages = {
   formSocialsLinkedinPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.social.linkedin.placeholder,
-      "Input user's Linkedin",
+      'Input Employee Linkedin',
     ),
   formSocialsGithubLabel: () =>
     _t(translations.UserDetailPage.modal.form.social.github.label, 'Github'),
   formSocialsGithubPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.social.github.placeholder,
-      "Input user's Github",
+      'Input Employee Github',
     ),
   formSocialsGitlabLabel: () =>
     _t(translations.UserDetailPage.modal.form.social.gitlab.label, 'Gitlab'),
   formSocialsGitlabPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.social.gitlab.placeholder,
-      "Input user's Gitlab",
+      'Input Employee Gitlab',
     ),
   formEditButton: () =>
     _t(translations.UserDetailPage.modal.form.button.edit, 'Edit'),
@@ -326,6 +351,18 @@ export const UserDetailMessages = {
     _t(translations.UserDetailPage.modal.form.button.cancel, 'Cancel'),
   formBackButton: () =>
     _t(translations.UserDetailPage.modal.form.button.back, 'Back'),
+  formAddBankButton: () =>
+    _t(
+      translations.UserDetailPage.modal.form.button.addBank,
+      'Add Bank Account',
+    ),
+  formEditBankButton: () =>
+    _t(
+      translations.UserDetailPage.modal.form.button.editBank,
+      'Edit Bank Account',
+    ),
+  formSubmitAddBankButton: () =>
+    _t(translations.UserDetailPage.modal.form.button.submitAddBank, 'Submit'),
   updateSuccessMessage: () =>
     _t(
       translations.UserDetailPage.modal.message.sucess,

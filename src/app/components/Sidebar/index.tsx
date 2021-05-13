@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { Drawer, Layout, Menu } from 'antd';
 import React from 'react';
-import { isMobile, isTablet } from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Logo } from './Logo';
@@ -21,8 +21,6 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
   const { Sider } = Layout;
   const { SubMenu } = Menu;
   const [isSidebar] = React.useState(isMobile);
-  console.log('isMobile', isMobile);
-  console.log('isTablet', isTablet);
   return (
     <Wrapper style={{ width: collapsed ? 80 : 200 }}>
       {isMobile ? (
@@ -44,7 +42,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
               <Link to="/">Dashboard</Link>
             </Menu.Item>
             <Menu.Item key="/employees" icon={<TeamOutlined />}>
-              <Link to="/employees">Employess</Link>
+              <Link to="/employees">Employees</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<ContainerOutlined />}>
               Option 3
@@ -88,7 +86,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
               <Link to="/">Dashboard</Link>
             </Menu.Item>
             <Menu.Item key="/employees" icon={<TeamOutlined />}>
-              <Link to="/employees">Employess</Link>
+              <Link to="/employees">Employees</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<ContainerOutlined />}>
               Option 3

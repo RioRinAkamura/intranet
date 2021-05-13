@@ -45,6 +45,30 @@ export const GlobalStyle = createGlobalStyle`
     z-index: 1010;
     margin: 0 24px 0 0;
   }
+  & .toast-box{
+    width: 100%;
+    text-align: -webkit-center;
+    box-sizing: border-box;
+    padding: 0;
+    color: #fff;
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none; 
+    font-feature-settings: "tnum";
+    position: fixed;
+    z-index: 1010;
+  }
+    & .top {
+      top:120px;
+      left: 0px;
+    }
+    & .bottom {
+      bottom:0px;
+      left: 0px;
+    }
+
+
     & .topLeft {
       top: 10px;
       left: 24px;
@@ -65,6 +89,6 @@ export const GlobalStyle = createGlobalStyle`
       right: 24px;
     };
     & .customClassname {
-      width: 500px,
+      width: 500px;
     }
 `;
