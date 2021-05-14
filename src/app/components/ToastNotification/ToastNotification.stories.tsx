@@ -35,6 +35,7 @@ export default {
         type: 'radio',
         options: NotificationVariant,
       },
+      defaultValue: NotificationVariant[0],
     },
   },
 } as any;
