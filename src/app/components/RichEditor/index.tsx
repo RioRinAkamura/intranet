@@ -15,7 +15,7 @@ import styled from 'styled-components/macro';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
 import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
-import { Button } from 'antd';
+import { Button, Popover } from 'antd';
 import createMentionPlugin, {
   MentionPluginTheme,
 } from '@draft-js-plugins/mention';
@@ -48,6 +48,7 @@ import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
 import { api } from 'utils/api';
 import { Env } from 'remarkable/lib';
 import { EntryMention } from './components/EntryMention';
+import { MentionContent } from './components/MentionContent';
 const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
 
@@ -90,7 +91,7 @@ const toolbarPlugin = createToolbarPlugin({
 const linkPlugin = createLinkPlugin();
 const { Toolbar } = toolbarPlugin;
 
-const mentionRegexp = /@+([\w ]+)+\(([\w+-]+)\)+\[([/+\w+]+[\w+-]+)\]/;
+const mentionRegexp = /@+([\w ]+)+\(([\w+-]+)\)/;
 const mentionRemakePlugin = (remarkable: Env) => {
   remarkable.inline.ruler.push('mention', (state: Env, silent: boolean) => {
     if (!state.src) {
@@ -110,7 +111,7 @@ const mentionRemakePlugin = (remarkable: Env) => {
         type: 'mention_open',
         name: match[1],
         id: match[2],
-        link: match[3],
+        link: 'employees/' + match[2],
         level: state.level,
       });
 
@@ -172,18 +173,20 @@ export const RichEditor = memo((props: Props) => {
       supportWhitespace: true,
       mentionComponent: mentionProps => {
         return (
-          <span
-            className={mentionProps.className}
-            onClick={() => {
-              window.open(
-                mentionProps.mention.link,
-                '_blank',
-                'noopener,noreferrer',
-              );
-            }}
-          >
-            {mentionProps.children}
-          </span>
+          <Popover content={<MentionContent id={mentionProps.mention.id} />}>
+            <span
+              className={mentionProps.className}
+              onClick={() => {
+                window.open(
+                  mentionProps.mention.link,
+                  '_blank',
+                  'noopener,noreferrer',
+                );
+              }}
+            >
+              {mentionProps.children}
+            </span>
+          </Popover>
         );
       },
     });
@@ -293,7 +296,7 @@ export const RichEditor = memo((props: Props) => {
                 },
 
                 close: function (entity: any) {
-                  return `(${entity.data.mention.id})[${entity.data.mention.link}]`;
+                  return `(${entity.data.mention.id})`;
                 },
               },
             },
@@ -371,7 +374,7 @@ const Wrapper = styled.div`
     left: 0;
     width: 100%;
     border: 1px solid #ddd;
-    background: #fff;
+    background: #fbfbfb;
     border-radius: 2px;
     box-shadow: 0px 1px 3px 0px rgb(220 220 220);
     z-index: 2;
