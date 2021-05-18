@@ -1,17 +1,31 @@
 import * as React from 'react';
 import { has } from 'lodash';
-import { Button, Input, Space } from 'antd';
+import {
+  Button,
+  Checkbox,
+  CheckboxOptionType,
+  Col,
+  Input,
+  Row,
+  Space,
+} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Highlighter from 'react-highlight-words';
-import { TagType } from 'app/pages/UserPage/types';
 import { TagsInput } from 'app/components/Tags';
 import { TableStateProps } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
+import { TagType } from './types';
+import styled from 'styled-components/macro';
 
 interface useTableProps {
   getColumnSorterProps: (dataIndex: string, columnPriority: number) => {};
   getColumnSearchInputProps: (dataIndex: string[], filterIndex?: number) => {};
   getColumnSearchTagProps: (dataIndex: string, tags?: TagType[]) => {};
+  getColumnSearchCheckboxProps: (
+    dataIndex: string[],
+    options: CheckboxOptionType[],
+    filterIndex?: number,
+  ) => {};
 }
 
 type MessageTranslate = {
@@ -59,7 +73,7 @@ export const useTableConfig = (
     ellipsis: true,
     filterDropdown: ({ confirm }) => {
       return (
-        <div style={{ padding: 8 }}>
+        <Wrapper>
           <Input
             placeholder={`${t(
               messageTrans.filterInputPlaceholder(),
@@ -99,7 +113,7 @@ export const useTableConfig = (
               {t(messageTrans.filterResetButton())}
             </Button>
           </Space>
-        </div>
+        </Wrapper>
       );
     },
     filterIcon: filtered => (
@@ -157,7 +171,7 @@ export const useTableConfig = (
     ellipsis: true,
     filterDropdown: ({ confirm }) => {
       return (
-        <div style={{ padding: 8 }}>
+        <Wrapper>
           <TagsInput
             value={selectedKeys[dataIndex]}
             callback={e => {
@@ -187,7 +201,7 @@ export const useTableConfig = (
               {t(messageTrans.filterResetButton())}
             </Button>
           </Space>
-        </div>
+        </Wrapper>
       );
     },
     filterIcon: filtered => (
@@ -202,9 +216,85 @@ export const useTableConfig = (
         : '',
   });
 
+  const getColumnSearchCheckboxProps = (
+    dataIndex: string[],
+    options: CheckboxOptionType[],
+    filterIndex?: number,
+  ) => ({
+    ellipsis: true,
+    filterDropdown: ({ confirm }) => {
+      return (
+        <Wrapper>
+          <WrapperCheckbox>
+            <Checkbox.Group
+              value={selectedKeys[dataIndex[filterIndex || 0]]}
+              options={options}
+              onChange={e => {
+                setSelectedKeys(prevState => ({
+                  ...prevState,
+                  [dataIndex[filterIndex || 0]]: e ? e : null,
+                }));
+              }}
+            />
+          </WrapperCheckbox>
+          <Row gutter={[8, 0]}>
+            <Col>
+              <Button
+                type="primary"
+                onClick={() =>
+                  handleSearch(dataIndex[filterIndex || 0], confirm)
+                }
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90 }}
+                loading={state.loading}
+              >
+                {t(messageTrans.filterSearchButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                onClick={() =>
+                  handleReset(dataIndex[filterIndex || 0], confirm)
+                }
+                size="small"
+                loading={state.loading}
+                style={{ width: 90 }}
+              >
+                {t(messageTrans.filterResetButton())}
+              </Button>
+            </Col>
+          </Row>
+        </Wrapper>
+      );
+    },
+    onFilter: (value, record) =>
+      record[dataIndex[filterIndex || 0]]
+        ? record[dataIndex[filterIndex || 0]]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : '',
+  });
+
   return {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchTagProps,
+    getColumnSearchCheckboxProps,
   };
 };
+
+const Wrapper = styled.div`
+  padding: 8px;
+`;
+
+const WrapperCheckbox = styled.div`
+  .ant-checkbox-group {
+    display: grid;
+  }
+
+  border-bottom: 1px solid #d5d4d5;
+  padding-bottom: 7px;
+  margin-bottom: 7px;
+`;

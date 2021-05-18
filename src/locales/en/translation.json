@@ -337,7 +337,60 @@
   },
   "tagsInput": {
     "validate": "Please input more 1 word",
-    "searchTags":"Search Tags"
-
+    "searchTags": "Search Tags"
+  },
+  "ProjectsPage": {
+    "title": "Projects",
+    "description": "Projects",
+    "exportCSV": "Export as CSV",
+    "exportPerPage": "Export as CSV this page",
+    "exportSelected": "Export as CSV for selected rows",
+    "importCSV": "Import CSV",
+    "list": {
+      "avatar": "Avatar",
+      "name": "Name",
+      "started": "Started",
+      "priority": "Priority",
+      "status": "Status",
+      "options": "Actions",
+      "viewTooltip": "View",
+      "EditTooltip": "Edit",
+      "DeleteTooltip": "Delete",
+      "filter": {
+        "inputPlaceholder": "Search",
+        "searchButton": "Search",
+        "resetButton": "Reset",
+        "filterButton": "Filter"
+      },
+      "tm": "Team Members",
+      "pm": "Project Manager",
+      "ld": "Leader",
+      "qc": "Quality Controller",
+      "dev": "Developer",
+      "other": "Other"
+    },
+    "search": {
+      "title": "Search",
+      "search": {
+        "label": "Search",
+        "placeholder": "Search project's name, priority and status"
+      },
+      "searchButton": "Search",
+      "resetButton": "Reset"
+    },
+    "modal": {
+      "createTitle": "Create Project",
+      "editTitle": "Edit Project",
+      "profileTitle": "Project Profile",
+      "previewCSVTitle": "Preview Import File",
+      "form": {
+        "deleteButton": "Delete",
+        "deleteContent": "Are you sure to delete this project?",
+        "cancelButton": "Cancel",
+        "submitButton": "Save"
+      }
+    },
+    "createProjectButton": "Create Project",
+    "exportAllProject": "Export as CSV for all"
   }
 }

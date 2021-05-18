@@ -1,11 +1,8 @@
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { Key } from 'react';
 
-type Employee = models.hr.Employee;
-
 /* --- STATE --- */
-export interface UserspageState {
-  users?: Employee[] | [];
+export interface ProjectsState {
+  projects?: any;
   loading?: boolean;
   error?: Error;
   isFilter?: boolean;
@@ -13,35 +10,29 @@ export interface UserspageState {
   pagination?: Pagination;
   filterColumns?: FilterColumns;
   selectedRowKeys?: Key[];
-  selectedRows?: Employee[];
+  selectedRows?: any;
   deleteSuccess?: boolean;
   deleteFailed?: boolean;
 }
 
 export interface FilterColumns {
-  first_name?: string;
-  last_name?: string;
-  code?: string;
-  email?: string;
-  phoneNumber?: string;
-  tags?: string;
+  name?: string;
+  priority?: string;
+  status?: string;
   [key: string]: string | undefined;
 }
 
 export interface UserResponse {
   count: number;
-  results: Employee[] | [];
+  results: any;
 }
 
 export interface QueryParams {
   search?: string;
   ordering?: string;
-  first_name?: string;
-  last_name?: string;
-  code?: string;
-  email?: string;
-  phoneNumber?: string;
-  tags?: string;
+  name?: string;
+  priority?: string;
+  status?: string;
   limit?: number;
   page?: number;
   [key: string]: string | number | undefined;

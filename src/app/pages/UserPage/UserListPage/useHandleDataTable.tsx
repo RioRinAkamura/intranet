@@ -2,7 +2,6 @@ import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
-import { Pagination } from '../types';
 import { Key, SorterResult } from 'antd/lib/table/interface';
 import { identity, isArray, isEmpty, pickBy } from 'lodash';
 
@@ -13,13 +12,19 @@ interface useDataTable {
   resetFilter: (dataIndex: string) => void;
   setSelectedRows: <T>(selectedRowKeys: Key[], selectedRows: T[]) => void;
   setOrdering: <T>(sorter: SorterResult<T> | SorterResult<T>[]) => void;
-  setPagination: (pagination: Pagination) => void;
+  setPagination: (pagination: TablePagination) => void;
 }
 
 export interface TableStateProps {
   loading?: boolean;
   params: Params;
   filterColumns?: FilterColumns;
+}
+
+export interface TablePagination {
+  current?: number;
+  pageSize?: number;
+  total?: number;
 }
 
 interface Params {
@@ -54,13 +59,7 @@ export const useHandleDataTable = (
       let params = parse(location.search, {
         sort: false,
       });
-      dispatch(
-        actions.changeState({
-          params: pickBy(params, identity),
-          filterColumns: pickBy(params, identity),
-          pagination: pickBy({ ...params }, identity),
-        }),
-      );
+      dispatch(actions.changeState(pickBy(params, identity)));
     } else {
       dispatch(actions.notQuery());
     }
@@ -150,14 +149,14 @@ export const useHandleDataTable = (
                 ...urlParams,
               }),
             });
-            dispatch(actions.setOrdering(undefined));
+            dispatch(actions.setOrdering(null));
           }
         }
       }
     }
   };
 
-  const setPagination = (pagination: Pagination) => {
+  const setPagination = (pagination: TablePagination) => {
     history.replace({
       search: stringify(
         {

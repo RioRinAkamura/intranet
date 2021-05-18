@@ -1,18 +1,13 @@
 import { PayloadAction } from '@reduxjs/toolkit';
+import { TablePagination } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
+import { Key } from 'react';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
-import { userspageSaga } from './saga';
-import {
-  UserspageState,
-  UserResponse,
-  FilterColumns,
-  QueryParams,
-} from './types';
-import { Key } from 'react';
-import { TablePagination } from '../useHandleDataTable';
+import { projectsSaga } from './saga';
+import { FilterColumns, ProjectsState, QueryParams } from './types';
 
-export const initialState: UserspageState = {
-  users: [],
+export const initialState: ProjectsState = {
+  projects: [],
   loading: false,
   deleteSuccess: false,
   deleteFailed: false,
@@ -31,21 +26,21 @@ export const initialState: UserspageState = {
 };
 
 const slice = createSlice({
-  name: 'userspage',
+  name: 'projects',
   initialState,
   reducers: {
-    fetchUsers(state, action: PayloadAction<UserspageState>) {
+    fetchProjects(state, action: PayloadAction<ProjectsState>) {
       state.loading = true;
     },
-    fetchUsersSuccess(state, action: PayloadAction<UserResponse>) {
-      state.users = action.payload.results;
+    fetchProjectsSuccess(state, action: PayloadAction<any>) {
+      state.projects = action.payload.results;
       state.pagination!.total = Number(action.payload.count);
       state.pagination!.current = Number(state.params.page);
       state.pagination!.pageSize = Number(state.params.limit);
       state.loading = false;
       state.isFilter = true;
     },
-    fetchUsersFailure(state, action: PayloadAction<UserspageState>) {
+    fetchProjectsFailure(state, action: PayloadAction<ProjectsState>) {
       state.error = action.payload.error;
       state.loading = false;
     },
@@ -53,12 +48,9 @@ const slice = createSlice({
       state.params = { ...state.params, ...action.payload };
       state.filterColumns = {
         ...state.filterColumns,
-        first_name: action.payload.first_name,
-        last_name: action.payload.last_name,
-        code: action.payload.code,
-        email: action.payload.email,
-        phoneNumber: action.payload.phoneNumber,
-        tags: action.payload.tags,
+        name: action.payload.name,
+        priority: action.payload.priority,
+        status: action.payload.status,
       };
       state.pagination = {
         ...state.pagination,
@@ -128,10 +120,22 @@ const slice = createSlice({
   },
 });
 
-export const { actions: userspageActions } = slice;
+export const { actions: projectsActions } = slice;
 
-export const useUserspageSlice = () => {
+export const useProjectsSlice = () => {
   useInjectReducer({ key: slice.name, reducer: slice.reducer });
-  useInjectSaga({ key: slice.name, saga: userspageSaga });
+  useInjectSaga({ key: slice.name, saga: projectsSaga });
   return { actions: slice.actions };
 };
+
+/**
+ * Example Usage:
+ *
+ * export function MyComponentNeedingThisSlice() {
+ *  const { actions } = useProjectsSlice();
+ *
+ *  const onButtonClick = (evt) => {
+ *    dispatch(actions.someAction());
+ *   };
+ * }
+ */

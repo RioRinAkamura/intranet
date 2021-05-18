@@ -25,6 +25,7 @@ import { AuthContextProvider } from './components/Auth/Context';
 import { ForgotPassword } from './pages/ForgotPassword/Loadable';
 import { ResetPassword } from './pages/ResetPassword/Loadable';
 import { ToastContextProvider } from './components/Toast/context';
+import { ProjectsPage } from './pages/ProjectPage/ProjectListPage/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -75,6 +76,7 @@ export function App() {
                 path={`${config.CREATE_USER_PATH}`}
                 component={UserDetailPage}
               />
+              <PrivateRoute exact path={'/projects'} component={ProjectsPage} />
             </AppLayout>
 
             <Route component={NotFoundPage} />
