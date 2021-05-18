@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import { Key, SorterResult } from 'antd/lib/table/interface';
-import { identity, isArray, isEmpty, isUndefined, pickBy } from 'lodash';
+import { isArray, isEmpty, isUndefined, pickBy } from 'lodash';
 
 interface useDataTable {
   setSearchText: (text: string) => void;

@@ -3,7 +3,15 @@
  * HeaderButton
  *
  */
-import { Button, Col, Popover, Row, Table, TablePaginationConfig } from 'antd';
+import {
+  Button,
+  Col,
+  Popover,
+  Row,
+  Table,
+  TablePaginationConfig,
+  Tag,
+} from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { DialogModal } from 'app/components/DialogModal';
 import * as React from 'react';
@@ -11,15 +19,18 @@ import CSVReader from 'react-csv-reader';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
-import { UsersMessages } from '../../messages';
 import { CSVLink } from 'react-csv';
 import { request } from 'utils/request';
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import {
   ExportOutlined,
   ImportOutlined,
-  UserAddOutlined,
+  ProjectOutlined,
 } from '@ant-design/icons';
+import { ProjectsMessages } from '../../messages';
+import moment from 'moment';
+import { antColours } from 'utils/types';
+import { ColumnsType } from 'antd/lib/table';
 
 interface HeaderButtonProps {
   pagination?: TablePaginationConfig;
@@ -62,38 +73,94 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     console.log('Handle Import CSV');
   };
 
-  const columns = [
+  const memberChildren = (dataIndex: string) => ({
+    dataIndex: ['members'],
+    width: 250,
+    render: (text, record: any) => {
+      let members;
+      if (dataIndex === 'OTHER') {
+        members = text.filter(
+          item =>
+            item.project_role !== 'PM' &&
+            item.project_role !== 'LD' &&
+            item.project_role !== 'QC' &&
+            item.project_role !== 'DEV',
+        );
+      } else {
+        members = text.filter(item => item.project_role === dataIndex);
+      }
+      return (
+        <div>
+          {members.map(member => {
+            const info = member.employee;
+            return (
+              <div style={{ marginBottom: '5px' }}>
+                <span>
+                  <Avatar
+                    src={info.avatar}
+                    name={info.first_name + ' ' + info.last_name}
+                    size={30}
+                  />
+                  {` ${info.first_name} ${info.last_name} `}
+                  <Tag color={antColours[member.allocation]}>
+                    {member.allocation}
+                  </Tag>
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      );
+    },
+  });
+
+  const columns: ColumnsType<any> = [
     {
-      title: t(UsersMessages.listAvatarTitle()),
-      dataIndex: 'avatar',
-      render: (text, record: Employee) => (
-        <Avatar
-          size={100}
-          src={text}
-          alt={record.first_name + ' ' + record.last_name}
-          name={record.first_name + ' ' + record.last_name}
-        />
-      ),
+      title: t(ProjectsMessages.listNameTitle()),
+      dataIndex: 'name',
+      width: 110,
+      fixed: 'left',
     },
     {
-      title: t(UsersMessages.listFirstNameTitle()),
-      dataIndex: 'first_name',
-      sorter: {
-        compare: (a, b) => a.first_name.localeCompare(b.first_name),
-        multiple: 2,
-      },
+      title: t(ProjectsMessages.listTMTitle()),
+      children: [
+        {
+          title: t(ProjectsMessages.listPMTitle()),
+          ...memberChildren('PM'),
+        },
+        {
+          title: t(ProjectsMessages.listLDTitle()),
+          ...memberChildren('LD'),
+        },
+        {
+          title: t(ProjectsMessages.listQCTitle()),
+          ...memberChildren('QC'),
+        },
+        {
+          title: t(ProjectsMessages.listDEVTitle()),
+          ...memberChildren('DEV'),
+        },
+        {
+          title: t(ProjectsMessages.listOTHERTitle()),
+          ...memberChildren('OTHER'),
+        },
+      ],
     },
     {
-      title: t(UsersMessages.listLastNameTitle()),
-      dataIndex: 'last_name',
-      sorter: {
-        compare: (a, b) => a.last_name.localeCompare(b.last_name),
-        multiple: 1,
-      },
+      title: t(ProjectsMessages.listStartedTitle()),
+      dataIndex: 'started',
+      width: 120,
+      render: text => moment(text).format('DD-MM-YYYY'),
     },
     {
-      title: t(UsersMessages.listEmailTitle()),
-      dataIndex: 'email',
+      title: t(ProjectsMessages.listPriorityTitle()),
+      dataIndex: 'priority',
+      width: 140,
+    },
+    {
+      title: t(ProjectsMessages.listStatusTitle()),
+      dataIndex: 'status',
+      width: 130,
     },
   ];
 
@@ -107,7 +174,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
             asyncOnClick={true}
             onClick={getAllUsers}
           >
-            {t(UsersMessages.exportAllUser())}
+            {t(ProjectsMessages.exportAllProject())}
           </CSVLink>
         </Button>
       </Col>
@@ -117,7 +184,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
             filename={'users-page-' + pagination?.current + '.csv'}
             data={data}
           >
-            {t(UsersMessages.exportPerPage())}
+            {t(ProjectsMessages.exportPerPage())}
           </CSVLink>
         </Button>
       </Col>
@@ -127,7 +194,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
           disabled={selectedRows && selectedRows?.length > 0 ? false : true}
         >
           <CSVLink filename={'users-page-select.csv'} data={selectedRows || []}>
-            {t(UsersMessages.exportSelected())}
+            {t(ProjectsMessages.exportSelected())}
           </CSVLink>
         </Button>
       </Col>
@@ -141,15 +208,15 @@ export const HeaderButton = (props: HeaderButtonProps) => {
           size="large"
           type="primary"
           onClick={() => history.push('/create-user')}
-          icon={<UserAddOutlined />}
+          icon={<ProjectOutlined />}
         >
-          {t(UsersMessages.createUserButton())}
+          {t(ProjectsMessages.createProjectButton())}
         </Button>
       </OptionButton>
       <OptionButton>
         <Popover placement="bottom" content={exportCSVType}>
           <Button size="large" icon={<ExportOutlined />}>
-            {t(UsersMessages.exportCSV())}
+            {t(ProjectsMessages.exportCSV())}
           </Button>
         </Popover>
       </OptionButton>
@@ -159,7 +226,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
             cssClass="react-csv-input"
             label={
               <>
-                <ImportOutlined /> {t(UsersMessages.importCSV())}
+                <ImportOutlined /> {t(ProjectsMessages.importCSV())}
               </>
             }
             inputStyle={{ display: 'none' }}
@@ -169,14 +236,14 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         </ButtonImport>
       </OptionButton>
       <DialogModal
-        title={t(UsersMessages.modalPreviewCSVTitle())}
+        title={t(ProjectsMessages.modalPreviewCSVTitle())}
         isOpen={previewModal.open}
         handleCancel={() => {
           setPreviewModal({ open: false, data: [] });
         }}
         handleSubmit={handleImport}
-        cancelText={t(UsersMessages.modalFormCancelButton())}
-        okText={t(UsersMessages.modalFormSubmitButton())}
+        cancelText={t(ProjectsMessages.modalFormCancelButton())}
+        okText={t(ProjectsMessages.modalFormSubmitButton())}
         width={1000}
       >
         <Table

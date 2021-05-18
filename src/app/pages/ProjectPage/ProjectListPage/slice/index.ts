@@ -29,17 +29,17 @@ const slice = createSlice({
   name: 'projects',
   initialState,
   reducers: {
-    fetchUsers(state, action: PayloadAction<ProjectsState>) {
+    fetchProjects(state, action: PayloadAction<ProjectsState>) {
       state.loading = true;
     },
-    fetchUsersSuccess(state, action: PayloadAction<any>) {
+    fetchProjectsSuccess(state, action: PayloadAction<any>) {
       state.projects = action.payload.results;
       state.pagination!.total = Number(action.payload.count);
       state.pagination!.current = Number(state.params.page);
       state.pagination!.pageSize = Number(state.params.limit);
       state.loading = false;
     },
-    fetchUsersFailure(state, action: PayloadAction<ProjectsState>) {
+    fetchProjectsFailure(state, action: PayloadAction<ProjectsState>) {
       state.error = action.payload.error;
       state.loading = false;
     },

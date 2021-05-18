@@ -6,70 +6,77 @@
 import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
-export const UsersMessages = {
-  title: () => _t(translations.UsersPage.title, 'Employees'),
-  description: () => _t(translations.UsersPage.description, 'Employees'),
-  createUserButton: () =>
-    _t(translations.UsersPage.createUserButton, 'Create Employee'),
-  exportCSV: () => _t(translations.UsersPage.exportCSV, 'Export as CSV'),
-  exportAllUser: () =>
-    _t(translations.UsersPage.exportAllUser, 'Export as CSV for all'),
+export const ProjectsMessages = {
+  title: () => _t(translations.ProjectsPage.title, 'Projects'),
+  description: () => _t(translations.ProjectsPage.description, 'Projects'),
+  createProjectButton: () =>
+    _t(translations.ProjectsPage.createProjectButton, 'Create Project'),
+  exportCSV: () => _t(translations.ProjectsPage.exportCSV, 'Export as CSV'),
+  exportAllProject: () =>
+    _t(translations.ProjectsPage.exportAllProject, 'Export as CSV for all'),
   exportPerPage: () =>
-    _t(translations.UsersPage.exportPerPage, 'Export as CSV this page'),
+    _t(translations.ProjectsPage.exportPerPage, 'Export as CSV this page'),
   exportSelected: () =>
     _t(
-      translations.UsersPage.exportSelected,
+      translations.ProjectsPage.exportSelected,
       'Export as CSV for selected rows',
     ),
-  importCSV: () => _t(translations.UsersPage.importCSV, 'Import CSV'),
-  listAvatarTitle: () => _t(translations.UsersPage.list.avatar, 'Avatar'),
-  listNameTitle: () => _t(translations.UsersPage.list.name, 'Name'),
-  listFirstNameTitle: () =>
-    _t(translations.UsersPage.list.firstName, 'First Name'),
-  listLastNameTitle: () =>
-    _t(translations.UsersPage.list.lastName, 'Last Name'),
-  listEmailTitle: () => _t(translations.UsersPage.list.email, 'Email'),
-  listOptionsTitle: () => _t(translations.UsersPage.list.options, 'Actions'),
-  listViewTooltip: () => _t(translations.UsersPage.list.viewTooltip, 'View'),
-  listEditTooltip: () => _t(translations.UsersPage.list.EditTooltip, 'Edit'),
+  importCSV: () => _t(translations.ProjectsPage.importCSV, 'Import CSV'),
+  listAvatarTitle: () => _t(translations.ProjectsPage.list.avatar, 'Avatar'),
+  listNameTitle: () => _t(translations.ProjectsPage.list.name, 'Name'),
+  listTMTitle: () => _t(translations.ProjectsPage.list.tm, 'Team Members'),
+  listPMTitle: () => _t(translations.ProjectsPage.list.pm, 'Project Manager'),
+  listLDTitle: () => _t(translations.ProjectsPage.list.ld, 'Leader'),
+  listQCTitle: () =>
+    _t(translations.ProjectsPage.list.qc, 'Quality Controller'),
+  listDEVTitle: () => _t(translations.ProjectsPage.list.dev, 'Developer'),
+  listOTHERTitle: () => _t(translations.ProjectsPage.list.other, 'Other'),
+  listStartedTitle: () => _t(translations.ProjectsPage.list.started, 'Started'),
+  listPriorityTitle: () =>
+    _t(translations.ProjectsPage.list.priority, 'Priority'),
+  listStatusTitle: () => _t(translations.ProjectsPage.list.status, 'Status'),
+  listOptionsTitle: () => _t(translations.ProjectsPage.list.options, 'Actions'),
+  listViewTooltip: () => _t(translations.ProjectsPage.list.viewTooltip, 'View'),
+  listEditTooltip: () => _t(translations.ProjectsPage.list.EditTooltip, 'Edit'),
   listDeleteTooltip: () =>
-    _t(translations.UsersPage.list.DeleteTooltip, 'Delete'),
+    _t(translations.ProjectsPage.list.DeleteTooltip, 'Delete'),
   filterInputPlaceholder: () =>
-    _t(translations.UsersPage.list.filter.inputPlaceholder, 'Search'),
+    _t(translations.ProjectsPage.list.filter.inputPlaceholder, 'Search'),
   filterSearchButton: () =>
-    _t(translations.UsersPage.list.filter.searchButton, 'Search'),
+    _t(translations.ProjectsPage.list.filter.searchButton, 'Search'),
   filterResetButton: () =>
-    _t(translations.UsersPage.list.filter.resetButton, 'Reset'),
+    _t(translations.ProjectsPage.list.filter.resetButton, 'Reset'),
   filterFilterButton: () =>
-    _t(translations.UsersPage.list.filter.filterButton, 'Filter'),
-  searchTitle: () => _t(translations.UsersPage.search.title, 'Search'),
-  searchLabel: () => _t(translations.UsersPage.search.search.label, 'Search'),
+    _t(translations.ProjectsPage.list.filter.filterButton, 'Filter'),
+  searchTitle: () => _t(translations.ProjectsPage.search.title, 'Search'),
+  searchLabel: () =>
+    _t(translations.ProjectsPage.search.search.label, 'Search'),
   searchPlaceholder: () =>
     _t(
-      translations.UsersPage.search.search.placeholder,
-      "Search user's first name, last name, email and phone number",
+      translations.ProjectsPage.search.search.placeholder,
+      "Search project's name, priority and status",
     ),
   searchSearchButton: () =>
-    _t(translations.UsersPage.search.searchButton, 'Search'),
+    _t(translations.ProjectsPage.search.searchButton, 'Search'),
   searchResetButton: () =>
-    _t(translations.UsersPage.search.resetButton, 'Reset'),
+    _t(translations.ProjectsPage.search.resetButton, 'Reset'),
   modalCreateTitle: () =>
-    _t(translations.UsersPage.modal.createTitle, 'Create Employee'),
+    _t(translations.ProjectsPage.modal.createTitle, 'Create Project'),
   modalEditTitle: () =>
-    _t(translations.UsersPage.modal.editTitle, 'Edit Employee'),
+    _t(translations.ProjectsPage.modal.editTitle, 'Edit Project'),
   modalProfileTitle: () =>
-    _t(translations.UsersPage.modal.profileTitle, 'Employee Profile'),
+    _t(translations.ProjectsPage.modal.profileTitle, 'Project Profile'),
   modalPreviewCSVTitle: () =>
-    _t(translations.UsersPage.modal.previewCSVTitle, 'Preview Import File'),
+    _t(translations.ProjectsPage.modal.previewCSVTitle, 'Preview Import File'),
   modalFormDeleteButton: () =>
-    _t(translations.UsersPage.modal.form.deleteButton, 'Delete'),
+    _t(translations.ProjectsPage.modal.form.deleteButton, 'Delete'),
   modalFormDeleteContent: () =>
     _t(
-      translations.UsersPage.modal.form.deleteContent,
-      'Are you sure to delete this user?',
+      translations.ProjectsPage.modal.form.deleteContent,
+      'Are you sure to delete this project?',
     ),
   modalFormCancelButton: () =>
-    _t(translations.UsersPage.modal.form.cancelButton, 'Cancel'),
+    _t(translations.ProjectsPage.modal.form.cancelButton, 'Cancel'),
   modalFormSubmitButton: () =>
-    _t(translations.UsersPage.modal.form.submitButton, 'Save'),
+    _t(translations.ProjectsPage.modal.form.submitButton, 'Save'),
 };

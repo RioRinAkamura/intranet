@@ -7,8 +7,8 @@ import React, { memo } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { Col, Form, FormInstance, Input, Row } from 'antd';
-import { UsersMessages } from '../../messages';
 import { SearchOutlined } from '@ant-design/icons';
+import { ProjectsMessages } from '../../messages';
 interface Props {
   onSearch: () => void;
   onReset: () => void;
@@ -27,7 +27,7 @@ export const SearchUsers = memo((props: Props) => {
         <Col xl={18} lg={24} md={24} sm={24} xs={24}>
           <FormItem name="search" initialValue={value}>
             <Input
-              placeholder={t(UsersMessages.searchPlaceholder())}
+              placeholder={t(ProjectsMessages.searchPlaceholder())}
               allowClear
               size="large"
               onChange={e => e.type === 'click' && onReset()}

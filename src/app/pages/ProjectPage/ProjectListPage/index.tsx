@@ -18,12 +18,10 @@ import {
   FilterValue,
   SorterResult,
 } from 'antd/lib/table/interface';
-import { UsersMessages } from './messages';
 import { Helmet } from 'react-helmet-async';
 import { SearchUsers } from './components/SearchUsers/Loadable';
 import { HeaderButton } from './components/HeaderButton/Loadable';
 import { UserList } from './components/UserList/Loadable';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -32,7 +30,6 @@ import {
 } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
-import { ColumnProps } from 'antd/lib/table';
 import { useProjectsSlice } from './slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { PageTitle } from 'app/components/PageTitle';
@@ -40,338 +37,15 @@ import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { useTableConfig } from 'utils/tableConfig';
-import { TagComponent } from 'app/components/Tags/components/Tag';
 import { useHandleDataTable } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
 import {
   selectProjects,
   selectProjectsIsFilter,
   selectProjectsParams,
 } from './slice/selectors';
-import { spawn } from 'child_process';
 import moment from 'moment';
 import { antColours } from 'utils/types';
-
-const projects = [
-  {
-    id: '1',
-    members: [
-      {
-        allocation: 3,
-        project_role: 'PM',
-        employee: {
-          id: '1',
-          code: null,
-          email: 'charles43@washington-richardson.com',
-          first_name: 'Melissa',
-          last_name: 'Blanchard',
-          starting_date: '2020-10-11',
-          leaving_date: '2021-04-07',
-          personal_email: 'william78@hotmail.com',
-          contacts: [],
-          avatar: null,
-          phone: '(702)104-4429',
-          dob: '1998-04-20',
-          gender: 'Female',
-          status: 'Single',
-          type: 'Part-time',
-          job_title: null,
-          social: [
-            {
-              facebook: 'carmen43',
-            },
-          ],
-          bank_accounts: [[{}]],
-          id_number: null,
-          issued_date: null,
-          issued_place: null,
-          social_insurance_no: null,
-          tags: [],
-          user: null,
-        },
-      },
-      {
-        allocation: 5,
-        project_role: 'LD',
-        employee: {
-          id: '2',
-          code: null,
-          email: 'charles43@washington-richardson.com',
-          first_name: 'Melissa',
-          last_name: 'Blanchard',
-          starting_date: '2020-10-11',
-          leaving_date: '2021-04-07',
-          personal_email: 'william78@hotmail.com',
-          contacts: [],
-          avatar: null,
-          phone: '(702)104-4429',
-          dob: '1998-04-20',
-          gender: 'Female',
-          status: 'Single',
-          type: 'Part-time',
-          job_title: null,
-          social: [
-            {
-              facebook: 'carmen43',
-            },
-          ],
-          bank_accounts: [[{}]],
-          id_number: null,
-          issued_date: null,
-          issued_place: null,
-          social_insurance_no: null,
-          tags: [],
-          user: null,
-        },
-      },
-      {
-        allocation: 5,
-        project_role: 'QC',
-        employee: {
-          id: '3',
-          code: null,
-          email: 'charles43@washington-richardson.com',
-          first_name: 'Melissa',
-          last_name: 'Blanchard',
-          starting_date: '2020-10-11',
-          leaving_date: '2021-04-07',
-          personal_email: 'william78@hotmail.com',
-          contacts: [],
-          avatar: null,
-          phone: '(702)104-4429',
-          dob: '1998-04-20',
-          gender: 'Female',
-          status: 'Single',
-          type: 'Part-time',
-          job_title: null,
-          social: [
-            {
-              facebook: 'carmen43',
-            },
-          ],
-          bank_accounts: [[{}]],
-          id_number: null,
-          issued_date: null,
-          issued_place: null,
-          social_insurance_no: null,
-          tags: [],
-          user: null,
-        },
-      },
-      {
-        allocation: 3,
-        project_role: 'QC',
-        employee: {
-          id: '4',
-          code: null,
-          email: 'charles43@washington-richardson.com',
-          first_name: 'Melissa',
-          last_name: 'Blanchard',
-          starting_date: '2020-10-11',
-          leaving_date: '2021-04-07',
-          personal_email: 'william78@hotmail.com',
-          contacts: [],
-          avatar: null,
-          phone: '(702)104-4429',
-          dob: '1998-04-20',
-          gender: 'Female',
-          status: 'Single',
-          type: 'Part-time',
-          job_title: null,
-          social: [
-            {
-              facebook: 'carmen43',
-            },
-          ],
-          bank_accounts: [[{}]],
-          id_number: null,
-          issued_date: null,
-          issued_place: null,
-          social_insurance_no: null,
-          tags: [],
-          user: null,
-        },
-      },
-      {
-        allocation: 7,
-        project_role: 'DEV',
-        employee: {
-          id: '5',
-          code: null,
-          email: 'charles43@washington-richardson.com',
-          first_name: 'Melissa',
-          last_name: 'Blanchard',
-          starting_date: '2020-10-11',
-          leaving_date: '2021-04-07',
-          personal_email: 'william78@hotmail.com',
-          contacts: [],
-          avatar: null,
-          phone: '(702)104-4429',
-          dob: '1998-04-20',
-          gender: 'Female',
-          status: 'Single',
-          type: 'Part-time',
-          job_title: null,
-          social: [
-            {
-              facebook: 'carmen43',
-            },
-          ],
-          bank_accounts: [[{}]],
-          id_number: null,
-          issued_date: null,
-          issued_place: null,
-          social_insurance_no: null,
-          tags: [],
-          user: null,
-        },
-      },
-      {
-        allocation: 6,
-        project_role: 'DEV',
-        employee: {
-          id: '6',
-          code: null,
-          email: 'charles43@washington-richardson.com',
-          first_name: 'Melissa',
-          last_name: 'Blanchard',
-          starting_date: '2020-10-11',
-          leaving_date: '2021-04-07',
-          personal_email: 'william78@hotmail.com',
-          contacts: [],
-          avatar: null,
-          phone: '(702)104-4429',
-          dob: '1998-04-20',
-          gender: 'Female',
-          status: 'Single',
-          type: 'Part-time',
-          job_title: null,
-          social: [
-            {
-              facebook: 'carmen43',
-            },
-          ],
-          bank_accounts: [[{}]],
-          id_number: null,
-          issued_date: null,
-          issued_place: null,
-          social_insurance_no: null,
-          tags: [],
-          user: null,
-        },
-      },
-      {
-        allocation: 7,
-        project_role: 'DEV',
-        employee: {
-          id: '7',
-          code: null,
-          email: 'charles43@washington-richardson.com',
-          first_name: 'Melissa',
-          last_name: 'Blanchard',
-          starting_date: '2020-10-11',
-          leaving_date: '2021-04-07',
-          personal_email: 'william78@hotmail.com',
-          contacts: [],
-          avatar: null,
-          phone: '(702)104-4429',
-          dob: '1998-04-20',
-          gender: 'Female',
-          status: 'Single',
-          type: 'Part-time',
-          job_title: null,
-          social: [
-            {
-              facebook: 'carmen43',
-            },
-          ],
-          bank_accounts: [[{}]],
-          id_number: null,
-          issued_date: null,
-          issued_place: null,
-          social_insurance_no: null,
-          tags: [],
-          user: null,
-        },
-      },
-      {
-        allocation: 8,
-        project_role: 'DEV',
-        employee: {
-          id: '8',
-          code: null,
-          email: 'charles43@washington-richardson.com',
-          first_name: 'Melissa',
-          last_name: 'Blanchard',
-          starting_date: '2020-10-11',
-          leaving_date: '2021-04-07',
-          personal_email: 'william78@hotmail.com',
-          contacts: [],
-          avatar: null,
-          phone: '(702)104-4429',
-          dob: '1998-04-20',
-          gender: 'Female',
-          status: 'Single',
-          type: 'Part-time',
-          job_title: null,
-          social: [
-            {
-              facebook: 'carmen43',
-            },
-          ],
-          bank_accounts: [[{}]],
-          id_number: null,
-          issued_date: null,
-          issued_place: null,
-          social_insurance_no: null,
-          tags: [],
-          user: null,
-        },
-      },
-      {
-        allocation: 8,
-        project_role: 'OTHER',
-        employee: {
-          id: '9',
-          code: null,
-          email: 'charles43@washington-richardson.com',
-          first_name: 'Melissa',
-          last_name: 'Blanchard',
-          starting_date: '2020-10-11',
-          leaving_date: '2021-04-07',
-          personal_email: 'william78@hotmail.com',
-          contacts: [],
-          avatar: null,
-          phone: '(702)104-4429',
-          dob: '1998-04-20',
-          gender: 'Female',
-          status: 'Single',
-          type: 'Part-time',
-          job_title: null,
-          social: [
-            {
-              facebook: 'carmen43',
-            },
-          ],
-          bank_accounts: [[{}]],
-          id_number: null,
-          issued_date: null,
-          issued_place: null,
-          social_insurance_no: null,
-          tags: [],
-          user: null,
-        },
-      },
-    ],
-    created: '2021-05-16T05:05:04.987035Z',
-    modified: '2021-05-16T05:05:04.987437Z',
-    name: 'Starter',
-    started: '2021-05-16',
-    priority: 'Low',
-    status: 'Preparing',
-    created_by: null,
-    modified_by: null,
-  },
-];
+import { ProjectsMessages } from './messages';
 
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -407,22 +81,26 @@ export const ProjectsPage: React.FC = () => {
     resetFilter,
   } = useHandleDataTable(getProjectState, actions);
 
-  const { getColumnSorterProps, getColumnSearchInputProps } = useTableConfig(
+  const {
+    getColumnSorterProps,
+    getColumnSearchInputProps,
+    getColumnSearchCheckboxProps,
+  } = useTableConfig(
     getProjectState,
-    UsersMessages,
+    ProjectsMessages,
     setFilterText,
     resetFilter,
   );
 
-  // const fetchUsers = useCallback(() => {
-  //   if (!isFilter) {
-  //     dispatch(actions.fetchUsers({ params: params }));
-  //   }
-  // }, [actions, dispatch, isFilter, params]);
+  const fetchProjects = useCallback(() => {
+    if (!isFilter) {
+      dispatch(actions.fetchProjects({ params: params }));
+    }
+  }, [actions, dispatch, isFilter, params]);
 
-  // useEffect(() => {
-  //   fetchUsers();
-  // }, [fetchUsers]);
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
@@ -540,7 +218,7 @@ export const ProjectsPage: React.FC = () => {
 
   const moreButton = (text: string, record: any) => (
     <>
-      <Tooltip title={t(UsersMessages.listViewTooltip())}>
+      <Tooltip title={t(ProjectsMessages.listViewTooltip())}>
         <IconButton
           type="primary"
           shape="circle"
@@ -551,7 +229,7 @@ export const ProjectsPage: React.FC = () => {
           }}
         />
       </Tooltip>
-      <Tooltip title={t(UsersMessages.listEditTooltip())}>
+      <Tooltip title={t(ProjectsMessages.listEditTooltip())}>
         <IconButton
           shape="circle"
           icon={<EditOutlined />}
@@ -564,7 +242,7 @@ export const ProjectsPage: React.FC = () => {
           }}
         />
       </Tooltip>
-      <Tooltip title={t(UsersMessages.listDeleteTooltip())}>
+      <Tooltip title={t(ProjectsMessages.listDeleteTooltip())}>
         <IconButton
           danger
           shape="circle"
@@ -623,7 +301,7 @@ export const ProjectsPage: React.FC = () => {
 
   const columns: ColumnsType<any> = [
     {
-      title: 'Name',
+      title: t(ProjectsMessages.listNameTitle()),
       dataIndex: 'name',
       width: 110,
       fixed: 'left',
@@ -631,48 +309,67 @@ export const ProjectsPage: React.FC = () => {
       ...getColumnSearchInputProps(['name']),
     },
     {
-      title: 'Team Members',
+      title: t(ProjectsMessages.listTMTitle()),
       children: [
         {
-          title: 'Project Manager',
+          title: t(ProjectsMessages.listPMTitle()),
           ...memberChildren('PM'),
         },
         {
-          title: 'Leader',
+          title: t(ProjectsMessages.listLDTitle()),
           ...memberChildren('LD'),
         },
         {
-          title: 'Quality Controller',
+          title: t(ProjectsMessages.listQCTitle()),
           ...memberChildren('QC'),
         },
         {
-          title: 'Developer',
+          title: t(ProjectsMessages.listDEVTitle()),
           ...memberChildren('DEV'),
         },
         {
-          title: 'Other',
+          title: t(ProjectsMessages.listOTHERTitle()),
           ...memberChildren('OTHER'),
         },
       ],
     },
     {
-      title: 'Started',
+      title: t(ProjectsMessages.listStartedTitle()),
       dataIndex: 'started',
       width: 120,
       render: text => moment(text).format('DD-MM-YYYY'),
     },
     {
-      title: 'Priority',
+      title: t(ProjectsMessages.listPriorityTitle()),
       dataIndex: 'priority',
-      width: 100,
+      ...getColumnSorterProps('priority', 2),
+      ...getColumnSearchCheckboxProps(
+        ['priority'],
+        [
+          { label: 'Low', value: 'Low' },
+          { label: 'Medium', value: 'Medium' },
+          { label: 'High', value: 'High' },
+        ],
+      ),
+      width: 140,
     },
     {
-      title: 'Status',
+      title: t(ProjectsMessages.listStatusTitle()),
       dataIndex: 'status',
-      width: 100,
+      width: 130,
+      ...getColumnSorterProps('status', 2),
+      ...getColumnSearchCheckboxProps(
+        ['status'],
+        [
+          { label: 'Preparing', value: 'Preparing' },
+          { label: 'Going', value: 'Going' },
+          { label: 'Release', value: 'Release' },
+          { label: 'Archived', value: 'Archived' },
+        ],
+      ),
     },
     {
-      title: t(UsersMessages.listOptionsTitle()),
+      title: t(ProjectsMessages.listOptionsTitle()),
       dataIndex: 'id',
       width: 100,
       fixed: 'right',
@@ -694,13 +391,13 @@ export const ProjectsPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Projects</title>
-        <meta name="description" content={t(UsersMessages.description())} />
+        <title>{t(ProjectsMessages.title())}</title>
+        <meta name="description" content={t(ProjectsMessages.description())} />
       </Helmet>
       <Wrapper>
         <Row gutter={[16, 16]} align="middle" justify="space-between">
           <Col sm={16} xs={24}>
-            <PageTitle>Projects</PageTitle>
+            <PageTitle>{t(ProjectsMessages.title())}</PageTitle>
           </Col>
           <Col sm={8} xs={24}>
             <SearchUsers
