@@ -2,7 +2,12 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { userspageSaga } from './saga';
-import { UserspageState, UserResponse, FilterColumns } from './types';
+import {
+  UserspageState,
+  UserResponse,
+  FilterColumns,
+  QueryParams,
+} from './types';
 import { Key } from 'react';
 import { TablePagination } from '../useHandleDataTable';
 
@@ -38,18 +43,28 @@ const slice = createSlice({
       state.pagination!.current = Number(state.params.page);
       state.pagination!.pageSize = Number(state.params.limit);
       state.loading = false;
+      state.isFilter = true;
     },
     fetchUsersFailure(state, action: PayloadAction<UserspageState>) {
       state.error = action.payload.error;
       state.loading = false;
     },
-    changeState(state, action: PayloadAction<UserspageState>) {
-      state.params = { ...state.params, ...action.payload.params };
+    changeState(state, action: PayloadAction<QueryParams>) {
+      state.params = { ...state.params, ...action.payload };
       state.filterColumns = {
         ...state.filterColumns,
-        ...(action.payload.filterColumns as FilterColumns),
+        first_name: action.payload.first_name,
+        last_name: action.payload.last_name,
+        code: action.payload.code,
+        email: action.payload.email,
+        phoneNumber: action.payload.phoneNumber,
+        tags: action.payload.tags,
       };
-      state.pagination = { ...state.pagination, ...action.payload.pagination };
+      state.pagination = {
+        ...state.pagination,
+        current: action.payload.page,
+        pageSize: action.payload.limit,
+      };
       state.isFilter = false;
     },
     notQuery(state) {
@@ -120,15 +135,3 @@ export const useUserspageSlice = () => {
   useInjectSaga({ key: slice.name, saga: userspageSaga });
   return { actions: slice.actions };
 };
-
-/**
- * Example Usage:
- *
- * export function MyComponentNeedingThisSlice() {
- *  const { actions } = useUserspageSlice();
- *
- *  const onButtonClick = (evt) => {
- *    dispatch(actions.someAction());
- *   };
- * }
- */

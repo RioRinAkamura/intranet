@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import { Key, SorterResult } from 'antd/lib/table/interface';
-import { isArray, isEmpty, isUndefined, pickBy } from 'lodash';
+import { identity, isArray, isEmpty, pickBy } from 'lodash';
 
 interface useDataTable {
   setSearchText: (text: string) => void;
@@ -59,14 +59,7 @@ export const useHandleDataTable = (
       let params = parse(location.search, {
         sort: false,
       });
-      console.log(params);
-      dispatch(
-        actions.changeState({
-          params: pickBy(params, isUndefined),
-          filterColumns: pickBy(params, isUndefined),
-          pagination: pickBy({ ...params }, isUndefined),
-        }),
-      );
+      dispatch(actions.changeState(pickBy(params, identity)));
     } else {
       dispatch(actions.notQuery());
     }

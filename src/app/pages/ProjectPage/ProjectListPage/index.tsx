@@ -461,7 +461,7 @@ export const ProjectsPage: React.FC = () => {
                   bordered
                   columns={columns}
                   rowKey="id"
-                  dataSource={projects}
+                  dataSource={getProjectState.projects}
                   pagination={{
                     ...getProjectState.pagination,
                     onChange: (page: number, pageSize?: number) => {

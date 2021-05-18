@@ -4,7 +4,7 @@ import { Key } from 'react';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { projectsSaga } from './saga';
-import { FilterColumns, ProjectsState } from './types';
+import { FilterColumns, ProjectsState, QueryParams } from './types';
 
 export const initialState: ProjectsState = {
   projects: [],
@@ -38,25 +38,31 @@ const slice = createSlice({
       state.pagination!.current = Number(state.params.page);
       state.pagination!.pageSize = Number(state.params.limit);
       state.loading = false;
+      state.isFilter = true;
     },
     fetchProjectsFailure(state, action: PayloadAction<ProjectsState>) {
       state.error = action.payload.error;
       state.loading = false;
     },
-    changeState(state, action: PayloadAction<ProjectsState>) {
-      state.params = { ...state.params, ...action.payload.params };
+    changeState(state, action: PayloadAction<QueryParams>) {
+      state.params = { ...state.params, ...action.payload };
       state.filterColumns = {
         ...state.filterColumns,
-        ...(action.payload.filterColumns as FilterColumns),
+        name: action.payload.name,
+        priority: action.payload.priority,
+        status: action.payload.status,
       };
-      state.pagination = { ...state.pagination, ...action.payload.pagination };
+      state.pagination = {
+        ...state.pagination,
+        current: action.payload.page,
+        pageSize: action.payload.limit,
+      };
       state.isFilter = false;
     },
     notQuery(state) {
       state.isFilter = false;
     },
     filterColumns(state, action: PayloadAction<FilterColumns>) {
-      console.log(action.payload);
       state.filterColumns = { ...state.filterColumns, ...action.payload };
       state.params = { ...state.params, ...action.payload };
     },

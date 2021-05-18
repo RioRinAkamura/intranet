@@ -1,17 +1,20 @@
 import fakeAPI from 'utils/fakeAPI';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { api } from 'utils/api';
+// import { api } from 'utils/api';
 import { projectsActions as actions } from '.';
-import { PayloadAction } from '@reduxjs/toolkit';
+// import { PayloadAction } from '@reduxjs/toolkit';
 
 function* fetchProjects(action) {
   try {
     const { params } = action.payload;
-    console.log(params);
     const queryParams = {
+      search: params.search,
+      ordering: params.ordering,
       name: params.name,
       priority: params.priority,
       status: params.status,
+      page: params.page,
+      limit: params.limit,
     };
     // const response = yield call(
     //   [api, api.hr.employee.list],
@@ -24,11 +27,12 @@ function* fetchProjects(action) {
     //   params.limit,
     // );
 
-    const response = yield call(fakeAPI.get, '/hr/projects');
+    const response = yield call(fakeAPI.get, '/hr/projects', {
+      params: { ...queryParams },
+    });
 
     yield put(actions.fetchProjectsSuccess(response));
   } catch (err) {
-    console.log(err);
     yield put(actions.fetchProjectsFailure);
   }
 }

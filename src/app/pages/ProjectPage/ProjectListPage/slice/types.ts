@@ -16,6 +16,9 @@ export interface ProjectsState {
 }
 
 export interface FilterColumns {
+  name?: string;
+  priority?: string;
+  status?: string;
   [key: string]: string | undefined;
 }
 
@@ -25,6 +28,13 @@ export interface UserResponse {
 }
 
 export interface QueryParams {
+  search?: string;
+  ordering?: string;
+  name?: string;
+  priority?: string;
+  status?: string;
+  limit?: number;
+  page?: number;
   [key: string]: string | number | undefined;
 }
 

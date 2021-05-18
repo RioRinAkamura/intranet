@@ -19,6 +19,12 @@ export interface UserspageState {
 }
 
 export interface FilterColumns {
+  first_name?: string;
+  last_name?: string;
+  code?: string;
+  email?: string;
+  phoneNumber?: string;
+  tags?: string;
   [key: string]: string | undefined;
 }
 
@@ -28,6 +34,16 @@ export interface UserResponse {
 }
 
 export interface QueryParams {
+  search?: string;
+  ordering?: string;
+  first_name?: string;
+  last_name?: string;
+  code?: string;
+  email?: string;
+  phoneNumber?: string;
+  tags?: string;
+  limit?: number;
+  page?: number;
   [key: string]: string | number | undefined;
 }
 
