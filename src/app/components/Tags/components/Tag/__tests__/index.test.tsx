@@ -16,7 +16,7 @@ jest.mock('react-i18next', () => ({
 
 describe('<Tags  />', () => {
   it('should match snapshot', () => {
-    const loadingIndicator = render(<TagComponent />);
+    const loadingIndicator = render(<TagComponent key="tag" tag="tag" />);
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });

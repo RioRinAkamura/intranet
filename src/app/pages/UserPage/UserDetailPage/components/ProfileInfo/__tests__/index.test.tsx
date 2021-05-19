@@ -2,6 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 
 import { ProfileInfo } from '..';
+import { matchMedia } from 'utils/matchMedia';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -13,6 +14,8 @@ jest.mock('react-i18next', () => ({
     };
   },
 }));
+
+matchMedia();
 
 describe('<ProfileInfo  />', () => {
   it('should match snapshot', () => {
