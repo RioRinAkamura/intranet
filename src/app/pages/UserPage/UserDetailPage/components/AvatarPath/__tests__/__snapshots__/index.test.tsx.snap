@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AvatarPath  /> should match snapshot 1`] = `
+.c1 div {
+  text-align: center;
+}
+
+.c1 .ant-avatar span {
+  display: contents;
+}
+
+.c1 .ant-avatar span svg {
+  margin-bottom: 10px;
+}
+
+.c2 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin: 0;
+}
+
+.c2 input {
+  color: #1890ff;
+  font-weight: 500;
+}
+
+.c0 {
+  width: 100%;
+  background-color: #f5f5f5;
+  padding: 1em;
+}
+
+.c0 .ant-avatar-string {
+  font-size: 44px;
+}
+
+<div
+  class="ant-row ant-row-middle"
+  style="margin: -16px -16px -16px -16px;"
+>
+  <div
+    class="ant-col ant-col-24"
+    style="padding: 16px 16px 16px 16px;"
+  >
+    <div
+      class="c0"
+    >
+      <div
+        class="ant-row ant-form-item c1"
+      >
+        <div
+          class="ant-col ant-form-item-control"
+        >
+          <div
+            class="ant-form-item-control-input"
+          >
+            <div
+              class="ant-form-item-control-input-content"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-col ant-col-12"
+    style="padding: 16px 16px 16px 16px;"
+  >
+    <b>
+      UserDetailPage.modal.form.code.label
+      Employee Code
+    </b>
+  </div>
+  <div
+    class="ant-col ant-col-12"
+    style="padding: 16px 16px 16px 16px;"
+  >
+    <div
+      class="ant-row ant-form-item c2"
+    >
+      <div
+        class="ant-col ant-form-item-control"
+      >
+        <div
+          class="ant-form-item-control-input"
+        >
+          <div
+            class="ant-form-item-control-input-content"
+          >
+            <input
+              class="ant-input ant-input-lg ant-input-borderless"
+              id="code"
+              placeholder=""
+              readonly=""
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,152 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<HeaderButton  /> should match snapshot 1`] = `
+.c0 {
+  margin-left: 1em;
+  margin-bottom: 1em;
+}
+
+.c0 button {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c1 label {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c1 label span {
+  margin-right: 10px;
+}
+
+.c1 label:hover {
+  cursor: pointer;
+}
+
+<div
+  class="ant-row ant-row-end"
+>
+  <div
+    class="ant-col c0"
+  >
+    <button
+      class="ant-btn ant-btn-primary ant-btn-lg"
+      type="button"
+    >
+      <span
+        aria-label="project"
+        class="anticon anticon-project"
+        role="img"
+      >
+        <svg
+          aria-hidden="true"
+          data-icon="project"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          viewBox="64 64 896 896"
+          width="1em"
+        >
+          <path
+            d="M280 752h80c4.4 0 8-3.6 8-8V280c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v464c0 4.4 3.6 8 8 8zm192-280h80c4.4 0 8-3.6 8-8V280c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v184c0 4.4 3.6 8 8 8zm192 72h80c4.4 0 8-3.6 8-8V280c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v256c0 4.4 3.6 8 8 8zm216-432H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zm-40 728H184V184h656v656z"
+          />
+        </svg>
+      </span>
+      <span>
+        Create Project
+      </span>
+    </button>
+  </div>
+  <div
+    class="ant-col c0"
+  >
+    <button
+      class="ant-btn ant-btn-lg"
+      type="button"
+    >
+      <span
+        aria-label="export"
+        class="anticon anticon-export"
+        role="img"
+      >
+        <svg
+          aria-hidden="true"
+          data-icon="export"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          viewBox="64 64 896 896"
+          width="1em"
+        >
+          <path
+            d="M888.3 757.4h-53.8c-4.2 0-7.7 3.5-7.7 7.7v61.8H197.1V197.1h629.8v61.8c0 4.2 3.5 7.7 7.7 7.7h53.8c4.2 0 7.7-3.4 7.7-7.7V158.7c0-17-13.7-30.7-30.7-30.7H158.7c-17 0-30.7 13.7-30.7 30.7v706.6c0 17 13.7 30.7 30.7 30.7h706.6c17 0 30.7-13.7 30.7-30.7V765.1c0-4.3-3.5-7.7-7.7-7.7zm18.6-251.7L765 393.7c-5.3-4.2-13-.4-13 6.3v76H438c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h314v76c0 6.7 7.8 10.5 13 6.3l141.9-112a8 8 0 000-12.6z"
+          />
+        </svg>
+      </span>
+      <span>
+        Export as CSV
+      </span>
+    </button>
+  </div>
+  <div
+    class="ant-col c0"
+  >
+    <button
+      class="ant-btn ant-btn-lg c1"
+      type="button"
+    >
+      <div
+        class="react-csv-input"
+      >
+        <label
+          class="csv-label"
+          for="react-csv-reader-input"
+        >
+          <span
+            aria-label="import"
+            class="anticon anticon-import"
+            role="img"
+          >
+            <svg
+              aria-hidden="true"
+              data-icon="import"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="64 64 896 896"
+              width="1em"
+            >
+              <path
+                d="M888.3 757.4h-53.8c-4.2 0-7.7 3.5-7.7 7.7v61.8H197.1V197.1h629.8v61.8c0 4.2 3.5 7.7 7.7 7.7h53.8c4.2 0 7.7-3.4 7.7-7.7V158.7c0-17-13.7-30.7-30.7-30.7H158.7c-17 0-30.7 13.7-30.7 30.7v706.6c0 17 13.7 30.7 30.7 30.7h706.6c17 0 30.7-13.7 30.7-30.7V765.1c0-4.3-3.5-7.7-7.7-7.7zM902 476H588v-76c0-6.7-7.8-10.5-13-6.3l-141.9 112a8 8 0 000 12.6l141.9 112c5.3 4.2 13 .4 13-6.3v-76h314c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8z"
+              />
+            </svg>
+          </span>
+           
+          Import CSV
+        </label>
+        <input
+          accept=".csv, text/csv"
+          class="csv-input"
+          id="react-csv-reader-input"
+          name="react-csv-reader-input"
+          style="display: none;"
+          type="file"
+        />
+      </div>
+    </button>
+  </div>
+</div>
+`;

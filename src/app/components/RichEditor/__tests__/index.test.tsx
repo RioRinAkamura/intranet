@@ -18,8 +18,12 @@ jest.mock('react-i18next', () => ({
 matchMedia();
 
 describe('<RichEditor  />', () => {
-  it('should match snapshot', () => {
+  it('Renders with a className equal to the variant', () => {
     const loadingIndicator = render(<RichEditor onSubmit={jest.fn()} />);
-    expect(loadingIndicator.container.firstChild).toMatchSnapshot();
+    expect(
+      loadingIndicator.container.getElementsByClassName(
+        'public-DraftEditor-content',
+      ).length,
+    ).toBe(1);
   });
 });

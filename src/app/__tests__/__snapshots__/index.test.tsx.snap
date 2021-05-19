@@ -3,7 +3,7 @@
 exports[`<App /> should render and match the snapshot 1`] = `
 <BrowserRouter>
   <Helmet
-    defaultTitle="React Boilerplate"
+    defaultTitle="Staff Management"
     defer={true}
     encodeSpecialCharacters={true}
     htmlAttributes={
@@ -11,34 +11,76 @@ exports[`<App /> should render and match the snapshot 1`] = `
         "lang": "en-US",
       }
     }
-    titleTemplate="%s - React Boilerplate"
+    titleTemplate="%s - Staff Management"
   >
     <meta
-      content="A React Boilerplate application"
+      content="A Staff Management application"
       name="description"
     />
   </Helmet>
-  <Switch>
-    <PublicRoute
-      component={[Function]}
-      exact={true}
-      path="/login"
-      restricted={true}
-    />
-    <PrivateRoute
-      component={[Function]}
-      exact={true}
-      path="/dashboard"
-    />
-    <PrivateRoute
-      component={[Function]}
-      exact={true}
-      path="/users"
-    />
-    <Route
-      component={[Function]}
-    />
-  </Switch>
+  <AuthContextProvider
+    authProvider={
+      Object {
+        "checkAuth": [Function],
+        "getIdentity": [Function],
+        "login": [Function],
+        "logout": [Function],
+      }
+    }
+  >
+    <ToastContextProvider>
+      <Switch>
+        <PublicRoute
+          component={[Function]}
+          exact={true}
+          path="/login"
+          restricted={true}
+        />
+        <PublicRoute
+          component={[Function]}
+          exact={true}
+          path="/forgot-password"
+          restricted={true}
+        />
+        <PublicRoute
+          component={[Function]}
+          exact={true}
+          path="/reset-password"
+          restricted={true}
+        />
+        <AppLayout>
+          <PrivateRoute
+            component={[Function]}
+            exact={true}
+            path="/dashboard"
+          />
+          <PrivateRoute
+            component={[Function]}
+            exact={true}
+            path="/employees"
+          />
+          <PrivateRoute
+            component={[Function]}
+            exact={true}
+            path="/employees/:id"
+          />
+          <PrivateRoute
+            component={[Function]}
+            exact={true}
+            path="/create-user"
+          />
+          <PrivateRoute
+            component={[Function]}
+            exact={true}
+            path="/projects"
+          />
+        </AppLayout>
+        <Route
+          component={[Function]}
+        />
+      </Switch>
+    </ToastContextProvider>
+  </AuthContextProvider>
   <Memo(GlobalStyleComponent) />
 </BrowserRouter>
 `;
