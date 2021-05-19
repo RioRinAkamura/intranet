@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Tags  /> should match snapshot 1`] = `
+<span
+  class="ant-tag ant-tag-blue"
+  style="margin: 5px;"
+>
+  TAG
+</span>
+`;

@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<JobInfo  /> should match snapshot 1`] = `
+.c0 {
+  color: #1890ff;
+  margin-bottom: 24px;
+}
+
+<div
+  class="c0"
+>
+  <b>
+    UserDetailPage.modal.form.job.title
+    Job Infomation
+  </b>
+</div>
+`;

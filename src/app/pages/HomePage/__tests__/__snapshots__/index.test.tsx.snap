@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<HomePage /> should render and match the snapshot 1`] = `
+<React.Fragment>
+  <Helmet
+    defer={true}
+    encodeSpecialCharacters={true}
+  >
+    <title>
+      Home Page
+    </title>
+    <meta
+      content="A React Boilerplate application homepage"
+      name="description"
+    />
+  </Helmet>
+  <PageWrapper>
+    <HomePage__TitleWrapper>
+      <ForwardRef(PieChartOutlined) />
+      <PageTitle>
+        Dashboard
+      </PageTitle>
+    </HomePage__TitleWrapper>
+    <HomePage__WrapperItem>
+      <Chart />
+    </HomePage__WrapperItem>
+    <HomePage__WrapperItem>
+      <Managers />
+    </HomePage__WrapperItem>
+    <HomePage__WrapperItem>
+      <Row
+        gutter={
+          Array [
+            32,
+            32,
+          ]
+        }
+      >
+        <Col
+          span={12}
+        >
+          <Recruitments />
+        </Col>
+        <Col
+          span={12}
+        >
+          <Activities />
+        </Col>
+      </Row>
+    </HomePage__WrapperItem>
+    <HomePage__WrapperItem>
+      <Row
+        gutter={
+          Array [
+            32,
+            32,
+          ]
+        }
+      >
+        <Col
+          span={12}
+        >
+          <PerformanceEmployees />
+        </Col>
+        <Col
+          span={12}
+        >
+          <NewEmployees />
+        </Col>
+      </Row>
+    </HomePage__WrapperItem>
+  </PageWrapper>
+</React.Fragment>
+`;

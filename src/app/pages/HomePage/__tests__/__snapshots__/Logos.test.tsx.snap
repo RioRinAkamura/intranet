@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Logos /> should render and match the snapshot 1`] = `
+<DocumentFragment>
+  .c0 {
+  height: 32px;
+  margin: 16px;
+  background: #7a7676;
+}
+
+<div
+    class="c0"
+  >
+    <img
+      alt=""
+      src="./assets/logo@3x.png"
+    />
+  </div>
+</DocumentFragment>
+`;
