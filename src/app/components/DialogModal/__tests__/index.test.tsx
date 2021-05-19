@@ -22,7 +22,9 @@ describe('<DialogModal  />', () => {
 
   it('shoud render dialog modal', () => {
     const { queryByText, getByRole } = render(
-      <DialogModal okText="Submit">Test Modal</DialogModal>,
+      <DialogModal okText="Submit" isOpen={true}>
+        Test Modal
+      </DialogModal>,
     );
     expect(getByRole('button')).toBeTruthy();
   });
