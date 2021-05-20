@@ -19,12 +19,8 @@ describe('<Logos />', () => {
 
   it('should use theme from props', () => {
     let logos = renderLogos(themes.light);
-    expect(logos.container.firstChild).toHaveStyle(
-      `color: ${themes.light.border}`,
-    );
+    expect(logos.container.firstChild).toHaveStyle(`color: ${themes.light}`);
     logos = renderLogos(themes.dark);
-    expect(logos.container.firstChild).toHaveStyle(
-      `color: ${themes.dark.border}`,
-    );
+    expect(logos.container.firstChild).toHaveStyle(`color: ${themes.dark}`);
   });
 });

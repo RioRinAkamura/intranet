@@ -2,6 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 
 import { IdCardInfo } from '..';
+import { matchMedia } from 'utils/matchMedia';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -14,9 +15,13 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
+matchMedia();
+
 describe('<IdCardInfo  />', () => {
   it('should match snapshot', () => {
-    const loadingIndicator = render(<IdCardInfo />);
+    const loadingIndicator = render(
+      <IdCardInfo isView={true} isEdit={false} />,
+    );
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });

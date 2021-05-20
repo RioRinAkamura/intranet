@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
 
-import { UserDetailPage } from '..';
+import { ProjectDetailPage } from '..';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -14,9 +14,9 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
-describe('<UserDetailPage  />', () => {
+describe('<ProjectDetailPage  />', () => {
   it('should match snapshot', () => {
-    const loadingIndicator = render(<UserDetailPage />);
+    const loadingIndicator = render(<ProjectDetailPage />);
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });

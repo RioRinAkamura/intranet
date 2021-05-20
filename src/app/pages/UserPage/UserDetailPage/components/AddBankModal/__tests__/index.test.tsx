@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
+import { Form } from 'antd';
 
 import { AddBankModal } from '..';
+import { matchMedia } from 'utils/matchMedia';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -14,9 +16,16 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
+matchMedia();
+
+const RenderAddBankModal = () => {
+  const [form] = Form.useForm();
+  return <AddBankModal isView form={form} />;
+};
+
 describe('<AddBankModal  />', () => {
   it('should match snapshot', () => {
-    const loadingIndicator = render(<AddBankModal />);
+    const loadingIndicator = render(<RenderAddBankModal />);
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });

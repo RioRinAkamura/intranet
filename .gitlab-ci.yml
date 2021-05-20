@@ -53,7 +53,7 @@ test:
   stage: test
   allow_failure: true
   script:
-    - npm run test
+    - npm run test -u
   when: manual
 
 build:
