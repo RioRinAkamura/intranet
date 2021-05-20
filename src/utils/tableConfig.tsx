@@ -271,6 +271,33 @@ export const useTableConfig = (
             .toLowerCase()
             .includes(value.toLowerCase())
         : '',
+    render: (text, record) => {
+      let dataText = '';
+      dataIndex.map(data => {
+        if (record[data]) {
+          dataText += record[data] + ' ';
+        }
+        return data;
+      });
+      console.log(state.filterColumns![dataIndex[filterIndex || 0]]);
+      return has(state.filterColumns, dataIndex[filterIndex || 0]) ||
+        (state.params.search && state.params.search.length > 0) ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[
+            state.filterColumns![dataIndex[filterIndex || 0]]?.includes(text) &&
+              text,
+            state.params.search &&
+              state.params.search.length > 0 &&
+              state.params.search,
+          ]}
+          autoEscape
+          textToHighlight={text ? dataText.trim().toString() : ''}
+        />
+      ) : (
+        dataText.trim()
+      );
+    },
   });
 
   return {

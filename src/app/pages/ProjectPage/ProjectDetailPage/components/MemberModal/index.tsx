@@ -1,6 +1,6 @@
 /**
  *
- * AddMemberModal
+ * MemberModal
  *
  */
 import React, { memo, useEffect, useState } from 'react';
@@ -8,10 +8,10 @@ import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { DialogModal } from 'app/components/DialogModal';
 import { Button, Form, FormInstance, Select, Spin } from 'antd';
-import { UserDetailMessages } from '../../messages';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { useProjectDetail } from '../../useProjectDetail';
 import { useHandleMember } from './useHandleMember';
+import { ProjectDetailMessages } from '../../messages';
 
 interface Props {
   form: FormInstance;
@@ -43,7 +43,7 @@ const allocations = [
 
 type Employee = models.hr.Employee;
 
-export const AddMemberModal = memo((props: Props) => {
+export const MemberModal = memo((props: Props) => {
   const { t } = useTranslation();
   const { form, open, setOpen, selectedMember, setSelectedMember } = props;
   const [memberForm] = Form.useForm();
@@ -84,7 +84,11 @@ export const AddMemberModal = memo((props: Props) => {
       const response = await addMember(project_id, values);
       if (response) {
         if (members) {
-          members.push({ ...values.members, employee: employee });
+          members.push({
+            ...values.members,
+            employee: employee,
+            allocation: response.allocation,
+          });
           form.setFieldsValue({
             members: members,
           });
@@ -126,23 +130,23 @@ export const AddMemberModal = memo((props: Props) => {
 
   const role = [
     {
-      name: 'Project Manager',
+      name: t(ProjectDetailMessages.memberPM()),
       value: 'PM',
     },
     {
-      name: 'Team Leader',
+      name: t(ProjectDetailMessages.memberTL()),
       value: 'TL',
     },
     {
-      name: 'Quality Controller',
+      name: t(ProjectDetailMessages.memberQC()),
       value: 'QC',
     },
     {
-      name: 'Developer',
+      name: t(ProjectDetailMessages.memberDEV()),
       value: 'DEV',
     },
     {
-      name: 'Other',
+      name: t(ProjectDetailMessages.memberOTHER()),
       value: 'OTHER',
     },
   ];
@@ -175,7 +179,11 @@ export const AddMemberModal = memo((props: Props) => {
   return (
     <>
       <DialogModal
-        title={isAddMember ? 'Add Member' : 'Edit Member'}
+        title={
+          isAddMember
+            ? t(ProjectDetailMessages.addMember())
+            : t(ProjectDetailMessages.editMember())
+        }
         isOpen={open}
         handleCancel={() => {
           setOpen(false);
@@ -195,11 +203,11 @@ export const AddMemberModal = memo((props: Props) => {
         >
           <FormSearchItem
             name={['members', 'employee']}
-            label="Member"
+            label={t(ProjectDetailMessages.memberFormEmployeeLabel())}
             rules={[
               {
                 required: true,
-                message: t(UserDetailMessages.formEmptyBankName()),
+                message: t(ProjectDetailMessages.memberFormEmployeeEmpty()),
               },
             ]}
           >
@@ -212,7 +220,9 @@ export const AddMemberModal = memo((props: Props) => {
               size="large"
               loading={searchLoad}
               disabled={selectedMember ? true : false}
-              placeholder="Input member name, email"
+              placeholder={t(
+                ProjectDetailMessages.memberFormEmployeePlaceholder(),
+              )}
               onSearch={handleSearch}
               onChange={handleChange}
               notFoundContent={searchLoad ? <Spin size="default" /> : null}
@@ -222,17 +232,19 @@ export const AddMemberModal = memo((props: Props) => {
           </FormSearchItem>
           <FormSearchItem
             name={['members', 'project_role']}
-            label="Role"
+            label={t(ProjectDetailMessages.memberFormProjectRoleLabel())}
             rules={[
               {
                 required: true,
-                message: t(UserDetailMessages.formEmptyBankNumber()),
+                message: t(ProjectDetailMessages.memberFormProjectRoleEmpty()),
               },
             ]}
           >
             <Select
               size="large"
-              placeholder={t(UserDetailMessages.formBankNamePlaceholder())}
+              placeholder={t(
+                ProjectDetailMessages.memberFormProjectRolePlaceholder(),
+              )}
             >
               {role &&
                 role.map((item, index: number) => {
@@ -246,17 +258,19 @@ export const AddMemberModal = memo((props: Props) => {
           </FormSearchItem>
           <FormSearchItem
             name={['members', 'allocation']}
-            label="Allocation"
+            label={t(ProjectDetailMessages.memberFormAllocationLabel())}
             rules={[
               {
                 required: true,
-                message: t(UserDetailMessages.formEmptyBankBranch()),
+                message: t(ProjectDetailMessages.memberFormAllocationEmpty()),
               },
             ]}
           >
             <Select
               size="large"
-              placeholder={t(UserDetailMessages.formBankNamePlaceholder())}
+              placeholder={t(
+                ProjectDetailMessages.memberFormAllocationPlaceholder(),
+              )}
             >
               {allocations &&
                 allocations.map((item, index) => {
@@ -276,7 +290,7 @@ export const AddMemberModal = memo((props: Props) => {
               shape="round"
               size="large"
             >
-              Submit
+              {t(ProjectDetailMessages.buttonSubmit())}
             </Button>
           </ModalButton>
         </Form>

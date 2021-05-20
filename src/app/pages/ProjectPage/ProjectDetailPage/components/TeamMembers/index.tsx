@@ -3,13 +3,25 @@ import {
   MinusCircleOutlined,
   PhoneOutlined,
 } from '@ant-design/icons';
-import { Button, Col, Form, FormInstance, Popover, Row, Tag } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  FormInstance,
+  Popover,
+  Row,
+  Tag,
+  Tooltip,
+} from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
+import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { antColours } from 'utils/types';
-import { AddMemberModal } from '../AddMemberModal/Loadable';
-import { useHandleMember } from '../AddMemberModal/useHandleMember';
+import { ProjectDetailMessages } from '../../messages';
+import { MemberModal } from '../MemberModal/Loadable';
+import { useHandleMember } from '../MemberModal/useHandleMember';
 
 interface Props {
   isView?: boolean;
@@ -19,7 +31,14 @@ interface Props {
 
 export const TeamMembers = (props: Props) => {
   const { isView, isEdit, form } = props;
+  const { t } = useTranslation();
   const [openModal, setOpenModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState({
+    open: false,
+    remove: (index: number) => {},
+  });
+  const [selectedMemberDelete, setSelectedMemberDelete] = useState<any>();
+  const [textCopy, setTextCopy] = useState(false);
   const [selectedMember, setSelectedMember] = useState<any>();
   const { deleteMember } = useHandleMember();
 
@@ -93,16 +112,49 @@ export const TeamMembers = (props: Props) => {
       {isEdit && (
         <MinusCircleOutlined
           onClick={async () => {
-            const id = form.getFieldValue('id');
-            const response = await deleteMember(id, info.employee.id);
-            if (response) {
-              remove(info.index);
-            }
+            setDeleteModal({ open: true, remove: remove });
+            setSelectedMemberDelete(info);
           }}
           style={{ color: 'red' }}
         />
       )}
     </MemberInfoCover>
+  );
+
+  const handleConfirmDelete = async () => {
+    setDeleteModal({ open: false, remove: () => {} });
+    const id = form.getFieldValue('id');
+    const response = await deleteMember(id, selectedMemberDelete.employee.id);
+    if (response) {
+      deleteModal.remove(selectedMemberDelete.index);
+    }
+  };
+
+  const handleCancelDeleteModal = () => {
+    setDeleteModal({ open: false, remove: () => {} });
+  };
+
+  const descriptionDelete = (
+    <p>
+      You're about to permanently delete this member{' '}
+      <Tooltip
+        title={<div>{textCopy ? 'Copied!' : 'Click to copy!'}</div>}
+        onVisibleChange={visible => visible === true && setTextCopy(false)}
+      >
+        <strong
+          id="deletedEmail"
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            let copyText = document.getElementById('deletedEmail')?.innerText;
+            if (copyText) {
+              navigator.clipboard.writeText(copyText);
+              setTextCopy(true);
+            }
+          }}
+        >{`${selectedMemberDelete?.employee.email}`}</strong>
+      </Tooltip>
+      . This will also delete any references to your project.
+    </p>
   );
 
   return (
@@ -111,7 +163,7 @@ export const TeamMembers = (props: Props) => {
         <>
           <Row gutter={[12, 12]} align="middle" style={{ marginBottom: 12 }}>
             <Col>
-              <h3>Team Members</h3>
+              <h3>{t(ProjectDetailMessages.memberTitle())}</h3>
             </Col>
             <Col>
               {!isView && (
@@ -122,11 +174,11 @@ export const TeamMembers = (props: Props) => {
                     size="large"
                     onClick={() => setOpenModal(true)}
                   >
-                    Add Member
+                    {t(ProjectDetailMessages.addMember())}
                   </Button>
                 </>
               )}
-              <AddMemberModal
+              <MemberModal
                 open={openModal}
                 setOpen={setOpenModal}
                 selectedMember={selectedMember}
@@ -166,13 +218,13 @@ export const TeamMembers = (props: Props) => {
                       <Row gutter={[12, 12]}>
                         {pms && pms.length > 0 && (
                           <Col span={12}>
-                            <h3>Project Manager</h3>
+                            <h3>{t(ProjectDetailMessages.memberPM())}</h3>
                             {pms.map(pm => memberInfo(pm, remove))}
                           </Col>
                         )}
                         {tls && tls.length > 0 && (
                           <Col span={12}>
-                            <h3>Leader</h3>
+                            <h3>{t(ProjectDetailMessages.memberTL())}</h3>
                             {tls.map(tl => memberInfo(tl, remove))}
                           </Col>
                         )}
@@ -184,19 +236,19 @@ export const TeamMembers = (props: Props) => {
                       <Row gutter={[12, 12]}>
                         {qcs && qcs.length > 0 && (
                           <Col span={8}>
-                            <h3>Quality Controller</h3>
+                            <h3>{t(ProjectDetailMessages.memberQC())}</h3>
                             {qcs.map(qc => memberInfo(qc, remove))}
                           </Col>
                         )}
                         {devs && devs.length > 0 && (
                           <Col span={8}>
-                            <h3>Developer</h3>
+                            <h3>{t(ProjectDetailMessages.memberDEV())}</h3>
                             {devs.map(dev => memberInfo(dev, remove))}
                           </Col>
                         )}
                         {others && others.length > 0 && (
                           <Col span={8}>
-                            <h3>Other</h3>
+                            <h3>{t(ProjectDetailMessages.memberOTHER())}</h3>
                             {others.map(other => memberInfo(other, remove))}
                           </Col>
                         )}
@@ -209,6 +261,14 @@ export const TeamMembers = (props: Props) => {
           </Form.List>
         </>
       )}
+      <DeleteConfirmModal
+        visible={deleteModal.open}
+        handleOk={() => handleConfirmDelete()}
+        handleCancel={handleCancelDeleteModal}
+        title={`Remove ${selectedMemberDelete?.employee.first_name} ${selectedMemberDelete?.employee.last_name}`}
+        description={descriptionDelete}
+        answer={`${selectedMemberDelete?.employee.email}`}
+      />
     </>
   );
 };

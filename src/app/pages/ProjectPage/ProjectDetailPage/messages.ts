@@ -6,366 +6,184 @@
 import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
-export const UserDetailMessages = {
-  title: () => _t(translations.UserDetailPage.title, 'User Detail'),
-  description: () => _t(translations.UserDetailPage.description, 'User Detail'),
-  createTitle: () => _t(translations.UserDetailPage.createTitle, 'Create User'),
-  formAvatarUpload: () =>
-    _t(translations.UserDetailPage.modal.form.avatar.upload, 'Upload Image'),
-  formAvatarLabel: () =>
-    _t(translations.UserDetailPage.modal.form.avatar.label, 'Avatar'),
-  formCodeLabel: () =>
-    _t(translations.UserDetailPage.modal.form.code.label, 'Employee Code'),
-  formCodePlaceholder: () =>
+export const ProjectDetailMessages = {
+  title: () => _t(translations.ProjectDetailPage.title, 'Project Detail'),
+  description: () =>
+    _t(translations.ProjectDetailPage.description, 'Project Detail'),
+  createTitle: () =>
+    _t(translations.ProjectDetailPage.createTitle, 'Create Project'),
+  editTitle: () => _t(translations.ProjectDetailPage.editTitle, 'Edit Project'),
+  addMember: () => _t(translations.ProjectDetailPage.addMember, 'Add Member'),
+  editMember: () =>
+    _t(translations.ProjectDetailPage.editMember, 'Edit Member'),
+  formProjectNameLabel: () =>
+    _t(translations.ProjectDetailPage.form.projectName.label, 'Project Name'),
+  formProjectNamePlaceholder: () =>
     _t(
-      translations.UserDetailPage.modal.form.code.placeholder,
-      'Enter employee code',
+      translations.ProjectDetailPage.form.projectName.placeholder,
+      'Enter Project Name',
     ),
-  formCodeEmpty: () =>
+  formProjectNameEmpty: () =>
     _t(
-      translations.UserDetailPage.modal.form.code.empty,
-      'Please enter employee code',
+      translations.ProjectDetailPage.form.projectName.empty,
+      'Please Enter Project Name!',
     ),
-
-  formEmptyAvatar: () =>
+  formProjectStartedLabel: () =>
     _t(
-      translations.UserDetailPage.modal.form.avatar.empty,
-      'Please upload Employee avatar!',
+      translations.ProjectDetailPage.form.projectStarted.label,
+      'Project Started',
     ),
-  formProfileTitle: () =>
+  formProjectStartedPlaceholder: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.title,
-      'Profile Infomation',
+      translations.ProjectDetailPage.form.projectStarted.placeholder,
+      'Select Project Started Date',
     ),
-  formFirstNameLabel: () =>
+  formProjectStartedEmpty: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.firstName.label,
-      'First Name',
+      translations.ProjectDetailPage.form.projectStarted.empty,
+      'Please Select Project Started Date!',
     ),
-  formFirstNamePlaceholder: () =>
+  formProjectPriorityLabel: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.firstName.placeholder,
-      'Enter Employee First Name',
+      translations.ProjectDetailPage.form.projectPriority.label,
+      'Project Priority',
     ),
-  formEmptyFirstName: () =>
+  formProjectPriorityPlaceholder: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.firstName.empty,
-      'Please Enter Employee First Name!',
+      translations.ProjectDetailPage.form.projectPriority.placeholder,
+      'Select Project Priority',
     ),
-  formLastNameLabel: () =>
+  formProjectPriorityEmpty: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.lastName.label,
-      'Last Name',
+      translations.ProjectDetailPage.form.projectPriority.empty,
+      'Please Select Project Priority!',
     ),
-  formLastNamePlaceholder: () =>
+  formProjectPriorityLow: () =>
+    _t(translations.ProjectDetailPage.form.projectPriority.low, 'Low'),
+  formProjectPriorityMedium: () =>
+    _t(translations.ProjectDetailPage.form.projectPriority.medium, 'Medium'),
+  formProjectPriorityHigh: () =>
+    _t(translations.ProjectDetailPage.form.projectPriority.high, 'High'),
+  formProjectStatusLabel: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.lastName.placeholder,
-      'Employee Last Name',
+      translations.ProjectDetailPage.form.projectStatus.label,
+      'Project Status',
     ),
-  formEmptyLastName: () =>
+  formProjectStatusPlaceholder: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.lastName.empty,
-      'Please Enter Employee Last Name!',
+      translations.ProjectDetailPage.form.projectStatus.placeholder,
+      'Select Project Status',
     ),
-  formDOBLabel: () =>
+  formProjectStatusEmpty: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.DOB.label,
-      'Date of Birth',
+      translations.ProjectDetailPage.form.projectStatus.empty,
+      'Please Select Project Status!',
     ),
-  formDOBPlaceholder: () =>
+  formProjectStatusPreparing: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.DOB.placeholder,
-      'Select Employee DOB',
+      translations.ProjectDetailPage.form.projectStatus.preparing,
+      'Preparing',
     ),
-  formEmptyDOB: () =>
+  formProjectStatusGoing: () =>
+    _t(translations.ProjectDetailPage.form.projectStatus.going, 'Going'),
+  formProjectStatusReleased: () =>
+    _t(translations.ProjectDetailPage.form.projectStatus.released, 'Released'),
+  formProjectStatusArchived: () =>
+    _t(translations.ProjectDetailPage.form.projectStatus.archived, 'Archived'),
+  formProjectOverviewLabel: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.DOB.empty,
-      'Please Enter Employee Date of Birth!',
+      translations.ProjectDetailPage.form.projectOverview.label,
+      'Project Overview',
     ),
-  formInvalidDOB: () =>
+  formProjectOverviewPlaceholder: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.DOB.invalid,
-      'Only allow 16+ years old!',
+      translations.ProjectDetailPage.form.projectOverview.placeholder,
+      'Enter Project Overview',
     ),
-  formGenderLabel: () =>
-    _t(translations.UserDetailPage.modal.form.profile.gender.label, 'Gender'),
-  formGenderMaleLabel: () =>
+  formProjectOverviewEmpty: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.gender.male.label,
-      'Male',
+      translations.ProjectDetailPage.form.projectOverview.empty,
+      'Please Enter Project Overview!',
     ),
-  formGenderFemaleLabel: () =>
+  memberTitle: () =>
+    _t(translations.ProjectDetailPage.member.title, 'Team Members'),
+  memberPM: () =>
+    _t(translations.ProjectDetailPage.member.pm, 'Project Manager'),
+  memberTL: () => _t(translations.ProjectDetailPage.member.tl, 'Team Leader'),
+  memberQC: () =>
+    _t(translations.ProjectDetailPage.member.qc, 'Quality Controller'),
+  memberDEV: () => _t(translations.ProjectDetailPage.member.dev, 'Developer'),
+  memberOTHER: () => _t(translations.ProjectDetailPage.member.other, 'Other'),
+  memberFormEmployeeLabel: () =>
+    _t(translations.ProjectDetailPage.member.form.employee.label, 'Employee'),
+  memberFormEmployeePlaceholder: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.gender.female.label,
-      'Female',
+      translations.ProjectDetailPage.member.form.employee.placeholder,
+      'Enter Member Name, Email',
     ),
-  formGenderOtherLabel: () =>
+  memberFormEmployeeEmpty: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.gender.other.label,
-      'Other',
+      translations.ProjectDetailPage.member.form.employee.empty,
+      'Please Enter Member Name, Email!',
     ),
-  formEmptyGender: () =>
+  memberFormProjectRoleLabel: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.gender.empty,
-      'Please Select Employee Gender',
+      translations.ProjectDetailPage.member.form.projectRole.label,
+      'Project Role',
     ),
-  formPhoneNumberLabel: () =>
+  memberFormProjectRolePlaceholder: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.phoneNumber.label,
-      'Phone Number',
+      translations.ProjectDetailPage.member.form.projectRole.placeholder,
+      'Select Project Role',
     ),
-  formPhoneNumberPlaceholder: () =>
+  memberFormProjectRoleEmpty: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.phoneNumber.placeholder,
-      'Employee Phone Number',
+      translations.ProjectDetailPage.member.form.projectRole.empty,
+      'Please Select Project Role!',
     ),
-  formEmptyPhoneNumber: () =>
+  memberFormAllocationLabel: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.phoneNumber.empty,
-      'Please Enter Employee Phone Number!',
+      translations.ProjectDetailPage.member.form.allocation.label,
+      'Allocation',
     ),
-  formInvalidPhoneNumber: () =>
+  memberFormAllocationPlaceholder: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.phoneNumber.invalid,
-      'Employee Phone Number Is Invalid!',
+      translations.ProjectDetailPage.member.form.allocation.placeholder,
+      'Select Allocation',
     ),
-  formEmailLabel: () =>
-    _t(translations.UserDetailPage.modal.form.profile.email.label, 'Email'),
-  formEmailPlaceholder: () =>
+  memberFormAllocationEmpty: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.email.placeholder,
-      'Employee Email',
+      translations.ProjectDetailPage.member.form.allocation.empty,
+      'Please Select Allocation!',
     ),
-  formEmptyEmail: () =>
+  messageCreateProjectSuccess: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.email.empty,
-      'Please Enter Employee Email!',
+      translations.ProjectDetailPage.message.createProjectSuccess,
+      'Create Project Successfully',
     ),
-  formInvalidEmail: () =>
+  messageEditProjectSuccess: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.email.invalid,
-      'Employee Email Is Invalid!',
+      translations.ProjectDetailPage.message.editProjectSuccess,
+      'Edit Project Successfully',
     ),
-  formStatusLabel: () =>
-    _t(translations.UserDetailPage.modal.form.profile.status.label, 'Status'),
-  formStatusSingleLabel: () =>
+  messageCreateMemberSuccess: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.status.single.label,
-      'Single',
+      translations.ProjectDetailPage.message.createMemberSuccess,
+      'Create Member Successfully',
     ),
-  formStatusMarriedLabel: () =>
+  messageEditMemberSuccess: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.status.married.label,
-      'Married',
+      translations.ProjectDetailPage.message.editMemberSuccess,
+      'Edit Member Successfully',
     ),
-  formIDCardTitle: () =>
-    _t(
-      translations.UserDetailPage.modal.form.profile.idCard.title,
-      'Id Card Information',
-    ),
-  formIdNumberLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.profile.idNumber.label,
-      'Id Number',
-    ),
-  formIdNumberPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.profile.idNumber.placeholder,
-      'Employee Id Number',
-    ),
-  formIssuedDateLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.profile.issuedDate.label,
-      'Issued Date',
-    ),
-  formIssuedDatePlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.profile.issuedDate.placeholder,
-      'Employee Issued Date',
-    ),
-  formIssuedPlaceLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.profile.issuedPlace.label,
-      'Issued Place',
-    ),
-  formIssuedPlacePlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.profile.issuedPlace.placeholder,
-      'Employee Issued Place',
-    ),
-  formSocialInsuranceNoLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.profile.socialInsuranceNo.label,
-      'Social Insurance No',
-    ),
-  formSocialInsuranceNoPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.profile.socialInsuranceNo
-        .placeholder,
-      'Employee Social Insurance No',
-    ),
-  formJobTitle: () =>
-    _t(translations.UserDetailPage.modal.form.job.title, 'Job Infomation'),
-  formJobTitleLabel: () =>
-    _t(translations.UserDetailPage.modal.form.job.jobTitle.label, 'Job Title'),
-  formJobTitlePlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.job.jobTitle.placeholder,
-      'Input Employee Job Title!',
-    ),
-  formEmptyJobTitle: () =>
-    _t(
-      translations.UserDetailPage.modal.form.job.jobTitle.empty,
-      'Please Enter Employee Job Title!',
-    ),
-  formTypeLabel: () =>
-    _t(translations.UserDetailPage.modal.form.job.type.label, 'Type'),
-  formTypeFullTimeLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.job.type.fullTime.label,
-      'Full-time',
-    ),
-  formTypePartTimeLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.job.type.partTim.label,
-      'Part-time',
-    ),
-  formTypeProbationLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.job.type.probation.label,
-      'Probation',
-    ),
-  formTypeEtcLabel: () =>
-    _t(translations.UserDetailPage.modal.form.job.type.etc.label, 'Etc'),
-  formJobTagsLabel: () =>
-    _t(translations.UserDetailPage.modal.form.job.jobTags.label, 'Tags'),
-  formJobTagsPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.job.jobTags.placeholder,
-      'Employee Tags',
-    ),
-  formBankAccountsTitle: () =>
-    _t(translations.UserDetailPage.modal.form.bank.title, 'Bank Informations'),
-  formBankNameLabel: () =>
-    _t(translations.UserDetailPage.modal.form.bank.name.label, 'Bank Name'),
-  formBankNamePlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.name.placeholder,
-      'Select Bank Name',
-    ),
-  formEmptyBankName: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.name.empty,
-      'Please Enter Employee Bank Name',
-    ),
-  formBankNumberLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.number.label,
-      'Account Number/ Card Number',
-    ),
-  formBankNumberPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.number.placeholder,
-      'Enter Account Number/ Card Number',
-    ),
-  formEmptyBankNumber: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.number.empty,
-      'Please Enter Employee bank number',
-    ),
-  formBankBranchLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.branch.label,
-      'Account Owner',
-    ),
-  formBankBranchPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.branch.placeholder,
-      "Enter Account Owner's Name",
-    ),
-  formEmptyBankBranch: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.branch.empty,
-      'Please Enter Employee Bank Branch',
-    ),
-  formBankAddButton: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.button.add,
-      'Add Bank Account',
-    ),
-  formSocialNetworkTitle: () =>
-    _t(translations.UserDetailPage.modal.form.social.title, 'Social Network'),
-  formSocialsSkypeLabel: () =>
-    _t(translations.UserDetailPage.modal.form.social.skype.label, 'Skype'),
-  formSocialsSkypePlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.social.skype.placeholder,
-      'Input Employee Skype',
-    ),
-  formSocialsTwitterLabel: () =>
-    _t(translations.UserDetailPage.modal.form.social.twitter.label, 'Twitter'),
-  formSocialsTwitterPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.social.twitter.placeholder,
-      'Input Employee Twitter',
-    ),
-  formSocialsFacebookLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.social.facebook.label,
-      'Facebook',
-    ),
-  formSocialsFacebookPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.social.facebook.placeholder,
-      'Input Employee Facebook',
-    ),
-  formSocialsLinkedinLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.social.linkedin.label,
-      'Linkedin',
-    ),
-  formSocialsLinkedinPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.social.linkedin.placeholder,
-      'Input Employee Linkedin',
-    ),
-  formSocialsGithubLabel: () =>
-    _t(translations.UserDetailPage.modal.form.social.github.label, 'Github'),
-  formSocialsGithubPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.social.github.placeholder,
-      'Input Employee Github',
-    ),
-  formSocialsGitlabLabel: () =>
-    _t(translations.UserDetailPage.modal.form.social.gitlab.label, 'Gitlab'),
-  formSocialsGitlabPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.social.gitlab.placeholder,
-      'Input Employee Gitlab',
-    ),
-  formEditButton: () =>
-    _t(translations.UserDetailPage.modal.form.button.edit, 'Edit'),
-  formSubmitButton: () =>
-    _t(translations.UserDetailPage.modal.form.button.submit, 'Save'),
-  formCancelButton: () =>
-    _t(translations.UserDetailPage.modal.form.button.cancel, 'Cancel'),
-  formBackButton: () =>
-    _t(translations.UserDetailPage.modal.form.button.back, 'Back'),
-  formAddBankButton: () =>
-    _t(
-      translations.UserDetailPage.modal.form.button.addBank,
-      'Add Bank Account',
-    ),
-  formEditBankButton: () =>
-    _t(
-      translations.UserDetailPage.modal.form.button.editBank,
-      'Edit Bank Account',
-    ),
-  formSubmitAddBankButton: () =>
-    _t(translations.UserDetailPage.modal.form.button.submitAddBank, 'Submit'),
-  updateSuccessMessage: () =>
-    _t(
-      translations.UserDetailPage.modal.message.sucess,
-      'Update employee successfully',
-    ),
+  buttonCreate: () =>
+    _t(translations.ProjectDetailPage.button.create, 'Create'),
+  buttonEdit: () => _t(translations.ProjectDetailPage.button.edit, 'Edit'),
+  buttonDelete: () =>
+    _t(translations.ProjectDetailPage.button.delete, 'Delete'),
+  buttonCancel: () =>
+    _t(translations.ProjectDetailPage.button.cancel, 'Cancel'),
+  buttonBack: () => _t(translations.ProjectDetailPage.button.back, 'Back'),
+  buttonSubmit: () =>
+    _t(translations.ProjectDetailPage.button.submit, 'Submit'),
 };

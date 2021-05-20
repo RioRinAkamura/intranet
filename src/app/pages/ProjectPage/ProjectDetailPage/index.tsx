@@ -8,7 +8,6 @@ import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
-import { UserDetailMessages } from './messages';
 import moment from 'moment';
 import { useProjectDetail } from './useProjectDetail';
 import { PageTitle } from 'app/components/PageTitle';
@@ -16,6 +15,7 @@ import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
 import { config } from 'config';
 import { ProjectInfo } from './components/ProjectInfo';
 import { TeamMembers } from './components/TeamMembers';
+import { ProjectDetailMessages } from './messages';
 
 interface Props {}
 interface LocationState {
@@ -83,7 +83,8 @@ export const ProjectDetailPage = (props: Props) => {
         if (isEdit) {
           const response = await update(values);
           if (response) {
-            setData(response);
+            delete response.members;
+            setData(prev => ({ ...prev, ...response }));
             setIsEdit(false);
           }
         }
@@ -99,10 +100,10 @@ export const ProjectDetailPage = (props: Props) => {
       <WrapperTitlePage>
         <PageTitle>
           {isView
-            ? 'Project Details'
+            ? t(ProjectDetailMessages.title())
             : isEdit
-            ? 'Edit Project'
-            : 'Create Project'}
+            ? t(ProjectDetailMessages.editTitle())
+            : t(ProjectDetailMessages.createTitle())}
         </PageTitle>
       </WrapperTitlePage>
       <WrapperMainItem>
@@ -124,14 +125,12 @@ export const ProjectDetailPage = (props: Props) => {
               onClick={() => {
                 if (isEdit) {
                   setIsEdit(false);
-                } else if (isView) {
-                  history.push('/employees');
-                } else if (isCreate) {
-                  history.push('/employees');
+                } else {
+                  history.push('/projects');
                 }
               }}
             >
-              {t(UserDetailMessages.formBackButton())}
+              {t(ProjectDetailMessages.buttonCancel())}
             </PageButton>
           </Col>
           <Col>
@@ -153,8 +152,8 @@ export const ProjectDetailPage = (props: Props) => {
               }}
             >
               {isView
-                ? t(UserDetailMessages.formEditButton())
-                : t(UserDetailMessages.formSubmitButton())}
+                ? t(ProjectDetailMessages.buttonEdit())
+                : t(ProjectDetailMessages.buttonSubmit())}
             </PageButton>
           </Col>
         </Row>

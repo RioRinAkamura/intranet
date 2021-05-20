@@ -5,8 +5,8 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { api } from 'utils/api';
-import { UserDetailMessages } from './messages';
 import { cloneDeep } from 'lodash';
+import { ProjectDetailMessages } from './messages';
 
 export const useProjectDetail = (): {
   loading: boolean;
@@ -58,7 +58,7 @@ export const useProjectDetail = (): {
         notify({
           type: ToastMessageType.Info,
           duration: 2,
-          message: t(UserDetailMessages.updateSuccessMessage()),
+          message: t(ProjectDetailMessages.messageEditProjectSuccess()),
         });
         return response;
       }
@@ -86,7 +86,7 @@ export const useProjectDetail = (): {
         notify({
           type: ToastMessageType.Info,
           duration: 2,
-          message: t(UserDetailMessages.updateSuccessMessage()),
+          message: t(ProjectDetailMessages.messageCreateProjectSuccess()),
         });
         history.push('/projects/' + response.id);
       }

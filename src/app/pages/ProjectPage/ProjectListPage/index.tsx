@@ -317,7 +317,7 @@ export const ProjectsPage: React.FC = () => {
         },
         {
           title: t(ProjectsMessages.listLDTitle()),
-          ...memberChildren('LD'),
+          ...memberChildren('TL'),
         },
         {
           title: t(ProjectsMessages.listQCTitle()),

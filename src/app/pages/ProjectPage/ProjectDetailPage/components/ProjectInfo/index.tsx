@@ -2,8 +2,10 @@ import { Col, DatePicker, Form, FormInstance, Input, Row, Select } from 'antd';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
 import config from 'config';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { datePickerViewProps, inputViewProps } from 'utils/types';
+import { ProjectDetailMessages } from '../../messages';
 
 interface Props {
   isView?: boolean;
@@ -16,37 +18,38 @@ const { Option } = Select;
 
 export const ProjectInfo = (props: Props) => {
   const { isView, form, data } = props;
+  const { t } = useTranslation();
 
   const priority = [
     {
-      name: 'Low',
+      name: t(ProjectDetailMessages.formProjectPriorityLow()),
       value: 'Low',
     },
     {
-      name: 'Medium',
+      name: t(ProjectDetailMessages.formProjectPriorityMedium()),
       value: 'Medium',
     },
     {
-      name: 'High',
+      name: t(ProjectDetailMessages.formProjectPriorityHigh()),
       value: 'High',
     },
   ];
 
   const status = [
     {
-      name: 'Preparing',
+      name: t(ProjectDetailMessages.formProjectStatusPreparing()),
       value: 'Preparing',
     },
     {
-      name: 'Going',
+      name: t(ProjectDetailMessages.formProjectStatusGoing()),
       value: 'Going',
     },
     {
-      name: 'Released',
+      name: t(ProjectDetailMessages.formProjectStatusReleased()),
       value: 'Released',
     },
     {
-      name: 'Archived',
+      name: t(ProjectDetailMessages.formProjectStatusArchived()),
       value: 'Archived',
     },
   ];
@@ -57,7 +60,7 @@ export const ProjectInfo = (props: Props) => {
         <Col md={14} xs={24}>
           <Row gutter={[0, 12]} align="middle">
             <Col md={isView ? 8 : 24} xs={24}>
-              <h3>Project Name</h3>
+              <h3>{t(ProjectDetailMessages.formProjectNameLabel())}</h3>
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem
@@ -69,7 +72,9 @@ export const ProjectInfo = (props: Props) => {
                     : [
                         {
                           required: true,
-                          message: "Please input project's name",
+                          message: t(
+                            ProjectDetailMessages.formProjectNameEmpty(),
+                          ),
                         },
                       ]
                 }
@@ -77,7 +82,11 @@ export const ProjectInfo = (props: Props) => {
                 <Input
                   {...(isView ? inputViewProps : {})}
                   size="large"
-                  placeholder={isView ? '' : "Project's Name"}
+                  placeholder={
+                    isView
+                      ? ''
+                      : t(ProjectDetailMessages.formProjectNamePlaceholder())
+                  }
                 />
               </FormItem>
             </Col>
@@ -86,7 +95,7 @@ export const ProjectInfo = (props: Props) => {
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
                 <Col md={isView ? 12 : 24} xs={24}>
-                  <h3>Project Started</h3>
+                  <h3>{t(ProjectDetailMessages.formProjectStartedLabel())}</h3>
                 </Col>
                 <Col md={isView ? 12 : 24} xs={24}>
                   <FormItem
@@ -98,7 +107,9 @@ export const ProjectInfo = (props: Props) => {
                         : [
                             {
                               required: true,
-                              message: "Please select project's stared date",
+                              message: t(
+                                ProjectDetailMessages.formProjectStartedEmpty(),
+                              ),
                             },
                           ]
                     }
@@ -108,7 +119,13 @@ export const ProjectInfo = (props: Props) => {
                       format={DATE_FORMAT}
                       style={{ width: '100%' }}
                       size="large"
-                      placeholder={isView ? '' : "Project's start date"}
+                      placeholder={
+                        isView
+                          ? ''
+                          : t(
+                              ProjectDetailMessages.formProjectStartedPlaceholder(),
+                            )
+                      }
                     />
                   </FormItem>
                 </Col>
@@ -117,7 +134,7 @@ export const ProjectInfo = (props: Props) => {
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
                 <Col md={isView ? 8 : 24} xs={24}>
-                  <h3>Priority</h3>
+                  <h3>{t(ProjectDetailMessages.formProjectPriorityLabel())}</h3>
                 </Col>
                 <Col md={isView ? 16 : 24} xs={24}>
                   <FormItem
@@ -129,7 +146,9 @@ export const ProjectInfo = (props: Props) => {
                         : [
                             {
                               required: true,
-                              message: "Please select project's priority",
+                              message: t(
+                                ProjectDetailMessages.formProjectPriorityEmpty(),
+                              ),
                             },
                           ]
                     }
@@ -137,7 +156,12 @@ export const ProjectInfo = (props: Props) => {
                     {isView ? (
                       <Input {...inputViewProps} size="large" />
                     ) : (
-                      <Select size="large" placeholder="Project's Priority">
+                      <Select
+                        size="large"
+                        placeholder={t(
+                          ProjectDetailMessages.formProjectPriorityPlaceholder(),
+                        )}
+                      >
                         {priority &&
                           priority.map((item, index: number) => {
                             return (
@@ -155,7 +179,7 @@ export const ProjectInfo = (props: Props) => {
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
                 <Col md={isView ? 8 : 24} xs={24}>
-                  <h3>Status</h3>
+                  <h3>{t(ProjectDetailMessages.formProjectStatusLabel())}</h3>
                 </Col>
                 <Col md={isView ? 16 : 24} xs={24}>
                   <FormItem
@@ -167,7 +191,9 @@ export const ProjectInfo = (props: Props) => {
                         : [
                             {
                               required: true,
-                              message: "Please input project's status",
+                              message: t(
+                                ProjectDetailMessages.formProjectStatusEmpty(),
+                              ),
                             },
                           ]
                     }
@@ -175,7 +201,12 @@ export const ProjectInfo = (props: Props) => {
                     {isView ? (
                       <Input {...inputViewProps} size="large" />
                     ) : (
-                      <Select size="large" placeholder="Project's Status">
+                      <Select
+                        size="large"
+                        placeholder={t(
+                          ProjectDetailMessages.formProjectStatusPlaceholder(),
+                        )}
+                      >
                         {status &&
                           status.map((item, index: number) => {
                             return (
@@ -195,7 +226,7 @@ export const ProjectInfo = (props: Props) => {
         <Col md={10} xs={24}>
           <Row gutter={[0, 12]} align="middle">
             <Col md={24} xs={24}>
-              <h3>Project Overview</h3>
+              <h3>{t(ProjectDetailMessages.formProjectOverviewLabel())}</h3>
             </Col>
             <Col md={24} xs={24}>
               <FormItem
@@ -207,7 +238,9 @@ export const ProjectInfo = (props: Props) => {
                     : [
                         {
                           required: true,
-                          message: "Please input project's name",
+                          message: t(
+                            ProjectDetailMessages.formProjectOverviewEmpty(),
+                          ),
                         },
                       ]
                 }
@@ -216,6 +249,9 @@ export const ProjectInfo = (props: Props) => {
                   width="100%"
                   isView={isView}
                   data={data?.overview}
+                  placeholder={t(
+                    ProjectDetailMessages.formProjectOverviewPlaceholder(),
+                  )}
                   callback={e => {
                     form.setFieldsValue({ overview: e });
                   }}

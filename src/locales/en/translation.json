@@ -392,5 +392,86 @@
     },
     "createProjectButton": "Create Project",
     "exportAllProject": "Export as CSV for all"
+  },
+  "ProjectDetailPage": {
+    "title": "Project Detail",
+    "description": "Project Detail",
+    "createTitle": "Create Project",
+    "editTitle": "Edit Project",
+    "form": {
+      "projectName": {
+        "label": "Project Name",
+        "placeholder": "Enter Project Name",
+        "empty": "Please Enter Project Name!"
+      },
+      "projectStarted": {
+        "label": "Project Started",
+        "placeholder": "Select Project Started Date",
+        "empty": "Please Select Project Started Date!"
+      },
+      "projectPriority": {
+        "label": "Project Priority",
+        "placeholder": "Select Project Priority",
+        "empty": "Please Select Project Priority!",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "projectStatus": {
+        "label": "Project Status",
+        "placeholder": "Select Project Status",
+        "empty": "Please Select Project Status!",
+        "preparing": "Preparing",
+        "going": "Going",
+        "released": "Released",
+        "archived": "Archived"
+      },
+      "projectOverview": {
+        "label": "Project Overview",
+        "placeholder": "Enter Project Overview",
+        "empty": "Please Enter Project Overview!"
+      }
+    },
+    "button": {
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "back": "Back",
+      "submit": "Submit"
+    },
+    "member": {
+      "pm": "Project Manager",
+      "tl": "Team Leader",
+      "qc": "Quality Controller",
+      "dev": "Developer",
+      "other": "Other",
+      "form": {
+        "employee": {
+          "label": "Employee",
+          "placeholder": "Enter Member Name, Email",
+          "empty": "Please Enter Member Name, Email!"
+        },
+        "projectRole": {
+          "label": "Project Role",
+          "placeholder": "Select Project Role",
+          "empty": "Please Select Project Role!"
+        },
+        "allocation": {
+          "label": "Allocation",
+          "placeholder": "Select Allocation",
+          "empty": "Please Select Allocation!"
+        }
+      },
+      "title": "Team Members"
+    },
+    "addMember": "Add Member",
+    "editMember": "Edit Member",
+    "message": {
+      "createProjectSuccess": "Create Project Successfully",
+      "editProjectSuccess": "Edit Project Successfully",
+      "createMemberSuccess": "Create Member Successfully",
+      "editMemberSuccess": "Edit Member Successfully"
+    }
   }
 }

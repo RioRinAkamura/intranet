@@ -43,6 +43,7 @@ import '@draft-js-plugins/mention/lib/plugin.css';
 import '@draft-js-plugins/hashtag/lib/plugin.css';
 import '@draft-js-plugins/static-toolbar/lib/plugin.css';
 import '@draft-js-plugins/inline-toolbar/lib/plugin.css';
+import 'draft-js/dist/Draft.css';
 
 import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
 import { api } from 'utils/api';
@@ -53,12 +54,12 @@ const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
 
 interface Props {
-  hashtag?: boolean;
   toolbar?: object;
   data?: string;
   width?: string;
   height?: string;
   isView?: boolean;
+  placeholder?: string;
   callback: (content: any) => void;
 }
 
@@ -134,7 +135,7 @@ const mentionRemakePlugin = (remarkable: Env) => {
 };
 
 export const RichEditor = memo((props: Props) => {
-  const { width, height, data, isView, callback } = props;
+  const { width, height, data, isView, placeholder, callback } = props;
   const ref = useRef<Editor>(null);
   const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<MentionData[]>();
@@ -272,6 +273,7 @@ export const RichEditor = memo((props: Props) => {
           editorState={editorState}
           readOnly={isView}
           onChange={onChange}
+          placeholder={placeholder}
           plugins={[
             mentionPlugin,
             hashtagPlugin,
