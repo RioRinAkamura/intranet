@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
+import { Form } from 'antd';
 
 import { TotalSearchForm } from '..';
+import { matchMedia } from 'utils/matchMedia';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -14,9 +16,23 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
+matchMedia();
+
+const RenderTotalSearchForm = () => {
+  const [form] = Form.useForm();
+  return (
+    <TotalSearchForm
+      loading={true}
+      onSearch={jest.fn()}
+      onReset={jest.fn()}
+      form={form}
+    />
+  );
+};
+
 describe('<TotalSearchForm  />', () => {
   it('should match snapshot', () => {
-    const loadingIndicator = render(<TotalSearchForm />);
+    const loadingIndicator = render(<RenderTotalSearchForm />);
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });

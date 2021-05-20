@@ -12,7 +12,7 @@ import { MessageTranslate } from 'utils/types';
 interface Props {
   onSearch: () => void;
   onReset: () => void;
-  messageTrans: MessageTranslate;
+  messageTrans?: MessageTranslate;
   form: FormInstance;
   value?: string | number;
   loading: boolean;
@@ -28,7 +28,7 @@ export const TotalSearchForm = memo((props: Props) => {
         <Col xl={18} lg={24} md={24} sm={24} xs={24}>
           <FormItem name="search" initialValue={value}>
             <Input
-              placeholder={t(messageTrans.searchPlaceholder())}
+              placeholder={t(messageTrans?.searchPlaceholder())}
               allowClear
               size="large"
               onChange={e => e.type === 'click' && onReset()}
