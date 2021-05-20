@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import Highlighter from 'react-highlight-words';
 import { TagsInput } from 'app/components/Tags';
 import { TableStateProps } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
-import { TagType } from './types';
+import { MessageTranslate, TagType } from './types';
 import styled from 'styled-components/macro';
 
 interface useTableProps {
@@ -27,10 +27,6 @@ interface useTableProps {
     filterIndex?: number,
   ) => {};
 }
-
-type MessageTranslate = {
-  [key: string]: Function;
-};
 
 export const useTableConfig = (
   state: TableStateProps,

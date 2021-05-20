@@ -26,6 +26,7 @@ import { ForgotPassword } from './pages/ForgotPassword/Loadable';
 import { ResetPassword } from './pages/ResetPassword/Loadable';
 import { ToastContextProvider } from './components/Toast/context';
 import { ProjectsPage } from './pages/ProjectPage/ProjectListPage/Loadable';
+import { ProjectDetailPage } from './pages/ProjectPage/ProjectDetailPage/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -60,23 +61,43 @@ export function App() {
               component={ResetPassword}
             />
             <AppLayout>
-              <PrivateRoute
-                exact
-                path={config.DASHBOARD_PATH}
-                component={HomePage}
-              />
-              <PrivateRoute exact path={config.USERS_PATH} component={Users} />
-              <PrivateRoute
-                exact
-                path={`${config.USERS_PATH}/:id`}
-                component={UserDetailPage}
-              />
-              <PrivateRoute
-                exact
-                path={`${config.CREATE_USER_PATH}`}
-                component={UserDetailPage}
-              />
-              <PrivateRoute exact path={'/projects'} component={ProjectsPage} />
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path={config.DASHBOARD_PATH}
+                  component={HomePage}
+                />
+                <PrivateRoute
+                  exact
+                  path={config.USERS_PATH}
+                  component={Users}
+                />
+                <PrivateRoute
+                  exact
+                  path={`${config.USERS_PATH}/:id`}
+                  component={UserDetailPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={`${config.USERS_PATH}/create`}
+                  component={UserDetailPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/projects'}
+                  component={ProjectsPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/projects/create'}
+                  component={ProjectDetailPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/projects/:id'}
+                  component={ProjectDetailPage}
+                />
+              </Switch>
             </AppLayout>
 
             <Route component={NotFoundPage} />

@@ -114,7 +114,7 @@ export function UserDetailPage(props: Props) {
           {isView
             ? 'Employee Details'
             : isEdit
-            ? 'Edit Employess'
+            ? 'Edit Employee'
             : 'Create Employee'}
         </PageTitle>
       </WrapperTitlePage>

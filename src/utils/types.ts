@@ -1,3 +1,5 @@
+import { DatePickerProps, InputProps } from 'antd';
+
 export enum Gender {
   'Male' = 'Male',
   'Female' = 'Female',
@@ -21,6 +23,10 @@ export interface TagType {
   slug: string;
 }
 
+export interface MessageTranslate {
+  [key: string]: Function;
+}
+
 export const antColours = [
   'pink',
   'yellow',
@@ -36,3 +42,16 @@ export const antColours = [
   'gold',
   'lime',
 ];
+
+export const inputViewProps: InputProps = {
+  bordered: false,
+  readOnly: true,
+};
+
+export const datePickerViewProps: DatePickerProps = {
+  bordered: false,
+  inputReadOnly: true,
+  allowClear: false,
+  suffixIcon: null,
+  popupStyle: { display: 'none' },
+};
