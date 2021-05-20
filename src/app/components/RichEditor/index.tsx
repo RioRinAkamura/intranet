@@ -11,11 +11,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
 import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
-import { Button, Popover } from 'antd';
+import { Popover } from 'antd';
 import createMentionPlugin, {
   MentionPluginTheme,
 } from '@draft-js-plugins/mention';
@@ -43,6 +43,7 @@ import '@draft-js-plugins/mention/lib/plugin.css';
 import '@draft-js-plugins/hashtag/lib/plugin.css';
 import '@draft-js-plugins/static-toolbar/lib/plugin.css';
 import '@draft-js-plugins/inline-toolbar/lib/plugin.css';
+import 'draft-js/dist/Draft.css';
 
 import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
 import { api } from 'utils/api';
@@ -53,12 +54,13 @@ const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
 
 interface Props {
-  hashtag?: boolean;
   toolbar?: object;
   data?: string;
-  width?: number;
-  height?: number;
-  onSubmit: (content: any) => void;
+  width?: string;
+  height?: string;
+  isView?: boolean;
+  placeholder?: string;
+  callback: (content: any) => void;
 }
 
 export interface EntryComponentProps {
@@ -133,7 +135,7 @@ const mentionRemakePlugin = (remarkable: Env) => {
 };
 
 export const RichEditor = memo((props: Props) => {
-  const { width, height, data, onSubmit } = props;
+  const { width, height, data, isView, placeholder, callback } = props;
   const ref = useRef<Editor>(null);
   const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<MentionData[]>();
@@ -194,9 +196,27 @@ export const RichEditor = memo((props: Props) => {
     return { MentionSuggestions, mentionPlugin };
   }, []);
 
-  const onChange = useCallback((_editorState: EditorState) => {
+  const onChange = (_editorState: EditorState) => {
     setEditorState(_editorState);
-  }, []);
+
+    const content = editorState.getCurrentContent();
+    const rawObject = convertToRaw(content);
+    const markdownString = draftToMarkdown(rawObject, {
+      entityItems: {
+        mention: {
+          open: function (entity: any) {
+            return ``;
+          },
+
+          close: function (entity: any) {
+            return `(${entity.data.mention.id})`;
+          },
+        },
+      },
+    });
+
+    callback(markdownString);
+  };
 
   const onOpenChange = useCallback((_open: boolean) => {
     setOpen(_open);
@@ -247,11 +267,13 @@ export const RichEditor = memo((props: Props) => {
   });
 
   return (
-    <Wrapper width={width} height={height}>
+    <Wrapper isView={isView} width={width} height={height}>
       <div className="editor">
         <Editor
           editorState={editorState}
+          readOnly={isView}
           onChange={onChange}
+          placeholder={placeholder}
           plugins={[
             mentionPlugin,
             hashtagPlugin,
@@ -261,7 +283,7 @@ export const RichEditor = memo((props: Props) => {
           ]}
           ref={ref}
         />
-        <MyToolbar />
+        {!isView && <MyToolbar />}
         <InlineToolbar>
           {externalProps => (
             <React.Fragment>
@@ -281,58 +303,40 @@ export const RichEditor = memo((props: Props) => {
           entryComponent={EntryMention}
         />
       </div>
-      <Button
-        size="large"
-        type="primary"
-        onClick={() => {
-          const content = editorState.getCurrentContent();
-          const rawObject = convertToRaw(content);
-          const markdownString = draftToMarkdown(rawObject, {
-            entityItems: {
-              mention: {
-                open: function (entity: any) {
-                  console.log(entity);
-                  return ``;
-                },
-
-                close: function (entity: any) {
-                  return `(${entity.data.mention.id})`;
-                },
-              },
-            },
-          });
-
-          onSubmit(markdownString);
-        }}
-      >
-        Save
-      </Button>
     </Wrapper>
   );
 });
 
 type ComponentProps = {
-  width?: number;
-  height?: number;
+  isView?: boolean;
+  width?: string;
+  height?: string;
 };
 
 const Wrapper = styled.div`
   .editor {
     position: relative;
     box-sizing: border-box;
-    border: 1px solid #ddd;
-    cursor: text;
-    padding: 48px 16px 16px 16px;
-    border-radius: 2px;
+
     margin-bottom: 2em;
-    box-shadow: inset 0px 1px 8px -3px #ababab;
-    background: #fefefe;
-    width: ${(props: ComponentProps) =>
-      props.width ? props.width + 'px' : '500px'};
+    width: ${(props: ComponentProps) => (props.width ? props.width : '500px')};
+
+    ${(props: ComponentProps) =>
+      !props.isView &&
+      css`
+        border: 1px solid #ddd;
+        cursor: text;
+        padding: 48px 16px 16px 16px;
+        border-radius: 2px;
+        box-shadow: inset 0px 1px 8px -3px #ababab;
+        background: #fefefe;
+      `}
 
     .public-DraftEditor-content {
-      min-height: ${(props: ComponentProps) =>
-        props.height ? props.height + 'px' : '140px'};
+      overflow: hidden;
+      overflow-y: auto;
+      height: ${(props: ComponentProps) =>
+        props.height ? props.height : '140px'};
     }
   }
 

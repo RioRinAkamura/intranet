@@ -19,7 +19,7 @@ matchMedia();
 
 describe('<RichEditor  />', () => {
   it('Renders with a className equal to the variant', () => {
-    const loadingIndicator = render(<RichEditor onSubmit={jest.fn()} />);
+    const loadingIndicator = render(<RichEditor callback={jest.fn()} />);
     expect(
       loadingIndicator.container.getElementsByClassName(
         'public-DraftEditor-content',

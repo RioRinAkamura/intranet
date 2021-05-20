@@ -207,7 +207,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         <Button
           size="large"
           type="primary"
-          onClick={() => history.push('/create-user')}
+          onClick={() => history.push('/projects/create')}
           icon={<ProjectOutlined />}
         >
           {t(ProjectsMessages.createProjectButton())}

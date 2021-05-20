@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { Form } from 'antd';
 
-import { SearchUsers } from '..';
+import { TotalSearchForm } from '..';
 import { matchMedia } from 'utils/matchMedia';
 
 jest.mock('react-i18next', () => ({
@@ -18,10 +18,10 @@ jest.mock('react-i18next', () => ({
 
 matchMedia();
 
-const RenderSearchUsers = () => {
+const RenderTotalSearchForm = () => {
   const [form] = Form.useForm();
   return (
-    <SearchUsers
+    <TotalSearchForm
       loading={true}
       onSearch={jest.fn()}
       onReset={jest.fn()}
@@ -30,9 +30,9 @@ const RenderSearchUsers = () => {
   );
 };
 
-describe('<SearchUsers  />', () => {
+describe('<TotalSearchForm  />', () => {
   it('should match snapshot', () => {
-    const loadingIndicator = render(<RenderSearchUsers />);
+    const loadingIndicator = render(<RenderTotalSearchForm />);
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });

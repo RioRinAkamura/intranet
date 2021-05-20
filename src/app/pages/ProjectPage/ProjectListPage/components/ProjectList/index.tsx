@@ -27,7 +27,7 @@ interface Props {
   onDelete: (id: string, user: Employee) => void;
 }
 
-export const UserList = React.memo((props: Props) => {
+export const ProjectList = React.memo((props: Props) => {
   const { loading, data, isMore, moreLoading, onDelete } = props;
   const history = useHistory();
   return (

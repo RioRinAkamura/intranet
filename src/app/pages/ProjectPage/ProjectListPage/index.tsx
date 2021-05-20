@@ -19,9 +19,8 @@ import {
   SorterResult,
 } from 'antd/lib/table/interface';
 import { Helmet } from 'react-helmet-async';
-import { SearchUsers } from './components/SearchUsers/Loadable';
 import { HeaderButton } from './components/HeaderButton/Loadable';
-import { UserList } from './components/UserList/Loadable';
+import { ProjectList } from './components/ProjectList/Loadable';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -46,6 +45,7 @@ import {
 import moment from 'moment';
 import { antColours } from 'utils/types';
 import { ProjectsMessages } from './messages';
+import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
 
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -225,7 +225,7 @@ export const ProjectsPage: React.FC = () => {
           size="small"
           icon={<EyeOutlined />}
           onClick={() => {
-            history.push(`/employees/${text}`);
+            history.push(`/projects/${text}`);
           }}
         />
       </Tooltip>
@@ -236,7 +236,7 @@ export const ProjectsPage: React.FC = () => {
           size="small"
           onClick={() => {
             history.push({
-              pathname: '/employees/' + text,
+              pathname: '/projects/' + text,
               state: { edit: true },
             });
           }}
@@ -317,7 +317,7 @@ export const ProjectsPage: React.FC = () => {
         },
         {
           title: t(ProjectsMessages.listLDTitle()),
-          ...memberChildren('LD'),
+          ...memberChildren('TL'),
         },
         {
           title: t(ProjectsMessages.listQCTitle()),
@@ -400,10 +400,11 @@ export const ProjectsPage: React.FC = () => {
             <PageTitle>{t(ProjectsMessages.title())}</PageTitle>
           </Col>
           <Col sm={8} xs={24}>
-            <SearchUsers
+            <TotalSearchForm
               form={searchForm}
               value={getProjectState.params.search}
               loading={getProjectState.loading ? true : false}
+              messageTrans={ProjectsMessages}
               onSearch={totalSearch}
               onReset={resetTotalSearch}
             />
@@ -411,7 +412,7 @@ export const ProjectsPage: React.FC = () => {
         </Row>
       </Wrapper>
       {isMobileOnly ? (
-        <UserList
+        <ProjectList
           loading={getProjectState.loading ? true : false}
           data={userList}
           isMore={isMore}

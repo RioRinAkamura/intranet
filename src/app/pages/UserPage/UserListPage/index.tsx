@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { UsersMessages } from './messages';
 import { Helmet } from 'react-helmet-async';
-import { SearchUsers } from './components/SearchUsers/Loadable';
 import { HeaderButton } from './components/HeaderButton/Loadable';
 import { UserList } from './components/UserList/Loadable';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
@@ -42,6 +41,7 @@ import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { useTableConfig } from 'utils/tableConfig';
 import { TagComponent } from 'app/components/Tags/components/Tag';
+import { TotalSearchForm } from 'app/components/TotalSearchForm';
 
 type Employee = models.hr.Employee;
 
@@ -359,10 +359,11 @@ export const Users: React.FC = () => {
             <PageTitle>{t(UsersMessages.title())}</PageTitle>
           </Col>
           <Col sm={8} xs={24}>
-            <SearchUsers
+            <TotalSearchForm
               form={searchForm}
               value={getUserListState.params.search}
               loading={getUserListState.loading ? true : false}
+              messageTrans={UsersMessages}
               onSearch={totalSearch}
               onReset={resetTotalSearch}
             />

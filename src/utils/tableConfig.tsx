@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import Highlighter from 'react-highlight-words';
 import { TagsInput } from 'app/components/Tags';
 import { TableStateProps } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
-import { TagType } from './types';
+import { MessageTranslate, TagType } from './types';
 import styled from 'styled-components/macro';
 
 interface useTableProps {
@@ -27,10 +27,6 @@ interface useTableProps {
     filterIndex?: number,
   ) => {};
 }
-
-type MessageTranslate = {
-  [key: string]: Function;
-};
 
 export const useTableConfig = (
   state: TableStateProps,
@@ -275,6 +271,33 @@ export const useTableConfig = (
             .toLowerCase()
             .includes(value.toLowerCase())
         : '',
+    render: (text, record) => {
+      let dataText = '';
+      dataIndex.map(data => {
+        if (record[data]) {
+          dataText += record[data] + ' ';
+        }
+        return data;
+      });
+      console.log(state.filterColumns![dataIndex[filterIndex || 0]]);
+      return has(state.filterColumns, dataIndex[filterIndex || 0]) ||
+        (state.params.search && state.params.search.length > 0) ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[
+            state.filterColumns![dataIndex[filterIndex || 0]]?.includes(text) &&
+              text,
+            state.params.search &&
+              state.params.search.length > 0 &&
+              state.params.search,
+          ]}
+          autoEscape
+          textToHighlight={text ? dataText.trim().toString() : ''}
+        />
+      ) : (
+        dataText.trim()
+      );
+    },
   });
 
   return {
