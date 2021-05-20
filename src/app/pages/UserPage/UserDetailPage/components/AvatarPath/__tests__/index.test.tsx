@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
 import { Form } from 'antd';
+import { Provider } from 'react-redux';
 
 import { AvatarPath } from '..';
 import { matchMedia } from 'utils/matchMedia';
+import { configureAppStore } from 'store/configureStore';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -18,9 +20,15 @@ jest.mock('react-i18next', () => ({
 
 matchMedia();
 
+const store = configureAppStore();
+
 const RenderAvatarPath = () => {
   const [form] = Form.useForm();
-  return <AvatarPath isView={true} isEdit={true} form={form} />;
+  return (
+    <Provider store={store}>
+      <AvatarPath isView={true} isEdit={true} form={form} />
+    </Provider>
+  );
 };
 
 describe('<AvatarPath  />', () => {

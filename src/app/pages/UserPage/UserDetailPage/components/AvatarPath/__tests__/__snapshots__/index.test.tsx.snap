@@ -13,15 +13,16 @@ exports[`<AvatarPath  /> should match snapshot 1`] = `
   margin-bottom: 10px;
 }
 
-.c2 {
+.c3 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   margin: 0;
+  margin-right: 20px;
 }
 
-.c2 input {
+.c3 input {
   color: #1890ff;
   font-weight: 500;
 }
@@ -34,6 +35,17 @@ exports[`<AvatarPath  /> should match snapshot 1`] = `
 
 .c0 .ant-avatar-string {
   font-size: 44px;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 
 <div
@@ -74,11 +86,11 @@ exports[`<AvatarPath  /> should match snapshot 1`] = `
     </b>
   </div>
   <div
-    class="ant-col ant-col-12"
+    class="ant-col ant-col-12 c2"
     style="padding: 16px 16px 16px 16px;"
   >
     <div
-      class="ant-row ant-form-item c2"
+      class="ant-row ant-form-item c3"
     >
       <div
         class="ant-col ant-form-item-control"
@@ -90,7 +102,8 @@ exports[`<AvatarPath  /> should match snapshot 1`] = `
             class="ant-form-item-control-input-content"
           >
             <input
-              class="ant-input ant-input-lg ant-input-borderless"
+              class="ant-input ant-input-lg ant-input-disabled ant-input-borderless"
+              disabled=""
               id="code"
               placeholder=""
               readonly=""
