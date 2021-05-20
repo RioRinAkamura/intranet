@@ -3,7 +3,7 @@
  * AvatarPath
  *
  */
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,11 +16,16 @@ import {
   Row,
   Upload,
 } from 'antd';
-import { Avatar } from 'app/components/Avatar/Loadable';
-import { UserDetailMessages } from '../../messages';
+import { useDispatch, useSelector } from 'react-redux';
 import { CameraOutlined } from '@ant-design/icons';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
+
+import { Avatar } from 'app/components/Avatar/Loadable';
 import { api } from 'utils/api';
+
+import { useUserDetailsSlice } from '../../slice';
+import { selectUserDetails } from '../../slice/selectors';
+import { UserDetailMessages } from '../../messages';
 
 type Employee = models.hr.Employee;
 
@@ -42,6 +47,11 @@ export const AvatarPath = memo((props: Props) => {
 
   const [imageURL, setImageURL] = useState('');
   const [loadingUpload, setLoadingUpload] = useState(false);
+  const [isRefresh, setIsRefresh] = useState(false);
+
+  const { actions } = useUserDetailsSlice();
+  const dispatch = useDispatch();
+  const userDetails = useSelector(selectUserDetails);
 
   const handleChange = async info => {
     setLoadingUpload(true);
@@ -61,6 +71,17 @@ export const AvatarPath = memo((props: Props) => {
       form.setFieldsValue({ avatar: response.file_path });
     }
   };
+
+  useEffect(() => {
+    dispatch(actions.fetchIdentity());
+    setIsRefresh(false);
+  }, [actions, dispatch, isRefresh]);
+
+  useEffect(() => {
+    if (userDetails.identity) {
+      form.setFieldsValue({ code: userDetails.identity });
+    }
+  }, [form, userDetails.identity]);
 
   return (
     <>
@@ -100,7 +121,7 @@ export const AvatarPath = memo((props: Props) => {
             <b>{t(UserDetailMessages.formCodeLabel())}</b>
           </Col>
         )}
-        <Col span={isView ? 12 : 24}>
+        <StyledEmployeeCode span={isView ? 12 : 24}>
           <FormItem
             isView={isView}
             name="code"
@@ -121,9 +142,19 @@ export const AvatarPath = memo((props: Props) => {
               placeholder={
                 isView ? '' : t(UserDetailMessages.formCodePlaceholder())
               }
+              disabled
             />
           </FormItem>
-        </Col>
+          {!isView && (
+            <Button
+              size="large"
+              type="primary"
+              onClick={() => setIsRefresh(true)}
+            >
+              Refresh
+            </Button>
+          )}
+        </StyledEmployeeCode>
       </Row>
     </>
   );
@@ -150,6 +181,7 @@ const FormItemAvatar = styled(Form.Item)`
 const FormItem = styled(Form.Item)`
   align-items: center;
   margin: 0;
+  margin-right: 20px;
   input {
     color: ${(props: ScreenProps) => props.isView && '#1890ff'};
     font-weight: ${(props: ScreenProps) => props.isView && 500};
@@ -176,4 +208,9 @@ const WrapperUpload = styled.div`
       color: #c5c4c5;
     }
   }
+`;
+
+const StyledEmployeeCode = styled(Col)`
+  display: flex;
+  align-items: center;
 `;
