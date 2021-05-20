@@ -42,7 +42,7 @@ const inputProps: InputProps = {
 };
 
 export const AvatarPath = memo((props: Props) => {
-  const { isView, form, user } = props;
+  const { isView, form, user, isEdit } = props;
   const { t } = useTranslation();
 
   const [imageURL, setImageURL] = useState('');
@@ -145,7 +145,7 @@ export const AvatarPath = memo((props: Props) => {
               disabled
             />
           </FormItem>
-          {!isView && (
+          {!isView && !isEdit && (
             <Button
               size="large"
               type="primary"
