@@ -43,7 +43,7 @@ const inputProps: InputProps = {
 };
 
 export const AvatarPath = memo((props: Props) => {
-  const { isView, form, user, isEdit } = props;
+  const { isView, form, user } = props;
   const { t } = useTranslation();
 
   const [imageURL, setImageURL] = useState('');
