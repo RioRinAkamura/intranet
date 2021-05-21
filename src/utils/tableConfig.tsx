@@ -279,7 +279,6 @@ export const useTableConfig = (
         }
         return data;
       });
-      console.log(text);
       return has(state.filterColumns, dataIndex[filterIndex || 0]) ||
         (state.params.search && state.params.search.length > 0) ? (
         <Highlighter
