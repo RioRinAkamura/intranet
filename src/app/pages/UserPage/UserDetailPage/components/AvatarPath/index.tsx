@@ -16,6 +16,7 @@ import {
   Row,
   Upload,
 } from 'antd';
+import { SyncOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { CameraOutlined } from '@ant-design/icons';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
@@ -42,7 +43,7 @@ const inputProps: InputProps = {
 };
 
 export const AvatarPath = memo((props: Props) => {
-  const { isView, form, user } = props;
+  const { isView, form, user, isEdit } = props;
   const { t } = useTranslation();
 
   const [imageURL, setImageURL] = useState('');
@@ -78,10 +79,10 @@ export const AvatarPath = memo((props: Props) => {
   }, [actions, dispatch, isRefresh]);
 
   useEffect(() => {
-    if (userDetails.identity) {
+    if (userDetails.identity && !isView) {
       form.setFieldsValue({ code: userDetails.identity });
     }
-  }, [form, userDetails.identity]);
+  }, [form, isView, userDetails]);
 
   return (
     <>
@@ -142,17 +143,15 @@ export const AvatarPath = memo((props: Props) => {
               placeholder={
                 isView ? '' : t(UserDetailMessages.formCodePlaceholder())
               }
-              disabled
             />
           </FormItem>
           {!isView && (
-            <Button
+            <StyledButton
               size="large"
               type="primary"
               onClick={() => setIsRefresh(true)}
-            >
-              Refresh
-            </Button>
+              icon={<SyncOutlined />}
+            />
           )}
         </StyledEmployeeCode>
       </Row>
@@ -181,7 +180,8 @@ const FormItemAvatar = styled(Form.Item)`
 const FormItem = styled(Form.Item)`
   align-items: center;
   margin: 0;
-  margin-right: 20px;
+  margin-right: ${(props: ScreenProps) => !props.isView && '20px'};
+  width: ${(props: ScreenProps) => !props.isView && '60%'};
   input {
     color: ${(props: ScreenProps) => props.isView && '#1890ff'};
     font-weight: ${(props: ScreenProps) => props.isView && 500};
@@ -212,5 +212,11 @@ const WrapperUpload = styled.div`
 
 const StyledEmployeeCode = styled(Col)`
   display: flex;
+  align-items: end;
+`;
+
+const StyledButton = styled(Button)`
+  display: flex;
+  justify-content: center;
   align-items: center;
 `;

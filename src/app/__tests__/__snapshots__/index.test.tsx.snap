@@ -49,31 +49,43 @@ exports[`<App /> should render and match the snapshot 1`] = `
           restricted={true}
         />
         <AppLayout>
-          <PrivateRoute
-            component={[Function]}
-            exact={true}
-            path="/dashboard"
-          />
-          <PrivateRoute
-            component={[Function]}
-            exact={true}
-            path="/employees"
-          />
-          <PrivateRoute
-            component={[Function]}
-            exact={true}
-            path="/employees/:id"
-          />
-          <PrivateRoute
-            component={[Function]}
-            exact={true}
-            path="/create-user"
-          />
-          <PrivateRoute
-            component={[Function]}
-            exact={true}
-            path="/projects"
-          />
+          <Switch>
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/dashboard"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/employees"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/employees/:id"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/employees/create"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/projects"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/projects/create"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/projects/:id"
+            />
+          </Switch>
         </AppLayout>
         <Route
           component={[Function]}
