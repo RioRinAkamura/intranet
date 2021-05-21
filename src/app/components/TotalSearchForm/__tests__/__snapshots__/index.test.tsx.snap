@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<SearchUsers  /> should match snapshot 1`] = `
+exports[`<TotalSearchForm  /> should match snapshot 1`] = `
 .c0 {
   padding: 0;
   margin: 0;
@@ -43,7 +43,6 @@ exports[`<SearchUsers  /> should match snapshot 1`] = `
                 <input
                   class="ant-input ant-input-lg"
                   id="search"
-                  placeholder="UsersPage.search.search.placeholder,Search user's first name, last name, email and phone number"
                   type="text"
                   value=""
                 />
