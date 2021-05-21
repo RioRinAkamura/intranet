@@ -99,17 +99,17 @@ const slice = createSlice({
       state.params.limit = action.payload.pageSize;
       state.params.page = action.payload.current;
     },
-    deleteUser(state, action: PayloadAction<string>) {
+    deleteProject(state, action: PayloadAction<string>) {
       state.isFilter = true;
       state.deleteSuccess = false;
       state.deleteFailed = false;
     },
-    deleteUserSuccess(state) {
+    deleteProjectSuccess(state) {
       state.isFilter = false;
       state.deleteSuccess = true;
       state.deleteFailed = false;
     },
-    deleteUserFailure(state) {
+    deleteProjectFailure(state) {
       state.deleteSuccess = false;
       state.deleteFailed = true;
     },

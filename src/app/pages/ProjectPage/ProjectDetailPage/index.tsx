@@ -44,6 +44,8 @@ export const ProjectDetailPage = (props: Props) => {
       form.setFieldsValue({
         ...data,
         id: data.id,
+        status: Number(data.status),
+        priority: Number(data.priority),
         started: data.started && moment(data.started, DATE_FORMAT),
       });
     }

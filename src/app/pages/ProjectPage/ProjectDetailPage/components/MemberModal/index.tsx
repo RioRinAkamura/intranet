@@ -65,7 +65,6 @@ export const MemberModal = memo((props: Props) => {
       // members.push({ ...values.members, employee: employee });
       const project_id = form.getFieldValue('id');
       const response = await editMember(project_id, values);
-      console.log(values);
       if (response) {
         members[selectedMember.index] = {
           ...members[selectedMember.index],
@@ -81,13 +80,40 @@ export const MemberModal = memo((props: Props) => {
       }
     } else {
       const project_id = form.getFieldValue('id');
-      const response = await addMember(project_id, values);
-      if (response) {
+      if (project_id) {
+        const response = await addMember(project_id, values);
+        if (response) {
+          if (members) {
+            members.push({
+              ...values.members,
+              employee: employee,
+              allocation: response.allocation,
+            });
+            form.setFieldsValue({
+              members: members,
+            });
+            setOpen(false);
+            memberForm.resetFields();
+          } else {
+            form.setFieldsValue({
+              members: [
+                {
+                  employee: employee,
+                  project_role: values.members.project_role,
+                  allocation: values.members.allocation,
+                },
+              ],
+            });
+          }
+          setOpen(false);
+          memberForm.resetFields();
+        }
+      } else {
         if (members) {
           members.push({
             ...values.members,
             employee: employee,
-            allocation: response.allocation,
+            allocation: values.members.allocation,
           });
           form.setFieldsValue({
             members: members,

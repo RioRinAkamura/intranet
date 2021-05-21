@@ -1,7 +1,17 @@
-import { Col, DatePicker, Form, FormInstance, Input, Row, Select } from 'antd';
+import {
+  Col,
+  DatePicker,
+  Form,
+  FormInstance,
+  Input,
+  Row,
+  Select,
+  SelectProps,
+} from 'antd';
+import { SelectValue } from 'antd/lib/select';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
 import config from 'config';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { datePickerViewProps, inputViewProps } from 'utils/types';
@@ -13,52 +23,68 @@ interface Props {
   data?: any;
 }
 
+const selectProps: SelectProps<SelectValue> = {
+  autoClearSearchValue: false,
+  bordered: false,
+  dropdownStyle: { display: 'none' },
+  removeIcon: null,
+  showArrow: false,
+  style: { pointerEvents: 'none' },
+};
+
 const DATE_FORMAT = config.DATE_FORMAT;
 const { Option } = Select;
 
 export const ProjectInfo = (props: Props) => {
   const { isView, form, data } = props;
   const { t } = useTranslation();
+  const [overview, setOverview] = useState('');
 
   const priority = [
     {
       name: t(ProjectDetailMessages.formProjectPriorityLow()),
-      value: 'Low',
+      value: 1,
     },
     {
       name: t(ProjectDetailMessages.formProjectPriorityMedium()),
-      value: 'Medium',
+      value: 2,
     },
     {
       name: t(ProjectDetailMessages.formProjectPriorityHigh()),
-      value: 'High',
+      value: 3,
     },
   ];
 
   const status = [
     {
       name: t(ProjectDetailMessages.formProjectStatusPreparing()),
-      value: 'Preparing',
+      value: 1,
     },
     {
       name: t(ProjectDetailMessages.formProjectStatusGoing()),
-      value: 'Going',
+      value: 2,
     },
     {
       name: t(ProjectDetailMessages.formProjectStatusReleased()),
-      value: 'Released',
+      value: 3,
     },
     {
       name: t(ProjectDetailMessages.formProjectStatusArchived()),
-      value: 'Archived',
+      value: 4,
     },
   ];
+
+  useEffect(() => {
+    if (data) {
+      setOverview(data.overview);
+    }
+  }, [data]);
 
   return (
     <Wrapper isView={isView}>
       <Row gutter={[32, 32]}>
         <Col md={14} xs={24}>
-          <Row gutter={[0, 12]} align="middle">
+          <Row gutter={[14, isView ? 32 : 12]} align="middle">
             <Col md={isView ? 8 : 24} xs={24}>
               <h3>{t(ProjectDetailMessages.formProjectNameLabel())}</h3>
             </Col>
@@ -90,30 +116,13 @@ export const ProjectInfo = (props: Props) => {
                 />
               </FormItem>
             </Col>
-          </Row>
-          <Row gutter={[32, 12]}>
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
                 <Col md={isView ? 12 : 24} xs={24}>
                   <h3>{t(ProjectDetailMessages.formProjectStartedLabel())}</h3>
                 </Col>
                 <Col md={isView ? 12 : 24} xs={24}>
-                  <FormItem
-                    isView={isView}
-                    name="started"
-                    rules={
-                      isView
-                        ? []
-                        : [
-                            {
-                              required: true,
-                              message: t(
-                                ProjectDetailMessages.formProjectStartedEmpty(),
-                              ),
-                            },
-                          ]
-                    }
-                  >
+                  <FormItem isView={isView} name="started">
                     <DatePicker
                       {...(isView ? datePickerViewProps : {})}
                       format={DATE_FORMAT}
@@ -133,95 +142,60 @@ export const ProjectInfo = (props: Props) => {
             </Col>
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
-                <Col md={isView ? 8 : 24} xs={24}>
+                <Col md={isView ? 12 : 24} xs={24}>
                   <h3>{t(ProjectDetailMessages.formProjectPriorityLabel())}</h3>
                 </Col>
-                <Col md={isView ? 16 : 24} xs={24}>
-                  <FormItem
-                    isView={isView}
-                    name="priority"
-                    rules={
-                      isView
-                        ? []
-                        : [
-                            {
-                              required: true,
-                              message: t(
-                                ProjectDetailMessages.formProjectPriorityEmpty(),
-                              ),
-                            },
-                          ]
-                    }
-                  >
-                    {isView ? (
-                      <Input {...inputViewProps} size="large" />
-                    ) : (
-                      <Select
-                        size="large"
-                        placeholder={t(
-                          ProjectDetailMessages.formProjectPriorityPlaceholder(),
-                        )}
-                      >
-                        {priority &&
-                          priority.map((item, index: number) => {
-                            return (
-                              <Option key={index} value={item.value}>
-                                {item.name}
-                              </Option>
-                            );
-                          })}
-                      </Select>
-                    )}
+                <Col md={isView ? 12 : 24} xs={24}>
+                  <FormItem isView={isView} name="priority">
+                    <Select
+                      {...(isView && selectProps)}
+                      size="large"
+                      placeholder={t(
+                        ProjectDetailMessages.formProjectPriorityPlaceholder(),
+                      )}
+                    >
+                      {priority &&
+                        priority.map((item, index: number) => {
+                          return (
+                            <Option key={index} value={item.value}>
+                              {item.name}
+                            </Option>
+                          );
+                        })}
+                    </Select>
                   </FormItem>
                 </Col>
               </Row>
             </Col>
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
-                <Col md={isView ? 8 : 24} xs={24}>
+                <Col md={isView ? 12 : 24} xs={24}>
                   <h3>{t(ProjectDetailMessages.formProjectStatusLabel())}</h3>
                 </Col>
-                <Col md={isView ? 16 : 24} xs={24}>
-                  <FormItem
-                    isView={isView}
-                    name="status"
-                    rules={
-                      isView
-                        ? []
-                        : [
-                            {
-                              required: true,
-                              message: t(
-                                ProjectDetailMessages.formProjectStatusEmpty(),
-                              ),
-                            },
-                          ]
-                    }
-                  >
-                    {isView ? (
-                      <Input {...inputViewProps} size="large" />
-                    ) : (
-                      <Select
-                        size="large"
-                        placeholder={t(
-                          ProjectDetailMessages.formProjectStatusPlaceholder(),
-                        )}
-                      >
-                        {status &&
-                          status.map((item, index: number) => {
-                            return (
-                              <Option key={index} value={item.value}>
-                                {item.name}
-                              </Option>
-                            );
-                          })}
-                      </Select>
-                    )}
+                <Col md={isView ? 12 : 24} xs={24}>
+                  <FormItem isView={isView} name="status">
+                    <Select
+                      {...(isView && selectProps)}
+                      size="large"
+                      placeholder={t(
+                        ProjectDetailMessages.formProjectStatusPlaceholder(),
+                      )}
+                    >
+                      {status &&
+                        status.map((item, index: number) => {
+                          return (
+                            <Option key={index} value={item.value}>
+                              {item.name}
+                            </Option>
+                          );
+                        })}
+                    </Select>
                   </FormItem>
                 </Col>
               </Row>
             </Col>
           </Row>
+          <Row gutter={[32, 12]}></Row>
         </Col>
         <Col md={10} xs={24}>
           <Row gutter={[0, 12]} align="middle">
@@ -229,33 +203,27 @@ export const ProjectInfo = (props: Props) => {
               <h3>{t(ProjectDetailMessages.formProjectOverviewLabel())}</h3>
             </Col>
             <Col md={24} xs={24}>
-              <FormItem
-                isView={isView}
-                name="overview"
-                rules={
-                  isView
-                    ? []
-                    : [
-                        {
-                          required: true,
-                          message: t(
-                            ProjectDetailMessages.formProjectOverviewEmpty(),
-                          ),
-                        },
-                      ]
-                }
-              >
-                <RichEditor
-                  width="100%"
-                  isView={isView}
-                  data={data?.overview}
-                  placeholder={t(
-                    ProjectDetailMessages.formProjectOverviewPlaceholder(),
-                  )}
-                  callback={e => {
-                    form.setFieldsValue({ overview: e });
-                  }}
-                />
+              <FormItem isView={isView} name="overview">
+                {isView ? (
+                  overview && (
+                    <RichEditor width="100%" data={overview} isView={isView} />
+                  )
+                ) : (
+                  <RichEditor
+                    width="100%"
+                    data={overview}
+                    placeholder={
+                      isView
+                        ? ''
+                        : t(
+                            ProjectDetailMessages.formProjectOverviewPlaceholder(),
+                          )
+                    }
+                    callback={e => {
+                      form.setFieldsValue({ overview: e });
+                    }}
+                  />
+                )}
               </FormItem>
             </Col>
           </Row>
@@ -273,6 +241,7 @@ const Wrapper = styled.div`
   h3 {
     margin: ${(props: ScreenProps) => props.isView && '0'};
   }
+  margin-bottom: 1em;
 `;
 
 const FormItem = styled(Form.Item)`

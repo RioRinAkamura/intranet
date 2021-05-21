@@ -51,9 +51,13 @@ export const useProjectDetail = (): {
     try {
       const data = cloneDeep(values);
       if (data.members && data.members.length > 0) {
-        data.members.map(member => (member.employee = member.employee.id));
+        data.members.map(member => {
+          member.employee = member.employee.id;
+          member.allocation = parseFloat(member.allocation).toFixed(1);
+          return member;
+        });
       }
-      const response = await fakeAPI.put(`/hr/projects/${data.id}/`, data);
+      const response = await fakeAPI.patch(`/hr/projects/${data.id}/`, data);
       if (response) {
         notify({
           type: ToastMessageType.Info,
@@ -79,7 +83,11 @@ export const useProjectDetail = (): {
     try {
       const data = cloneDeep(values);
       if (data.members && data.members.length > 0) {
-        data.members.map(member => (member.employee = member.employee.id));
+        data.members.map(member => {
+          member.employee = member.employee.id;
+          member.allocation = parseFloat(member.allocation).toFixed(1);
+          return member;
+        });
       }
       const response: any = await fakeAPI.post('/hr/projects/', data);
       if (response) {

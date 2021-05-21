@@ -79,7 +79,7 @@ export const TeamMembers = (props: Props) => {
   };
 
   const memberInfo = (info, remove) => (
-    <MemberInfoCover>
+    <MemberInfoCover key={info.employee.id}>
       <Popover
         content={<MemberCover member={info.employee} />}
         placement="topLeft"
@@ -109,11 +109,15 @@ export const TeamMembers = (props: Props) => {
           </Tag>
         </span>
       </Popover>
-      {isEdit && (
+      {!isView && (
         <MinusCircleOutlined
           onClick={async () => {
-            setDeleteModal({ open: true, remove: remove });
-            setSelectedMemberDelete(info);
+            if (form.getFieldValue('id')) {
+              setDeleteModal({ open: true, remove: remove });
+              setSelectedMemberDelete(info);
+            } else {
+              remove(info.index);
+            }
           }}
           style={{ color: 'red' }}
         />
@@ -159,108 +163,99 @@ export const TeamMembers = (props: Props) => {
 
   return (
     <>
-      {(isEdit || isView) && (
-        <>
-          <Row gutter={[12, 12]} align="middle" style={{ marginBottom: 12 }}>
-            <Col>
-              <h3>{t(ProjectDetailMessages.memberTitle())}</h3>
-            </Col>
-            <Col>
-              {!isView && (
-                <>
-                  <Button
-                    type="primary"
-                    block
-                    size="large"
-                    onClick={() => setOpenModal(true)}
-                  >
-                    {t(ProjectDetailMessages.addMember())}
-                  </Button>
-                </>
-              )}
-              <MemberModal
-                open={openModal}
-                setOpen={setOpenModal}
-                selectedMember={selectedMember}
-                setSelectedMember={setSelectedMember}
-                form={form}
-              />
-            </Col>
-          </Row>
-          <Form.List name="members">
-            {(fields, { add, remove }) => {
-              console.log(form.getFieldValue('members'));
-              const members = form
-                .getFieldValue('members')
-                ?.map((member, index: number) => {
-                  member.index = index;
-                  return member;
-                });
-              const pms = members?.filter(
-                member => member.project_role === 'PM',
-              );
-              const tls = members?.filter(
-                member => member.project_role === 'TL',
-              );
-              const qcs = members?.filter(
-                member => member.project_role === 'QC',
-              );
-              const devs = members?.filter(
-                member => member.project_role === 'DEV',
-              );
-              const others = members?.filter(
-                member => member.project_role === 'OTHER',
-              );
-              return (
-                <Row gutter={[32, 16]}>
-                  {(pms || tls) && (
-                    <Col span={24}>
-                      <Row gutter={[12, 12]}>
-                        {pms && pms.length > 0 && (
-                          <Col span={12}>
-                            <h3>{t(ProjectDetailMessages.memberPM())}</h3>
-                            {pms.map(pm => memberInfo(pm, remove))}
-                          </Col>
-                        )}
-                        {tls && tls.length > 0 && (
-                          <Col span={12}>
-                            <h3>{t(ProjectDetailMessages.memberTL())}</h3>
-                            {tls.map(tl => memberInfo(tl, remove))}
-                          </Col>
-                        )}
-                      </Row>
-                    </Col>
-                  )}
-                  {(qcs || devs || others) && (
-                    <Col span={24}>
-                      <Row gutter={[12, 12]}>
-                        {qcs && qcs.length > 0 && (
-                          <Col span={8}>
-                            <h3>{t(ProjectDetailMessages.memberQC())}</h3>
-                            {qcs.map(qc => memberInfo(qc, remove))}
-                          </Col>
-                        )}
-                        {devs && devs.length > 0 && (
-                          <Col span={8}>
-                            <h3>{t(ProjectDetailMessages.memberDEV())}</h3>
-                            {devs.map(dev => memberInfo(dev, remove))}
-                          </Col>
-                        )}
-                        {others && others.length > 0 && (
-                          <Col span={8}>
-                            <h3>{t(ProjectDetailMessages.memberOTHER())}</h3>
-                            {others.map(other => memberInfo(other, remove))}
-                          </Col>
-                        )}
-                      </Row>
-                    </Col>
-                  )}
-                </Row>
-              );
-            }}
-          </Form.List>
-        </>
-      )}
+      <>
+        <Row gutter={[12, 12]} align="middle" style={{ marginBottom: 12 }}>
+          <Col>
+            <h3>{t(ProjectDetailMessages.memberTitle())}</h3>
+          </Col>
+          <Col>
+            {!isView && (
+              <>
+                <Button
+                  type="primary"
+                  block
+                  size="large"
+                  onClick={() => setOpenModal(true)}
+                >
+                  {t(ProjectDetailMessages.addMember())}
+                </Button>
+              </>
+            )}
+            <MemberModal
+              open={openModal}
+              setOpen={setOpenModal}
+              selectedMember={selectedMember}
+              setSelectedMember={setSelectedMember}
+              form={form}
+            />
+          </Col>
+        </Row>
+        <Form.List name="members">
+          {(fields, { add, remove }) => {
+            const members = form
+              .getFieldValue('members')
+              ?.map((member, index: number) => {
+                member.index = index;
+                return member;
+              });
+            const pms = members?.filter(member => member.project_role === 'PM');
+            const tls = members?.filter(member => member.project_role === 'TL');
+            const qcs = members?.filter(member => member.project_role === 'QC');
+            const devs = members?.filter(
+              member => member.project_role === 'DEV',
+            );
+            const others = members?.filter(
+              member => member.project_role === 'OTHER',
+            );
+            return (
+              <Row gutter={[32, 16]}>
+                {(pms || tls) && (
+                  <Col span={24}>
+                    <Row gutter={[12, 12]}>
+                      {pms && pms.length > 0 && (
+                        <Col span={12}>
+                          <h3>{t(ProjectDetailMessages.memberPM())}</h3>
+                          {pms.map(pm => memberInfo(pm, remove))}
+                        </Col>
+                      )}
+                      {tls && tls.length > 0 && (
+                        <Col span={12}>
+                          <h3>{t(ProjectDetailMessages.memberTL())}</h3>
+                          {tls.map(tl => memberInfo(tl, remove))}
+                        </Col>
+                      )}
+                    </Row>
+                  </Col>
+                )}
+                {(qcs || devs || others) && (
+                  <Col span={24}>
+                    <Row gutter={[12, 12]}>
+                      {qcs && qcs.length > 0 && (
+                        <Col span={8}>
+                          <h3>{t(ProjectDetailMessages.memberQC())}</h3>
+                          {qcs.map(qc => memberInfo(qc, remove))}
+                        </Col>
+                      )}
+                      {devs && devs.length > 0 && (
+                        <Col span={8}>
+                          <h3>{t(ProjectDetailMessages.memberDEV())}</h3>
+                          {devs.map(dev => memberInfo(dev, remove))}
+                        </Col>
+                      )}
+                      {others && others.length > 0 && (
+                        <Col span={8}>
+                          <h3>{t(ProjectDetailMessages.memberOTHER())}</h3>
+                          {others.map(other => memberInfo(other, remove))}
+                        </Col>
+                      )}
+                    </Row>
+                  </Col>
+                )}
+              </Row>
+            );
+          }}
+        </Form.List>
+      </>
       <DeleteConfirmModal
         visible={deleteModal.open}
         handleOk={() => handleConfirmDelete()}

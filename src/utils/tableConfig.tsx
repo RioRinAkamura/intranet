@@ -279,23 +279,27 @@ export const useTableConfig = (
         }
         return data;
       });
-      console.log(state.filterColumns![dataIndex[filterIndex || 0]]);
+      console.log(text);
       return has(state.filterColumns, dataIndex[filterIndex || 0]) ||
         (state.params.search && state.params.search.length > 0) ? (
         <Highlighter
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[
             state.filterColumns![dataIndex[filterIndex || 0]]?.includes(text) &&
-              text,
+              options.find(option => option.value === Number(text))?.label,
             state.params.search &&
               state.params.search.length > 0 &&
               state.params.search,
           ]}
           autoEscape
-          textToHighlight={text ? dataText.trim().toString() : ''}
+          textToHighlight={
+            text
+              ? options.find(option => option.value === Number(dataText))?.label
+              : ''
+          }
         />
       ) : (
-        dataText.trim()
+        options.find(option => option.value === Number(dataText))?.label
       );
     },
   });

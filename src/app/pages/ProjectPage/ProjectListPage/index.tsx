@@ -56,9 +56,9 @@ export const ProjectsPage: React.FC = () => {
   const [isMore, setIsMore] = useState(true);
   const { notify } = useNotify();
   const [searchForm] = Form.useForm();
-  const [idUserDelete, setIdUserDelete] = useState('');
+  const [idProjectDelete, setIdProjectDelete] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [deleteEmployee, setDeleteEmployee] = useState<any>();
+  const [deleteProject, setDeleteProject] = useState<any>();
   const deleteModalState = useSelector((state: RootState) => state.userspage);
   const deleteSuccess = deleteModalState?.deleteSuccess;
   const deleteFailed = deleteModalState?.deleteFailed;
@@ -108,7 +108,7 @@ export const ProjectsPage: React.FC = () => {
 
   const handleConfirmDelete = () => {
     setIsModalVisible(false);
-    dispatch(actions.deleteUser(idUserDelete));
+    dispatch(actions.deleteProject(idProjectDelete));
   };
 
   const handleCancelDeleteModal = () => {
@@ -148,7 +148,7 @@ export const ProjectsPage: React.FC = () => {
               setTextCopy(true);
             }
           }}
-        >{`${deleteEmployee?.email}`}</strong>
+        >{`${deleteProject?.name}`}</strong>
       </Tooltip>
       . This will also delete any references to your project.
     </p>
@@ -250,8 +250,8 @@ export const ProjectsPage: React.FC = () => {
           icon={<DeleteOutlined />}
           onClick={() => {
             showDeleteModal();
-            setIdUserDelete(text);
-            setDeleteEmployee(record);
+            setIdProjectDelete(text);
+            setDeleteProject(record);
           }}
         />
       </Tooltip>
@@ -276,24 +276,25 @@ export const ProjectsPage: React.FC = () => {
       }
       return (
         <div>
-          {members.map(member => {
-            const info = member.employee;
-            return (
-              <div style={{ marginBottom: '5px' }}>
-                <span>
-                  <Avatar
-                    src={info.avatar}
-                    name={info.first_name + ' ' + info.last_name}
-                    size={30}
-                  />
-                  {` ${info.first_name} ${info.last_name} `}
-                  <Tag color={antColours[member.allocation]}>
-                    {member.allocation}
-                  </Tag>
-                </span>
-              </div>
-            );
-          })}
+          {members.length > 0 &&
+            members.map(member => {
+              const info = member.employee;
+              return (
+                <div style={{ marginBottom: '5px' }}>
+                  <span>
+                    <Avatar
+                      src={info.avatar}
+                      name={info.first_name + ' ' + info.last_name}
+                      size={30}
+                    />
+                    {` ${info.first_name} ${info.last_name} `}
+                    <Tag color={antColours[member.allocation]}>
+                      {member.allocation}
+                    </Tag>
+                  </span>
+                </div>
+              );
+            })}
         </div>
       );
     },
@@ -337,7 +338,7 @@ export const ProjectsPage: React.FC = () => {
       title: t(ProjectsMessages.listStartedTitle()),
       dataIndex: 'started',
       width: 120,
-      render: text => moment(text).format('DD-MM-YYYY'),
+      render: text => (text ? moment(text).format('DD-MM-YYYY') : ''),
     },
     {
       title: t(ProjectsMessages.listPriorityTitle()),
@@ -346,9 +347,9 @@ export const ProjectsPage: React.FC = () => {
       ...getColumnSearchCheckboxProps(
         ['priority'],
         [
-          { label: 'Low', value: 'Low' },
-          { label: 'Medium', value: 'Medium' },
-          { label: 'High', value: 'High' },
+          { label: 'Low', value: 1 },
+          { label: 'Medium', value: 2 },
+          { label: 'High', value: 3 },
         ],
       ),
       width: 140,
@@ -361,10 +362,10 @@ export const ProjectsPage: React.FC = () => {
       ...getColumnSearchCheckboxProps(
         ['status'],
         [
-          { label: 'Preparing', value: 'Preparing' },
-          { label: 'Going', value: 'Going' },
-          { label: 'Release', value: 'Release' },
-          { label: 'Archived', value: 'Archived' },
+          { label: 'Preparing', value: 1 },
+          { label: 'Going', value: 2 },
+          { label: 'Release', value: 3 },
+          { label: 'Archived', value: 4 },
         ],
       ),
     },
@@ -417,10 +418,10 @@ export const ProjectsPage: React.FC = () => {
           data={userList}
           isMore={isMore}
           moreLoading={moreLoading}
-          onDelete={(id: string, user: any) => {
+          onDelete={(id: string, project: any) => {
             showDeleteModal();
-            setIdUserDelete(id);
-            setDeleteEmployee(user);
+            setIdProjectDelete(id);
+            setDeleteProject(project);
           }}
         />
       ) : (
@@ -493,9 +494,9 @@ export const ProjectsPage: React.FC = () => {
         visible={isModalVisible}
         handleOk={handleConfirmDelete}
         handleCancel={handleCancelDeleteModal}
-        title={`Remove ${deleteEmployee?.first_name} ${deleteEmployee?.last_name}`}
+        title={`Remove ${deleteProject?.name}`}
         description={descriptionDelete}
-        answer={`${deleteEmployee?.email}`}
+        answer={`${deleteProject?.name}`}
       />
     </>
   );

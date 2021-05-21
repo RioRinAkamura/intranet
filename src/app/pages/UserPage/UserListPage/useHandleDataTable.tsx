@@ -103,7 +103,7 @@ export const useHandleDataTable = (
       if (isArray(sorter)) {
         const orderingParams = sorter.map(item => {
           if (item.order === 'ascend') {
-            return '+' + item.field;
+            return item.field;
           } else if (item.order === 'descend') {
             return '-' + item.field;
           } else {
@@ -122,14 +122,14 @@ export const useHandleDataTable = (
         }
       } else {
         if (sorter.order === 'ascend') {
-          if (ordering !== '+' + sorter.field) {
+          if (ordering !== sorter.field) {
             history.replace({
               search: stringify({
                 ...urlParams,
-                ordering: '+' + sorter.field,
+                ordering: sorter.field,
               }),
             });
-            dispatch(actions.setOrdering('+' + sorter.field));
+            dispatch(actions.setOrdering(sorter.field));
           }
         } else if (sorter.order === 'descend') {
           if (ordering !== '-' + sorter.field) {
