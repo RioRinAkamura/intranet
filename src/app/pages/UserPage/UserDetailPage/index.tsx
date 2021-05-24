@@ -6,7 +6,16 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Button, Col, Divider, Form, Input, Row } from 'antd';
+import {
+  Button,
+  Col,
+  Divider,
+  Form,
+  FormInstance,
+  Input,
+  Row,
+  Tabs,
+} from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { JobInfo } from './components/JobInfo/Loadable';
@@ -23,8 +32,19 @@ import { AddBankModal } from './components/AddBankModal/Loadable';
 import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { config } from 'config';
+import { Notes } from './components/Notes/Loadable';
 
 interface Props {}
+
+interface FormProps {
+  form: FormInstance;
+  isView: boolean;
+  isEdit: boolean;
+  data?: Employee;
+  leftScreenItems?: React.ReactNode;
+  rightScreenItems?: React.ReactNode;
+}
+
 interface LocationState {
   edit: boolean;
 }
@@ -32,6 +52,63 @@ interface LocationState {
 type Employee = models.hr.Employee;
 
 const DATE_FORMAT = config.DATE_FORMAT;
+
+enum TabKeys {
+  'details' = 'details',
+  'notes' = 'notes',
+}
+
+const WrapperForm: React.FC<FormProps> = ({
+  form,
+  isView,
+  isEdit,
+  data,
+  leftScreenItems,
+  rightScreenItems,
+}) => {
+  return (
+    <Form form={form} labelAlign="left">
+      <Form.Item hidden name="id">
+        <Input hidden />
+      </Form.Item>
+      <WrapperMainItem isView={isView}>
+        <Row gutter={[32, 32]}>
+          <LeftScreen md={5}>
+            <AvatarPath
+              user={data}
+              isView={isView}
+              isEdit={isEdit}
+              form={form}
+            />
+            {leftScreenItems}
+          </LeftScreen>
+          <RightScreen isView={isView} md={19}>
+            {rightScreenItems}
+          </RightScreen>
+        </Row>
+        {!isView && (
+          <>
+            <BankAccounts isView={isView} isEdit={isEdit} form={form} />
+            <Divider />
+            <IdCardInfo isView={isView} isEdit={isEdit} />
+          </>
+        )}
+      </WrapperMainItem>
+      <Row gutter={[64, 32]}>
+        <Col span={isView ? 12 : 8}>
+          <WrapperItem>
+            <JobInfo form={form} isView={isView} />
+          </WrapperItem>
+        </Col>
+        <Col span={isView ? 12 : 16}>
+          <WrapperItem>
+            <SocialNetwork isView={isView} />
+          </WrapperItem>
+        </Col>
+      </Row>
+    </Form>
+  );
+};
 
 export function UserDetailPage(props: Props) {
   const { id } = useParams<Record<string, string>>();
@@ -48,6 +125,17 @@ export function UserDetailPage(props: Props) {
   const [isEdit, setIsEdit] = React.useState(false);
 
   const isView = isCreate || isEdit ? false : true;
+
+  const { TabPane } = Tabs;
+  const [isNotesTab, setIsNotesTab] = React.useState(false);
+
+  const onChangeTab = (key: string) => {
+    if (key === TabKeys.notes) {
+      setIsNotesTab(true);
+    } else {
+      setIsNotesTab(false);
+    }
+  };
 
   React.useEffect(() => {
     if (user) {
@@ -118,111 +206,91 @@ export function UserDetailPage(props: Props) {
             : 'Create Employee'}
         </PageTitle>
       </WrapperTitlePage>
-      <Form form={form} labelAlign="left">
-        <Form.Item hidden name="id">
-          <Input hidden />
-        </Form.Item>
-        <WrapperMainItem>
-          {isView ? (
-            <>
-              <Row gutter={[32, 32]}>
-                <LeftScreen md={5}>
-                  <AvatarPath
-                    user={data}
-                    isView={isView}
-                    isEdit={isEdit}
-                    form={form}
-                  />
-                  <IdCardInfo isView={isView} isEdit={isEdit} />
-                </LeftScreen>
-                <RightScreen isView={isView} md={19}>
+      {isView ? (
+        <StyledTabs
+          defaultActiveKey={`${TabKeys.details}`}
+          onChange={onChangeTab}
+        >
+          <TabPane tab="Details" key={TabKeys.details}>
+            <WrapperForm
+              form={form}
+              data={data}
+              isEdit={isEdit}
+              isView={isView}
+              leftScreenItems={<IdCardInfo isView={isView} isEdit={isEdit} />}
+              rightScreenItems={
+                <>
                   <ProfileInfo isView={isView} isEdit={isEdit} />
                   <BankAccounts isView={isView} isEdit={isEdit} form={form} />
-                </RightScreen>
-              </Row>
-            </>
-          ) : (
-            <>
-              <Row gutter={[32, 32]}>
-                <LeftScreen md={5}>
-                  <AvatarPath
-                    user={data}
-                    isView={isView}
-                    isEdit={isEdit}
-                    form={form}
-                  />
-                  <WrapperAddBank>
-                    <AddBankModal isView={isView} form={form} />
-                  </WrapperAddBank>
-                </LeftScreen>
-                <RightScreen md={19}>
-                  <ProfileInfo isView={isView} isEdit={isEdit} />
-                </RightScreen>
-              </Row>
-              <BankAccounts isView={isView} isEdit={isEdit} form={form} />
-              <Divider />
-              <IdCardInfo isView={isView} isEdit={isEdit} />
-            </>
-          )}
-        </WrapperMainItem>
-        <Row gutter={[64, 32]}>
-          <Col span={isView ? 12 : 8}>
-            <WrapperItem>
-              <JobInfo form={form} isView={isView} />
-            </WrapperItem>
-          </Col>
-          <Col span={isView ? 12 : 16}>
-            <WrapperItem>
-              <SocialNetwork isView={isView} />
-            </WrapperItem>
-          </Col>
-        </Row>
-      </Form>
-      <WrapperButton>
-        <Row gutter={[8, 8]} justify="end">
-          <Col>
-            <PageButton
-              block
-              size="large"
-              shape="round"
-              onClick={() => {
-                if (isEdit) {
-                  setIsEdit(false);
-                } else if (isView) {
-                  history.push('/employees');
-                } else if (isCreate) {
-                  history.push('/employees');
-                }
-              }}
-            >
-              {t(UserDetailMessages.formBackButton())}
-            </PageButton>
-          </Col>
-          <Col>
-            <PageButton
-              loading={loading}
-              block
-              size="large"
-              shape="round"
-              type="primary"
-              onClick={() => {
-                if (isEdit) {
-                  handleSubmit();
-                } else if (isView) {
-                  setIsEdit(true);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                } else if (isCreate) {
-                  handleSubmit();
-                }
-              }}
-            >
-              {isView
-                ? t(UserDetailMessages.formEditButton())
-                : t(UserDetailMessages.formSubmitButton())}
-            </PageButton>
-          </Col>
-        </Row>
-      </WrapperButton>
+                </>
+              }
+            />
+          </TabPane>
+          <TabPane tab="Notes" key={TabKeys.notes}>
+            <Notes />
+          </TabPane>
+        </StyledTabs>
+      ) : (
+        <WrapperForm
+          form={form}
+          data={data}
+          isEdit={isEdit}
+          isView={isView}
+          leftScreenItems={
+            <WrapperAddBank>
+              <AddBankModal isView={isView} form={form} />
+            </WrapperAddBank>
+          }
+          rightScreenItems={<ProfileInfo isView={isView} isEdit={isEdit} />}
+        />
+      )}
+      {!isNotesTab && (
+        <WrapperButton>
+          <Row gutter={[8, 8]} justify="end">
+            <Col>
+              <PageButton
+                block
+                size="large"
+                shape="round"
+                onClick={() => {
+                  if (isEdit) {
+                    setIsEdit(false);
+                  } else if (isView) {
+                    history.push('/employees');
+                  } else if (isCreate) {
+                    history.push('/employees');
+                  }
+                }}
+              >
+                {t(UserDetailMessages.formBackButton())}
+              </PageButton>
+            </Col>
+            <Col>
+              <PageButton
+                loading={loading}
+                block
+                size="large"
+                shape="round"
+                type="primary"
+                onClick={() => {
+                  if (isEdit) {
+                    handleSubmit();
+                  } else if (isView) {
+                    setIsEdit(true);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  } else if (isCreate) {
+                    handleSubmit();
+                  }
+                }}
+              >
+                {isView
+                  ? t(UserDetailMessages.formEditButton())
+                  : t(UserDetailMessages.formSubmitButton())}
+              </PageButton>
+            </Col>
+          </Row>
+        </WrapperButton>
+      )}
     </>
   );
 }
@@ -233,13 +301,12 @@ interface ScreenProps {
 
 const LeftScreen = styled(Col)``;
 
-const RightScreen = styled(Col)`
-  padding-left: ${(props: ScreenProps) =>
-    props.isView ? '5em !important' : '0'};
+const RightScreen = styled(Col)<ScreenProps>`
+  padding-left: ${props => (props.isView ? '5em !important' : '0')};
 `;
 
-const WrapperMainItem = styled.div`
-  margin-top: 2em;
+const WrapperMainItem = styled.div<ScreenProps>`
+  margin-top: ${props => (props.isView ? 'auto' : '2rem')};
   padding: 3em;
   width: 100%;
   height: 100%;
@@ -269,4 +336,11 @@ const PageButton = styled(Button)`
 
 const WrapperAddBank = styled.div`
   margin-top: 2em;
+`;
+
+const StyledTabs = styled(Tabs)`
+  margin-top: 10px;
+  .ant-tabs-content-holder {
+    padding: 5px;
+  }
 `;
