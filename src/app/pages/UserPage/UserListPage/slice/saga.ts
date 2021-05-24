@@ -13,6 +13,8 @@ function* fetchUsers(action) {
       phone: params.phone,
       email: params.email,
       tags: params.tags,
+      from: params.from,
+      to: params.to,
     };
     const response = yield call(
       [api, api.hr.employee.list],

@@ -16,6 +16,7 @@ import { TagsInput } from 'app/components/Tags';
 import { TableStateProps } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
 import { MessageTranslate, TagType } from './types';
 import styled from 'styled-components/macro';
+import { FilterColumns } from 'app/pages/UserPage/UserListPage/slice/types';
 
 interface useTableProps {
   getColumnSorterProps: (dataIndex: string, columnPriority: number) => {};
@@ -26,13 +27,18 @@ interface useTableProps {
     options: CheckboxOptionType[],
     filterIndex?: number,
   ) => {};
+  getColumnSearchCheckboxFromToProps: (
+    dataIndex: string[],
+    options: CheckboxOptionType[],
+    range: string,
+    filterIndex?: number,
+  ) => {};
 }
 
 export const useTableConfig = (
   state: TableStateProps,
   messageTrans: MessageTranslate,
-  setFilterText: (dataIndex: string, data: string) => void,
-  resetFilter: (dataIndex: string) => void,
+  setFilterText: (value: FilterColumns) => void,
 ): useTableProps => {
   const { t } = useTranslation();
 
@@ -150,7 +156,7 @@ export const useTableConfig = (
   });
 
   const handleSearch = (dataIndex: string, confirm: () => void) => {
-    setFilterText(dataIndex, selectedKeys[dataIndex]);
+    setFilterText({ [dataIndex]: selectedKeys[dataIndex] });
     confirm();
   };
 
@@ -159,12 +165,36 @@ export const useTableConfig = (
       ...prevState,
       [dataIndex]: undefined,
     }));
-    resetFilter(dataIndex);
+    setFilterText({ [dataIndex]: undefined });
+    confirm();
+  };
+
+  const handleFromToSearch = (
+    dataIndex: string,
+    range: string,
+    confirm: () => void,
+  ) => {
+    if (selectedKeys[dataIndex] === '1') {
+      setFilterText({ to: range, from: undefined });
+    } else if (selectedKeys[dataIndex] === '2') {
+      setFilterText({ from: range, to: range });
+    } else {
+      setFilterText({ from: range, to: undefined });
+    }
+    confirm();
+  };
+
+  const handleFromToReset = (confirm: () => void) => {
+    setSelectedKeys(prevState => ({
+      ...prevState,
+      from: undefined,
+      to: undefined,
+    }));
+    setFilterText({ from: undefined, to: undefined });
     confirm();
   };
 
   const getColumnSearchTagProps = (dataIndex: string) => ({
-    ellipsis: true,
     filterDropdown: ({ confirm }) => {
       return (
         <Wrapper>
@@ -217,7 +247,6 @@ export const useTableConfig = (
     options: CheckboxOptionType[],
     filterIndex?: number,
   ) => ({
-    ellipsis: true,
     filterDropdown: ({ confirm }) => {
       return (
         <Wrapper>
@@ -303,11 +332,77 @@ export const useTableConfig = (
     },
   });
 
+  const getColumnSearchCheckboxFromToProps = (
+    dataIndex: string[],
+    options: CheckboxOptionType[],
+    range: string,
+    filterIndex?: number,
+  ) => ({
+    filterDropdown: ({ confirm }) => {
+      return (
+        <Wrapper>
+          <WrapperCheckbox>
+            <Checkbox.Group
+              value={selectedKeys[dataIndex[filterIndex || 0]]}
+              options={options}
+              onChange={e => {
+                setSelectedKeys(prevState => ({
+                  ...prevState,
+                  [dataIndex[filterIndex || 0]]: e.toString()
+                    ? e.toString()
+                    : null,
+                }));
+              }}
+            />
+          </WrapperCheckbox>
+          <Row gutter={[8, 0]}>
+            <Col>
+              <Button
+                type="primary"
+                onClick={() =>
+                  handleFromToSearch(
+                    dataIndex[filterIndex || 0],
+                    range,
+                    confirm,
+                  )
+                }
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90 }}
+                loading={state.loading}
+              >
+                {t(messageTrans.filterSearchButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                onClick={() => handleFromToReset(confirm)}
+                size="small"
+                loading={state.loading}
+                style={{ width: 90 }}
+              >
+                {t(messageTrans.filterResetButton())}
+              </Button>
+            </Col>
+          </Row>
+        </Wrapper>
+      );
+    },
+    onFilter: (value, record) =>
+      record[dataIndex[filterIndex || 0]]
+        ? record[dataIndex[filterIndex || 0]]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : '',
+  });
+
   return {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchTagProps,
     getColumnSearchCheckboxProps,
+    getColumnSearchCheckboxFromToProps,
   };
 };
 

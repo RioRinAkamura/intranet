@@ -78,19 +78,13 @@ export const ProjectsPage: React.FC = () => {
     setOrdering,
     setPagination,
     setFilterText,
-    resetFilter,
   } = useHandleDataTable(getProjectState, actions);
 
   const {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchCheckboxProps,
-  } = useTableConfig(
-    getProjectState,
-    ProjectsMessages,
-    setFilterText,
-    resetFilter,
-  );
+  } = useTableConfig(getProjectState, ProjectsMessages, setFilterText);
 
   const fetchProjects = useCallback(() => {
     if (!isFilter) {

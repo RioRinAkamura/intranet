@@ -59,6 +59,8 @@ const slice = createSlice({
         email: action.payload.email,
         phoneNumber: action.payload.phoneNumber,
         tags: action.payload.tags,
+        from: action.payload.from,
+        to: action.payload.to,
       };
       state.pagination = {
         ...state.pagination,

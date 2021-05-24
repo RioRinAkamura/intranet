@@ -76,19 +76,14 @@ export const Users: React.FC = () => {
     setOrdering,
     setPagination,
     setFilterText,
-    resetFilter,
   } = useHandleDataTable(getUserListState, actions);
 
   const {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchTagProps,
-  } = useTableConfig(
-    getUserListState,
-    UsersMessages,
-    setFilterText,
-    resetFilter,
-  );
+    getColumnSearchCheckboxFromToProps,
+  } = useTableConfig(getUserListState, UsersMessages, setFilterText);
 
   const fetchUsers = useCallback(() => {
     if (!isFilter) {
@@ -291,7 +286,7 @@ export const Users: React.FC = () => {
     {
       title: t(UsersMessages.listEmailTitle()),
       dataIndex: 'email',
-      width: 150,
+      width: 130,
       ...getColumnSorterProps('email', 3),
       ...getColumnSearchInputProps(['email']),
     },
@@ -305,7 +300,7 @@ export const Users: React.FC = () => {
     {
       title: 'Tags',
       dataIndex: 'tags',
-      width: 120,
+      width: 100,
       ...getColumnSearchTagProps('tags'),
       render: (text, record: Employee, index: number) => {
         return (
@@ -316,6 +311,22 @@ export const Users: React.FC = () => {
           </>
         );
       },
+    },
+    {
+      title: 'Total Active Hours Per Week',
+      className: 'totalAllocated',
+      dataIndex: 'total_active_project_allocated_hour_weekly',
+      width: 80,
+      ...getColumnSorterProps('total_active_project_allocated_hour_weekly', 6),
+      ...getColumnSearchCheckboxFromToProps(
+        ['total_active_project_allocated_hour_weekly'],
+        [
+          { label: '< 40h per week', value: 1 },
+          { label: '40h per week', value: 2 },
+          { label: '> 40h per week', value: 3 },
+        ],
+        '40',
+      ),
     },
     {
       title: 'Type',
@@ -496,5 +507,9 @@ const TableWrapper = styled.div`
     span {
       color: blue;
     }
+  }
+
+  .totalAllocated {
+    white-space: break-spaces;
   }
 `;
