@@ -333,7 +333,8 @@
         "cancelButton": "Cancel",
         "submitButton": "Save"
       }
-    }
+    },
+    "exportCSVMessage": "Click link below to download the export file"
   },
   "tagsInput": {
     "validate": "Please input more 1 word",
