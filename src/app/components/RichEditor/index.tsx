@@ -7,6 +7,7 @@ import React, {
   memo,
   MouseEvent,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -47,9 +48,9 @@ import 'draft-js/dist/Draft.css';
 
 import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
 import { api } from 'utils/api';
-import { Env } from 'remarkable/lib';
 import { EntryMention } from './components/EntryMention';
 import { MentionContent } from './components/MentionContent';
+import { mentionRemarkPlugin } from './remarkPlugin';
 const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
 
@@ -60,7 +61,7 @@ interface Props {
   height?: string;
   isView?: boolean;
   placeholder?: string;
-  callback: (content: any) => void;
+  callback?: (content: any) => void;
 }
 
 export interface EntryComponentProps {
@@ -93,58 +94,19 @@ const toolbarPlugin = createToolbarPlugin({
 const linkPlugin = createLinkPlugin();
 const { Toolbar } = toolbarPlugin;
 
-const mentionRegexp = /@+([\w ]+)+\(([\w+-]+)\)/;
-const mentionRemakePlugin = (remarkable: Env) => {
-  remarkable.inline.ruler.push('mention', (state: Env, silent: boolean) => {
-    if (!state.src) {
-      return false;
-    }
-
-    if (state.src[state.pos] !== '@') {
-      return false;
-    }
-    var match = mentionRegexp.exec(state.src.slice(state.pos));
-    if (!match) {
-      return false;
-    }
-
-    if (!silent) {
-      state.push({
-        type: 'mention_open',
-        name: match[1],
-        id: match[2],
-        link: 'employees/' + match[2],
-        level: state.level,
-      });
-
-      state.push({
-        type: 'text',
-        content: '@' + match[1],
-        level: state.level + 1,
-      });
-
-      state.push({
-        type: 'mention_close',
-        level: state.level,
-      });
-    }
-    state.pos += match[0].length;
-
-    return true;
-  });
-};
-
 export const RichEditor = memo((props: Props) => {
   const { width, height, data, isView, placeholder, callback } = props;
   const ref = useRef<Editor>(null);
   const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<MentionData[]>();
+  const [editorState, setEditorState] = useState<any>();
+  const [loading, setLoading] = useState(true);
 
-  const [editorState, setEditorState] = useState(() => {
+  useEffect(() => {
     if (data) {
       const markdownString = data;
       const rawData = markdownToDraft(markdownString, {
-        remarkablePlugins: [mentionRemakePlugin],
+        remarkablePlugins: [mentionRemarkPlugin],
         blockEntities: {
           mention_open: function (item: any) {
             return {
@@ -162,11 +124,13 @@ export const RichEditor = memo((props: Props) => {
         },
       });
       const contentState = convertFromRaw(rawData);
-      return EditorState.createWithContent(contentState);
+      setEditorState(EditorState.createWithContent(contentState));
+      setLoading(false);
     } else {
-      return EditorState.createEmpty();
+      setEditorState(EditorState.createEmpty());
+      setLoading(false);
     }
-  });
+  }, [data]);
 
   const { MentionSuggestions, mentionPlugin } = useMemo(() => {
     const mentionPlugin = createMentionPlugin({
@@ -215,7 +179,9 @@ export const RichEditor = memo((props: Props) => {
       },
     });
 
-    callback(markdownString);
+    if (callback) {
+      callback(markdownString);
+    }
   };
 
   const onOpenChange = useCallback((_open: boolean) => {
@@ -268,41 +234,43 @@ export const RichEditor = memo((props: Props) => {
 
   return (
     <Wrapper isView={isView} width={width} height={height}>
-      <div className="editor">
-        <Editor
-          editorState={editorState}
-          readOnly={isView}
-          onChange={onChange}
-          placeholder={placeholder}
-          plugins={[
-            mentionPlugin,
-            hashtagPlugin,
-            toolbarPlugin,
-            inlineToolbarPlugin,
-            linkPlugin,
-          ]}
-          ref={ref}
-        />
-        {!isView && <MyToolbar />}
-        <InlineToolbar>
-          {externalProps => (
-            <React.Fragment>
-              <BoldButton {...externalProps} />
-              <ItalicButton {...externalProps} />
-              <UnderlineButton {...externalProps} />
-              <linkPlugin.LinkButton {...externalProps} />
-            </React.Fragment>
-          )}
-        </InlineToolbar>
-        <MentionSuggestions
-          open={open}
-          onOpenChange={onOpenChange}
-          suggestions={suggestions || []}
-          onSearchChange={onSearchChange}
-          onAddMention={mention => {}}
-          entryComponent={EntryMention}
-        />
-      </div>
+      {!loading && (
+        <div className="editor">
+          <Editor
+            editorState={editorState}
+            readOnly={isView}
+            onChange={onChange}
+            placeholder={placeholder}
+            plugins={[
+              mentionPlugin,
+              hashtagPlugin,
+              toolbarPlugin,
+              inlineToolbarPlugin,
+              linkPlugin,
+            ]}
+            ref={ref}
+          />
+          {!isView && <MyToolbar />}
+          <InlineToolbar>
+            {externalProps => (
+              <React.Fragment>
+                <BoldButton {...externalProps} />
+                <ItalicButton {...externalProps} />
+                <UnderlineButton {...externalProps} />
+                <linkPlugin.LinkButton {...externalProps} />
+              </React.Fragment>
+            )}
+          </InlineToolbar>
+          <MentionSuggestions
+            open={open}
+            onOpenChange={onOpenChange}
+            suggestions={suggestions || []}
+            onSearchChange={onSearchChange}
+            onAddMention={mention => {}}
+            entryComponent={EntryMention}
+          />
+        </div>
+      )}
     </Wrapper>
   );
 });

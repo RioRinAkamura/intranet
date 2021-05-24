@@ -2,6 +2,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { call, put, takeLatest } from 'redux-saga/effects';
 // import { api } from 'utils/api';
 import { projectsActions as actions } from '.';
+import { PayloadAction } from '@reduxjs/toolkit';
 // import { PayloadAction } from '@reduxjs/toolkit';
 
 function* fetchProjects(action) {
@@ -37,21 +38,21 @@ function* fetchProjects(action) {
   }
 }
 
-// function* deleteUser(action: PayloadAction<string>) {
-//   try {
-//     const idDelete = action.payload;
-//     yield call([api, api.hr.employee.delete], idDelete);
-//     yield put(actions.deleteUserSuccess());
-//   } catch (err) {
-//     yield put(actions.deleteUserFailure());
-//   } finally {
-//     yield put(actions.resetStateDeleteModal());
-//   }
-// }
+function* deleteProject(action: PayloadAction<string>) {
+  try {
+    const idDelete = action.payload;
+    yield call(fakeAPI.delete, `/hr/projects/${idDelete}/`);
+    yield put(actions.deleteProjectSuccess());
+  } catch (err) {
+    yield put(actions.deleteProjectFailure());
+  } finally {
+    yield put(actions.resetStateDeleteModal());
+  }
+}
 
 export function* projectsSaga() {
   yield* [
     takeLatest(actions.fetchProjects.type, fetchProjects),
-    // takeLatest(actions.deleteUser.type, deleteUser),
+    takeLatest(actions.deleteProject.type, deleteProject),
   ];
 }
