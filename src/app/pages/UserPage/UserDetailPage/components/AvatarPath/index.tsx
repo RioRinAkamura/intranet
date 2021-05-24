@@ -43,7 +43,7 @@ const inputProps: InputProps = {
 };
 
 export const AvatarPath = memo((props: Props) => {
-  const { isView, form, user } = props;
+  const { isView, form, user, isEdit } = props;
   const { t } = useTranslation();
 
   const [imageURL, setImageURL] = useState('');
@@ -79,10 +79,10 @@ export const AvatarPath = memo((props: Props) => {
   }, [actions, dispatch, isRefresh]);
 
   useEffect(() => {
-    if (userDetails.identity && !isView) {
+    if ((userDetails.identity && !isView && !isEdit) || isRefresh) {
       form.setFieldsValue({ code: userDetails.identity });
     }
-  }, [form, isView, userDetails]);
+  }, [form, isView, userDetails, isRefresh, isEdit]);
 
   return (
     <>
