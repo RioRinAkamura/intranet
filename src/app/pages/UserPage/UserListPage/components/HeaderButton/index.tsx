@@ -3,23 +3,33 @@
  * HeaderButton
  *
  */
-import { Button, Col, Popover, Row, Table, TablePaginationConfig } from 'antd';
+import {
+  Button,
+  Col,
+  notification,
+  Popover,
+  Row,
+  Table,
+  TablePaginationConfig,
+} from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { DialogModal } from 'app/components/DialogModal';
-import * as React from 'react';
+import React, { useState } from 'react';
 import CSVReader from 'react-csv-reader';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 import { UsersMessages } from '../../messages';
 import { CSVLink } from 'react-csv';
-import { request } from 'utils/request';
-import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import {
   ExportOutlined,
   ImportOutlined,
   UserAddOutlined,
 } from '@ant-design/icons';
+import fakeAPI from 'utils/fakeAPI';
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
+
+type Employee = models.hr.Employee;
 
 interface HeaderButtonProps {
   pagination?: TablePaginationConfig;
@@ -28,15 +38,14 @@ interface HeaderButtonProps {
 }
 
 export const HeaderButton = (props: HeaderButtonProps) => {
-  const { pagination, data, selectedRows } = props;
+  const { selectedRows } = props;
   const { t } = useTranslation();
   const history = useHistory();
 
-  const [previewModal, setPreviewModal] = React.useState({
+  const [previewModal, setPreviewModal] = useState({
     open: false,
     data: [],
   });
-  const [users, setUsers] = React.useState([]);
 
   const handleForce = (data: any) => {
     setPreviewModal({ open: true, data: data });
@@ -49,13 +58,38 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     transformHeader: header => header.toLowerCase().replace(/\W/g, '_'),
   };
 
-  const getAllUsers = (event, done) => {
-    request('https://reqres.in/api/users').then((response: any) => {
-      setUsers(response.data);
-      if (users) {
-        done();
-      }
-    });
+  const exportAll = async () => {
+    const response: any = await fakeAPI.get(
+      'https://api.boilerplate.dev.hdwebsoft.co/v1/hr/employees/export/',
+    );
+    if (response) {
+      notification.open({
+        message: 'Exporting',
+        key: 'export',
+        description: (
+          <>
+            <div>
+              <b>{t(UsersMessages.exportCSVMessage())}</b>
+            </div>
+            <a
+              href="#0"
+              onClick={e => {
+                e.preventDefault();
+                window.open(
+                  response.download_url,
+                  '_blank',
+                  'noopener,noreferrer',
+                );
+                notification.close('export');
+              }}
+            >
+              {response.download_url}
+            </a>
+          </>
+        ),
+        duration: 0,
+      });
+    }
   };
 
   const handleImport = () => {
@@ -100,25 +134,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   const exportCSVType = (
     <WrapperExport gutter={[8, 8]}>
       <Col span={24}>
-        <Button block>
-          <CSVLink
-            filename={'users-page.csv'}
-            data={users}
-            asyncOnClick={true}
-            onClick={getAllUsers}
-          >
-            {t(UsersMessages.exportAllUser())}
-          </CSVLink>
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button block>
-          <CSVLink
-            filename={'users-page-' + pagination?.current + '.csv'}
-            data={data}
-          >
-            {t(UsersMessages.exportPerPage())}
-          </CSVLink>
+        <Button block onClick={exportAll}>
+          {t(UsersMessages.exportAllUser())}
         </Button>
       </Col>
       <Col span={24}>
