@@ -25,6 +25,8 @@ export interface FilterColumns {
   email?: string;
   phoneNumber?: string;
   tags?: string;
+  from?: string;
+  to?: string;
   [key: string]: string | undefined;
 }
 
@@ -42,6 +44,8 @@ export interface QueryParams {
   email?: string;
   phoneNumber?: string;
   tags?: string;
+  from?: string;
+  to?: string;
   limit?: number;
   page?: number;
   [key: string]: string | number | undefined;

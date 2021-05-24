@@ -8,8 +8,7 @@ import { identity, isArray, isEmpty, pickBy } from 'lodash';
 interface useDataTable {
   setSearchText: (text: string) => void;
   resetSearch: () => void;
-  setFilterText: (dataIndex: string, text: string) => void;
-  resetFilter: (dataIndex: string) => void;
+  setFilterText: (value: FilterColumns) => void;
   setSelectedRows: <T>(selectedRowKeys: Key[], selectedRows: T[]) => void;
   setOrdering: <T>(sorter: SorterResult<T> | SorterResult<T>[]) => void;
   setPagination: (pagination: TablePagination) => void;
@@ -170,49 +169,19 @@ export const useHandleDataTable = (
     dispatch(actions.setPagination(pagination));
   };
 
-  const setFilterText = (dataIndex: string, text: string) => {
+  const setFilterText = (value: FilterColumns) => {
     dispatch(
       actions.filterColumns({
         ...filterColumns,
-        [dataIndex]: text,
-      }),
-    );
-    if (text) {
-      history.replace({
-        search: stringify(
-          {
-            ...urlParams,
-            [dataIndex]: text,
-            page: urlParams.page ? 1 : undefined,
-          },
-          { sort: false },
-        ),
-      });
-    } else {
-      delete urlParams[dataIndex];
-      history.replace({
-        search: stringify(
-          {
-            ...urlParams,
-          },
-          { sort: false },
-        ),
-      });
-    }
-  };
-
-  const resetFilter = (dataIndex: string) => {
-    dispatch(
-      actions.filterColumns({
-        ...filterColumns,
-        [dataIndex]: undefined,
+        ...value,
       }),
     );
     history.replace({
       search: stringify(
         {
           ...urlParams,
-          [dataIndex]: undefined,
+          ...value,
+          page: urlParams.page ? 1 : undefined,
         },
         { sort: false },
       ),
@@ -226,6 +195,5 @@ export const useHandleDataTable = (
     setOrdering,
     setPagination,
     setFilterText,
-    resetFilter,
   };
 };
