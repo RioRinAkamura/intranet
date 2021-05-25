@@ -12,6 +12,7 @@ import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { useProjectDetail } from '../../useProjectDetail';
 import { useHandleMember } from './useHandleMember';
 import { ProjectDetailMessages } from '../../messages';
+import { SelectValue } from 'antd/lib/select';
 
 interface Props {
   form: FormInstance;
@@ -22,24 +23,10 @@ interface Props {
 }
 const { Option } = Select;
 
-const allocations = [
-  0.5,
-  1.0,
-  1.5,
-  2.0,
-  2.5,
-  3.0,
-  3.5,
-  4.0,
-  4.5,
-  5.0,
-  5.5,
-  6.0,
-  6.5,
-  7.0,
-  7.5,
-  8.0,
-];
+const allocations: number[] = [2];
+for (let i = 4; i <= 40; i += 4) {
+  allocations.push(i);
+}
 
 type Employee = models.hr.Employee;
 
@@ -54,6 +41,7 @@ export const MemberModal = memo((props: Props) => {
   const [value, setValue] = useState('');
   const { fetchUser } = useProjectDetail();
   const { loadingMember, addMember, editMember } = useHandleMember();
+  const [allocation, setAllocation] = useState<SelectValue>();
 
   const handleAddMember = async values => {
     const members = form.getFieldValue('members');
@@ -61,8 +49,6 @@ export const MemberModal = memo((props: Props) => {
       employee => employee.id === values.members.employee,
     );
     if (selectedMember) {
-      // members.splice(selectedMember.index, 1);
-      // members.push({ ...values.members, employee: employee });
       const project_id = form.getFieldValue('id');
       const response = await editMember(project_id, values);
       if (response) {
@@ -297,6 +283,22 @@ export const MemberModal = memo((props: Props) => {
               placeholder={t(
                 ProjectDetailMessages.memberFormAllocationPlaceholder(),
               )}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) => option?.value === Number(input)}
+              onSearch={value => {
+                setAllocation(value);
+              }}
+              onInputKeyDown={event => {
+                if (event.key === 'Enter') {
+                  if (!allocations.includes(Number(allocation))) {
+                    allocations.push(Number(allocation));
+                    memberForm.setFieldsValue({
+                      members: { allocation: Number(allocation) },
+                    });
+                  }
+                }
+              }}
             >
               {allocations &&
                 allocations.map((item, index) => {
