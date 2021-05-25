@@ -129,13 +129,31 @@ export function UserDetailPage(props: Props) {
   const { TabPane } = Tabs;
   const [isNotesTab, setIsNotesTab] = React.useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const isNotesLocation = () => history.location.pathname.includes('notes');
+
   const onChangeTab = (key: string) => {
     if (key === TabKeys.notes) {
       setIsNotesTab(true);
+      history.push(`/employees/${id}/notes`);
     } else {
       setIsNotesTab(false);
+      history.push(`/employees/${id}`);
     }
   };
+
+  const getDefaultTab = () => {
+    if (isNotesLocation()) {
+      return `${TabKeys.notes}`;
+    }
+    return `${TabKeys.details}`;
+  };
+
+  React.useEffect(() => {
+    if (isNotesLocation()) {
+      setIsNotesTab(true);
+    }
+  }, [history.location.pathname, isNotesLocation, isNotesTab]);
 
   React.useEffect(() => {
     if (user) {
@@ -207,10 +225,7 @@ export function UserDetailPage(props: Props) {
         </PageTitle>
       </WrapperTitlePage>
       {isView ? (
-        <StyledTabs
-          defaultActiveKey={`${TabKeys.details}`}
-          onChange={onChangeTab}
-        >
+        <StyledTabs defaultActiveKey={getDefaultTab()} onChange={onChangeTab}>
           <TabPane tab="Details" key={TabKeys.details}>
             <WrapperForm
               form={form}
