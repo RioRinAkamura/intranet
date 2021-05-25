@@ -68,6 +68,11 @@ exports[`<App /> should render and match the snapshot 1`] = `
             <PrivateRoute
               component={[Function]}
               exact={true}
+              path="/employees/:id/notes"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
               path="/employees/create"
             />
             <PrivateRoute
