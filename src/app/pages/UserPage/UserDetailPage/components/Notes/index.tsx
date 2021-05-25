@@ -28,6 +28,7 @@ import moment from 'moment';
 import { config } from 'config';
 import { DialogModal } from 'app/components/DialogModal';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import { RichEditor } from 'app/components/RichEditor/Loadable';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
@@ -39,7 +40,6 @@ interface Note {
   summary: string;
   date: Date;
   content: string;
-  timestamp: string;
 }
 
 interface FormProps {
@@ -52,8 +52,6 @@ interface ActionsProps {
 }
 
 const WrapperForm: React.FC<FormProps> = ({ form, note }) => {
-  const { TextArea } = Input;
-
   useEffect(() => {
     if (note) {
       form.setFieldsValue({
@@ -75,10 +73,7 @@ const WrapperForm: React.FC<FormProps> = ({ form, note }) => {
         <StyledDatePicker size="large" />
       </Form.Item>
       <Form.Item name="content" label="Content">
-        <TextArea placeholder="Content" rows={4} />
-      </Form.Item>
-      <Form.Item name="timestamp" label="Timestamp">
-        <Input size="large" placeholder="Timestamp" />
+        <RichEditor data={note?.content} width="100%" />
       </Form.Item>
     </Form>
   );
@@ -152,12 +147,10 @@ const columns: ColumnProps<Note>[] = [
   {
     title: 'Type',
     dataIndex: 'type',
-    key: 'type',
   },
   {
     title: 'Summary',
     dataIndex: 'summary',
-    key: 'summary',
   },
   {
     title: 'Date',
@@ -165,23 +158,15 @@ const columns: ColumnProps<Note>[] = [
     render: date => {
       return moment(date).format(`${DATE_FORMAT} hh:mm:ss`);
     },
-    key: 'date',
   },
   {
     title: 'Content',
     dataIndex: 'content',
-    key: 'content',
-  },
-  {
-    title: 'Timestamp',
-    dataIndex: 'timestamp',
-    key: 'timestamp',
   },
   {
     title: 'Actions',
     dataIndex: 'id',
     render: (id, record: Note) => <Actions note={record} />,
-    key: 'id',
   },
 ];
 
@@ -192,7 +177,6 @@ const dataSource: Note[] = [
     summary: 'B',
     date: new Date(1621846284657),
     content: 'D',
-    timestamp: 'E',
   },
   {
     id: '2',
@@ -200,7 +184,6 @@ const dataSource: Note[] = [
     summary: 'G',
     date: new Date(1621846293152),
     content: 'H',
-    timestamp: 'I',
   },
 ];
 
@@ -224,7 +207,7 @@ export const Notes = memo((props: Props) => {
         </StyledButton>
       </Header>
 
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} rowKey="id" />
 
       <DialogModal
         isOpen={isOpen}
