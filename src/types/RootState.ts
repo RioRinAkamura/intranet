@@ -4,6 +4,7 @@ import { UserspageState } from 'app/pages/UserPage/UserListPage/slice/types';
 import { State } from 'app/components/ChangePasswordModal/slice/types';
 import { ProjectsState } from 'app/pages/ProjectPage/ProjectListPage/slice/types';
 import { UserDetailsState } from 'app/pages/UserPage/UserDetailPage/slice/types';
+import { EmployeeProjectState } from 'app/pages/UserPage/UserDetailPage/components/Projects/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /*
@@ -19,5 +20,6 @@ export interface RootState {
   changePassword?: State;
   projects?: ProjectsState;
   userDetails?: UserDetailsState;
+  employeeProject?: EmployeeProjectState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }

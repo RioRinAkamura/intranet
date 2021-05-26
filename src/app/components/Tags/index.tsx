@@ -74,7 +74,9 @@ export const TagsInput = memo((props: Props) => {
       mode="tags"
       {...(isView ? selectProps : {})}
       isView={isView}
-      placeholder={placeholder || `${t(messages.tagsInputSearchTags())}`}
+      placeholder={
+        isView ? '' : placeholder || `${t(messages.tagsInputSearchTags())}`
+      }
       size="large"
       value={value}
       onChange={handleOnChangeTags}
@@ -109,7 +111,7 @@ interface ScreenProps {
   isView?: boolean;
 }
 
-const WrapperSelect = styled(Select)`
+const WrapperSelect = styled(Select)<ScreenProps>`
   display: block;
   margin-bottom: 10px;
   span {
@@ -122,10 +124,13 @@ const WrapperSelect = styled(Select)`
     width: 280px;
     overflow-y: auto;
     overflow-x: hidden;
+    input {
+      display: ${props => (props.isView ? 'none' : 'block')};
+    }
   }
 
   #tags {
-    display: ${(props: ScreenProps) => (props.isView ? 'none' : 'block')};
+    display: ${props => (props.isView ? 'none' : 'block')};
   }
 `;
 

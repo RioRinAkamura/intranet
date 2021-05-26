@@ -104,30 +104,6 @@ export const JobInfo = (props: JobInfoProps) => {
         </Col>
         <Col md={isView ? 20 : 24} xs={24}>
           <FormItem isView={isView} name="tags">
-            {/* <WrapperSelect
-              {...(isView ? selectProps : {})}
-              isView={isView}
-              mode="tags"
-              placeholder={
-                isView ? '' : t(UserDetailMessages.formJobTagsPlaceholder())
-              }
-              size="large"
-              loading={loading}
-              className="selectTags"
-              tagRender={props => (
-                <TagOption color="blue">
-                  {props.label}
-                  {!isView && <Link onClick={() => props.onClose()}>x</Link>}
-                </TagOption>
-              )}
-            >
-              {tags &&
-                tags.map((tag: TagType) => (
-                  <Option key={tag.id} value={tag.slug}>
-                    {tag.name}
-                  </Option>
-                ))}
-            </WrapperSelect> */}
             <TagsInput
               selectProps={selectProps}
               isView={isView}
