@@ -1,0 +1,258 @@
+/**
+ *
+ * ProjectModal
+ *
+ */
+import React, { memo, useEffect, useState } from 'react';
+import styled from 'styled-components/macro';
+import { useTranslation } from 'react-i18next';
+import { DialogModal } from 'app/components/DialogModal';
+import { Button, Form, Select, Spin } from 'antd';
+import { useHandleProject } from './useHandleProject';
+import { SelectValue } from 'antd/lib/select';
+import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
+
+interface Props {
+  id: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  selectedProject: any;
+  setSelectedProject: (member: any) => void;
+}
+const { Option } = Select;
+
+const allocations: number[] = [2];
+for (let i = 4; i <= 40; i += 4) {
+  allocations.push(i);
+}
+
+export const ProjectModal = memo((props: Props) => {
+  const { t } = useTranslation();
+  const { id, open, setOpen, selectedProject, setSelectedProject } = props;
+  const [memberForm] = Form.useForm();
+
+  const [isAddProject, setIsAddProject] = useState(true);
+  const [searchLoad, setSearchLoad] = useState(false);
+  const [projects, setProjects] = useState<any>([]);
+  const [value, setValue] = useState('');
+  const [allocation, setAllocation] = useState<SelectValue>();
+  const {
+    loadingProject,
+    fetchProjects,
+    addProject,
+    editProject,
+  } = useHandleProject();
+
+  const handleProject = async values => {
+    if (selectedProject) {
+      const response = await editProject(id, values);
+      if (response) {
+        setOpen(false);
+        memberForm.resetFields();
+      }
+    } else {
+      const response = await addProject(id, values);
+      if (response) {
+        setOpen(false);
+        memberForm.resetFields();
+      }
+    }
+  };
+
+  const handleSearch = async value => {
+    if (value) {
+      setSearchLoad(true);
+      const response = await fetchProjects(value);
+      if (response) {
+        setProjects(response);
+        setSearchLoad(false);
+      }
+    } else {
+      setProjects([]);
+    }
+  };
+
+  const handleChange = value => {
+    setValue(value);
+  };
+
+  const role = [
+    {
+      name: t(ProjectDetailMessages.memberPM()),
+      value: 'PM',
+    },
+    {
+      name: t(ProjectDetailMessages.memberTL()),
+      value: 'TL',
+    },
+    {
+      name: t(ProjectDetailMessages.memberQC()),
+      value: 'QC',
+    },
+    {
+      name: t(ProjectDetailMessages.memberDEV()),
+      value: 'DEV',
+    },
+    {
+      name: t(ProjectDetailMessages.memberOTHER()),
+      value: 'OTHER',
+    },
+  ];
+
+  const options = projects?.map(project => (
+    <Option key={project.id} value={project.id}>
+      {project.name}
+    </Option>
+  ));
+
+  useEffect(() => {
+    if (selectedProject) {
+      (async () => {
+        const response = await fetchProjects(selectedProject.project.name);
+        if (response) {
+          setProjects(response);
+        }
+        memberForm.setFieldsValue({
+          project: selectedProject.project.id,
+          project_role: selectedProject.project_role,
+          allocation: selectedProject.allocation,
+        });
+        setIsAddProject(false);
+      })();
+    }
+  }, [fetchProjects, memberForm, selectedProject]);
+
+  return (
+    <>
+      <DialogModal
+        title={isAddProject ? 'Add Project' : 'Edit Project'}
+        isOpen={open}
+        handleCancel={() => {
+          setOpen(false);
+          if (selectedProject) {
+            setSelectedProject(null);
+            setProjects(undefined);
+          }
+          setIsAddProject(true);
+          memberForm.resetFields();
+        }}
+      >
+        <Form
+          form={memberForm}
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          onFinish={handleProject}
+        >
+          <FormSearchItem
+            name="project"
+            label="Project"
+            rules={[
+              {
+                required: true,
+                message: 'Please Select Project!',
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              value={value}
+              defaultActiveFirstOption={false}
+              showArrow={false}
+              filterOption={false}
+              size="large"
+              loading={searchLoad}
+              disabled={selectedProject ? true : false}
+              placeholder={t('Enter Project Name')}
+              onSearch={handleSearch}
+              onChange={handleChange}
+              notFoundContent={searchLoad ? <Spin size="default" /> : null}
+            >
+              {options}
+            </Select>
+          </FormSearchItem>
+          <FormSearchItem
+            name="project_role"
+            label="Project Role"
+            rules={[
+              {
+                required: true,
+                message: 'Please Select Project Role!',
+              },
+            ]}
+          >
+            <Select size="large" placeholder="Select Project Role">
+              {role &&
+                role.map((item, index: number) => {
+                  return (
+                    <Option key={index} value={item.value}>
+                      {item.name}
+                    </Option>
+                  );
+                })}
+            </Select>
+          </FormSearchItem>
+          <FormSearchItem
+            name="allocation"
+            label="Allocation"
+            rules={[
+              {
+                required: true,
+                message: 'Please Select Allocation!',
+              },
+            ]}
+          >
+            <Select
+              size="large"
+              placeholder="Select Allocation"
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) => option?.value === Number(input)}
+              onSearch={value => {
+                setAllocation(value);
+              }}
+              onInputKeyDown={event => {
+                if (event.key === 'Enter') {
+                  if (!allocations.includes(Number(allocation))) {
+                    allocations.push(Number(allocation));
+                    memberForm.setFieldsValue({
+                      members: { allocation: Number(allocation) },
+                    });
+                  }
+                }
+              }}
+            >
+              {allocations &&
+                allocations.map((item, index) => {
+                  return (
+                    <Option key={index} value={item}>
+                      {item}
+                    </Option>
+                  );
+                })}
+            </Select>
+          </FormSearchItem>
+          <ModalButton>
+            <Button
+              loading={loadingProject}
+              htmlType="submit"
+              type="primary"
+              shape="round"
+              size="large"
+            >
+              Submit
+            </Button>
+          </ModalButton>
+        </Form>
+      </DialogModal>
+    </>
+  );
+});
+
+const FormSearchItem = styled(Form.Item)``;
+
+const ModalButton = styled.div`
+  text-align: center;
+  button {
+    padding: 0 2em !important;
+  }
+`;

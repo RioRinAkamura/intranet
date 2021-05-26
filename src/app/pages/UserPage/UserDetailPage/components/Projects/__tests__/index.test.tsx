@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
 
-import { SocialNetwork } from '../../SocialNetwork';
-import { matchMedia } from 'utils/matchMedia';
+import { Projects } from '..';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -15,11 +14,9 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
-matchMedia();
-
-describe('<SocialNetwork  />', () => {
+describe('<Projects  />', () => {
   it('should match snapshot', () => {
-    const loadingIndicator = render(<SocialNetwork />);
+    const loadingIndicator = render(<Projects />);
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });
