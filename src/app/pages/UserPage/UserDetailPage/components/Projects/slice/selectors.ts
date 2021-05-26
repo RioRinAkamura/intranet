@@ -28,3 +28,28 @@ export const selectEmployeeProjectParams = createSelector(
   [selectSlice],
   state => state.params,
 );
+
+export const selectEmployeeProjectAddSuccess = createSelector(
+  [selectSlice],
+  state => state.addSuccess,
+);
+export const selectEmployeeProjectAddFailed = createSelector(
+  [selectSlice],
+  state => state.addFailed,
+);
+export const selectEmployeeProjectEditSuccess = createSelector(
+  [selectSlice],
+  state => state.editSuccess,
+);
+export const selectEmployeeProjectEditFailed = createSelector(
+  [selectSlice],
+  state => state.editFailed,
+);
+export const selectEmployeeProjectDeleteSuccess = createSelector(
+  [selectSlice],
+  state => state.deleteSuccess,
+);
+export const selectEmployeeProjectDeleteFailed = createSelector(
+  [selectSlice],
+  state => state.deleteFailed,
+);

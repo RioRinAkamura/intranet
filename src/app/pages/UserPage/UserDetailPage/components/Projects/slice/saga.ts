@@ -3,6 +3,8 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 // import { api } from 'utils/api';
 import { employeeProjectActions as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { AddProject } from './types';
+import { cloneDeep } from 'lodash';
 // import { PayloadAction } from '@reduxjs/toolkit';
 
 function* fetchEmployeeProject(action) {
@@ -27,6 +29,36 @@ function* fetchEmployeeProject(action) {
   }
 }
 
+function* addProject(action: PayloadAction<AddProject>) {
+  try {
+    const member = cloneDeep(action.payload);
+    member.allocation = parseFloat(member.allocation).toFixed(1);
+    yield call(fakeAPI.post, `/hr/projects/${member.project}/members/`, member);
+    yield put(actions.addProjectSuccess());
+  } catch (err) {
+    yield put(actions.addProjectFailure());
+  } finally {
+    yield put(actions.resetStateAddModal());
+  }
+}
+
+function* editProject(action: PayloadAction<AddProject>) {
+  try {
+    const member = cloneDeep(action.payload);
+    member.allocation = parseFloat(member.allocation).toFixed(1);
+    yield call(
+      fakeAPI.patch,
+      `/hr/projects/${member.project}/members/${member.employee}/`,
+      member,
+    );
+    yield put(actions.editProjectSuccess());
+  } catch (err) {
+    yield put(actions.editProjectFailure());
+  } finally {
+    yield put(actions.resetStateEditModal());
+  }
+}
+
 function* deleteProject(action: PayloadAction<string>) {
   try {
     const idDelete = action.payload;
@@ -42,6 +74,8 @@ function* deleteProject(action: PayloadAction<string>) {
 export function* employeeProjectSaga() {
   yield* [
     takeLatest(actions.fetchEmployeeProject.type, fetchEmployeeProject),
+    takeLatest(actions.addProject.type, addProject),
+    takeLatest(actions.editProject.type, editProject),
     takeLatest(actions.deleteProject.type, deleteProject),
   ];
 }

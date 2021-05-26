@@ -50,7 +50,7 @@ export const Projects = memo(() => {
     setFilterText,
   } = useHandleDataTable(getEmployeeProjectState, actions);
 
-  const { getColumnSorterProps } = useTableConfig(
+  const { getColumnSorterProps, getColumnSearchInputProps } = useTableConfig(
     getEmployeeProjectState,
     ProjectsMessages,
     setFilterText,
@@ -109,7 +109,9 @@ export const Projects = memo(() => {
   const columns: any = [
     {
       title: 'Project Name',
-      dataIndex: ['project', 'name'],
+      dataIndex: ['project_name'],
+      ...getColumnSorterProps('project_name', 1),
+      ...getColumnSearchInputProps(['project_name']),
     },
     {
       title: 'Allocation',

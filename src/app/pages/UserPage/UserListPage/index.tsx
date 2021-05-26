@@ -323,7 +323,7 @@ export const Users: React.FC = () => {
       title: 'Total Active Hours Per Week',
       className: 'totalAllocated',
       dataIndex: 'total_active_project_allocated_hour_weekly',
-      width: 80,
+      width: 90,
       ...getColumnSorterProps('total_active_project_allocated_hour_weekly', 6),
       ...getColumnSearchCheckboxFromToProps(
         ['total_active_project_allocated_hour_weekly'],
@@ -334,6 +334,32 @@ export const Users: React.FC = () => {
         ],
         '40',
       ),
+    },
+    {
+      title: 'Projects',
+      width: 80,
+      dataIndex: 'projects',
+      render: (text, render) => {
+        return text?.map(project => {
+          return (
+            <div key={project.project_id}>
+              <a
+                href="#0"
+                onClick={e => {
+                  e.preventDefault();
+                  window.open(
+                    `/projects/${project.project_id}`,
+                    '_blank',
+                    'noopener,noreferrer',
+                  );
+                }}
+              >
+                {project.project_name}
+              </a>
+            </div>
+          );
+        });
+      },
     },
     {
       title: 'Type',
@@ -348,7 +374,7 @@ export const Users: React.FC = () => {
     {
       title: t(UsersMessages.listOptionsTitle()),
       dataIndex: 'id',
-      width: 40,
+      width: 50,
       fixed: 'right',
       render: (text, record: Employee, index: number) => {
         return (

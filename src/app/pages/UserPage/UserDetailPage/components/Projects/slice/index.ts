@@ -4,7 +4,12 @@ import { Key } from 'react';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { employeeProjectSaga } from './saga';
-import { EmployeeProjectState, FilterColumns, QueryParams } from './types';
+import {
+  AddProject,
+  EmployeeProjectState,
+  FilterColumns,
+  QueryParams,
+} from './types';
 
 export const initialState: EmployeeProjectState = {
   id: '',
@@ -100,6 +105,42 @@ const slice = createSlice({
     setPagination(state, action: PayloadAction<TablePagination>) {
       state.params.limit = action.payload.pageSize;
       state.params.page = action.payload.current;
+    },
+    addProject(state, action: PayloadAction<AddProject>) {
+      state.isFilter = true;
+      state.addSuccess = false;
+      state.addFailed = false;
+    },
+    addProjectSuccess(state) {
+      state.isFilter = false;
+      state.addSuccess = true;
+      state.addFailed = false;
+    },
+    addProjectFailure(state) {
+      state.addSuccess = false;
+      state.addFailed = true;
+    },
+    resetStateAddModal(state) {
+      state.addSuccess = false;
+      state.addFailed = false;
+    },
+    editProject(state, action: PayloadAction<AddProject>) {
+      state.isFilter = true;
+      state.editSuccess = false;
+      state.editFailed = false;
+    },
+    editProjectSuccess(state) {
+      state.isFilter = false;
+      state.editSuccess = true;
+      state.editFailed = false;
+    },
+    editProjectFailure(state) {
+      state.editSuccess = false;
+      state.editFailed = true;
+    },
+    resetStateEditModal(state) {
+      state.editSuccess = false;
+      state.editFailed = false;
     },
     deleteProject(state, action: PayloadAction<string>) {
       state.isFilter = true;
