@@ -6,21 +6,22 @@
 import {
   Button,
   Col,
+  notification,
   Popover,
+  Progress,
   Row,
   Table,
   TablePaginationConfig,
   Tag,
+  Tooltip,
+  Upload,
 } from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { DialogModal } from 'app/components/DialogModal';
-import * as React from 'react';
-import CSVReader from 'react-csv-reader';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
-import { CSVLink } from 'react-csv';
-import { request } from 'utils/request';
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import {
   ExportOutlined,
@@ -31,6 +32,8 @@ import { ProjectsMessages } from '../../messages';
 import moment from 'moment';
 import { antColours } from 'utils/types';
 import { ColumnsType } from 'antd/lib/table';
+import fakeAPI from 'utils/fakeAPI';
+import Papa from 'papaparse';
 
 interface HeaderButtonProps {
   pagination?: TablePaginationConfig;
@@ -39,38 +42,130 @@ interface HeaderButtonProps {
 }
 
 export const HeaderButton = (props: HeaderButtonProps) => {
-  const { pagination, data, selectedRows } = props;
   const { t } = useTranslation();
   const history = useHistory();
 
-  const [previewModal, setPreviewModal] = React.useState({
-    open: false,
-    data: [],
-  });
-  const [users, setUsers] = React.useState([]);
+  const [previewModal, setPreviewModal] = useState(false);
+  const [file, setFile] = useState<File>();
+  const [data, setData] = useState<any[]>([]);
+  const [logImportId, setLogImportId] = useState('');
+  const [imported, setImported] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleForce = (data: any) => {
-    setPreviewModal({ open: true, data: data });
+  const exportAll = async () => {
+    const response: any = await fakeAPI.get('/hr/employees/export/');
+    if (response) {
+      notification.open({
+        message: 'Exporting',
+        key: 'export',
+        description: (
+          <>
+            <div>
+              <b>{t(ProjectsMessages.exportCSVMessage())}</b>
+            </div>
+            <a
+              href="#0"
+              onClick={e => {
+                e.preventDefault();
+                window.open(
+                  response.download_url,
+                  '_blank',
+                  'noopener,noreferrer',
+                );
+                notification.close('export');
+              }}
+            >
+              {response.download_url}
+            </a>
+          </>
+        ),
+        duration: 0,
+      });
+    }
   };
 
-  const papaparseOptions = {
-    header: true,
-    dynamicTyping: true,
-    skipEmptyLines: true,
-    transformHeader: header => header.toLowerCase().replace(/\W/g, '_'),
+  const exportSelected = async () => {
+    console.log('Export Selected');
   };
 
-  const getAllUsers = (event, done) => {
-    request('https://reqres.in/api/users').then((response: any) => {
-      setUsers(response.data);
-      if (users) {
-        done();
+  useEffect(() => {
+    if (logImportId && !imported) {
+      let intervalId = setInterval(async () => {
+        await fakeAPI
+          .get(`/hr/employees/import/${logImportId}/`)
+          .then((response: any) => {
+            const total = response.total_records;
+            const success = response.success;
+            const fails = response.fails;
+            const successPercent = (response.success / total) * 100;
+            const failsPercent = (response.fails / total) * 100;
+            const percent = successPercent + failsPercent;
+
+            notification.success({
+              message: 'Imported',
+              key: 'import',
+              description: (
+                <>
+                  <div>
+                    <b>
+                      {percent === 100
+                        ? 'Your data are imported'
+                        : 'Your data are importing...'}
+                    </b>
+                    <Tooltip
+                      title={success + ' Success and ' + fails + ' Failed'}
+                    >
+                      <Progress
+                        percent={percent}
+                        success={{ percent: successPercent }}
+                        status={failsPercent === 100 ? 'exception' : 'normal'}
+                        strokeColor="red"
+                      />
+                    </Tooltip>
+                  </div>
+                </>
+              ),
+              duration: 0,
+            });
+
+            if (response.status === 'Done') {
+              setImported(true);
+              clearInterval(intervalId);
+            }
+          });
+      }, 1000);
+    }
+  }, [logImportId, imported]);
+
+  const handleImport = async () => {
+    if (file) {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('upload_file', file);
+      formData.append('upsert', '1');
+      const response: any = await fakeAPI.post(
+        '/hr/employees/import/',
+        formData,
+      );
+      if (response) {
+        setPreviewModal(false);
+        setLoading(false);
+        setImported(false);
+        setLogImportId(response.id);
+        notification.info({
+          message: 'Importing',
+          key: 'import',
+          description: (
+            <>
+              <div>
+                <b>Your data are importing...</b>
+              </div>
+            </>
+          ),
+          duration: 0,
+        });
       }
-    });
-  };
-
-  const handleImport = () => {
-    console.log('Handle Import CSV');
+    }
   };
 
   const memberChildren = (dataIndex: string) => ({
@@ -167,39 +262,34 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   const exportCSVType = (
     <WrapperExport gutter={[8, 8]}>
       <Col span={24}>
-        <Button block>
-          <CSVLink
-            filename={'users-page.csv'}
-            data={users}
-            asyncOnClick={true}
-            onClick={getAllUsers}
-          >
-            {t(ProjectsMessages.exportAllProject())}
-          </CSVLink>
+        <Button disabled block onClick={exportAll}>
+          {t(ProjectsMessages.exportAllProject())}
         </Button>
       </Col>
       <Col span={24}>
-        <Button block>
-          <CSVLink
-            filename={'users-page-' + pagination?.current + '.csv'}
-            data={data}
-          >
-            {t(ProjectsMessages.exportPerPage())}
-          </CSVLink>
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button
-          block
-          disabled={selectedRows && selectedRows?.length > 0 ? false : true}
-        >
-          <CSVLink filename={'users-page-select.csv'} data={selectedRows || []}>
-            {t(ProjectsMessages.exportSelected())}
-          </CSVLink>
+        <Button disabled block onClick={exportSelected}>
+          {t(ProjectsMessages.exportSelected())}
         </Button>
       </Col>
     </WrapperExport>
   );
+
+  const beforeUpload = (file: File) => {
+    setFile(file);
+    Papa.parse(file, {
+      delimiter: '',
+      chunkSize: 3,
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      transformHeader: header => header.toLowerCase().replace(/\W/g, '_'),
+      complete: (results: Papa.ParseResult<Employee>) => {
+        setPreviewModal(true);
+        setData(results.data);
+      },
+    });
+    return false;
+  };
 
   return (
     <Row justify="end">
@@ -221,25 +311,22 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         </Popover>
       </OptionButton>
       <OptionButton>
-        <ButtonImport size="large">
-          <CSVReader
-            cssClass="react-csv-input"
-            label={
-              <>
-                <ImportOutlined /> {t(ProjectsMessages.importCSV())}
-              </>
-            }
-            inputStyle={{ display: 'none' }}
-            onFileLoaded={handleForce}
-            parserOptions={papaparseOptions}
-          />
-        </ButtonImport>
+        <Upload
+          disabled
+          showUploadList={false}
+          beforeUpload={beforeUpload}
+          accept=".xlsx, .xls, .csv"
+        >
+          <Button loading={loading} block size="large">
+            <ImportOutlined /> {t(ProjectsMessages.importCSV())}
+          </Button>
+        </Upload>
       </OptionButton>
       <DialogModal
         title={t(ProjectsMessages.modalPreviewCSVTitle())}
-        isOpen={previewModal.open}
+        isOpen={previewModal}
         handleCancel={() => {
-          setPreviewModal({ open: false, data: [] });
+          setPreviewModal(false);
         }}
         handleSubmit={handleImport}
         cancelText={t(ProjectsMessages.modalFormCancelButton())}
@@ -249,7 +336,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         <Table
           columns={columns}
           rowKey="id"
-          dataSource={previewModal.data}
+          dataSource={data}
           pagination={false}
         />
       </DialogModal>
@@ -264,19 +351,6 @@ const OptionButton = styled(Col)`
   button {
     display: flex;
     align-items: center;
-  }
-`;
-
-const ButtonImport = styled(Button)`
-  label {
-    display: flex;
-    align-items: center;
-    span {
-      margin-right: 10px;
-    }
-  }
-  label:hover {
-    cursor: pointer;
   }
 `;
 
