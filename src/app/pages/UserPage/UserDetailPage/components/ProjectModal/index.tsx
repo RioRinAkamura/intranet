@@ -11,6 +11,15 @@ import { Button, Form, Select, Spin } from 'antd';
 import { useHandleProject } from './useHandleProject';
 import { SelectValue } from 'antd/lib/select';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEmployeeProjectSlice } from '../Projects/slice';
+import {
+  selectEmployeeProjectAddFailed,
+  selectEmployeeProjectAddSuccess,
+  selectEmployeeProjectEditFailed,
+  selectEmployeeProjectEditSuccess,
+} from '../Projects/slice/selectors';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 
 interface Props {
   id: string;
@@ -30,34 +39,70 @@ export const ProjectModal = memo((props: Props) => {
   const { t } = useTranslation();
   const { id, open, setOpen, selectedProject, setSelectedProject } = props;
   const [memberForm] = Form.useForm();
+  const { notify } = useNotify();
 
   const [isAddProject, setIsAddProject] = useState(true);
   const [searchLoad, setSearchLoad] = useState(false);
   const [projects, setProjects] = useState<any>([]);
   const [value, setValue] = useState('');
   const [allocation, setAllocation] = useState<SelectValue>();
-  const {
-    loadingProject,
-    fetchProjects,
-    addProject,
-    editProject,
-  } = useHandleProject();
+  const { loadingProject, fetchProjects } = useHandleProject();
+
+  const { actions } = useEmployeeProjectSlice();
+  const dispatch = useDispatch();
+
+  const addSuccess = useSelector(selectEmployeeProjectAddSuccess);
+  const addFailed = useSelector(selectEmployeeProjectAddFailed);
+  const editSuccess = useSelector(selectEmployeeProjectEditSuccess);
+  const editFailed = useSelector(selectEmployeeProjectEditFailed);
 
   const handleProject = async values => {
     if (selectedProject) {
-      const response = await editProject(id, values);
-      if (response) {
-        setOpen(false);
-        memberForm.resetFields();
-      }
+      dispatch(actions.editProject({ ...values, employee: id }));
     } else {
-      const response = await addProject(id, values);
-      if (response) {
-        setOpen(false);
-        memberForm.resetFields();
-      }
+      dispatch(actions.addProject({ ...values, employee: id }));
     }
   };
+
+  useEffect(() => {
+    if (addSuccess) {
+      setOpen(false);
+      memberForm.resetFields();
+      notify({
+        type: ToastMessageType.Info,
+        message: 'Add Success',
+        duration: 2,
+      });
+    } else if (addFailed) {
+      setOpen(false);
+      memberForm.resetFields();
+      notify({
+        type: ToastMessageType.Error,
+        message: 'Add Failed',
+        duration: 2,
+      });
+    }
+  }, [addFailed, addSuccess, memberForm, notify, setOpen]);
+
+  useEffect(() => {
+    if (editSuccess) {
+      setOpen(false);
+      memberForm.resetFields();
+      notify({
+        type: ToastMessageType.Info,
+        message: 'Edit Success',
+        duration: 2,
+      });
+    } else if (editFailed) {
+      setOpen(false);
+      memberForm.resetFields();
+      notify({
+        type: ToastMessageType.Error,
+        message: 'Edit Failed',
+        duration: 2,
+      });
+    }
+  }, [editFailed, editSuccess, memberForm, notify, setOpen]);
 
   const handleSearch = async value => {
     if (value) {

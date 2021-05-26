@@ -177,7 +177,7 @@ export function UserDetailPage(props: Props) {
             <Notes />
           </TabPane>
           <TabPane tab="Projects" key={TabKeys.projects}>
-            <Projects data={data} />
+            <Projects />
           </TabPane>
         </StyledTabs>
       ) : (

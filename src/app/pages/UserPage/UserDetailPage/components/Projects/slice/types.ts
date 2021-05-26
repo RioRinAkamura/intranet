@@ -14,16 +14,15 @@ export interface EmployeeProjectState {
   selectedRows?: any[];
   deleteSuccess?: boolean;
   deleteFailed?: boolean;
+  addSuccess?: boolean;
+  addFailed?: boolean;
+  editSuccess?: boolean;
+  editFailed?: boolean;
 }
 
 export interface FilterColumns {
   project__name?: string;
   [key: string]: string | undefined;
-}
-
-export interface UserResponse {
-  count: number;
-  results: any[] | [];
 }
 
 export interface QueryParams {
@@ -39,4 +38,11 @@ interface Pagination {
   current?: number;
   pageSize?: number;
   total?: number;
+}
+
+export interface AddProject {
+  employee: string;
+  project: string;
+  allocation: string;
+  project_role: string;
 }
