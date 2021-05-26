@@ -61,6 +61,7 @@ export const Users: React.FC = () => {
   const deleteSuccess = deleteModalState?.deleteSuccess;
   const deleteFailed = deleteModalState?.deleteFailed;
   const [textCopy, setTextCopy] = useState(false);
+  const [imported, setImported] = useState(false);
 
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
@@ -94,6 +95,12 @@ export const Users: React.FC = () => {
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+
+  useEffect(() => {
+    if (imported) {
+      dispatch(actions.fetchUsers({ params: params }));
+    }
+  }, [actions, dispatch, imported, params]);
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
@@ -417,8 +424,8 @@ export const Users: React.FC = () => {
             </Col>
             <Col span={16}>
               <HeaderButton
-                pagination={getUserListState.pagination}
-                data={getUserListState.users}
+                imported={imported}
+                setImported={setImported}
                 selectedRows={getUserListState.selectedRows}
               />
             </Col>

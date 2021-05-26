@@ -14,6 +14,11 @@ export const ProjectsMessages = {
   exportCSV: () => _t(translations.ProjectsPage.exportCSV, 'Export as CSV'),
   exportAllProject: () =>
     _t(translations.ProjectsPage.exportAllProject, 'Export as CSV for all'),
+  exportCSVMessage: () =>
+    _t(
+      translations.UsersPage.exportCSVMessage,
+      'Click link below to download the export file',
+    ),
   exportPerPage: () =>
     _t(translations.ProjectsPage.exportPerPage, 'Export as CSV this page'),
   exportSelected: () =>

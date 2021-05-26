@@ -16,6 +16,7 @@ interface Props {
   handleCancel?: () => void;
   cancelText?: string;
   handleSubmit?: () => void;
+  loading?: boolean;
   okText?: string;
   width?: number | string;
 }
@@ -32,6 +33,7 @@ export const DialogModal = React.memo(
     handleSubmit,
     okText,
     width,
+    loading,
   }: Props) => {
     return (
       <Modal
@@ -50,6 +52,7 @@ export const DialogModal = React.memo(
                   key="onSave"
                   size="large"
                   type="primary"
+                  loading={loading}
                   onClick={handleSubmit}
                 >
                   {okText}
