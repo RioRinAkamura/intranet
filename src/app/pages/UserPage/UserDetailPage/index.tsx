@@ -8,18 +8,21 @@ import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { Button, Col, Form, Row, Tabs } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
+import moment from 'moment';
+
+import { config } from 'config';
+import { PageTitle } from 'app/components/PageTitle';
+import { TotalSearchForm } from 'app/components/TotalSearchForm';
+import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
+
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { BankAccounts } from './components/BankAccounts/Loadable';
 import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
-import moment from 'moment';
 import { useUpdateUserDetail } from './useUpdateUserDetail';
-import { PageTitle } from 'app/components/PageTitle';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
 import { AddBankModal } from './components/AddBankModal/Loadable';
-import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
-import { config } from 'config';
 import { Notes } from './components/Notes/Loadable';
 import { DetailForm } from './components/DetailForm/Loadable';
 import { Projects } from './components/Projects/Loadable';
@@ -55,6 +58,11 @@ export function UserDetailPage(props: Props) {
   const [isEdit, setIsEdit] = React.useState(false);
 
   const isView = isCreate || isEdit ? false : true;
+
+  const [searchForm] = Form.useForm();
+
+  const totalSearch = () => {};
+  const resetTotalSearch = () => {};
 
   const { TabPane } = Tabs;
   const [isDetailTab, setIsDetailTab] = React.useState(true);
@@ -148,13 +156,27 @@ export function UserDetailPage(props: Props) {
   return (
     <>
       <WrapperTitlePage>
-        <PageTitle>
-          {isView
-            ? 'Employee Details'
-            : isEdit
-            ? 'Edit Employee'
-            : 'Create Employee'}
-        </PageTitle>
+        <Row gutter={[16, 16]} align="middle" justify="space-between">
+          <Col sm={16} xs={24}>
+            <PageTitle>
+              {isView
+                ? 'Employee Details'
+                : isEdit
+                ? 'Edit Employee'
+                : 'Create Employee'}
+            </PageTitle>
+          </Col>
+          {getDefaultTab === TabKeys.notes && (
+            <Col sm={8} xs={24}>
+              <TotalSearchForm
+                form={searchForm}
+                loading={false}
+                onSearch={totalSearch}
+                onReset={resetTotalSearch}
+              />
+            </Col>
+          )}
+        </Row>
       </WrapperTitlePage>
       {isView ? (
         <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>

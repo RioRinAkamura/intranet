@@ -474,5 +474,26 @@
       "createMemberSuccess": "Create Member Successfully",
       "editMemberSuccess": "Edit Member Successfully"
     }
+  },
+  "NotesPage": {
+    "title": "Notes",
+    "description": "Notes",
+    "list": {
+      "editTooltip": "Edit",
+      "deleteTooltip": "Delete",
+      "type": "Type",
+      "summary": "Summary",
+      "date": "Date",
+      "content": "Content",
+      "actions": "Actions"
+    },
+    "modal": {
+      "createTitle": "Create Note",
+      "editTitle": "Edit Note",
+      "form": {
+        "cancelButton": "Cancel",
+        "submitButton": "Save"
+      }
+    }
   }
 }

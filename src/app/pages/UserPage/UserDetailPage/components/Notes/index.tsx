@@ -16,7 +16,8 @@ import {
   DatePicker,
   FormInstance,
 } from 'antd';
-import { ColumnProps } from 'antd/lib/table';
+import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
+import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import {
   FormOutlined,
   MoreOutlined,
@@ -24,24 +25,23 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons';
 import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { config } from 'config';
 import { DialogModal } from 'app/components/DialogModal';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
+import { useHandleDataTable } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
+import { useTableConfig } from 'utils/tableConfig';
+
+import { Note } from './slice/types';
+import { useNotesSlice } from './slice';
+import { selectNotes, selectNotesParams } from './slice/selectors';
+import { NotesMessages } from './message';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
 interface Props {}
-
-interface Note {
-  id: string;
-  type: string;
-  summary: string;
-  date: Date;
-  content: string;
-}
-
 interface FormProps {
   form: FormInstance;
   note?: Note;
@@ -80,6 +80,8 @@ const WrapperForm: React.FC<FormProps> = ({ form, note }) => {
 };
 
 const Actions: React.FC<ActionsProps> = ({ note }) => {
+  const { t } = useTranslation();
+
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isDelete, setIsDelete] = useState<boolean>(false);
 
@@ -97,7 +99,7 @@ const Actions: React.FC<ActionsProps> = ({ note }) => {
         placement="bottom"
         content={() => (
           <>
-            <Tooltip title="Edit">
+            <Tooltip title={t(NotesMessages.listEditTooltip())}>
               <StyledIconButton
                 type="primary"
                 shape="circle"
@@ -106,7 +108,7 @@ const Actions: React.FC<ActionsProps> = ({ note }) => {
                 onClick={() => setIsEdit(true)}
               />
             </Tooltip>
-            <Tooltip title="Delete">
+            <Tooltip title={t(NotesMessages.listDeleteTooltip())}>
               <StyledIconButton
                 danger
                 shape="circle"
@@ -123,9 +125,9 @@ const Actions: React.FC<ActionsProps> = ({ note }) => {
 
       <DialogModal
         isOpen={isEdit}
-        cancelText="Cancel"
-        okText="Save"
-        title="Edit Note"
+        cancelText={t(NotesMessages.modalCancelButton())}
+        okText={t(NotesMessages.modalSubmitButton())}
+        title={t(NotesMessages.modalEditTitle())}
         handleCancel={() => setIsEdit(false)}
       >
         <WrapperForm form={form} note={note} />
@@ -143,56 +145,82 @@ const Actions: React.FC<ActionsProps> = ({ note }) => {
   );
 };
 
-const columns: ColumnProps<Note>[] = [
-  {
-    title: 'Type',
-    dataIndex: 'type',
-  },
-  {
-    title: 'Summary',
-    dataIndex: 'summary',
-  },
-  {
-    title: 'Date',
-    dataIndex: 'date',
-    render: date => {
-      return moment(date).format(`${DATE_FORMAT} hh:mm:ss`);
-    },
-  },
-  {
-    title: 'Content',
-    dataIndex: 'content',
-  },
-  {
-    title: 'Actions',
-    dataIndex: 'id',
-    render: (id, record: Note) => <Actions note={record} />,
-  },
-];
-
-const dataSource: Note[] = [
-  {
-    id: '1',
-    type: 'A',
-    summary: 'B',
-    date: new Date(1621846284657),
-    content: 'D',
-  },
-  {
-    id: '2',
-    type: 'F',
-    summary: 'G',
-    date: new Date(1621846293152),
-    content: 'H',
-  },
-];
-
 export const Notes = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [form] = Form.useForm();
+
+  const { actions } = useNotesSlice();
+
+  const dispatch = useDispatch();
+
+  const params = useSelector(selectNotesParams);
+  const notesState = useSelector(selectNotes);
+
+  const {
+    setSelectedRows,
+    setSearchText,
+    resetSearch,
+    setOrdering,
+    setPagination,
+    setFilterText,
+  } = useHandleDataTable(notesState, actions);
+
+  const {
+    getColumnSorterProps,
+    getColumnSearchInputProps,
+    getColumnSearchTagProps,
+    getColumnSearchCheckboxFromToProps,
+  } = useTableConfig(notesState, NotesMessages, setFilterText);
+
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<any> | SorterResult<any>[],
+  ) => {
+    setOrdering(sorter);
+  };
+
+  useEffect(() => {
+    dispatch(actions.fetchNotes({ params }));
+  }, [actions, dispatch, params]);
+
+  const columns: ColumnProps<Note>[] = [
+    {
+      title: t(NotesMessages.listType()),
+      dataIndex: 'type',
+      ...getColumnSorterProps('type', 0),
+      ...getColumnSearchInputProps(['type']),
+    },
+    {
+      title: t(NotesMessages.listSummary()),
+      dataIndex: 'summary',
+      ...getColumnSorterProps('summary', 1),
+      ...getColumnSearchInputProps(['summary']),
+    },
+    {
+      title: t(NotesMessages.listDate()),
+      dataIndex: 'date',
+      render: date => {
+        return moment(date).format(`${DATE_FORMAT} hh:mm:ss`);
+      },
+      ...getColumnSorterProps('date', 2),
+      ...getColumnSearchInputProps(['date']),
+    },
+    {
+      title: t(NotesMessages.listContent()),
+      dataIndex: 'content',
+      ...getColumnSorterProps('content', 3),
+      ...getColumnSearchInputProps(['content']),
+    },
+    {
+      title: t(NotesMessages.listActions()),
+      dataIndex: 'id',
+      render: (id, record: Note) => <Actions note={record} />,
+    },
+  ];
 
   return (
     <Wrapper>
@@ -207,13 +235,19 @@ export const Notes = memo((props: Props) => {
         </StyledButton>
       </Header>
 
-      <Table dataSource={dataSource} columns={columns} rowKey="id" />
+      <Table
+        dataSource={notesState.notes}
+        columns={columns}
+        rowKey="id"
+        loading={notesState.loading}
+        onChange={handleTableChange}
+      />
 
       <DialogModal
         isOpen={isOpen}
-        cancelText="Cancel"
-        okText="Save"
-        title="Create Note"
+        cancelText={t(NotesMessages.modalCancelButton())}
+        okText={t(NotesMessages.modalSubmitButton())}
+        title={t(NotesMessages.modalCreateTitle())}
         handleCancel={() => setIsOpen(false)}
       >
         <WrapperForm form={form} />
