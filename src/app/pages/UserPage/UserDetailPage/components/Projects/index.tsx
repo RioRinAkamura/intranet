@@ -125,7 +125,7 @@ export const Projects = memo(() => {
     },
     {
       title: 'Actions',
-      dataIndex: 'id',
+      dataIndex: 'project_id',
       render: (text, record, index: number) => {
         return (
           <>
