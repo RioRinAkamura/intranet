@@ -84,6 +84,7 @@ export const ProjectsPage: React.FC = () => {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchCheckboxProps,
+    ConfirmModal
   } = useTableConfig(getProjectState, ProjectsMessages, setFilterText);
 
   const fetchProjects = useCallback(() => {
@@ -346,7 +347,7 @@ export const ProjectsPage: React.FC = () => {
           { label: 'High', value: 3 },
         ],
       ),
-      width: 140,
+      width: 140
     },
     {
       title: t(ProjectsMessages.listStatusTitle()),
@@ -385,6 +386,7 @@ export const ProjectsPage: React.FC = () => {
 
   return (
     <>
+      <ConfirmModal />
       <Helmet>
         <title>{t(ProjectsMessages.title())}</title>
         <meta name="description" content={t(ProjectsMessages.description())} />

@@ -8,7 +8,11 @@ import {
   Input,
   Row,
   Space,
+  Select,
+  SelectProps,
+  Modal
 } from 'antd';
+import { SelectValue } from 'antd/lib/select';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Highlighter from 'react-highlight-words';
@@ -17,6 +21,7 @@ import { TableStateProps } from 'app/pages/UserPage/UserListPage/useHandleDataTa
 import { MessageTranslate, TagType } from './types';
 import styled from 'styled-components/macro';
 import { FilterColumns } from 'app/pages/UserPage/UserListPage/slice/types';
+import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
 
 interface useTableProps {
   getColumnSorterProps: (dataIndex: string, columnPriority: number) => {};
@@ -33,7 +38,19 @@ interface useTableProps {
     range: string,
     filterIndex?: number,
   ) => {};
+  ConfirmModal: () => JSX.Element
 }
+
+const selectProps: SelectProps<SelectValue> = {
+  autoClearSearchValue: false,
+  bordered: false,
+  dropdownStyle: { display: 'none' },
+  removeIcon: null,
+  showArrow: false,
+  style: { pointerEvents: 'none' },
+};
+
+const { Option } = Select;
 
 export const useTableConfig = (
   state: TableStateProps,
@@ -41,14 +58,42 @@ export const useTableConfig = (
   setFilterText: (value: FilterColumns) => void,
 ): useTableProps => {
   const { t } = useTranslation();
-
+  const { update } = useProjectDetail();
   const [selectedKeys, setSelectedKeys] = React.useState([]);
+  const [visible, setVisible] = React.useState(false);
+  const [formValue, setFormValue] = React.useState({});
 
   React.useLayoutEffect(() => {
     if (state.filterColumns) {
       setSelectedKeys(prev => ({ ...prev, ...state.filterColumns }));
     }
   }, [state.filterColumns]);
+
+  const handleOkConfirmModal = async () => {
+    try {
+      const response = await update(formValue);
+      setVisible(false);
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  const handleCancelConfirmModal = () => {
+    setVisible(false);
+  }
+
+  const ConfirmModal = () => (
+  <Modal
+    title="Confirm Modal"
+    visible={visible}
+    onOk={handleOkConfirmModal}
+    onCancel={handleCancelConfirmModal}
+    okText="Ok"
+    cancelText="Cancel"
+  >
+    <p>Are you sure this project has been completed?</p>
+  </Modal>
+  )
 
   const getColumnSorterProps = (dataIndex: string, columnPriority: number) => {
     const ordering = {
@@ -138,17 +183,17 @@ export const useTableConfig = (
       });
       return has(state.filterColumns, dataIndex[filterIndex || 0]) ||
         (state.params.search && state.params.search.length > 0) ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[
-            state.filterColumns![dataIndex[filterIndex || 0]],
-            state.params.search &&
-              state.params.search.length > 0 &&
-              state.params.search,
-          ]}
-          autoEscape
-          textToHighlight={text ? dataText.trim().toString() : ''}
-        />
+            <Highlighter
+              highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+              searchWords={[
+                state.filterColumns![dataIndex[filterIndex || 0]],
+                state.params.search &&
+                state.params.search.length > 0 &&
+                state.params.search,
+              ]}
+              autoEscape
+              textToHighlight={text ? dataText.trim().toString() : ''}
+            />
       ) : (
         dataText.trim()
       );
@@ -308,26 +353,67 @@ export const useTableConfig = (
         }
         return data;
       });
+      const handleValueChange = async (value) => {
+        const defaultForm = {
+          ...record
+        }
+        defaultForm[dataIndex[0]] = value;
+
+        // hard code
+        if (dataIndex[0] === 'status' && value === '4') {
+          setVisible(true);
+          setFormValue({...defaultForm})
+          return;
+        }
+
+        try {
+          const response = await update(defaultForm);
+        } catch(e) {
+          console.log(e);
+        }
+      }
+      let defaultValue: string = ''
+      const findOption = options.find(option => option.value === Number(dataText));
+      defaultValue = findOption ? (findOption.label ? findOption.label.toString() : '') : ''
       return has(state.filterColumns, dataIndex[filterIndex || 0]) ||
         (state.params.search && state.params.search.length > 0) ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[
-            state.filterColumns![dataIndex[filterIndex || 0]]?.includes(text) &&
-              options.find(option => option.value === Number(text))?.label,
-            state.params.search &&
-              state.params.search.length > 0 &&
-              state.params.search,
-          ]}
-          autoEscape
-          textToHighlight={
-            text
-              ? options.find(option => option.value === Number(dataText))?.label
-              : ''
+        <Select onChange={handleValueChange} defaultValue={defaultValue} style={{width: '100%'}}>
+          {
+            options.map((option) => {
+              return (
+                <Option value={`${option.value}`}>
+                  <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[
+                      state.filterColumns![dataIndex[filterIndex || 0]]?.includes(text) &&
+                      options.find(option => option.value === Number(text))?.label,
+                      state.params.search &&
+                      state.params.search.length > 0 &&
+                      state.params.search,
+                    ]}
+                    autoEscape
+                    textToHighlight={
+                      option.label
+                    }
+                  />
+                </Option>
+              )
+            })
           }
-        />
+        </Select>
       ) : (
-        options.find(option => option.value === Number(dataText))?.label
+        <Select onChange={handleValueChange} defaultValue={defaultValue} style={{width: '100%'}}>
+          {
+            options.map((option) => {
+              return (
+                <Option value={`${option.value}`}>
+                { option.label }
+                </Option>
+              )
+            })
+          }
+        </Select>
+        // options.find(option => option.value === Number(dataText))?.label
       );
     },
   });
@@ -403,6 +489,7 @@ export const useTableConfig = (
     getColumnSearchTagProps,
     getColumnSearchCheckboxProps,
     getColumnSearchCheckboxFromToProps,
+    ConfirmModal
   };
 };
 
