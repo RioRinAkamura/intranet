@@ -17,25 +17,6 @@ exports[`<HeaderButton  /> should match snapshot 1`] = `
   align-items: center;
 }
 
-.c1 label {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.c1 label span {
-  margin-right: 10px;
-}
-
-.c1 label:hover {
-  cursor: pointer;
-}
-
 <div
   class="ant-row ant-row-end"
 >
@@ -104,49 +85,51 @@ exports[`<HeaderButton  /> should match snapshot 1`] = `
   <div
     class="ant-col c0"
   >
-    <button
-      class="ant-btn ant-btn-lg c1"
-      type="button"
+    <span
+      class=""
     >
       <div
-        class="react-csv-input"
+        class="ant-upload ant-upload-select ant-upload-select-text ant-upload-disabled"
       >
-        <label
-          class="csv-label"
-          for="react-csv-reader-input"
+        <span
+          class="ant-upload ant-upload-disabled"
+          role="button"
         >
-          <span
-            aria-label="import"
-            class="anticon anticon-import"
-            role="img"
+          <input
+            accept=".xlsx, .xls, .csv"
+            style="display: none;"
+            type="file"
+          />
+          <button
+            class="ant-btn ant-btn-lg ant-btn-block"
+            type="button"
           >
-            <svg
-              aria-hidden="true"
-              data-icon="import"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
+            <span
+              aria-label="import"
+              class="anticon anticon-import"
+              role="img"
             >
-              <path
-                d="M888.3 757.4h-53.8c-4.2 0-7.7 3.5-7.7 7.7v61.8H197.1V197.1h629.8v61.8c0 4.2 3.5 7.7 7.7 7.7h53.8c4.2 0 7.7-3.4 7.7-7.7V158.7c0-17-13.7-30.7-30.7-30.7H158.7c-17 0-30.7 13.7-30.7 30.7v706.6c0 17 13.7 30.7 30.7 30.7h706.6c17 0 30.7-13.7 30.7-30.7V765.1c0-4.3-3.5-7.7-7.7-7.7zM902 476H588v-76c0-6.7-7.8-10.5-13-6.3l-141.9 112a8 8 0 000 12.6l141.9 112c5.3 4.2 13 .4 13-6.3v-76h314c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8z"
-              />
-            </svg>
-          </span>
-           
-          Import CSV
-        </label>
-        <input
-          accept=".csv, text/csv"
-          class="csv-input"
-          id="react-csv-reader-input"
-          name="react-csv-reader-input"
-          style="display: none;"
-          type="file"
-        />
+              <svg
+                aria-hidden="true"
+                data-icon="import"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                viewBox="64 64 896 896"
+                width="1em"
+              >
+                <path
+                  d="M888.3 757.4h-53.8c-4.2 0-7.7 3.5-7.7 7.7v61.8H197.1V197.1h629.8v61.8c0 4.2 3.5 7.7 7.7 7.7h53.8c4.2 0 7.7-3.4 7.7-7.7V158.7c0-17-13.7-30.7-30.7-30.7H158.7c-17 0-30.7 13.7-30.7 30.7v706.6c0 17 13.7 30.7 30.7 30.7h706.6c17 0 30.7-13.7 30.7-30.7V765.1c0-4.3-3.5-7.7-7.7-7.7zM902 476H588v-76c0-6.7-7.8-10.5-13-6.3l-141.9 112a8 8 0 000 12.6l141.9 112c5.3 4.2 13 .4 13-6.3v-76h314c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8z"
+                />
+              </svg>
+            </span>
+            <span>
+               Import CSV
+            </span>
+          </button>
+        </span>
       </div>
-    </button>
+    </span>
   </div>
 </div>
 `;

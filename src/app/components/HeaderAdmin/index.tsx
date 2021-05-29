@@ -11,11 +11,7 @@ import styled from 'styled-components/macro';
 import { BadgeList } from '../BadgeList';
 import { NavList } from '../NavList';
 import { NavItem } from '../NavList/NavItem';
-// import { useNotify, MessageType, PlacementType } from '../Notification';
 import { Logo } from '../Sidebar/Logo';
-import { PlacementType, MessageType } from '../Toast';
-import { useToast } from '../Toast/useToast';
-import TestComponent from '../Toast/testComponet';
 
 interface Props {
   collapsed: boolean;
@@ -23,15 +19,6 @@ interface Props {
 }
 
 const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
-  const { message } = useToast();
-
-  const openNotification = () => {
-    message({
-      type: MessageType.Error,
-      placement: PlacementType.Top,
-      message: <TestComponent message={'message'} />,
-    });
-  };
   return (
     <>
       <Wrapper>
@@ -77,23 +64,6 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
               {window.location.pathname.substr(1)}
             </Breadcrumb.Item>
           </Breadcrumb>
-          <NavList>
-            <NavItem>
-              <Icon>
-                <LineChartOutlined />
-              </Icon>
-              <Link to="/">Dashboard</Link>
-            </NavItem>
-
-            <NavItem>
-              <Link to="/employees">Employees</Link>
-            </NavItem>
-            <NavItem>
-              <Link to="/" onClick={openNotification}>
-                Setting
-              </Link>
-            </NavItem>
-          </NavList>
         </SubHeader>
       </Wrapper>
     </>

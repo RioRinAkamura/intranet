@@ -118,7 +118,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
                     </Tooltip>
                   </div>
                 </>
-              ),
+              ) as React.ReactNode,
               duration: 0,
             });
 
