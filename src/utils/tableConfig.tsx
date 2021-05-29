@@ -184,9 +184,10 @@ export const useTableConfig = (
     confirm();
   };
 
-  const handleFromToReset = (confirm: () => void) => {
+  const handleFromToReset = (dataIndex: string, confirm: () => void) => {
     setSelectedKeys(prevState => ({
       ...prevState,
+      [dataIndex]: undefined,
       from: undefined,
       to: undefined,
     }));
@@ -376,7 +377,9 @@ export const useTableConfig = (
             </Col>
             <Col>
               <Button
-                onClick={() => handleFromToReset(confirm)}
+                onClick={() =>
+                  handleFromToReset(dataIndex[filterIndex || 0], confirm)
+                }
                 size="small"
                 loading={state.loading}
                 style={{ width: 90 }}

@@ -279,35 +279,35 @@ export const Users: React.FC = () => {
     {
       title: t(UsersMessages.listNameTitle()),
       dataIndex: 'first_name',
-      width: 80,
+      width: 75,
       ...getColumnSorterProps('first_name', 1),
       ...getColumnSearchInputProps(['first_name', 'last_name']),
     },
     {
       title: 'Code',
       dataIndex: 'code',
-      width: 70,
+      width: 60,
       ...getColumnSorterProps('code', 5),
       ...getColumnSearchInputProps(['code']),
     },
     {
       title: t(UsersMessages.listEmailTitle()),
       dataIndex: 'email',
-      width: 130,
+      width: 120,
       ...getColumnSorterProps('email', 3),
       ...getColumnSearchInputProps(['email']),
     },
     {
       title: 'Phone Number',
       dataIndex: 'phone',
-      width: 80,
+      width: 85,
       ...getColumnSorterProps('phone', 4),
       ...getColumnSearchInputProps(['phone']),
     },
     {
       title: 'Tags',
       dataIndex: 'tags',
-      width: 100,
+      width: 95,
       ...getColumnSearchTagProps('tags'),
       render: (text, record: Employee, index: number) => {
         return (

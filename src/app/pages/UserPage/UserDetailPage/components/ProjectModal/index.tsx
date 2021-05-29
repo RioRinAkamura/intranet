@@ -153,12 +153,12 @@ export const ProjectModal = memo((props: Props) => {
   useEffect(() => {
     if (selectedProject) {
       (async () => {
-        const response = await fetchProjects(selectedProject.project.name);
+        const response = await fetchProjects(selectedProject.project_name);
         if (response) {
           setProjects(response);
         }
         memberForm.setFieldsValue({
-          project: selectedProject.project.id,
+          project: selectedProject.project_id,
           project_role: selectedProject.project_role,
           allocation: selectedProject.allocation,
         });
