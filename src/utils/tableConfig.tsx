@@ -9,7 +9,6 @@ import {
   Row,
   Space,
   Select,
-  SelectProps,
   Modal
 } from 'antd';
 import { SelectValue } from 'antd/lib/select';
@@ -41,15 +40,6 @@ interface useTableProps {
   ConfirmModal: () => JSX.Element
 }
 
-const selectProps: SelectProps<SelectValue> = {
-  autoClearSearchValue: false,
-  bordered: false,
-  dropdownStyle: { display: 'none' },
-  removeIcon: null,
-  showArrow: false,
-  style: { pointerEvents: 'none' },
-};
-
 const { Option } = Select;
 
 export const useTableConfig = (
@@ -71,7 +61,7 @@ export const useTableConfig = (
 
   const handleOkConfirmModal = async () => {
     try {
-      const response = await update(formValue);
+      await update(formValue);
       setVisible(false);
     } catch(e) {
       console.log(e);
