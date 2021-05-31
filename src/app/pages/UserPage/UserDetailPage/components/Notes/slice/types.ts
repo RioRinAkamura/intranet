@@ -1,7 +1,7 @@
 import { Key } from 'react';
 
 /* --- STATE --- */
-export interface Note {
+export interface EmployeeNote {
   id: string;
   type: string;
   summary: string;
@@ -9,18 +9,29 @@ export interface Note {
   content: string;
 }
 
-export interface NotesState {
-  notes?: Note[] | [];
+export interface EmployeeNotesFetchData {
+  employee_id: string;
+  params: QueryParams;
+}
+export interface EmployeeNotePayloadAction {
+  note_id?: string;
+  employee_id?: string;
+  results?: EmployeeNote[];
+  count?: number;
+  error?: Error;
+}
+
+export interface EmployeeNoteState {
+  notes?: EmployeeNote[] | [];
   loading?: boolean;
   error?: Error;
+  isSuccess?: boolean;
   isFilter?: boolean;
   params: QueryParams;
   pagination?: Pagination;
   filterColumns?: FilterColumns;
   selectedRowKeys?: Key[];
-  selectedRows?: Note[];
-  deleteSuccess?: boolean;
-  deleteFailed?: boolean;
+  selectedRows?: EmployeeNote[];
 }
 
 export interface FilterColumns {

@@ -4,32 +4,21 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 
-import { notesSaga } from './saga';
-import { NotesState, QueryParams, Pagination, FilterColumns } from './types';
+import { employeeNoteSaga } from './saga';
+import {
+  EmployeeNotesFetchData,
+  EmployeeNotePayloadAction,
+  EmployeeNoteState,
+  QueryParams,
+  Pagination,
+  FilterColumns,
+} from './types';
 
-export const notes = [
-  {
-    id: '1',
-    type: 'A',
-    summary: 'B',
-    date: new Date(1621846284657).toISOString(),
-    content: 'D',
-  },
-  {
-    id: '2',
-    type: 'F',
-    summary: 'G',
-    date: new Date(1621846293152).toISOString(),
-    content: 'H',
-  },
-];
-
-export const initialState: NotesState = {
+export const initialState: EmployeeNoteState = {
   notes: [],
   loading: false,
-  deleteSuccess: false,
-  deleteFailed: false,
   isFilter: true,
+  isSuccess: false,
   params: {
     limit: 5,
     page: 1,
@@ -44,23 +33,86 @@ export const initialState: NotesState = {
 };
 
 const slice = createSlice({
-  name: 'notesState',
+  name: 'employeeNote',
   initialState,
   reducers: {
-    fetchNotes(state, action: PayloadAction<NotesState>) {
-      // state.loading = true;
+    fetchEmployeeNotes(state, action: PayloadAction<EmployeeNotesFetchData>) {
+      state.loading = true;
     },
-    fetchNotesSuccess(state, action: PayloadAction<NotesState>) {
-      console.log(action);
-
+    fetchEmployeeNotesSuccess(
+      state,
+      action: PayloadAction<EmployeeNotePayloadAction>,
+    ) {
+      state.notes = action.payload.results;
+      state.pagination!.total = Number(action.payload.count);
+      state.pagination!.current = Number(state.params.page);
+      state.pagination!.pageSize = Number(state.params.limit);
       state.loading = false;
-      state.notes = action.payload.notes;
+      state.isFilter = true;
     },
-    fetchNotesFailure(state) {
-      state.error = {
-        message: 'Faulty fetch notes',
-        name: 'Fetch data',
-      };
+    fetchEmployeeNotesFailure(
+      state,
+      action: PayloadAction<EmployeeNotePayloadAction>,
+    ) {
+      state.error = action.payload.error;
+      state.loading = false;
+    },
+    createEmployeeNote(
+      state,
+      action: PayloadAction<EmployeeNotePayloadAction>,
+    ) {
+      state.loading = true;
+    },
+    createEmployeeNoteSuccess(state) {
+      state.isFilter = false;
+      state.loading = false;
+      state.isSuccess = true;
+    },
+    createEmployeeNoteFailure(
+      state,
+      action: PayloadAction<EmployeeNotePayloadAction>,
+    ) {
+      state.error = action.payload.error;
+      state.loading = false;
+    },
+    updateEmployeeNote(
+      state,
+      action: PayloadAction<EmployeeNotePayloadAction>,
+    ) {
+      state.loading = true;
+    },
+    updateEmployeeNoteSuccess(state) {
+      state.isFilter = false;
+      state.loading = false;
+      state.isSuccess = true;
+    },
+    updateEmployeeNoteFailure(
+      state,
+      action: PayloadAction<EmployeeNotePayloadAction>,
+    ) {
+      state.error = action.payload.error;
+      state.loading = false;
+    },
+    deleteEmployeeNote(
+      state,
+      action: PayloadAction<EmployeeNotePayloadAction>,
+    ) {
+      state.loading = true;
+    },
+    deleteEmployeeNoteSuccess(state) {
+      state.isFilter = false;
+      state.loading = false;
+      state.isSuccess = true;
+    },
+    deleteEmployeeNoteFailure(
+      state,
+      action: PayloadAction<EmployeeNotePayloadAction>,
+    ) {
+      state.error = action.payload.error;
+      state.loading = false;
+    },
+    resetState(state) {
+      state.isSuccess = false;
     },
     changeState(state, action: PayloadAction<QueryParams>) {
       state.params = { ...state.params, ...action.payload };
@@ -125,7 +177,7 @@ export const { actions: Actions } = slice;
 
 export const useNotesSlice = () => {
   useInjectReducer({ key: slice.name, reducer: slice.reducer });
-  useInjectSaga({ key: slice.name, saga: notesSaga });
+  useInjectSaga({ key: slice.name, saga: employeeNoteSaga });
   return { actions: slice.actions };
 };
 

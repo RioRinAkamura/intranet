@@ -6,20 +6,25 @@
 import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
-export const NotesMessages = {
+export const EmployeeNoteMessages = {
   //List
   listType: () => _t(translations.NotesPage.list.type, 'Type'),
   listSummary: () => _t(translations.NotesPage.list.summary, 'Summary'),
   listDate: () => _t(translations.NotesPage.list.date, 'Date'),
   listContent: () => _t(translations.NotesPage.list.content, 'Content'),
   listActions: () => _t(translations.NotesPage.list.actions, 'Actions'),
+  listViewTooltip: () => _t(translations.NotesPage.list.viewTooltip, 'View'),
   listEditTooltip: () => _t(translations.NotesPage.list.editTooltip, 'Edit'),
   listDeleteTooltip: () =>
     _t(translations.NotesPage.list.deleteTooltip, 'Delete'),
   //Modal
+  modalViewTitle: () =>
+    _t(translations.NotesPage.modal.viewTitle, 'Note Details'),
   modalCreateTitle: () =>
     _t(translations.NotesPage.modal.createTitle, 'Create Note'),
   modalEditTitle: () => _t(translations.NotesPage.modal.editTitle, 'Edit Note'),
+  modalEditButton: () =>
+    _t(translations.NotesPage.modal.form.editButton, 'Edit'),
   modalCancelButton: () =>
     _t(translations.NotesPage.modal.form.cancelButton, 'Cancel'),
   modalSubmitButton: () =>

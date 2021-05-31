@@ -479,6 +479,7 @@
     "title": "Notes",
     "description": "Notes",
     "list": {
+      "viewTooltip": "View",
       "editTooltip": "Edit",
       "deleteTooltip": "Delete",
       "type": "Type",
@@ -488,9 +489,11 @@
       "actions": "Actions"
     },
     "modal": {
+      "viewTitle": "Note Details",
       "createTitle": "Create Note",
       "editTitle": "Edit Note",
       "form": {
+        "editButton": "Edit",
         "cancelButton": "Cancel",
         "submitButton": "Save"
       }

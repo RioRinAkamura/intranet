@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Col, Form, Row, Tabs } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 import { config } from 'config';
 import { PageTitle } from 'app/components/PageTitle';
@@ -26,6 +27,9 @@ import { AddBankModal } from './components/AddBankModal/Loadable';
 import { Notes } from './components/Notes/Loadable';
 import { DetailForm } from './components/DetailForm/Loadable';
 import { Projects } from './components/Projects/Loadable';
+import { useNotesSlice } from './components/Notes/slice';
+import { useHandleDataTable } from '../UserListPage/useHandleDataTable';
+import { selectEmployeeNotes } from './components/Notes/slice/selectors';
 
 interface Props {}
 
@@ -61,8 +65,20 @@ export function UserDetailPage(props: Props) {
 
   const [searchForm] = Form.useForm();
 
-  const totalSearch = () => {};
-  const resetTotalSearch = () => {};
+  const { actions } = useNotesSlice();
+  const employeeNoteState = useSelector(selectEmployeeNotes);
+  const { setSearchText, resetSearch } = useHandleDataTable(
+    employeeNoteState,
+    actions,
+  );
+
+  const handleSearch = () => {
+    setSearchText(searchForm.getFieldValue('search'));
+  };
+  const resetSearchValue = () => {
+    searchForm.setFieldsValue({ search: undefined });
+    resetSearch();
+  };
 
   const { TabPane } = Tabs;
   const [isDetailTab, setIsDetailTab] = React.useState(true);
@@ -160,7 +176,7 @@ export function UserDetailPage(props: Props) {
           <Col sm={16} xs={24}>
             <PageTitle>
               {isView
-                ? 'Employee Details'
+                ? 'Employee Name'
                 : isEdit
                 ? 'Edit Employee'
                 : 'Create Employee'}
@@ -170,9 +186,10 @@ export function UserDetailPage(props: Props) {
             <Col sm={8} xs={24}>
               <TotalSearchForm
                 form={searchForm}
-                loading={false}
-                onSearch={totalSearch}
-                onReset={resetTotalSearch}
+                value={employeeNoteState.params.search}
+                loading={employeeNoteState.loading ? true : false}
+                onSearch={handleSearch}
+                onReset={resetSearchValue}
               />
             </Col>
           )}
@@ -195,11 +212,11 @@ export function UserDetailPage(props: Props) {
               }
             />
           </TabPane>
-          <TabPane tab="Notes" key={TabKeys.notes}>
-            <Notes />
-          </TabPane>
           <TabPane tab="Projects" key={TabKeys.projects}>
             <Projects />
+          </TabPane>
+          <TabPane tab="Notes" key={TabKeys.notes}>
+            <Notes />
           </TabPane>
         </StyledTabs>
       ) : (
