@@ -8,21 +8,28 @@ import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { Button, Col, Form, Row, Tabs } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
+import moment from 'moment';
+import { useSelector } from 'react-redux';
+
+import { config } from 'config';
+import { PageTitle } from 'app/components/PageTitle';
+import { TotalSearchForm } from 'app/components/TotalSearchForm';
+import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
+
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { BankAccounts } from './components/BankAccounts/Loadable';
 import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
-import moment from 'moment';
 import { useUpdateUserDetail } from './useUpdateUserDetail';
-import { PageTitle } from 'app/components/PageTitle';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
 import { AddBankModal } from './components/AddBankModal/Loadable';
-import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
-import { config } from 'config';
 import { Notes } from './components/Notes/Loadable';
 import { DetailForm } from './components/DetailForm/Loadable';
 import { Projects } from './components/Projects/Loadable';
+import { useNotesSlice } from './components/Notes/slice';
+import { useHandleDataTable } from '../UserListPage/useHandleDataTable';
+import { selectEmployeeNotes } from './components/Notes/slice/selectors';
 
 interface Props {}
 
@@ -55,6 +62,23 @@ export function UserDetailPage(props: Props) {
   const [isEdit, setIsEdit] = React.useState(false);
 
   const isView = isCreate || isEdit ? false : true;
+
+  const [searchForm] = Form.useForm();
+
+  const { actions } = useNotesSlice();
+  const employeeNoteState = useSelector(selectEmployeeNotes);
+  const { setSearchText, resetSearch } = useHandleDataTable(
+    employeeNoteState,
+    actions,
+  );
+
+  const handleSearch = () => {
+    setSearchText(searchForm.getFieldValue('search'));
+  };
+  const resetSearchValue = () => {
+    searchForm.setFieldsValue({ search: undefined });
+    resetSearch();
+  };
 
   const { TabPane } = Tabs;
   const [isDetailTab, setIsDetailTab] = React.useState(true);
@@ -148,13 +172,28 @@ export function UserDetailPage(props: Props) {
   return (
     <>
       <WrapperTitlePage>
-        <PageTitle>
-          {isView
-            ? 'Employee Details'
-            : isEdit
-            ? 'Edit Employee'
-            : 'Create Employee'}
-        </PageTitle>
+        <Row gutter={[16, 16]} align="middle" justify="space-between">
+          <Col sm={16} xs={24}>
+            <PageTitle>
+              {isView
+                ? 'Employee Name'
+                : isEdit
+                ? 'Edit Employee'
+                : 'Create Employee'}
+            </PageTitle>
+          </Col>
+          {getDefaultTab === TabKeys.notes && (
+            <Col sm={8} xs={24}>
+              <TotalSearchForm
+                form={searchForm}
+                value={employeeNoteState.params.search}
+                loading={employeeNoteState.loading ? true : false}
+                onSearch={handleSearch}
+                onReset={resetSearchValue}
+              />
+            </Col>
+          )}
+        </Row>
       </WrapperTitlePage>
       {isView ? (
         <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
@@ -173,11 +212,11 @@ export function UserDetailPage(props: Props) {
               }
             />
           </TabPane>
-          <TabPane tab="Notes" key={TabKeys.notes}>
-            <Notes />
-          </TabPane>
           <TabPane tab="Projects" key={TabKeys.projects}>
             <Projects />
+          </TabPane>
+          <TabPane tab="Notes" key={TabKeys.notes}>
+            <Notes />
           </TabPane>
         </StyledTabs>
       ) : (

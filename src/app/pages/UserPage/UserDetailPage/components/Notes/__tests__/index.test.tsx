@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
+import ReactRouter from 'react-router';
+import { Provider } from 'react-redux';
 
 import { Notes } from '..';
+import { configureAppStore } from 'store/configureStore';
 import { matchMedia } from 'utils/matchMedia';
 
 jest.mock('react-i18next', () => ({
@@ -18,8 +21,29 @@ jest.mock('react-i18next', () => ({
 matchMedia();
 
 describe('<Notes  />', () => {
+  beforeEach(() => {
+    const location = {
+      pathname: '/welcome',
+      hash: '',
+      search: '',
+      state: '',
+    };
+
+    const history: any = {
+      location: location,
+      action: 'PUSH',
+      length: 1,
+    };
+    jest.spyOn(ReactRouter, 'useParams').mockReturnValue({ id: '1' });
+    jest.spyOn(ReactRouter, 'useLocation').mockReturnValue(location);
+    jest.spyOn(ReactRouter, 'useHistory').mockReturnValue(history);
+  });
   it('should match snapshot', () => {
-    const loadingIndicator = render(<Notes />);
+    const loadingIndicator = render(
+      <Provider store={configureAppStore()}>
+        <Notes />
+      </Provider>,
+    );
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });

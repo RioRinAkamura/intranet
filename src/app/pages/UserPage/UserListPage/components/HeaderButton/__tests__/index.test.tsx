@@ -8,9 +8,8 @@ matchMedia();
 
 describe('<HeaderButton  />', () => {
   it('should match snapshot', () => {
-    const [imported, setImported] = React.useState(false);
     const loadingIndicator = render(
-      <HeaderButton imported={imported} setImported={setImported} />,
+      <HeaderButton imported={false} setImported={jest.fn()} />,
     );
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
