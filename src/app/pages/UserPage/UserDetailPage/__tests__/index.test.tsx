@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
 import ReactRouter from 'react-router';
+import { Provider } from 'react-redux';
 
 import { UserDetailPage } from '..';
+import { configureAppStore } from 'store/configureStore';
 import { matchMedia } from 'utils/matchMedia';
 
 jest.mock('react-i18next', () => ({
@@ -37,7 +39,11 @@ describe('<UserDetailPage  />', () => {
     jest.spyOn(ReactRouter, 'useHistory').mockReturnValue(history);
   });
   it('should match snapshot', () => {
-    const loadingIndicator = render(<UserDetailPage />);
+    const loadingIndicator = render(
+      <Provider store={configureAppStore()}>
+        <UserDetailPage />
+      </Provider>,
+    );
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });
