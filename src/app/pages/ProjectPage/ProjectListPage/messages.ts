@@ -40,6 +40,8 @@ export const ProjectsMessages = {
   listPriorityTitle: () =>
     _t(translations.ProjectsPage.list.priority, 'Priority'),
   listStatusTitle: () => _t(translations.ProjectsPage.list.status, 'Status'),
+  listTotalMembers: () => _t(translations.ProjectsPage.list.totalMembers),
+  listTotalWeeklyHours: () => _t(translations.ProjectsPage.list.totalWeeklyHours),
   listOptionsTitle: () => _t(translations.ProjectsPage.list.options, 'Actions'),
   listViewTooltip: () => _t(translations.ProjectsPage.list.viewTooltip, 'View'),
   listEditTooltip: () => _t(translations.ProjectsPage.list.EditTooltip, 'Edit'),
