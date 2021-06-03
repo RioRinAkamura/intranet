@@ -20,11 +20,13 @@ import { UserDetailMessages } from '../../messages';
 import { SelectValue } from 'antd/lib/select';
 import { TitlePath } from '../TitlePath';
 import { TagsInput } from 'app/components/Tags';
+import { Skills } from 'app/components/Skills';
 
 const { Option } = Select;
 
 interface JobInfoProps {
   isView?: boolean;
+  isEdit: boolean;
   form: FormInstance;
 }
 
@@ -41,9 +43,9 @@ const selectProps: SelectProps<SelectValue> = {
 };
 
 export const JobInfo = (props: JobInfoProps) => {
-  const { isView, form } = props;
+  const { isView, form, isEdit } = props;
   const { t } = useTranslation();
-
+  const isShowSkill = isEdit || isView ? true : false
   return (
     <>
       <TitlePath>
@@ -117,6 +119,13 @@ export const JobInfo = (props: JobInfoProps) => {
             />
           </FormItem>
         </Col>
+        {
+          isShowSkill && (
+            <Col md={24} xs={24}>
+              <Skills isEdit={isEdit} />
+            </Col>
+          )
+        }
       </Row>
     </>
   );

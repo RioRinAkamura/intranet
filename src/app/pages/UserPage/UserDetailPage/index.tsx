@@ -31,6 +31,7 @@ import { useNotesSlice } from './components/Notes/slice';
 import { useHandleDataTable } from '../UserListPage/useHandleDataTable';
 import { selectEmployeeNotes } from './components/Notes/slice/selectors';
 
+
 interface Props {}
 
 interface LocationState {
