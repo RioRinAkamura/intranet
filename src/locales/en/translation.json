@@ -157,6 +157,9 @@
             "empty": "Please Enter Employee Email!",
             "invalid": "Employee Email Is Invalid!"
           },
+          "skills": {
+            "label": "Skills"
+          },
           "status": {
             "label": "Status",
             "single": {
