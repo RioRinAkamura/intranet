@@ -33,28 +33,28 @@ checkts:
   allow_failure: true
   script:
     - npm run checkTs
-  when: manual
+  #when: manual
 
 lint:
   stage: analysis
   allow_failure: true
   script:
     - npm run lint
-  when: manual
+  #when: manual
 
 lint-css:
   stage: analysis
   allow_failure: true
   script:
     - npm run lint:css
-  when: manual
+  #when: manual
 
 test:
   stage: test
   allow_failure: true
   script:
     - npm run test -u
-  when: manual
+  #when: manual
 
 build:
   stage: build
