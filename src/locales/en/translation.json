@@ -356,6 +356,8 @@
       "started": "Started",
       "priority": "Priority",
       "status": "Status",
+      "totalMembers": "Total Members",
+      "totalWeeklyHours": "Total Weekly Hours",
       "options": "Actions",
       "viewTooltip": "View",
       "EditTooltip": "Edit",
