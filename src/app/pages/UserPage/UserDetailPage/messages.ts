@@ -114,10 +114,8 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.profile.phoneNumber.label,
       'Phone Number',
     ),
-  formSkillLabel: () => _t(
-    translations.UserDetailPage.modal.form.profile.skills.label,
-    'SKills'
-  ),
+  formSkillLabel: () =>
+    _t(translations.UserDetailPage.modal.form.profile.skills.label, 'SKills'),
   formPhoneNumberPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.phoneNumber.placeholder,

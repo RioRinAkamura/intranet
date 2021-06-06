@@ -9,9 +9,8 @@ import {
   Row,
   Space,
   Select,
-  Modal
+  Modal,
 } from 'antd';
-import { SelectValue } from 'antd/lib/select';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Highlighter from 'react-highlight-words';
@@ -37,7 +36,7 @@ interface useTableProps {
     range: string,
     filterIndex?: number,
   ) => {};
-  ConfirmModal: () => JSX.Element
+  ConfirmModal: () => JSX.Element;
 }
 
 const { Option } = Select;
@@ -63,27 +62,27 @@ export const useTableConfig = (
     try {
       await update(formValue);
       setVisible(false);
-    } catch(e) {
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const handleCancelConfirmModal = () => {
     setVisible(false);
-  }
+  };
 
   const ConfirmModal = () => (
-  <Modal
-    title="Confirm Modal"
-    visible={visible}
-    onOk={handleOkConfirmModal}
-    onCancel={handleCancelConfirmModal}
-    okText="Ok"
-    cancelText="Cancel"
-  >
-    <p>Are you sure this project has been completed?</p>
-  </Modal>
-  )
+    <Modal
+      title="Confirm Modal"
+      visible={visible}
+      onOk={handleOkConfirmModal}
+      onCancel={handleCancelConfirmModal}
+      okText="Ok"
+      cancelText="Cancel"
+    >
+      <p>Are you sure this project has been completed?</p>
+    </Modal>
+  );
 
   const getColumnSorterProps = (dataIndex: string, columnPriority: number) => {
     const ordering = {
@@ -173,17 +172,17 @@ export const useTableConfig = (
       });
       return has(state.filterColumns, dataIndex[filterIndex || 0]) ||
         (state.params.search && state.params.search.length > 0) ? (
-            <Highlighter
-              highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-              searchWords={[
-                state.filterColumns![dataIndex[filterIndex || 0]],
-                state.params.search &&
-                state.params.search.length > 0 &&
-                state.params.search,
-              ]}
-              autoEscape
-              textToHighlight={text ? dataText.trim().toString() : ''}
-            />
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[
+            state.filterColumns![dataIndex[filterIndex || 0]],
+            state.params.search &&
+              state.params.search.length > 0 &&
+              state.params.search,
+          ]}
+          autoEscape
+          textToHighlight={text ? dataText.trim().toString() : ''}
+        />
       ) : (
         dataText.trim()
       );
@@ -344,65 +343,72 @@ export const useTableConfig = (
         }
         return data;
       });
-      const handleValueChange = async (value) => {
+      const handleValueChange = async value => {
         const defaultForm = {
-          ...record
-        }
+          ...record,
+        };
         defaultForm[dataIndex[0]] = value;
 
         // hard code
         if (dataIndex[0] === 'status' && value === '4') {
           setVisible(true);
-          setFormValue({...defaultForm})
+          setFormValue({ ...defaultForm });
           return;
         }
 
         try {
-          const response = await update(defaultForm);
-        } catch(e) {
+          await update(defaultForm);
+        } catch (e) {
           console.log(e);
         }
-      }
-      let defaultValue: string = ''
-      const findOption = options.find(option => option.value === Number(dataText));
-      defaultValue = findOption ? (findOption.label ? findOption.label.toString() : '') : ''
+      };
+      let defaultValue: string = '';
+      const findOption = options.find(
+        option => option.value === Number(dataText),
+      );
+      defaultValue = findOption
+        ? findOption.label
+          ? findOption.label.toString()
+          : ''
+        : '';
       return has(state.filterColumns, dataIndex[filterIndex || 0]) ||
         (state.params.search && state.params.search.length > 0) ? (
-        <Select onChange={handleValueChange} defaultValue={defaultValue} style={{width: '100%'}}>
-          {
-            options.map((option) => {
-              return (
-                <Option value={`${option.value}`}>
-                  <Highlighter
-                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                    searchWords={[
-                      state.filterColumns![dataIndex[filterIndex || 0]]?.includes(text) &&
-                      options.find(option => option.value === Number(text))?.label,
-                      state.params.search &&
+        <Select
+          onChange={handleValueChange}
+          defaultValue={defaultValue}
+          style={{ width: '100%' }}
+        >
+          {options.map(option => {
+            return (
+              <Option value={`${option.value}`}>
+                <Highlighter
+                  highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                  searchWords={[
+                    state.filterColumns![dataIndex[filterIndex || 0]]?.includes(
+                      text,
+                    ) &&
+                      options.find(option => option.value === Number(text))
+                        ?.label,
+                    state.params.search &&
                       state.params.search.length > 0 &&
                       state.params.search,
-                    ]}
-                    autoEscape
-                    textToHighlight={
-                      option.label
-                    }
-                  />
-                </Option>
-              )
-            })
-          }
+                  ]}
+                  autoEscape
+                  textToHighlight={option.label}
+                />
+              </Option>
+            );
+          })}
         </Select>
       ) : (
-        <Select onChange={handleValueChange} defaultValue={defaultValue} style={{width: '100%'}}>
-          {
-            options.map((option) => {
-              return (
-                <Option value={`${option.value}`}>
-                { option.label }
-                </Option>
-              )
-            })
-          }
+        <Select
+          onChange={handleValueChange}
+          defaultValue={defaultValue}
+          style={{ width: '100%' }}
+        >
+          {options.map(option => {
+            return <Option value={`${option.value}`}>{option.label}</Option>;
+          })}
         </Select>
         // options.find(option => option.value === Number(dataText))?.label
       );
@@ -482,7 +488,7 @@ export const useTableConfig = (
     getColumnSearchTagProps,
     getColumnSearchCheckboxProps,
     getColumnSearchCheckboxFromToProps,
-    ConfirmModal
+    ConfirmModal,
   };
 };
 

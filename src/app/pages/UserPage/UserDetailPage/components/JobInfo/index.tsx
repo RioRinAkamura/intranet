@@ -45,7 +45,7 @@ const selectProps: SelectProps<SelectValue> = {
 export const JobInfo = (props: JobInfoProps) => {
   const { isView, form, isEdit } = props;
   const { t } = useTranslation();
-  const isShowSkill = isEdit || isView ? true : false
+  const isShowSkill = isEdit || isView ? true : false;
   return (
     <>
       <TitlePath>
@@ -119,13 +119,11 @@ export const JobInfo = (props: JobInfoProps) => {
             />
           </FormItem>
         </Col>
-        {
-          isShowSkill && (
-            <Col md={24} xs={24}>
-              <Skills isEdit={isEdit} />
-            </Col>
-          )
-        }
+        {isShowSkill && (
+          <Col md={24} xs={24}>
+            <Skills isEdit={isEdit} />
+          </Col>
+        )}
       </Row>
     </>
   );

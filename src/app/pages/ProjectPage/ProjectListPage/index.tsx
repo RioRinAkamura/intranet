@@ -84,7 +84,7 @@ export const ProjectsPage: React.FC = () => {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchCheckboxProps,
-    ConfirmModal
+    ConfirmModal,
   } = useTableConfig(getProjectState, ProjectsMessages, setFilterText);
 
   const fetchProjects = useCallback(() => {
@@ -347,7 +347,7 @@ export const ProjectsPage: React.FC = () => {
           { label: 'High', value: 3 },
         ],
       ),
-      width: 140
+      width: 140,
     },
     {
       title: t(ProjectsMessages.listStatusTitle()),
@@ -367,16 +367,16 @@ export const ProjectsPage: React.FC = () => {
     {
       title: t(ProjectsMessages.listTotalMembers()),
       dataIndex: 'total_members',
-      width:130,
+      width: 130,
       ...getColumnSorterProps('total_members', 3),
       render: text => <TextCenter>{text}</TextCenter>,
     },
     {
       title: t(ProjectsMessages.listTotalWeeklyHours()),
       dataIndex: 'total_weekly_hour_allocated',
-      width:130,
+      width: 130,
       ...getColumnSorterProps('total_weekly_hour_allocated', 3),
-      render: text => <TextCenter>{text}</TextCenter>
+      render: text => <TextCenter>{text}</TextCenter>,
     },
     {
       title: t(ProjectsMessages.listOptionsTitle()),
@@ -533,10 +533,10 @@ const Wrapper = styled.div`
 `;
 
 const TextCenter = styled.span`
-  text-align:center;
-  width:100%;
-  display:block;
-`
+  text-align: center;
+  width: 100%;
+  display: block;
+`;
 
 const TableWrapper = styled.div`
   .avatar {

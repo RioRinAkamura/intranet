@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  LineChartOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Breadcrumb } from 'antd';
 
 import { Link } from 'react-router-dom';
@@ -132,11 +128,6 @@ const IconToggle = styled.div`
   .site-layout .site-layout-background {
     background: #fff;
   }
-`;
-
-const Icon = styled.div`
-  transform: translate(-4px, -3px);
-  display: inline-block;
 `;
 
 export default HeaderAdmin;
