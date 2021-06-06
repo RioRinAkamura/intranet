@@ -38,6 +38,7 @@
     "draft-js": "0.11.7",
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.24.0",
     "eslint-plugin-react-hooks": "4.1.0",
     "fontfaceobserver": "2.1.0",
     "husky": "4.2.5",
@@ -54,6 +55,7 @@
     "papaparse": "5.3.0",
     "plop": "2.7.4",
     "prettier": "2.1.1",
+    "prettier-eslint-cli": "5.0.1",
     "query-string": "7.0.0",
     "react": "16.14.0",
     "react-app-polyfill": "1.0.6",
@@ -107,7 +109,8 @@
     "prettify": "prettier --write",
     "extract-messages": "i18next-scanner --config=internals/extractMessages/i18next-scanner.config.js",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "format": "prettier-eslint --write \"{,!(node_modules)/**/}*.{js,jsx,tsx,ts}\""
   },
   "eslintConfig": {
     "extends": "react-app",
