@@ -11,7 +11,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useParams } from 'react-router-dom';
 
 interface Props {
-  isEdit: boolean;
+  isEdit?: boolean;
 }
 
 interface Skill {

@@ -26,7 +26,7 @@ const { Option } = Select;
 
 interface JobInfoProps {
   isView?: boolean;
-  isEdit: boolean;
+  isEdit?: boolean;
   form: FormInstance;
 }
 
