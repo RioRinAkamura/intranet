@@ -45,7 +45,7 @@ export const Skills = memo((props: Props) => {
         console.log(e);
       }
     })();
-  }, []);
+  }, [id]);
 
   const handleCancel = () => {
     setVisibility(false);
