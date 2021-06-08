@@ -348,6 +348,26 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
       onOk={handleOk}
       onCancel={handleCancel}
       visible={visibility}
+      footer={[
+        <Button key="back" onClick={handleCancel}>
+          close
+        </Button>,
+        <Button
+          style={{
+            display: activeKey === '1' ? 'none' : 'inline-block',
+          }}
+          loading={loadingMember}
+          htmlType="submit"
+          type="primary"
+          onClick={() => {
+            memberForm.validateFields().then(values => {
+              handleAddMember(values);
+            });
+          }}
+        >
+          {t(ProjectDetailMessages.buttonSubmit())}
+        </Button>,
+      ]}
     >
       <Tabs
         defaultActiveKey="1"
@@ -473,17 +493,6 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
                   })}
               </Select>
             </FormSearchItem>
-            <ModalButton>
-              <Button
-                loading={loadingMember}
-                htmlType="submit"
-                type="primary"
-                shape="round"
-                size="large"
-              >
-                {t(ProjectDetailMessages.buttonSubmit())}
-              </Button>
-            </ModalButton>
           </Form>
         </TabPane>
       </Tabs>
@@ -522,10 +531,3 @@ const IconButton = styled(Button)`
 `;
 
 const FormSearchItem = styled(Form.Item)``;
-
-const ModalButton = styled.div`
-  text-align: center;
-  button {
-    padding: 0 2em !important;
-  }
-`;

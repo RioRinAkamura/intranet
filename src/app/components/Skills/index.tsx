@@ -9,10 +9,7 @@ import { SkillsModal } from './components/SkillsModal';
 import { DeleteOutlined } from '@ant-design/icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useParams } from 'react-router-dom';
-
-interface Props {
-  isEdit?: boolean;
-}
+import { api } from 'utils/api';
 
 interface Skill {
   id: string;
@@ -29,8 +26,7 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-export const Skills = memo((props: Props) => {
-  const { isEdit } = props;
+export const Skills = memo(props => {
   const [visibility, setVisibility] = useState(false);
   const [data, setData] = useState<any>();
   const [skills, setSkills] = useState<any>([]);
@@ -39,7 +35,8 @@ export const Skills = memo((props: Props) => {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fakeAPI.get(`/hr/employees/${id}/skills/`);
+        // const response = await fakeAPI.get(`/hr/employees/${id}/skills/`);
+        const response = await api.hr.employee.getSkills(id);
         setData(response);
       } catch (e) {
         console.log(e);
@@ -169,9 +166,7 @@ export const Skills = memo((props: Props) => {
     <>
       <FlexWrapper>
         <span>{t(UserDetailMessages.formSkillLabel())}</span>
-        {isEdit && (
-          <IconBtn onClick={handleToggleModal} icon={<PlusOutlined />} />
-        )}
+        <IconBtn onClick={handleToggleModal} icon={<PlusOutlined />} />
       </FlexWrapper>
       <SkillsModal
         isVisibility={visibility}
