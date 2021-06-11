@@ -1,5 +1,5 @@
 import React from 'react';
-import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
 
 export const useGetSkills = (): {
   loading: boolean;
@@ -14,7 +14,7 @@ export const useGetSkills = (): {
     setLoading(true);
     (async () => {
       try {
-        const response = await fakeAPI.get('/hr/skills');
+        const response = await api.hr.skill.list();
         setData(response);
       } catch (e) {
         setError(e);

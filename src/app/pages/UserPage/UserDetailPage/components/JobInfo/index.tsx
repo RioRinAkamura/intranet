@@ -121,7 +121,7 @@ export const JobInfo = (props: JobInfoProps) => {
         </Col>
         {isShowSkill && (
           <Col md={24} xs={24}>
-            <Skills isEdit={isEdit} />
+            <Skills />
           </Col>
         )}
       </Row>

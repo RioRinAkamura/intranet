@@ -1,9 +1,15 @@
 import React, { memo, useState, useEffect } from 'react';
-import { Modal, Input, Button, Tag } from 'antd';
+import { Modal, Input, Button, Tag, Popover, Tooltip } from 'antd';
 import styled from 'styled-components/macro';
-import { PlusOutlined } from '@ant-design/icons';
-import fakeAPI from 'utils/fakeAPI';
+import {
+  EllipsisOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
+// import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
 import { useGetSkills } from '../../useGetSkill';
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
 
 interface skillModalProps {
   isVisibility: boolean;
@@ -18,7 +24,7 @@ interface Skill {
   type: string;
   employeeSkillId: string;
 }
-
+const { confirm } = Modal;
 export const SkillsModal = memo((props: skillModalProps) => {
   const { data } = useGetSkills();
   const [pickedSkill, setPickedSkill] = useState<any>([]);
@@ -26,20 +32,6 @@ export const SkillsModal = memo((props: skillModalProps) => {
 
   const { isVisibility, onCancel, onOk, currentSkills } = props;
   const [suggestSkills, setSuggestSkill] = useState<any>([]);
-  // const [loading, setLoading] = useState(false)
-  // useEffect(() => {
-  //   (async () => {
-  //     setLoading(true)
-  //     try {
-  //       const response = await fakeAPI.get('/hr/skills/')
-  //       setSuggestSkill(response);
-  //     } catch (error) {
-  //       console.log(error);
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   })();
-  // }, [])
 
   useEffect(() => {
     setSuggestSkill(data ? data.results : []);
@@ -95,9 +87,10 @@ export const SkillsModal = memo((props: skillModalProps) => {
       try {
         const newSkill = {
           name: customSkill,
-          type: '',
+          type: models.hr.SkillType.ENGINEERING,
         };
-        const response = await fakeAPI.post('/hr/skills/', newSkill);
+        // const response = await fakeAPI.post('/hr/skills/', newSkill);
+        const response = await api.hr.skill.create(newSkill);
         setPickedSkill([...pickedSkill, response]);
         setCustomSkill('');
       } catch (e) {
@@ -114,6 +107,39 @@ export const SkillsModal = memo((props: skillModalProps) => {
   //handle ok modal
   const handleOkModal = () => {
     onOk(pickedSkill);
+  };
+
+  // more button
+  const moreButtons = (id: string) => {
+    return (
+      <Tooltip title={'Delete'}>
+        <ButtonIcon
+          danger
+          shape="circle"
+          size="small"
+          icon={<DeleteOutlined />}
+          onClick={e => {
+            e.stopPropagation();
+            handleDeleteSkill(id);
+          }}
+        />
+      </Tooltip>
+    );
+  };
+
+  // handle delete skill
+  const handleDeleteSkill = (id: string) => {
+    confirm({
+      title: 'Do you Want to delete this item?',
+      icon: <ExclamationCircleOutlined />,
+      async onOk() {
+        await api.hr.skill.delete(id);
+        const newSuggesteSkills = [...suggestSkills].filter(
+          (item: Skill) => item.id !== id,
+        );
+        setSuggestSkill(newSuggesteSkills);
+      },
+    });
   };
 
   return (
@@ -138,7 +164,7 @@ export const SkillsModal = memo((props: skillModalProps) => {
             closable
             onClose={() => handleRemoveSkill(skill)}
           >
-            {skill.name}
+            {skill.name}{' '}
           </CustomTag>
         ))}
       </FlexWrapper>
@@ -150,12 +176,25 @@ export const SkillsModal = memo((props: skillModalProps) => {
           suggestSkills.map((skill, index: number) => {
             return (
               <ButtonIcon
-                onClick={() => handleAddSkill(skill)}
+                style={{ margin: '5px 5px 5px 0' }}
+                onClick={e => {
+                  handleAddSkill(skill);
+                }}
                 shape={'round'}
                 key={skill.id}
-                icon={<PlusOutlined />}
               >
                 {skill.name}
+                <Popover
+                  content={() => moreButtons(skill.id)}
+                  placement="bottom"
+                >
+                  <ButtonIcon
+                    style={{ margin: '0 0 0 5px' }}
+                    shape="circle"
+                    icon={<EllipsisOutlined />}
+                    size="small"
+                  />
+                </Popover>
               </ButtonIcon>
             );
           })}
@@ -185,7 +224,8 @@ const FlexWrapper = styled.div`
 const ButtonIcon = styled(Button)`
   display: flex;
   align-items: center;
-  margin: 0 5px 5px 0;
+  justify-content: center;
+  /* margin: 0 5px 5px 0; */
 `;
 const CustomTag = styled(Tag)`
   display: flex;
