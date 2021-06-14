@@ -95,6 +95,21 @@ exports[`<App /> should render and match the snapshot 1`] = `
               exact={true}
               path="/projects/:id"
             />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/users"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/users/create"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/users/:id"
+            />
           </Switch>
         </AppLayout>
         <Route

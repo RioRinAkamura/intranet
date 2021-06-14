@@ -27,6 +27,8 @@ import { ResetPassword } from './pages/ResetPassword/Loadable';
 import { ToastContextProvider } from './components/Toast/context';
 import { ProjectsPage } from './pages/ProjectPage/ProjectListPage/Loadable';
 import { ProjectDetailPage } from './pages/ProjectPage/ProjectDetailPage/Loadable';
+import { ManageUserPage } from './pages/ManageUserPage/Loadable';
+import { UserManageDetailPage } from './pages/ManageUserPage/UserDetailPage/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -106,6 +108,23 @@ export function App() {
                   exact
                   path={'/projects/:id'}
                   component={ProjectDetailPage}
+                />
+
+                {/* use list */}
+                <PrivateRoute
+                  exact
+                  path={'/users'}
+                  component={ManageUserPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/users/create'}
+                  component={UserManageDetailPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/users/:id'}
+                  component={UserManageDetailPage}
                 />
               </Switch>
             </AppLayout>

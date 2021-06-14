@@ -1,6 +1,7 @@
 import {
   AppstoreOutlined,
   PieChartOutlined,
+  UserOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
 import { Drawer, Layout, Menu } from 'antd';
@@ -42,6 +43,10 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
             <Menu.Item key="/employees" icon={<TeamOutlined />}>
               <Link to="/employees">Employees</Link>
             </Menu.Item>
+            <Menu.Item key="/users" icon={<UserOutlined />}>
+              <Link to="/users">Users</Link>
+            </Menu.Item>
+
             <SubMenu
               key="sub2"
               icon={<AppstoreOutlined />}
@@ -77,6 +82,10 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
             <Menu.Item key="/employees" icon={<TeamOutlined />}>
               <Link to="/employees">Employees</Link>
             </Menu.Item>
+            <Menu.Item key="/users" icon={<UserOutlined />}>
+              <Link to="/users">Users</Link>
+            </Menu.Item>
+
             <SubMenu
               key="sub2"
               icon={<AppstoreOutlined />}

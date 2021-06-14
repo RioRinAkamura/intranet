@@ -5,6 +5,7 @@ import { ProjectsState } from 'app/pages/ProjectPage/ProjectListPage/slice/types
 import { UserDetailsState } from 'app/pages/UserPage/UserDetailPage/slice/types';
 import { EmployeeProjectState } from 'app/pages/UserPage/UserDetailPage/components/Projects/slice/types';
 import { EmployeeNoteState } from 'app/pages/UserPage/UserDetailPage/components/Notes/slice/types';
+import { UsersManagePageState } from 'app/pages/ManageUserPage/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /*
@@ -21,5 +22,6 @@ export interface RootState {
   userDetails?: UserDetailsState;
   employeeProject?: EmployeeProjectState;
   employeeNote?: EmployeeNoteState;
+  usersmanagepage?: UsersManagePageState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }
