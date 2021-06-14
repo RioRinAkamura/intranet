@@ -35,6 +35,7 @@ interface Props {
   isEdit: boolean;
   form: FormInstance;
   user?: Employee;
+  hidden?: boolean;
 }
 
 const inputProps: InputProps = {
@@ -43,7 +44,7 @@ const inputProps: InputProps = {
 };
 
 export const AvatarPath = memo((props: Props) => {
-  const { isView, form, user, isEdit } = props;
+  const { isView, form, user, isEdit, hidden } = props;
   const { t } = useTranslation();
 
   const [imageURL, setImageURL] = useState('');
@@ -117,43 +118,45 @@ export const AvatarPath = memo((props: Props) => {
             )}
           </WrapperAvatar>
         </Col>
-        {isView && (
+        {!hidden && isView && (
           <Col span={12}>
             <b>{t(UserDetailMessages.formCodeLabel())}</b>
           </Col>
         )}
-        <StyledEmployeeCode span={isView ? 12 : 24}>
-          <FormItem
-            isView={isView}
-            name="code"
-            rules={
-              isView
-                ? []
-                : [
-                    {
-                      required: true,
-                      message: t(UserDetailMessages.formCodeEmpty()),
-                    },
-                  ]
-            }
-          >
-            <Input
-              {...(isView ? inputProps : {})}
-              size="large"
-              placeholder={
-                isView ? '' : t(UserDetailMessages.formCodePlaceholder())
+        {!hidden && (
+          <StyledEmployeeCode span={isView ? 12 : 24}>
+            <FormItem
+              isView={isView}
+              name="code"
+              rules={
+                isView
+                  ? []
+                  : [
+                      {
+                        required: true,
+                        message: t(UserDetailMessages.formCodeEmpty()),
+                      },
+                    ]
               }
-            />
-          </FormItem>
-          {!isView && (
-            <StyledButton
-              size="large"
-              type="primary"
-              onClick={() => setIsRefresh(true)}
-              icon={<SyncOutlined />}
-            />
-          )}
-        </StyledEmployeeCode>
+            >
+              <Input
+                {...(isView ? inputProps : {})}
+                size="large"
+                placeholder={
+                  isView ? '' : t(UserDetailMessages.formCodePlaceholder())
+                }
+              />
+            </FormItem>
+            {!isView && (
+              <StyledButton
+                size="large"
+                type="primary"
+                onClick={() => setIsRefresh(true)}
+                icon={<SyncOutlined />}
+              />
+            )}
+          </StyledEmployeeCode>
+        )}
       </Row>
     </>
   );
