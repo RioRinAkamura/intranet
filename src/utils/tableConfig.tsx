@@ -29,6 +29,7 @@ interface useTableProps {
     dataIndex: string[],
     options: CheckboxOptionType[],
     filterIndex?: number,
+    filterOptions?: CheckboxOptionType[],
   ) => {};
   getColumnSearchCheckboxFromToProps: (
     dataIndex: string[],
@@ -281,6 +282,7 @@ export const useTableConfig = (
     dataIndex: string[],
     options: CheckboxOptionType[],
     filterIndex?: number,
+    filterOptions?: CheckboxOptionType[],
   ) => ({
     filterDropdown: ({ confirm }) => {
       return (
@@ -288,7 +290,7 @@ export const useTableConfig = (
           <WrapperCheckbox>
             <Checkbox.Group
               value={selectedKeys[dataIndex[filterIndex || 0]]}
-              options={options}
+              options={filterOptions ? filterOptions : options}
               onChange={e => {
                 setSelectedKeys(prevState => ({
                   ...prevState,
