@@ -380,6 +380,12 @@ export const ProjectsPage: React.FC = () => {
           { label: 'Release', value: 3 },
           { label: 'Archived', value: 4 },
         ],
+        0,
+        [
+          { label: 'Preparing', value: 1 },
+          { label: 'Going', value: 2 },
+          { label: 'Release', value: 3 },
+        ],
       ),
     },
     {
