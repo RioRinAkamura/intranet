@@ -1,15 +1,9 @@
-import {
-  AppstoreOutlined,
-  PieChartOutlined,
-  UserOutlined,
-  TeamOutlined,
-} from '@ant-design/icons';
-import { Drawer, Layout, Menu } from 'antd';
+import { Drawer, Layout } from 'antd';
 import React from 'react';
 import { isMobile } from 'react-device-detect';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Logo } from './Logo';
+import { MenuItems } from './MenuItems';
 
 interface Props {
   collapsed: boolean;
@@ -18,8 +12,8 @@ interface Props {
 
 const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
   const { Sider } = Layout;
-  const { SubMenu } = Menu;
   const [isSidebar] = React.useState(isMobile);
+
   return (
     <Wrapper style={{ width: collapsed ? 80 : 200 }}>
       {isMobile ? (
@@ -32,34 +26,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           width={250}
         >
           <Logo />
-          <Menu
-            theme="dark"
-            defaultSelectedKeys={[window.location.pathname]}
-            mode="inline"
-          >
-            <Menu.Item key="/" icon={<PieChartOutlined />}>
-              <Link to="/">Dashboard</Link>
-            </Menu.Item>
-            <Menu.Item key="/employees" icon={<TeamOutlined />}>
-              <Link to="/employees">Employees</Link>
-            </Menu.Item>
-            <Menu.Item key="/users" icon={<UserOutlined />}>
-              <Link to="/users">Users</Link>
-            </Menu.Item>
-
-            <SubMenu
-              key="sub2"
-              icon={<AppstoreOutlined />}
-              title="Navigation Two"
-            >
-              <Menu.Item key="9">Option 9</Menu.Item>
-              <Menu.Item key="10">Option 10</Menu.Item>
-              <SubMenu key="sub3" title="Submenu">
-                <Menu.Item key="11">Option 11</Menu.Item>
-                <Menu.Item key="12">Option 12</Menu.Item>
-              </SubMenu>
-            </SubMenu>
-          </Menu>
+          <MenuItems />
         </Drawer>
       ) : (
         <Sider
@@ -71,34 +38,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           style={{ display: isSidebar ? 'none' : 'block' }}
         >
           <Logo />
-          <Menu
-            theme="dark"
-            defaultSelectedKeys={[window.location.pathname]}
-            mode="inline"
-          >
-            <Menu.Item key="/" icon={<PieChartOutlined />}>
-              <Link to="/">Dashboard</Link>
-            </Menu.Item>
-            <Menu.Item key="/employees" icon={<TeamOutlined />}>
-              <Link to="/employees">Employees</Link>
-            </Menu.Item>
-            <Menu.Item key="/users" icon={<UserOutlined />}>
-              <Link to="/users">Users</Link>
-            </Menu.Item>
-
-            <SubMenu
-              key="sub2"
-              icon={<AppstoreOutlined />}
-              title="Navigation Two"
-            >
-              <Menu.Item key="9">Option 9</Menu.Item>
-              <Menu.Item key="10">Option 10</Menu.Item>
-              <SubMenu key="sub3" title="Submenu">
-                <Menu.Item key="11">Option 11</Menu.Item>
-                <Menu.Item key="12">Option 12</Menu.Item>
-              </SubMenu>
-            </SubMenu>
-          </Menu>
+          <MenuItems />
         </Sider>
       )}
     </Wrapper>

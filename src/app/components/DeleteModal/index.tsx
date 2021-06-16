@@ -4,8 +4,8 @@ import styled from 'styled-components';
 
 interface Props {
   open: boolean;
-  cancelText: string;
-  deleteText: string;
+  cancelText?: string;
+  deleteText?: string;
   content: string;
   handleDelete: () => void;
   handleCancel: () => void;
@@ -26,11 +26,17 @@ export const DeleteModal = React.memo((props: Props) => {
       visible={open}
       onCancel={handleCancel}
       footer={[
-        <Button size="large" onClick={handleCancel}>
-          {cancelText}
+        <Button size="large" key="cancel" onClick={handleCancel}>
+          {cancelText || 'Cancel'}
         </Button>,
-        <Button type="primary" size="large" danger onClick={handleDelete}>
-          {deleteText}
+        <Button
+          type="primary"
+          key="index"
+          size="large"
+          danger
+          onClick={handleDelete}
+        >
+          {deleteText || 'Delete'}
         </Button>,
       ]}
     >

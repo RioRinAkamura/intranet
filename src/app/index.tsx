@@ -26,9 +26,11 @@ import { ForgotPassword } from './pages/ForgotPassword/Loadable';
 import { ResetPassword } from './pages/ResetPassword/Loadable';
 import { ToastContextProvider } from './components/Toast/context';
 import { ProjectsPage } from './pages/ProjectPage/ProjectListPage/Loadable';
+import { LeaveApplicationPage } from './pages/LeaveApplicationPage/LeaveApplicationListPage/Loadable';
 import { ProjectDetailPage } from './pages/ProjectPage/ProjectDetailPage/Loadable';
 import { ManageUserPage } from './pages/ManageUserPage/Loadable';
 import { UserManageDetailPage } from './pages/ManageUserPage/UserDetailPage/Loadable';
+import { LeaveApplicationDetailPage } from './pages/LeaveApplicationPage/LeaveApplicationDetailPage/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -98,6 +100,21 @@ export function App() {
                   exact
                   path={'/projects'}
                   component={ProjectsPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/leave_applications'}
+                  component={LeaveApplicationPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/leave_applications/create'}
+                  component={LeaveApplicationDetailPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/leave_applications/:id'}
+                  component={LeaveApplicationDetailPage}
                 />
                 <PrivateRoute
                   exact

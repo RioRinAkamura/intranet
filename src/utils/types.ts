@@ -1,4 +1,5 @@
 import { DatePickerProps, InputProps } from 'antd';
+import { TextAreaProps } from 'antd/lib/input';
 
 export enum Gender {
   'Male' = 'Male',
@@ -44,6 +45,11 @@ export const antColours = [
 ];
 
 export const inputViewProps: InputProps = {
+  bordered: false,
+  readOnly: true,
+};
+
+export const textareaViewProps: TextAreaProps = {
   bordered: false,
   readOnly: true,
 };
