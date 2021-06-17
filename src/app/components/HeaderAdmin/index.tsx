@@ -44,10 +44,6 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
               <NavItem>
                 <Link to="/users">Users</Link>
               </NavItem>
-
-              <NavItem>
-                <Link to="/">Setting</Link>
-              </NavItem>
             </NavList>
           </div>
           <LogoHeader>
