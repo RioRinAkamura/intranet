@@ -1,5 +1,4 @@
 import {
-  AppstoreOutlined,
   PieChartOutlined,
   UserOutlined,
   TeamOutlined,
@@ -18,7 +17,6 @@ interface Props {
 
 const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
   const { Sider } = Layout;
-  const { SubMenu } = Menu;
   const [isSidebar] = React.useState(isMobile);
   return (
     <Wrapper style={{ width: collapsed ? 80 : 200 }}>
