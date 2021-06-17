@@ -377,7 +377,7 @@ export const ProjectsPage: React.FC = () => {
         [
           { label: 'Preparing', value: 1 },
           { label: 'Going', value: 2 },
-          { label: 'Release', value: 3 },
+          { label: 'Released', value: 3 },
           { label: 'Archived', value: 4 },
         ],
         0,
