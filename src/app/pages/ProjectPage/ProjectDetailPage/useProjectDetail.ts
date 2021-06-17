@@ -53,7 +53,7 @@ export const useProjectDetail = (): {
       if (data.members && data.members.length > 0) {
         data.members.map(member => {
           member.employee = member.employee.id;
-          member.allocation = parseFloat(member.allocation).toFixed(1);
+          // member.allocation = parseFloat(member.allocation).toFixed(1);
           return member;
         });
       }
