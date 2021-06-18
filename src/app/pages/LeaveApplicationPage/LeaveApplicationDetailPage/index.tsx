@@ -29,7 +29,6 @@ import {
 } from 'utils/types';
 import { FORM_RULES, WORKING_TYPE } from 'constants/leave_application';
 import { calcBusinessDays } from 'utils/variable';
-import { useMe } from 'app/components/Auth/useMe';
 import { useGetIdentity } from 'app/components/Auth/useGetIdentity';
 
 interface Props {}
@@ -124,12 +123,15 @@ export const LeaveApplicationDetailPage = (props: Props) => {
   }, [history, location]);
 
   const isAccess = useMemo(() => {
-    return Boolean(
-      data?.employee_leave_approver.find(
-        item => item.approver === identity?.id,
-      ),
+    return (
+      isView &&
+      Boolean(
+        data?.employee_leave_approver?.find(
+          item => item.approver === identity?.id,
+        ),
+      )
     );
-  }, [identity, data]);
+  }, [identity, data, isView]);
 
   const handleSubmit = () => {
     form
