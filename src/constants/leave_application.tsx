@@ -3,6 +3,7 @@ import { calcBusinessDays } from 'utils/variable';
 export const APPROVAL_STATUS = [
   { label: 'Pending', value: 'PENDING' },
   { label: 'Approved', value: 'APPROVED' },
+  { label: 'Rejected', value: 'REJECTED' },
 ];
 
 export const WORKING_TYPE = [

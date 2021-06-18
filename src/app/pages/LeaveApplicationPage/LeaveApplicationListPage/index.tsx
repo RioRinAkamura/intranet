@@ -42,7 +42,7 @@ export const LeaveApplications: React.FC = () => {
   const history = useHistory();
   const { notify } = useNotify();
   const [searchForm] = Form.useForm();
-  const [IdDelete, setIdDelete] = useState('');
+  const [selectedId, setSelectedId] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteMulti, setIsDeleteMulti] = useState(false);
   const deleteModalState = useSelector(
@@ -96,7 +96,7 @@ export const LeaveApplications: React.FC = () => {
         actions.delete({ IdDelete: ids[0], ids: state.selectedRowKeys }),
       );
     } else {
-      await dispatch(actions.delete({ IdDelete }));
+      await dispatch(actions.delete({ IdDelete: selectedId }));
     }
 
     await dispatch(actions.fetchList({ params: params }));
@@ -182,7 +182,7 @@ export const LeaveApplications: React.FC = () => {
           icon={<DeleteOutlined />}
           onClick={() => {
             showDeleteModal();
-            setIdDelete(text);
+            setSelectedId(text);
           }}
         />
       </Tooltip>

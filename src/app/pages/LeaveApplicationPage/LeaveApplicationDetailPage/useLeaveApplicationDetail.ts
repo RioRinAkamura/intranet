@@ -13,6 +13,8 @@ export const useLeaveApplicationDetail = (): {
   fetchEmployees: () => Promise<Employee[] | undefined>;
   detail: (id: string) => Promise<any | undefined>;
   update: (data: any) => Promise<any | undefined>;
+  approve: (id: string) => Promise<any | undefined>;
+  reject: (id: string) => Promise<any | undefined>;
   create: (data: any) => void;
 } => {
   const history = useHistory();
@@ -91,6 +93,55 @@ export const useLeaveApplicationDetail = (): {
       setLoading(false);
     }
   };
+
+  const approve = async (id: string) => {
+    setLoading(true);
+    try {
+      const response: any = await api.hr.employeeLeave.approve(id);
+      if (response) {
+        notify({
+          type: ToastMessageType.Info,
+          duration: 2,
+          message: 'Approve leave application successfully',
+        });
+        history.push('/leave_applications/');
+      }
+    } catch (error) {
+      setError(error);
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const reject = async (id: string) => {
+    setLoading(true);
+    try {
+      const response: any = await api.hr.employeeLeave.approve(id);
+      if (response) {
+        notify({
+          type: ToastMessageType.Info,
+          duration: 2,
+          message: 'Reject leave application successfully',
+        });
+        history.push('/leave_applications/');
+      }
+    } catch (error) {
+      setError(error);
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     loading,
     error,
@@ -98,5 +149,7 @@ export const useLeaveApplicationDetail = (): {
     detail,
     update,
     create,
+    approve,
+    reject,
   };
 };

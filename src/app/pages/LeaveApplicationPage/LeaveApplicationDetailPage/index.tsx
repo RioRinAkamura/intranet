@@ -3,7 +3,7 @@
  * LeaveApplicationDetailPage
  *
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components/macro';
 import {
   Button,
@@ -29,6 +29,8 @@ import {
 } from 'utils/types';
 import { FORM_RULES, WORKING_TYPE } from 'constants/leave_application';
 import { calcBusinessDays } from 'utils/variable';
+import { useMe } from 'app/components/Auth/useMe';
+import { useGetIdentity } from 'app/components/Auth/useGetIdentity';
 
 interface Props {}
 interface LocationState {
@@ -58,6 +60,8 @@ export const LeaveApplicationDetailPage = (props: Props) => {
     detail,
     create,
     update,
+    approve,
+    reject,
     loading,
   } = useLeaveApplicationDetail();
 
@@ -65,6 +69,8 @@ export const LeaveApplicationDetailPage = (props: Props) => {
   const [data, setData] = useState<any>();
   const [isCreate, setIsCreate] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+
+  const { identity } = useGetIdentity();
 
   const isView = isCreate || isEdit ? false : true;
 
@@ -116,6 +122,14 @@ export const LeaveApplicationDetailPage = (props: Props) => {
       }
     }
   }, [history, location]);
+
+  const isAccess = useMemo(() => {
+    return Boolean(
+      data?.employee_leave_approver.find(
+        item => item.approver === identity?.id,
+      ),
+    );
+  }, [identity, data]);
 
   const handleSubmit = () => {
     form
@@ -301,6 +315,35 @@ export const LeaveApplicationDetailPage = (props: Props) => {
               {isView ? 'Edit' : 'Submit'}
             </PageButton>
           </Col>
+          {isAccess && isView && data?.approval_status !== 'APPROVED' && (
+            <Col>
+              <PageButton
+                loading={loading}
+                block
+                size="large"
+                shape="round"
+                type="primary"
+                onClick={() => approve(id)}
+              >
+                Approve
+              </PageButton>
+            </Col>
+          )}
+          {isAccess && isView && data?.approval_status !== 'REJECTED' && (
+            <Col>
+              <PageButton
+                loading={loading}
+                block
+                size="large"
+                shape="round"
+                type="primary"
+                danger
+                onClick={() => reject(id)}
+              >
+                Reject
+              </PageButton>
+            </Col>
+          )}
         </Row>
       </WrapperButton>
     </>
