@@ -1,14 +1,9 @@
-import {
-  PieChartOutlined,
-  UserOutlined,
-  TeamOutlined,
-} from '@ant-design/icons';
-import { Drawer, Layout, Menu } from 'antd';
+import { Drawer, Layout } from 'antd';
 import React from 'react';
 import { isMobile } from 'react-device-detect';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Logo } from './Logo';
+import { MenuItems } from './MenuItems';
 
 interface Props {
   collapsed: boolean;
@@ -18,6 +13,7 @@ interface Props {
 const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
   const { Sider } = Layout;
   const [isSidebar] = React.useState(isMobile);
+
   return (
     <Wrapper style={{ width: collapsed ? 80 : 200 }}>
       {isMobile ? (
@@ -30,21 +26,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           width={250}
         >
           <Logo />
-          <Menu
-            theme="dark"
-            defaultSelectedKeys={[window.location.pathname]}
-            mode="inline"
-          >
-            <Menu.Item key="/" icon={<PieChartOutlined />}>
-              <Link to="/">Dashboard</Link>
-            </Menu.Item>
-            <Menu.Item key="/employees" icon={<TeamOutlined />}>
-              <Link to="/employees">Employees</Link>
-            </Menu.Item>
-            <Menu.Item key="/users" icon={<UserOutlined />}>
-              <Link to="/users">Users</Link>
-            </Menu.Item>
-          </Menu>
+          <MenuItems />
         </Drawer>
       ) : (
         <Sider
@@ -56,21 +38,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           style={{ display: isSidebar ? 'none' : 'block' }}
         >
           <Logo />
-          <Menu
-            theme="dark"
-            defaultSelectedKeys={[window.location.pathname]}
-            mode="inline"
-          >
-            <Menu.Item key="/" icon={<PieChartOutlined />}>
-              <Link to="/">Dashboard</Link>
-            </Menu.Item>
-            <Menu.Item key="/employees" icon={<TeamOutlined />}>
-              <Link to="/employees">Employees</Link>
-            </Menu.Item>
-            <Menu.Item key="/users" icon={<UserOutlined />}>
-              <Link to="/users">Users</Link>
-            </Menu.Item>
-          </Menu>
+          <MenuItems />
         </Sider>
       )}
     </Wrapper>

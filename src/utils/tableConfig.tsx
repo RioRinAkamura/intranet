@@ -10,6 +10,7 @@ import {
   Space,
   Select,
   Modal,
+  DatePicker,
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -20,10 +21,18 @@ import { MessageTranslate, TagType } from './types';
 import styled from 'styled-components/macro';
 import { FilterColumns } from 'app/pages/UserPage/UserListPage/slice/types';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
+import moment from 'moment';
+import config from 'config';
+
+const DATE_FORMAT = config.DATE_FORMAT;
 
 interface useTableProps {
   getColumnSorterProps: (dataIndex: string, columnPriority: number) => {};
-  getColumnSearchInputProps: (dataIndex: string[], filterIndex?: number) => {};
+  getColumnSearchInputProps: (
+    dataIndex: string[],
+    filterIndex?: number,
+    type?: string,
+  ) => {};
   getColumnSearchTagProps: (dataIndex: string, tags?: TagType[]) => {};
   getColumnSearchCheckboxProps: (
     dataIndex: string[],
@@ -35,6 +44,12 @@ interface useTableProps {
     dataIndex: string[],
     options: CheckboxOptionType[],
     range: string,
+    filterIndex?: number,
+  ) => {};
+  getColumnSearchSelectProps: (
+    dataIndex: string,
+    options,
+    placeholder?: string,
     filterIndex?: number,
   ) => {};
   ConfirmModal: () => JSX.Element;
@@ -91,6 +106,7 @@ export const useTableConfig = (
         multiple: columnPriority,
       },
     };
+    console.log(dataIndex, state.params.ordering);
     if (state.params.ordering) {
       ordering['sortOrder'] = state.params.ordering.includes(dataIndex)
         ? state.params.ordering.includes('-' + dataIndex)
@@ -106,30 +122,48 @@ export const useTableConfig = (
   const getColumnSearchInputProps = (
     dataIndex: string[],
     filterIndex?: number,
+    type?: string,
   ) => ({
     ellipsis: true,
     filterDropdown: ({ confirm }) => {
       return (
         <Wrapper>
-          <Input
-            placeholder={`${t(
-              messageTrans.filterInputPlaceholder(),
-            )} ${dataIndex}`}
-            value={selectedKeys[dataIndex[filterIndex || 0]]}
-            onChange={e => {
-              e.persist();
-              setSelectedKeys(prevState => ({
-                ...prevState,
-                [dataIndex[filterIndex || 0]]: e.target.value
-                  ? e.target.value
-                  : null,
-              }));
-            }}
-            onPressEnter={() =>
-              handleSearch(dataIndex[filterIndex || 0], confirm)
-            }
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
-          />
+          {type === 'date' ? (
+            <DatePicker
+              size="large"
+              format={DATE_FORMAT}
+              style={{ width: '100%', marginBottom: 10 }}
+              onChange={e =>
+                setSelectedKeys(prevState => ({
+                  ...prevState,
+                  [dataIndex[filterIndex || 0]]: e
+                    ? moment(e).format(DATE_FORMAT)
+                    : null,
+                }))
+              }
+            />
+          ) : (
+            <Input
+              placeholder={`${t(
+                messageTrans.filterInputPlaceholder(),
+              )} ${dataIndex}`}
+              value={selectedKeys[dataIndex[filterIndex || 0]]}
+              onChange={e => {
+                e.persist();
+                setSelectedKeys(prevState => ({
+                  ...prevState,
+                  [dataIndex[filterIndex || 0]]: e.target.value
+                    ? e.target.value
+                    : null,
+                }));
+              }}
+              onPressEnter={() =>
+                handleSearch(dataIndex[filterIndex || 0], confirm)
+              }
+              style={{ width: 188, marginBottom: 8, display: 'block' }}
+            />
+          )}
+
           <Space>
             <Button
               type="primary"
@@ -484,12 +518,71 @@ export const useTableConfig = (
         : '',
   });
 
+  const getColumnSearchSelectProps = (
+    dataIndex: string,
+    options,
+    placeholder?: string,
+    filterIndex?: number,
+  ) => ({
+    filterDropdown: ({ confirm }) => {
+      return (
+        <Wrapper>
+          <WrapperCheckbox>
+            <Select
+              value={selectedKeys[dataIndex[filterIndex || 0]]}
+              options={options}
+              placeholder={placeholder}
+              onChange={e => {
+                setSelectedKeys(prevState => ({
+                  ...prevState,
+                  [dataIndex]: e.toString() || null,
+                }));
+              }}
+            />
+          </WrapperCheckbox>
+          <Row gutter={[8, 0]}>
+            <Col>
+              <Button
+                type="primary"
+                onClick={() => handleSearch(dataIndex, confirm)}
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90 }}
+                loading={state.loading}
+              >
+                {t(messageTrans.filterSearchButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                onClick={() => handleReset(dataIndex, confirm)}
+                size="small"
+                loading={state.loading}
+                style={{ width: 90 }}
+              >
+                {t(messageTrans.filterResetButton())}
+              </Button>
+            </Col>
+          </Row>
+        </Wrapper>
+      );
+    },
+    onFilter: (value, record) =>
+      record[dataIndex[filterIndex || 0]]
+        ? record[dataIndex[filterIndex || 0]]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : '',
+  });
+
   return {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchTagProps,
     getColumnSearchCheckboxProps,
     getColumnSearchCheckboxFromToProps,
+    getColumnSearchSelectProps,
     ConfirmModal,
   };
 };
@@ -499,7 +592,8 @@ const Wrapper = styled.div`
 `;
 
 const WrapperCheckbox = styled.div`
-  .ant-checkbox-group {
+  .ant-checkbox-group,
+  .ant-select {
     display: grid;
   }
 
