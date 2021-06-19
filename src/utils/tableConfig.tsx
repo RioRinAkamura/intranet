@@ -26,6 +26,8 @@ import config from 'config';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
+const { Search } = Input;
+
 interface useTableProps {
   getColumnSorterProps: (dataIndex: string, columnPriority: number) => {};
   getColumnSearchInputProps: (
@@ -35,6 +37,12 @@ interface useTableProps {
   ) => {};
   getColumnSearchTagProps: (dataIndex: string, tags?: TagType[]) => {};
   getColumnSearchCheckboxProps: (
+    dataIndex: string[],
+    options: CheckboxOptionType[],
+    filterIndex?: number,
+    filterOptions?: CheckboxOptionType[],
+  ) => {};
+  getColumnSearchInputCheckboxProps: (
     dataIndex: string[],
     options: CheckboxOptionType[],
     filterIndex?: number,
@@ -67,6 +75,10 @@ export const useTableConfig = (
   const [selectedKeys, setSelectedKeys] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
   const [formValue, setFormValue] = React.useState({});
+  const [searchOptions, setSearchOptions] = React.useState<
+    CheckboxOptionType[]
+  >([]);
+  const [searchData, setSearch] = React.useState<CheckboxOptionType[]>([]);
 
   React.useLayoutEffect(() => {
     if (state.filterColumns) {
@@ -227,6 +239,13 @@ export const useTableConfig = (
   const handleSearch = (dataIndex: string, confirm: () => void) => {
     setFilterText({ [dataIndex]: selectedKeys[dataIndex] });
     confirm();
+  };
+
+  const handleSearchInput = e => {
+    const newOptions = [...searchData].filter((item: any) => {
+      return item.label.includes(e.target.value);
+    });
+    setSearchOptions(newOptions);
   };
 
   const handleReset = (dataIndex: string, confirm: () => void) => {
@@ -450,6 +469,75 @@ export const useTableConfig = (
       );
     },
   });
+  const getColumnSearchInputCheckboxProps = (
+    dataIndex: string[],
+    options: CheckboxOptionType[],
+    filterIndex?: number,
+    filterOptions?: CheckboxOptionType[],
+  ) => ({
+    filterDropdown: ({ confirm }) => {
+      if (searchData.length === 0) {
+        setSearchOptions(options);
+        setSearch(options);
+      }
+      return (
+        <Wrapper>
+          <Search
+            onChange={handleSearchInput}
+            placeholder="Search member"
+            style={{ margin: '0 0 10px 0' }}
+          />
+          <WrapperCheckbox>
+            <Checkbox.Group
+              value={selectedKeys[dataIndex[filterIndex || 0]]}
+              options={searchOptions}
+              onChange={e => {
+                setSelectedKeys(prevState => ({
+                  ...prevState,
+                  [dataIndex[filterIndex || 0]]: e ? e : null,
+                }));
+              }}
+            />
+          </WrapperCheckbox>
+          <Row gutter={[8, 0]}>
+            <Col>
+              <Button
+                type="primary"
+                onClick={() =>
+                  handleSearch(dataIndex[filterIndex || 0], confirm)
+                }
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90 }}
+                loading={state.loading}
+              >
+                {t(messageTrans.filterSearchButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                onClick={() =>
+                  handleReset(dataIndex[filterIndex || 0], confirm)
+                }
+                size="small"
+                loading={state.loading}
+                style={{ width: 90 }}
+              >
+                {t(messageTrans.filterResetButton())}
+              </Button>
+            </Col>
+          </Row>
+        </Wrapper>
+      );
+    },
+    onFilter: (value, record) =>
+      record[dataIndex[filterIndex || 0]]
+        ? record[dataIndex[filterIndex || 0]]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : '',
+  });
 
   const getColumnSearchCheckboxFromToProps = (
     dataIndex: string[],
@@ -584,6 +672,7 @@ export const useTableConfig = (
     getColumnSearchCheckboxFromToProps,
     getColumnSearchSelectProps,
     ConfirmModal,
+    getColumnSearchInputCheckboxProps,
   };
 };
 
@@ -595,6 +684,8 @@ const WrapperCheckbox = styled.div`
   .ant-checkbox-group,
   .ant-select {
     display: grid;
+    max-height: 300px;
+    overflow-y: auto;
   }
 
   border-bottom: 1px solid #d5d4d5;
