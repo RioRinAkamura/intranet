@@ -10,8 +10,10 @@ import {
   useChangePassword,
   ChangePasswordPayload,
 } from '../ChangePasswordModal/useChangePassword';
+import { useAuth } from '../Auth/Context';
 
 export function Badges() {
+  const { identity } = useAuth();
   const { notify } = useNotify();
   const history = useHistory();
   const { logout } = useLogout();
@@ -100,10 +102,7 @@ export function Badges() {
             href="/"
           >
             <UserInfo>
-              <img
-                src="https://coreui.io/demo/3.4.0/assets/img/avatars/6.jpg"
-                alt=""
-              />
+              <img src={identity ? identity.avatar : ''} alt="" />
             </UserInfo>
           </a>
         </Dropdown>
@@ -135,5 +134,6 @@ const UserInfo = styled.div`
   img {
     border-radius: 50%;
     width: 2rem;
+    height: 2rem;
   }
 `;

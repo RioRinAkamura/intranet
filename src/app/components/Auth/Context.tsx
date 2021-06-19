@@ -71,3 +71,6 @@ export const AuthContextProvider = ({ authProvider, children }) => {
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
+
+export const useAuth = () =>
+  (React.useContext(AuthContext) as unknown) as AuthContextValues;
