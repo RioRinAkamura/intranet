@@ -3,11 +3,13 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 // import { api } from 'utils/api';
 import { projectsActions as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
+import qs from 'query-string';
 // import { PayloadAction } from '@reduxjs/toolkit';
 
 function* fetchProjects(action) {
   try {
     const { params } = action.payload;
+    console.log(params, 'params');
     const queryParams = {
       search: params.search,
       ordering: params.ordering,
@@ -16,6 +18,7 @@ function* fetchProjects(action) {
       status: params.status,
       page: params.page,
       limit: params.limit,
+      employee_id: params.employee,
     };
     // const response = yield call(
     //   [api, api.hr.employee.list],
@@ -30,6 +33,9 @@ function* fetchProjects(action) {
 
     const response = yield call(fakeAPI.get, '/hr/projects', {
       params: { ...queryParams },
+      paramsSerializer: params => {
+        return qs.stringify(params);
+      },
     });
 
     yield put(actions.fetchProjectsSuccess(response));

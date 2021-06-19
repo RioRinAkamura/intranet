@@ -5,6 +5,7 @@ import {
   Table,
   Form,
   TablePaginationConfig,
+  CheckboxOptionType,
   Tooltip,
   Popover,
   // Tag,
@@ -30,6 +31,9 @@ import {
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 import { useProjectsSlice } from './slice';
+import { useUserspageSlice } from 'app/pages/UserPage/UserListPage/slice';
+import { selectUserspage } from 'app/pages/UserPage/UserListPage/slice/selectors';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { PageTitle } from 'app/components/PageTitle';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
@@ -64,13 +68,21 @@ export const ProjectsPage: React.FC = () => {
   const deleteSuccess = deleteModalState?.deleteSuccess;
   const deleteFailed = deleteModalState?.deleteFailed;
   const [textCopy, setTextCopy] = useState(false);
+  const getUserListState = useSelector(selectUserspage);
 
   const { actions } = useProjectsSlice();
+  const { actions: userActions } = useUserspageSlice();
   const dispatch = useDispatch();
-
+  const [userOptions, setUserOptions] = useState<CheckboxOptionType[]>([]);
   const params = useSelector(selectProjectsParams);
   const isFilter = useSelector(selectProjectsIsFilter);
   const getProjectState = useSelector(selectProjects);
+
+  const fetchUsers = useCallback(() => {
+    dispatch(
+      userActions.fetchUsers({ params: { limit: 1000, page: undefined } }),
+    );
+  }, [userActions, dispatch]);
 
   const {
     setSelectedRows,
@@ -85,6 +97,7 @@ export const ProjectsPage: React.FC = () => {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchCheckboxProps,
+    getColumnSearchInputCheckboxProps,
     ConfirmModal,
   } = useTableConfig(getProjectState, ProjectsMessages, setFilterText);
 
@@ -97,6 +110,23 @@ export const ProjectsPage: React.FC = () => {
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  useEffect(() => {
+    const mapUsers: any =
+      getUserListState.users &&
+      [...getUserListState.users].map(user => {
+        return {
+          label: user.first_name + ' ' + user.last_name,
+          value: user.id,
+        };
+      });
+
+    setUserOptions(mapUsers);
+  }, [getUserListState.users]);
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
@@ -305,31 +335,6 @@ export const ProjectsPage: React.FC = () => {
       ...getColumnSorterProps('name', 1),
       ...getColumnSearchInputProps(['name']),
     },
-    // {
-    //   title: t(ProjectsMessages.listTMTitle()),
-    //   children: [
-    //     {
-    //       title: t(ProjectsMessages.listPMTitle()),
-    //       ...memberChildren('PM'),
-    //     },
-    //     {
-    //       title: t(ProjectsMessages.listLDTitle()),
-    //       ...memberChildren('TL'),
-    //     },
-    //     {
-    //       title: t(ProjectsMessages.listQCTitle()),
-    //       ...memberChildren('QC'),
-    //     },
-    //     {
-    //       title: t(ProjectsMessages.listDEVTitle()),
-    //       ...memberChildren('DEV'),
-    //     },
-    //     {
-    //       title: t(ProjectsMessages.listOTHERTitle()),
-    //       ...memberChildren('OTHER'),
-    //     },
-    //   ],
-    // },
     {
       title: 'Member',
       width: 200,
@@ -346,6 +351,7 @@ export const ProjectsPage: React.FC = () => {
           members={members}
         />
       ),
+      ...getColumnSearchInputCheckboxProps(['employee'], userOptions, 0),
     },
     {
       title: t(ProjectsMessages.listStartedTitle()),
