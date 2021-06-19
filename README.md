@@ -10,7 +10,7 @@ This project uses a SDK package to communicate with our API. The configuration o
 
 ```shell
 npm config set @hdwebsoft:registry https://gitlab.com/api/v4/projects/25975384/packages/npm/
-npm config set -- //gitlab.example.com/api/v4/projects/25975384/packages/npm/:_authToken=ZiveEc1yo29oMESFoiN3
+npm config set -- //gitlab.com/api/v4/projects/25975384/packages/npm/:_authToken=ZiveEc1yo29oMESFoiN3
 ```
 
 Start and check our example app, if you want
