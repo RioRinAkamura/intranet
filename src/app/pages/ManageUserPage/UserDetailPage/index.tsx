@@ -42,7 +42,6 @@ export const UserManageDetailPage = props => {
 
   React.useEffect(() => {
     if (location.state) {
-      console.log('location.state');
       const edit = location.state.edit;
       if (edit) {
         setIsEdit(true);

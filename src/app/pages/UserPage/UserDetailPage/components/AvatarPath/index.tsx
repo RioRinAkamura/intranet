@@ -47,7 +47,7 @@ export const AvatarPath = memo((props: Props) => {
   const { isView, form, user, isEdit, hidden } = props;
   const { t } = useTranslation();
 
-  const [imageURL, setImageURL] = useState('');
+  const [imageURL, setImageURL] = useState<string | undefined>('');
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [isRefresh, setIsRefresh] = useState(false);
 
@@ -64,7 +64,9 @@ export const AvatarPath = memo((props: Props) => {
       setLoadingUpload(false);
       const reader = new FileReader();
       reader.addEventListener('load', () => {
+        console.log(reader, 'reader');
         if (reader.result) {
+          console.log(reader.result.toString());
           setImageURL(reader.result.toString());
         }
       });
@@ -83,7 +85,11 @@ export const AvatarPath = memo((props: Props) => {
     if ((userDetails.identity && !isView && !isEdit) || isRefresh) {
       form.setFieldsValue({ code: userDetails.identity });
     }
-  }, [form, isView, userDetails, isRefresh, isEdit]);
+
+    if (isEdit || isView) {
+      setImageURL(user?.avatar);
+    }
+  }, [form, isView, userDetails, isRefresh, isEdit, user?.avatar]);
 
   return (
     <>
@@ -92,7 +98,7 @@ export const AvatarPath = memo((props: Props) => {
           <WrapperAvatar>
             <FormItemAvatar name="avatar" valuePropName="file">
               <Avatar
-                src={user?.avatar || imageURL}
+                src={imageURL}
                 alt="avatar"
                 icon={!isView && !user?.first_name && <CameraOutlined />}
                 size={170}
