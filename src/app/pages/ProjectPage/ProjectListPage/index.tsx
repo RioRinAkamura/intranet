@@ -339,13 +339,11 @@ export const ProjectsPage: React.FC = () => {
       title: 'Member',
       width: 200,
       dataIndex: 'members',
+      ...getColumnSorterProps('members', 2),
       render: (members, record: any) => (
         <TeamMembers
           callback={() => {
             dispatch(actions.fetchProjects({ params: params }));
-
-            // console.log('callback');
-            // fetchProjects();
           }}
           projId={record.id}
           members={members}
@@ -394,13 +392,13 @@ export const ProjectsPage: React.FC = () => {
         ],
       ),
     },
-    {
-      title: t(ProjectsMessages.listTotalMembers()),
-      dataIndex: 'total_members',
-      width: 130,
-      ...getColumnSorterProps('total_members', 3),
-      render: text => <TextCenter>{text}</TextCenter>,
-    },
+    // {
+    //   title: t(ProjectsMessages.listTotalMembers()),
+    //   dataIndex: 'total_members',
+    //   width: 130,
+    //   ...getColumnSorterProps('total_members', 3),
+    //   render: text => <TextCenter>{text}</TextCenter>,
+    // },
     {
       title: t(ProjectsMessages.listTotalWeeklyHours()),
       dataIndex: 'total_weekly_hour_allocated',
