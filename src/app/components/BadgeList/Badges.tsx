@@ -14,6 +14,7 @@ import { useAuth } from '../Auth/Context';
 
 export function Badges() {
   const { identity } = useAuth();
+  console.log(identity, 'identity');
   const { notify } = useNotify();
   const history = useHistory();
   const { logout } = useLogout();
@@ -65,7 +66,7 @@ export function Badges() {
     return (
       <Menu>
         <Menu.Item key="0">
-          <a href="https://www.antgroup.com">Profile</a>
+          <a onClick={() => history.push(`/users/${identity?.id}`)}>Profile</a>
         </Menu.Item>
         <Menu.Item key="1">
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}

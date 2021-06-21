@@ -394,13 +394,13 @@ export const ProjectsPage: React.FC = () => {
         ],
       ),
     },
-    {
-      title: t(ProjectsMessages.listTotalMembers()),
-      dataIndex: 'total_members',
-      width: 130,
-      ...getColumnSorterProps('total_members', 3),
-      render: text => <TextCenter>{text}</TextCenter>,
-    },
+    // {
+    //   title: t(ProjectsMessages.listTotalMembers()),
+    //   dataIndex: 'total_members',
+    //   width: 130,
+    //   ...getColumnSorterProps('total_members', 3),
+    //   render: text => <TextCenter>{text}</TextCenter>,
+    // },
     {
       title: t(ProjectsMessages.listTotalWeeklyHours()),
       dataIndex: 'total_weekly_hour_allocated',
