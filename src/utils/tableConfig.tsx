@@ -118,7 +118,6 @@ export const useTableConfig = (
         multiple: columnPriority,
       },
     };
-    console.log(dataIndex, state.params.ordering);
     if (state.params.ordering) {
       ordering['sortOrder'] = state.params.ordering.includes(dataIndex)
         ? state.params.ordering.includes('-' + dataIndex)

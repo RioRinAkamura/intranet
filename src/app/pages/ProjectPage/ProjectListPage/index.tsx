@@ -339,13 +339,11 @@ export const ProjectsPage: React.FC = () => {
       title: 'Member',
       width: 200,
       dataIndex: 'members',
+      ...getColumnSorterProps('members', 2),
       render: (members, record: any) => (
         <TeamMembers
           callback={() => {
             dispatch(actions.fetchProjects({ params: params }));
-
-            // console.log('callback');
-            // fetchProjects();
           }}
           projId={record.id}
           members={members}

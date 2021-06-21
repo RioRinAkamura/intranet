@@ -1,8 +1,10 @@
 import React, { memo, useState } from 'react';
 import styled from 'styled-components/macro';
 import { Member } from './components/Member';
-import { Button } from 'antd';
+// import { Button } from 'antd';
 import { TeamMemberModal } from './components/TeamMemberModal';
+
+import { SettingOutlined } from '@ant-design/icons';
 
 interface MemberType {
   allocation: number;
@@ -54,9 +56,10 @@ export const TeamMembers = memo((props: TeamMembersProps) => {
           })}
       </MembersWrapper>
 
-      <Button onClick={() => setVisible(true)} type="primary">
+      {/* <Button onClick={() => setVisible(true)} type="primary">
         Manage
-      </Button>
+      </Button> */}
+      <SettingOutlined onClick={() => setVisible(true)} />
     </div>
   );
 });
