@@ -4,43 +4,16 @@ import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import { Key, SorterResult } from 'antd/lib/table/interface';
 import { identity, isArray, isEmpty, pickBy } from 'lodash';
-
-interface useDataTable {
-  setSearchText: (text: string) => void;
-  resetSearch: () => void;
-  setFilterText: (value: FilterColumns) => void;
-  setSelectedRows: <T>(selectedRowKeys: Key[], selectedRows: T[]) => void;
-  setOrdering: <T>(sorter: SorterResult<T> | SorterResult<T>[]) => void;
-  setPagination: (pagination: TablePagination) => void;
-}
-
-export interface TableStateProps {
-  loading?: boolean;
-  params: Params;
-  filterColumns?: FilterColumns;
-}
-
-export interface TablePagination {
-  current?: number;
-  pageSize?: number;
-  total?: number;
-}
-
-interface Params {
-  [key: string]: string | number | undefined;
-  ordering?: string;
-  search?: string;
-}
-interface FilterColumns {
-  [key: string]: string | undefined;
-}
-
-interface TableActions {
-  [key: string]: Function;
-}
+import {
+  TableActions,
+  useDataTable,
+  TablePagination,
+  FilterColumns,
+  TableListState,
+} from './slice/types';
 
 export const useHandleDataTable = (
-  state: TableStateProps,
+  state: TableListState,
   actions: TableActions,
 ): useDataTable => {
   const history = useHistory();
@@ -50,19 +23,17 @@ export const useHandleDataTable = (
   });
 
   const dispatch = useDispatch();
-  const { filterColumns } = state;
+  const { filterColumns, reload, loading } = state;
   const { ordering } = state.params;
 
   React.useLayoutEffect(() => {
-    if (location.search) {
+    if (location.search && reload && !loading) {
       let params = parse(location.search, {
         sort: false,
       });
       dispatch(actions.changeState(pickBy(params, identity)));
-    } else {
-      dispatch(actions.notQuery());
     }
-  }, [actions, dispatch, location.search]);
+  }, [actions, dispatch, location.search, reload, loading]);
 
   const setSelectedRows = <T,>(
     selectedRowKeys: Key[],
