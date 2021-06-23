@@ -14,7 +14,6 @@ import { useAuth } from '../Auth/Context';
 
 export function Badges() {
   const { identity } = useAuth();
-  console.log(identity, 'identity');
   const { notify } = useNotify();
   const history = useHistory();
   const { logout } = useLogout();

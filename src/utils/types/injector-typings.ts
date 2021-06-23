@@ -12,7 +12,7 @@ export type InjectedReducersType = {
 };
 export interface InjectReducerParams<Key extends RootStateKeyType> {
   key: Key;
-  reducer: Reducer<RequiredRootState[Key], AnyAction>;
+  reducer: any;
 }
 
 export interface InjectSagaParams {

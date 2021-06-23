@@ -1,26 +1,29 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
-import { leaveApplicationPageSaga } from './saga';
+import { TableSaga } from './saga';
+import { Key } from 'react';
 import {
-  LeaveApplicationState,
+  Delete,
   FilterColumns,
   QueryParams,
-  LeaveApplicationResponse,
-  Delete,
+  TableListState,
+  TablePagination,
 } from './types';
-import { Key } from 'react';
-import { TablePagination } from '../useHandleDataTable';
+import { RootStateKeyType } from 'utils/types/injector-typings';
 
-export const initialState: LeaveApplicationState = {
+export const initialState: TableListState = {
+  model: 'table',
   results: [],
   loading: false,
   deleteSuccess: false,
   deleteFailed: false,
-  isFilter: true,
+  reload: true,
   params: {
     limit: 20,
     page: 1,
+    search: '',
+    ordering: '',
   },
   pagination: {
     pageSize: 20,
@@ -28,25 +31,26 @@ export const initialState: LeaveApplicationState = {
     total: 20,
   },
   filterColumns: {},
+  selectedRows: [],
   selectedRowKeys: [],
 };
 
-const slice = createSlice({
-  name: 'leaveApplication',
+const sliceOptions = (model: RootStateKeyType) => ({
+  name: model,
   initialState,
   reducers: {
-    fetchList(state, action: PayloadAction<LeaveApplicationState>) {
+    fetchList(state, action) {
       state.loading = true;
     },
-    fetchListSuccess(state, action: PayloadAction<LeaveApplicationResponse>) {
+    fetchListSuccess(state, action: PayloadAction<any>) {
       state.results = action.payload.results;
       state.pagination!.total = Number(action.payload.count);
       state.pagination!.current = Number(state.params.page);
       state.pagination!.pageSize = Number(state.params.limit);
       state.loading = false;
-      state.isFilter = true;
+      state.reload = false;
     },
-    fetchListFailure(state, action: PayloadAction<LeaveApplicationState>) {
+    fetchListFailure(state, action: PayloadAction<TableListState>) {
       state.error = action.payload.error;
       state.loading = false;
     },
@@ -54,29 +58,25 @@ const slice = createSlice({
       state.params = { ...state.params, ...action.payload };
       state.filterColumns = {
         ...state.filterColumns,
-        employee_name: action.payload.employee_name,
-        phone: action.payload.phone,
-        email: action.payload.email,
-        title: action.payload.title,
-        description: action.payload.description,
-        start_date: action.payload.start_date,
-        end_date: action.payload.end_date,
-        working_type: action.payload.working_type,
-        approval_status: action.payload.approval_status,
+        name: action.payload.name,
+        priority: action.payload.priority,
+        status: action.payload.status,
       };
       state.pagination = {
         ...state.pagination,
         current: action.payload.page,
         pageSize: action.payload.limit,
       };
-      state.isFilter = false;
+      state.loading = false;
+      state.reload = true;
     },
     notQuery(state) {
-      state.isFilter = false;
+      state.reload = false;
     },
     filterColumns(state, action: PayloadAction<FilterColumns>) {
       state.filterColumns = { ...state.filterColumns, ...action.payload };
       state.params = { ...state.params, ...action.payload };
+      state.reload = true;
     },
     selectedRows<T>(
       state,
@@ -93,31 +93,35 @@ const slice = createSlice({
       if (state.params.page && state.params.page > 1) {
         state.params.page = 1;
       }
+      state.reload = true;
     },
     resetSearch(state) {
       state.filterColumns = {};
       state.params = {
         limit: 20,
         page: 1,
+        search: '',
         ordering: '',
       };
       state.selectedRowKeys = undefined;
       state.selectedRows = undefined;
+      state.reload = true;
     },
     setOrdering(state, action: PayloadAction<string | undefined>) {
       state.params.ordering = action.payload;
+      state.reload = true;
     },
     setPagination(state, action: PayloadAction<TablePagination>) {
       state.params.limit = action.payload.pageSize;
       state.params.page = action.payload.current;
+      state.reload = true;
     },
     delete(state, action: PayloadAction<Delete>) {
-      state.isFilter = true;
       state.deleteSuccess = false;
       state.deleteFailed = false;
     },
     deleteSuccess(state) {
-      state.isFilter = false;
+      state.reload = true;
       state.deleteSuccess = true;
       state.deleteFailed = false;
     },
@@ -132,10 +136,14 @@ const slice = createSlice({
   },
 });
 
-export const { actions: leaveApplicationPageActions } = slice;
+export const tableActions = (model: RootStateKeyType) => {
+  return createSlice(sliceOptions(model)).actions;
+};
 
-export const useLeaveApplicationPageSlice = () => {
-  useInjectReducer({ key: slice.name, reducer: slice.reducer });
-  useInjectSaga({ key: slice.name, saga: leaveApplicationPageSaga });
+export const useTableSlice = (model: RootStateKeyType) => {
+  sessionStorage.setItem('model', model);
+  const slice = createSlice(sliceOptions(model));
+  useInjectReducer({ key: model, reducer: slice.reducer });
+  useInjectSaga({ key: model, saga: TableSaga });
   return { actions: slice.actions };
 };
