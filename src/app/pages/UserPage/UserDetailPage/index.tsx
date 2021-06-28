@@ -25,6 +25,7 @@ import { useUpdateUserDetail } from './useUpdateUserDetail';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
 import { AddBankModal } from './components/AddBankModal/Loadable';
 import { Notes } from './components/Notes/Loadable';
+import { Device } from './components/Devices/Loadable';
 import { DetailForm } from './components/DetailForm/Loadable';
 import { Projects } from './components/Projects/Loadable';
 import { useNotesSlice } from './components/Notes/slice';
@@ -45,6 +46,7 @@ enum TabKeys {
   'details' = 'details',
   'notes' = 'notes',
   'projects' = 'projects',
+  'devices' = 'devices',
 }
 
 export function UserDetailPage(props: Props) {
@@ -217,6 +219,9 @@ export function UserDetailPage(props: Props) {
           </TabPane>
           <TabPane tab="Notes" key={TabKeys.notes}>
             <Notes />
+          </TabPane>
+          <TabPane tab="Devices">
+            <Device id={id} />
           </TabPane>
         </StyledTabs>
       ) : (

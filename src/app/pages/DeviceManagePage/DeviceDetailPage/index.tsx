@@ -1,0 +1,320 @@
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components/macro';
+import { PageTitle } from 'app/components/PageTitle';
+import { SettingOutlined } from '@ant-design/icons';
+import { FORM_RULES, HEALTH_STATUS } from 'constants/deviceManager';
+import { DeviceCategory } from '../DeviceCategory';
+import { useSelector } from 'react-redux';
+import { selectCategories } from '../DeviceCategory/slice/selectors';
+import moment from 'moment';
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Row,
+  Select,
+  SelectProps,
+  Tabs,
+} from 'antd';
+import { useHistory, useLocation, useParams } from 'react-router';
+import { useDeviceDetail } from './useDeviceDetail';
+import { SelectValue } from 'antd/lib/select';
+import {
+  inputViewProps,
+  datePickerViewProps,
+  textareaViewProps,
+} from 'utils/types';
+
+const { Option } = Select;
+
+interface LocationState {
+  edit: boolean;
+}
+
+const selectProps: SelectProps<SelectValue> = {
+  autoClearSearchValue: false,
+  bordered: false,
+  dropdownStyle: { display: 'none' },
+  removeIcon: null,
+  showArrow: false,
+  style: { pointerEvents: 'none' },
+  placeholder: '',
+};
+
+const { TabPane } = Tabs;
+
+export const DeviceDetailPage = props => {
+  const [visible, setVisible] = useState(false);
+  const [form] = Form.useForm();
+  const categories = useSelector(selectCategories);
+  const { id } = useParams<Record<string, string>>();
+  const [isCreate, setIsCreate] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [data, setData] = useState<any>();
+  const [isDetailTab, setIsDetailTab] = useState(true);
+  const { detail, loading, create, update } = useDeviceDetail();
+  const location = useLocation<LocationState>();
+  const history = useHistory();
+  const isView = isCreate || isEdit ? false : true;
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        ...data,
+        since: data.since && moment(data.since),
+      });
+    }
+  }, [data, form, isEdit]);
+
+  useEffect(() => {
+    if (id) {
+      setIsCreate(false);
+      (async () => {
+        const response = await detail(id);
+        setData(response);
+      })();
+    } else {
+      setIsCreate(true);
+    }
+  }, [id, detail]);
+
+  // form handler
+  const handleSubmit = () => {
+    form.validateFields().then(async values => {
+      const mapValues = {
+        // ...omit(values, ['id']),
+        ...values,
+        since: Number(moment(values.since).format('yyyy')),
+      };
+
+      try {
+        if (isCreate) {
+          delete mapValues.id;
+          // const response = await fakeAPI.post('device-management/devices/', mapValues);
+          await create(mapValues);
+
+          // post employee device
+        }
+
+        if (isEdit) {
+          const data = await update(mapValues);
+          setData(data);
+          setIsEdit(false);
+
+          // update employee device
+        }
+        // console.log(response, 'res');
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  };
+
+  // tab handler
+  const handleTabChange = key => {
+    if (key === 'detail') {
+      setIsDetailTab(true);
+    } else {
+      setIsDetailTab(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setVisible(false);
+  };
+
+  useEffect(() => {
+    if (location.state) {
+      const edit = location.state.edit;
+      if (edit) {
+        setIsEdit(true);
+        history.replace(location.pathname, {});
+      }
+    }
+  }, [history, location]);
+
+  return (
+    <>
+      <DeviceCategory visible={visible} onCancel={handleCloseModal} />
+      <WrapperTitlePage>
+        <PageTitle>
+          {isView ? 'Device Detail' : isEdit ? 'Edit Device' : 'Create Device'}
+        </PageTitle>
+        <SettingOutlined
+          style={{ margin: '0 0 0 10px' }}
+          onClick={() => setVisible(true)}
+        />
+      </WrapperTitlePage>
+      <StyledTabs defaultActiveKey="detail" onChange={handleTabChange}>
+        <TabPane tab={isEdit || isView ? ' Detail ' : 'Create'} key="detail">
+          <WrapperMainItem>
+            <Form form={form} labelAlign="left">
+              <Form.Item hidden name="id">
+                <Input hidden />
+              </Form.Item>
+              <FormItem name="code" rules={FORM_RULES.CODE} label="Device Code">
+                <Input
+                  {...(isView ? inputViewProps : {})}
+                  placeholder="Device Code"
+                  size="large"
+                ></Input>
+              </FormItem>
+              <FormItem
+                rules={FORM_RULES.CATEGORY}
+                name="category"
+                label="Category"
+              >
+                <Select
+                  placeholder="Category"
+                  {...(isView ? selectProps : {})}
+                  size="large"
+                  style={{
+                    width: '100%',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {categories?.map(category => {
+                    return (
+                      <Option key={category.id} value={category.id}>
+                        {category.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </FormItem>
+              <FormItem name="description" label="Description">
+                <Input.TextArea
+                  {...(isView ? textareaViewProps : {})}
+                  placeholder="Descriptions"
+                  size="large"
+                ></Input.TextArea>
+              </FormItem>
+              <Row gutter={[8, 8]}>
+                <Col span="8">
+                  <FormItem rules={FORM_RULES.SINCE} name="since" label="Since">
+                    <DatePicker
+                      {...(isView ? datePickerViewProps : {})}
+                      picker="year"
+                      size="large"
+                      format="YYYY"
+                    />
+                  </FormItem>
+                </Col>
+                <Col span="8">
+                  <FormItem
+                    rules={FORM_RULES.HEALTH_STATUS}
+                    name="health_status"
+                    label="Health Status"
+                  >
+                    <Select
+                      {...(isView ? selectProps : {})}
+                      size="large"
+                      placeholder="Select Health Status"
+                    >
+                      {HEALTH_STATUS.map(i => (
+                        <Option value={i.value}>{i.label}</Option>
+                      ))}
+                    </Select>
+                  </FormItem>
+                </Col>
+              </Row>
+            </Form>
+          </WrapperMainItem>
+        </TabPane>
+        {/* {(isEdit || isView) && (
+          <TabPane tab="History" key="history">
+            <WrapperMainItem>history</WrapperMainItem>
+          </TabPane>
+        )} */}
+      </StyledTabs>
+      {isDetailTab && (
+        <WrapperButton>
+          <Row gutter={[8, 8]} justify="end">
+            <Col>
+              <PageButton
+                block
+                size="large"
+                shape="round"
+                onClick={() =>
+                  isEdit ? setIsEdit(false) : history.push('/devices')
+                }
+              >
+                Cancel
+              </PageButton>
+            </Col>
+            <Col>
+              <PageButton
+                loading={loading}
+                block
+                size="large"
+                shape="round"
+                type="primary"
+                onClick={() => {
+                  // handleSubmit();
+                  if (isEdit) {
+                    handleSubmit();
+                  } else if (isView) {
+                    setIsEdit(true);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  } else if (isCreate) {
+                    handleSubmit();
+                  }
+                }}
+              >
+                {isView ? 'Edit' : 'Submit'}
+              </PageButton>
+            </Col>
+          </Row>
+        </WrapperButton>
+      )}
+    </>
+  );
+};
+
+export const WrapperTitlePage = styled.div`
+  padding: 1rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const WrapperMainItem = styled.div`
+  margin-top: 2em;
+  padding: 3em;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+`;
+
+const FormItem = styled(Form.Item)`
+  align-items: center;
+
+  label {
+    font-weight: 500;
+    min-width: 150px;
+  }
+`;
+
+const PageButton = styled(Button)`
+  width: 120px;
+`;
+
+const WrapperButton = styled.div`
+  margin-top: 3em;
+  padding: 10px;
+  height: 100%;
+`;
+
+const StyledTabs = styled(Tabs)`
+  margin-top: 10px;
+  .ant-tabs-content-holder {
+  }
+`;

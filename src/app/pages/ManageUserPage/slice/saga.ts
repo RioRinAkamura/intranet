@@ -5,7 +5,6 @@ import { UserManageAction as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
 
 function fetchUsersAction(options) {
-  console.log(options);
   return fakeAPI.get('/users/', {
     params: {
       page: options.params.page,
