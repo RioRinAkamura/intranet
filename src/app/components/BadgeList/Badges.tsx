@@ -65,6 +65,7 @@ export function Badges() {
     return (
       <Menu>
         <Menu.Item key="0">
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a onClick={() => history.push(`/users/${identity?.id}`)}>Profile</a>
         </Menu.Item>
         <Menu.Item key="1">
