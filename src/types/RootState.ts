@@ -6,6 +6,9 @@ import { UserDetailsState } from 'app/pages/UserPage/UserDetailPage/slice/types'
 import { EmployeeProjectState } from 'app/pages/UserPage/UserDetailPage/components/Projects/slice/types';
 import { EmployeeNoteState } from 'app/pages/UserPage/UserDetailPage/components/Notes/slice/types';
 import { UsersManagePageState } from 'app/pages/ManageUserPage/slice/types';
+import { DevicesManagerState } from 'app/pages/DeviceManagePage/DeviceListPage/slice/types';
+import { CategoryState } from 'app/pages/DeviceManagePage/DeviceCategory/slice/types';
+import { DeviceHistoryState } from 'app/pages/DeviceManagePage/DeviceHistory/slice/types';
 import { TableListState } from 'app/components/TableListModel/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
@@ -24,6 +27,10 @@ export interface RootState {
   employeeProject?: EmployeeProjectState;
   employeeNote?: EmployeeNoteState;
   usersmanagepage?: UsersManagePageState;
+  // leaveApplication?: LeaveApplicationState;
+  DeviceManager?: DevicesManagerState;
+  CategoryManager?: CategoryState;
+  DeviceHistory?: DeviceHistoryState;
   table: TableListState;
   employeeLeave: TableListState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly

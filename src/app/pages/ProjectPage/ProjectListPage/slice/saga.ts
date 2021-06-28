@@ -9,7 +9,6 @@ import qs from 'query-string';
 function* fetchProjects(action) {
   try {
     const { params } = action.payload;
-    console.log(params, 'params');
     const queryParams = {
       search: params.search,
       ordering: params.ordering,

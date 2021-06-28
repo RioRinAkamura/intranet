@@ -31,7 +31,8 @@ import { ProjectDetailPage } from './pages/ProjectPage/ProjectDetailPage/Loadabl
 import { ManageUserPage } from './pages/ManageUserPage/Loadable';
 import { UserManageDetailPage } from './pages/ManageUserPage/UserDetailPage/Loadable';
 import { LeaveApplicationDetailPage } from './pages/LeaveApplicationPage/LeaveApplicationDetailPage/Loadable';
-
+import { DeviceManagerPage } from './pages/DeviceManagePage/DeviceListPage/Loadable';
+import { DeviceDetailPage } from './pages/DeviceManagePage/DeviceDetailPage/Loadable';
 export function App() {
   const { i18n } = useTranslation();
   return (
@@ -126,7 +127,6 @@ export function App() {
                   path={'/projects/:id'}
                   component={ProjectDetailPage}
                 />
-
                 {/* use list */}
                 <PrivateRoute
                   exact
@@ -142,6 +142,22 @@ export function App() {
                   exact
                   path={'/users/:id'}
                   component={UserManageDetailPage}
+                />
+                {/* device manager */}
+                <PrivateRoute
+                  exact
+                  path={'/devices'}
+                  component={DeviceManagerPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/devices/create'}
+                  component={DeviceDetailPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/devices/:id'}
+                  component={DeviceDetailPage}
                 />
               </Switch>
             </AppLayout>
