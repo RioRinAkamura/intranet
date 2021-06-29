@@ -26,6 +26,7 @@ import {
   datePickerViewProps,
   textareaViewProps,
 } from 'utils/types';
+import { DeviceHistoryTab } from '../DeviceHistory/Loadable';
 
 const { Option } = Select;
 
@@ -223,11 +224,13 @@ export const DeviceDetailPage = props => {
             </Form>
           </WrapperMainItem>
         </TabPane>
-        {/* {(isEdit || isView) && (
+        {(isEdit || isView) && (
           <TabPane tab="History" key="history">
-            <WrapperMainItem>history</WrapperMainItem>
+            <WrapperMainItem>
+              <DeviceHistoryTab />
+            </WrapperMainItem>
           </TabPane>
-        )} */}
+        )}
       </StyledTabs>
       {isDetailTab && (
         <WrapperButton>

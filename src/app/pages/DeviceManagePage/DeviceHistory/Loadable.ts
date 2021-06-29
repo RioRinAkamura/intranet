@@ -6,7 +6,7 @@
 
 import { lazyLoad } from 'utils/loadable';
 
-export const DeviceHistoryPage = lazyLoad(
+export const DeviceHistoryTab = lazyLoad(
   () => import('./index'),
   module => module.DeviceHistory,
 );

@@ -79,7 +79,7 @@ export const DevicesManager = () => {
   };
 
   const fetchCategories = async () => {
-    const response: any = await fakeAPI.get('/device-management/categories');
+    const response: any = await fakeAPI.get('/devices/categories');
 
     setCategories(response.results);
   };
