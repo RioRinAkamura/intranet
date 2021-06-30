@@ -30,6 +30,7 @@ interface DeviceResponse {
   stopped_using_at: string;
   status: string;
   id: string;
+  employee_name: string;
 }
 
 interface Devices {
@@ -86,13 +87,14 @@ const WrapperForm: React.FC<FormProps> = ({
           ))}
         </Select>
       </Form.Item>
-      <Form.Item rules={FORM_RULES.STATUS} name="status" label="Status">
+      <Form.Item
+        rules={FORM_RULES.STATUS}
+        initialValue={'assigned'}
+        name="status"
+        label="Status"
+      >
         {/* <Input size="large" placeholder="Summary" disabled={isView} /> */}
-        <Select
-          disabled={isView}
-          placeholder="Status"
-          defaultValue={'assigned'}
-        >
+        <Select disabled={isView} placeholder="Status">
           {EMPLOYEE_DEVICE_STATUS.map(status => (
             <Option value={status.value}>{status.label}</Option>
           ))}
@@ -251,7 +253,13 @@ export const Device = memo((props: DeviceProps) => {
         employee: null,
       });
 
-      await fakeAPI.delete(`devices/employee/${deviceDelete?.id}`);
+      await fakeAPI.post(`devices/histories/`, {
+        device: deviceDelete?.device,
+        employee: id,
+        note: `Unassign device from employee ${deviceDelete?.employee_name}`,
+      });
+
+      await fakeAPI.delete(`devices/employee-devices/${deviceDelete?.id}`);
       fetchEmployeeDevices();
       setIsDelete(false);
     } catch (e) {
@@ -296,6 +304,12 @@ export const Device = memo((props: DeviceProps) => {
             await fakeAPI.patch(`devices/${deviceUpdate?.device}/`, {
               status: 'available',
               employee: null,
+            });
+
+            await fakeAPI.post(`devices/histories/`, {
+              device: deviceUpdate?.device,
+              employee: id,
+              note: `Unassign device from employee ${deviceUpdate?.employee_name}`,
             });
           }
 
