@@ -18,14 +18,14 @@ export const MenuItems: React.FC = () => {
             {item.subMenu.map(menu => {
               return (
                 <Item key={menu.to}>
-                  <Link to={menu.to}>{menu.title}</Link>
+                  <Link to={menu.to!}>{menu.title}</Link>
                 </Item>
               );
             })}
           </SubMenu>
         ) : (
           <Item key={item.to} icon={item.icon}>
-            <Link to={item.to}>{item.title}</Link>
+            <Link to={item.to!}>{item.title}</Link>
           </Item>
         );
       })}

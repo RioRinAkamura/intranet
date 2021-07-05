@@ -12,7 +12,7 @@ import { NewEmployees } from './components/NewEmployees';
 import { Recruitments } from './components/Recruitments';
 import { PageTitle } from 'app/components/PageTitle';
 
-export const HomePage = () => {
+export const HomePage: React.FC = () => {
   return (
     <>
       <Helmet>
@@ -65,8 +65,8 @@ const TitleWrapper = styled.div`
   align-items: center;
   background-color: white;
   padding: 1rem;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-  border-radius: 12px;
+  /* box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16); */
+  border-radius: 10px;
 
   span {
     margin: 0 15px;

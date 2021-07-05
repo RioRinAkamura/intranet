@@ -9,8 +9,8 @@ interface CardProps {
 
 export const CardWrapper = styled(Card)`
   background-color: white;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-  border-radius: 12px;
+  /* box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16); */
+  border-radius: 10px;
   height: ${(props: CardProps) => props.mainheight};
   background: ${(props: CardProps) =>
     props.backgroundimg && `url(${props.backgroundimg})`};

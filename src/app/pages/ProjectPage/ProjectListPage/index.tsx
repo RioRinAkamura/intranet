@@ -392,13 +392,6 @@ export const ProjectsPage: React.FC = () => {
         ],
       ),
     },
-    // {
-    //   title: t(ProjectsMessages.listTotalMembers()),
-    //   dataIndex: 'total_members',
-    //   width: 130,
-    //   ...getColumnSorterProps('total_members', 3),
-    //   render: text => <TextCenter>{text}</TextCenter>,
-    // },
     {
       title: t(ProjectsMessages.listTotalWeeklyHours()),
       dataIndex: 'total_weekly_hour_allocated',
@@ -556,8 +549,8 @@ const Wrapper = styled.div`
   background-color: white;
   padding: 1rem;
   margin-bottom: 2rem;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-  border-radius: 12px;
+  /* box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16); */
+  border-radius: 10px;
 `;
 
 const TextCenter = styled.span`

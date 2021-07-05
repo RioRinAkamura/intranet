@@ -14,7 +14,7 @@ type AdminRouteProps = {
 const AppLayout: React.FC<AdminRouteProps> = ({
   children,
 }: AdminRouteProps) => {
-  const [collapsed, setCollapsed] = React.useState(false);
+  const [collapsed, setCollapsed] = React.useState(true);
 
   const onCollapse = (collapsed: boolean): void => {
     setCollapsed(!collapsed);

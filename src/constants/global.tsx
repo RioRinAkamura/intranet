@@ -1,20 +1,26 @@
 import {
-  AppstoreOutlined,
+  // AppstoreOutlined,
   PieChartOutlined,
   TeamOutlined,
   UserOutlined,
+  ScheduleOutlined,
 } from '@ant-design/icons';
 
-const SIDE_BAR_MENU_ITEMS = [
+interface MenuItem {
+  title: string;
+  to?: string;
+  icon?: JSX.Element;
+}
+
+interface Menu extends MenuItem {
+  subMenu?: MenuItem[];
+}
+
+const SIDE_BAR_MENU_ITEMS: Menu[] = [
   {
     title: 'Dashboard',
     to: '/',
     icon: <PieChartOutlined />,
-  },
-  {
-    title: 'Users',
-    to: '/Users',
-    icon: <UserOutlined />,
   },
   {
     title: 'Employees',
@@ -24,22 +30,27 @@ const SIDE_BAR_MENU_ITEMS = [
   {
     title: 'Leave Applications',
     to: '/leave_applications',
-    icon: <TeamOutlined />,
+    icon: <ScheduleOutlined />,
   },
   {
-    title: 'Navigation Two',
-    icon: <AppstoreOutlined />,
-    subMenu: [
-      {
-        title: 'Option 9',
-        to: '/option9',
-      },
-      {
-        title: 'Option10',
-        to: '/option10',
-      },
-    ],
+    title: 'Users',
+    to: '/Users',
+    icon: <UserOutlined />,
   },
+  // {
+  //   title: 'Navigation Two',
+  //   icon: <AppstoreOutlined />,
+  //   subMenu: [
+  //     {
+  //       title: 'Option 9',
+  //       to: '/option9',
+  //     },
+  //     {
+  //       title: 'Option10',
+  //       to: '/option10',
+  //     },
+  //   ],
+  // },
 ];
 
 export default SIDE_BAR_MENU_ITEMS;

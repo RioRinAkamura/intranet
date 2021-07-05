@@ -32,10 +32,10 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
         <Sider
           collapsible
           collapsed={collapsed}
-          onCollapse={() => onCollapse(collapsed)}
           collapsedWidth="80"
           breakpoint="lg"
           style={{ display: isSidebar ? 'none' : 'block' }}
+          onClick={() => onCollapse(collapsed)}
         >
           <Logo />
           <MenuItems />

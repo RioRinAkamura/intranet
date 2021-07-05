@@ -350,7 +350,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
       visible={visibility}
       footer={[
         <Button key="back" onClick={handleCancel}>
-          close
+          Close
         </Button>,
         <Button
           style={{
