@@ -19,7 +19,7 @@ import {
   useTableSlice,
 } from 'app/components/TableListModel/slice';
 import { RootState } from 'types';
-import {CardLayout} from "app/components/CardLayout"
+import { CardLayout } from 'app/components/CardLayout';
 
 type EmployeeLeave = models.hr.EmployeeLeave;
 const model = 'employeeLeave';
