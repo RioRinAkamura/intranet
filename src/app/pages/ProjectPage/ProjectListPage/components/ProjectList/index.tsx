@@ -17,6 +17,7 @@ import {
 } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { CardLayout } from 'app/components/CardLayout';
 
 type Employee = models.hr.Employee;
 interface Props {
@@ -31,7 +32,7 @@ export const ProjectList = React.memo((props: Props) => {
   const { loading, data, isMore, moreLoading, onDelete } = props;
   const history = useHistory();
   return (
-    <Wrapper>
+    <CardLayout>
       <List
         className="demo-loadmore-list"
         loading={loading}
@@ -109,7 +110,7 @@ export const ProjectList = React.memo((props: Props) => {
         ) : (
           <LoadMore></LoadMore>
         ))}
-    </Wrapper>
+    </CardLayout>
   );
 });
 
@@ -139,12 +140,4 @@ const LoadMore = styled.div`
   div {
     font-size: xxx-large;
   }
-`;
-
-const Wrapper = styled.div`
-  background-color: #fff;
-  padding: 1em;
-  box-shadow: 0 2px 2px 0 rgba(60, 75, 100, 0.14);
-  border-radius: 2px;
-  border: 1px solid lightgray;
 `;

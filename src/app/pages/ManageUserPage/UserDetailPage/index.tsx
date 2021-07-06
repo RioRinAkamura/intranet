@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
 import { useHistory, useLocation, useParams } from 'react-router';
-import { Button, Col, Row } from 'antd';
-import { PageTitle } from 'app/components/PageTitle';
+import { Button } from 'antd';
+import PageTitle from 'app/components/PageTitle';
 import { DetailForm } from './components/DetailForm';
-import styled from 'styled-components/macro';
 import fakeAPI from 'utils/fakeAPI';
+import { CardLayout } from 'app/components/CardLayout';
 
 interface LocationState {
   edit: boolean;
@@ -52,16 +51,10 @@ export const UserManageDetailPage = props => {
 
   return (
     <>
-      <WrapperTitlePage>
-        <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col sm={16} xs={24}>
-            <PageTitle>
-              {isView ? 'User Name' : isEdit ? 'Edit User' : 'Create User'}
-            </PageTitle>
-          </Col>
-        </Row>
-      </WrapperTitlePage>
-      <Wrapper>
+      <PageTitle
+        title={isView ? 'User Name' : isEdit ? 'Edit User' : 'Create User'}
+      />
+      <CardLayout>
         <DetailForm
           isCreate={isCreate}
           callback={() => setIsEdit(false)}
@@ -69,7 +62,7 @@ export const UserManageDetailPage = props => {
           user={data}
           isView={isView}
         />
-      </Wrapper>
+      </CardLayout>
       {isView && (
         <Button
           style={{ marginLeft: 'auto', display: 'block' }}
@@ -84,12 +77,3 @@ export const UserManageDetailPage = props => {
     </>
   );
 };
-
-const Wrapper = styled.div`
-  background-color: white;
-  padding: 1rem;
-  margin-bottom: 2rem;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-  border-radius: 12px;
-  margin-top: 2rem;
-`;

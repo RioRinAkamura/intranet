@@ -1,6 +1,6 @@
 import { Badge, Col, Row } from 'antd';
 import { CardWrapper } from 'app/components/CardWrapper';
-import { PageTitle } from 'app/components/PageTitle';
+import PageTitle from 'app/components/PageTitle';
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import background from '../../assets/BG.png';
@@ -37,9 +37,9 @@ export const Recruitments = () => {
     <>
       <CardWrapper
         backgroundimg={background}
-        mainheight="328px"
-        bodyheight="250px"
-        title={<PageTitle>Recruitment News</PageTitle>}
+        // mainheight="328px"
+        bodyheight="240px"
+        title={<PageTitle title="Recruitment News" />}
       >
         <RowHeader gutter={[32, 0]} align="middle">
           <Col offset={10} span={3}></Col>

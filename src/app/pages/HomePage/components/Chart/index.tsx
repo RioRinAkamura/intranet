@@ -61,6 +61,7 @@ const DIV = styled.div`
   background-position-x: center;
   background-position-y: initial;
   position: relative;
+  border-radius: 10px;
 `;
 
 const DataRow = styled(Row)`

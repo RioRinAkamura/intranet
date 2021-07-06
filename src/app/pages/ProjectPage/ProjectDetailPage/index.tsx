@@ -10,8 +10,8 @@ import { Button, Col, Form, Input, Row } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
 import moment from 'moment';
 import { useProjectDetail } from './useProjectDetail';
-import { PageTitle } from 'app/components/PageTitle';
-import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
+import PageTitle from 'app/components/PageTitle';
+import { CardLayout } from 'app/components/CardLayout';
 import { config } from 'config';
 import { ProjectInfo } from './components/ProjectInfo';
 import { TeamMembers } from './components/TeamMembers';
@@ -99,16 +99,16 @@ export const ProjectDetailPage = (props: Props) => {
 
   return (
     <>
-      <WrapperTitlePage>
-        <PageTitle>
-          {isView
+      <PageTitle
+        title={
+          isView
             ? t(ProjectDetailMessages.title())
             : isEdit
             ? t(ProjectDetailMessages.editTitle())
-            : t(ProjectDetailMessages.createTitle())}
-        </PageTitle>
-      </WrapperTitlePage>
-      <WrapperMainItem>
+            : t(ProjectDetailMessages.createTitle())
+        }
+      />
+      <CardLayout padding="3rem">
         <Form form={form} labelAlign="left">
           <Form.Item hidden name="id">
             <Input hidden />
@@ -116,7 +116,7 @@ export const ProjectDetailPage = (props: Props) => {
           <ProjectInfo isView={isView} form={form} data={data} />
           <TeamMembers isView={isView} isEdit={isEdit} form={form} />
         </Form>
-      </WrapperMainItem>
+      </CardLayout>
       <WrapperButton>
         <Row gutter={[8, 8]} justify="end">
           <Col>
@@ -163,16 +163,6 @@ export const ProjectDetailPage = (props: Props) => {
     </>
   );
 };
-
-const WrapperMainItem = styled.div`
-  margin-top: 2em;
-  padding: 3em;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-`;
 
 const WrapperButton = styled.div`
   margin-top: 3em;

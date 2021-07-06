@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import { PageTitle } from 'app/components/PageTitle';
+import PageTitle from 'app/components/PageTitle';
 import { SettingOutlined } from '@ant-design/icons';
 import { FORM_RULES, HEALTH_STATUS } from 'constants/deviceManager';
 import { DeviceCategory } from '../DeviceCategory';
@@ -27,6 +27,7 @@ import {
   textareaViewProps,
 } from 'utils/types';
 import { DeviceHistoryTab } from '../DeviceHistory/Loadable';
+import { CardLayout } from 'app/components/CardLayout';
 
 const { Option } = Select;
 
@@ -139,15 +140,14 @@ export const DeviceDetailPage = props => {
   return (
     <>
       <DeviceCategory visible={visible} onCancel={handleCloseModal} />
-      <WrapperTitlePage>
-        <PageTitle>
-          {isView ? 'Device Detail' : isEdit ? 'Edit Device' : 'Create Device'}
-        </PageTitle>
-        <SettingOutlined
-          style={{ margin: '0 0 0 10px' }}
-          onClick={() => setVisible(true)}
-        />
-      </WrapperTitlePage>
+      <PageTitle
+        title={
+          isView ? 'Device Detail' : isEdit ? 'Edit Device' : 'Create Device'
+        }
+        className="no-responsive"
+      >
+        <SettingOutlined onClick={() => setVisible(true)} />
+      </PageTitle>
       <StyledTabs defaultActiveKey="detail" onChange={handleTabChange}>
         <TabPane tab={isEdit || isView ? ' Detail ' : 'Create'} key="detail">
           <WrapperMainItem>
@@ -192,35 +192,32 @@ export const DeviceDetailPage = props => {
                   size="large"
                 ></Input.TextArea>
               </FormItem>
-              <Row gutter={[8, 8]}>
-                <Col span="8">
-                  <FormItem rules={FORM_RULES.SINCE} name="since" label="Since">
-                    <DatePicker
-                      {...(isView ? datePickerViewProps : {})}
-                      picker="year"
-                      size="large"
-                      format="YYYY"
-                    />
-                  </FormItem>
-                </Col>
-                <Col span="8">
-                  <FormItem
-                    rules={FORM_RULES.HEALTH_STATUS}
-                    name="health_status"
-                    label="Health Status"
-                  >
-                    <Select
-                      {...(isView ? selectProps : {})}
-                      size="large"
-                      placeholder="Select Health Status"
-                    >
-                      {HEALTH_STATUS.map(i => (
-                        <Option value={i.value}>{i.label}</Option>
-                      ))}
-                    </Select>
-                  </FormItem>
-                </Col>
-              </Row>
+              <FormItem rules={FORM_RULES.SINCE} name="since" label="Since">
+                <DatePicker
+                  {...(isView ? datePickerViewProps : {})}
+                  picker="year"
+                  size="large"
+                  format="YYYY"
+                />
+              </FormItem>
+
+              <FormItem
+                rules={FORM_RULES.HEALTH_STATUS}
+                name="health_status"
+                label="Health Status"
+              >
+                <Select
+                  {...(isView ? selectProps : {})}
+                  size="large"
+                  placeholder="Select Health Status"
+                >
+                  {HEALTH_STATUS.map(i => (
+                    <Option value={i.value}>{i.label}</Option>
+                  ))}
+                </Select>
+              </FormItem>
+              {/* </Col> */}
+              {/* </Row> */}
             </Form>
           </WrapperMainItem>
         </TabPane>
@@ -276,25 +273,9 @@ export const DeviceDetailPage = props => {
   );
 };
 
-export const WrapperTitlePage = styled.div`
-  padding: 1rem;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const WrapperMainItem = styled.div`
-  margin-top: 2em;
+const WrapperMainItem = styled(CardLayout)`
   padding: 3em;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  margin-top: 0;
 `;
 
 const FormItem = styled(Form.Item)`

@@ -12,6 +12,7 @@ import { IdCardInfo } from '../IdCardInfo/Loadable';
 import { JobInfo } from '../JobInfo/Loadable';
 import { SocialNetwork } from '../SocialNetwork/Loadable';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { CardLayout } from 'app/components/CardLayout';
 
 type Employee = models.hr.Employee;
 
@@ -39,7 +40,7 @@ export const DetailForm = memo((props: FormProps) => {
       <Form.Item hidden name="id">
         <Input hidden />
       </Form.Item>
-      <WrapperMainItem isView={isView}>
+      <Wrapper isView={isView}>
         <Row gutter={[32, 32]}>
           <LeftScreen md={5}>
             <AvatarPath
@@ -61,7 +62,7 @@ export const DetailForm = memo((props: FormProps) => {
             <IdCardInfo isView={isView} isEdit={isEdit} />
           </>
         )}
-      </WrapperMainItem>
+      </Wrapper>
       <WrapperSubItem gutter={[64, 32]}>
         <Col span={isView ? 12 : 8}>
           <WrapperItem>
@@ -88,25 +89,20 @@ const RightScreen = styled(Col)<ScreenProps>`
   padding-left: ${props => (props.isView ? '5em !important' : '0')};
 `;
 
-const WrapperMainItem = styled.div<ScreenProps>`
-  margin-top: ${props => (props.isView ? 'auto' : '2rem')};
-  padding: 3em;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-`;
-
 const WrapperSubItem = styled(Row)`
-  padding-top: 2em;
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    .ant-col {
+      max-width: 100%;
+    }
+  }
 `;
 
-const WrapperItem = styled.div`
+const Wrapper = styled(CardLayout)`
+  margin-top: ${(props: ScreenProps) => (props.isView ? '0' : '2rem')};
+`;
+
+const WrapperItem = styled(CardLayout)`
   padding: 3em 3em 1em 3em;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  margin: 0;
 `;

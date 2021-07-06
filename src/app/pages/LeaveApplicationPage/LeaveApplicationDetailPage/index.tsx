@@ -19,8 +19,7 @@ import { SelectValue } from 'antd/lib/select';
 import { useHistory, useLocation, useParams } from 'react-router';
 import moment from 'moment';
 import { useLeaveApplicationDetail } from './useLeaveApplicationDetail';
-import { PageTitle } from 'app/components/PageTitle';
-import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
+import PageTitle from 'app/components/PageTitle';
 import { config } from 'config';
 import {
   inputViewProps,
@@ -30,6 +29,7 @@ import {
 import { FORM_RULES, WORKING_TYPE } from 'constants/leave_application';
 import { calcBusinessDays } from 'utils/variable';
 import { useGetIdentity } from 'app/components/Auth/useGetIdentity';
+import { CardLayout } from 'app/components/CardLayout';
 
 interface Props {}
 interface LocationState {
@@ -159,15 +159,15 @@ export const LeaveApplicationDetailPage = (props: Props) => {
 
   return (
     <>
-      <WrapperTitlePage>
-        <PageTitle>
-          {isView
+      <PageTitle
+        title={
+          isView
             ? 'Leave application detail'
             : isEdit
             ? 'Edit leave application'
-            : 'Create leave application'}
-        </PageTitle>
-      </WrapperTitlePage>
+            : 'Create leave application'
+        }
+      />
       <WrapperMainItem>
         <Form form={form} labelAlign="left">
           <Form.Item hidden name="id">
@@ -352,14 +352,8 @@ export const LeaveApplicationDetailPage = (props: Props) => {
   );
 };
 
-const WrapperMainItem = styled.div`
-  margin-top: 2em;
+const WrapperMainItem = styled(CardLayout)`
   padding: 3em;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
 `;
 
 const WrapperButton = styled.div`

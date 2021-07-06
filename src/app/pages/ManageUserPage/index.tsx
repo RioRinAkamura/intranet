@@ -22,6 +22,8 @@ import {
 import { useHistory, useLocation } from 'react-router';
 import { RootState } from 'types';
 import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
+import PageTitle from 'app/components/PageTitle';
+import { CardLayout } from 'app/components/CardLayout';
 
 type User = models.user.User;
 
@@ -311,23 +313,16 @@ export const ManageUserPage: React.FC = () => {
 
   return (
     <>
-      <Wrapper>
-        <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col sm={16} xs={24}>
-            <PageTitle>User List</PageTitle>
-          </Col>
-          <Col sm={8} xs={24}>
-            <TotalSearchForm
-              form={searchForm}
-              value={userListState.params.search}
-              loading={userListState.loading ? true : false}
-              messageTrans={{ searchPlaceholder: () => 'Search Users' }}
-              onSearch={totalSearch}
-              onReset={resetTotalSearch}
-            />
-          </Col>
-        </Row>
-      </Wrapper>
+      <PageTitle title="User List">
+        <TotalSearchForm
+          form={searchForm}
+          value={userListState.params.search}
+          loading={userListState.loading ? true : false}
+          messageTrans={{ searchPlaceholder: () => 'Search Users' }}
+          onSearch={totalSearch}
+          onReset={resetTotalSearch}
+        />
+      </PageTitle>
       <Wrapper>
         <Row align="middle" justify="center">
           <Col span={8}>
@@ -393,27 +388,12 @@ export const ManageUserPage: React.FC = () => {
           description={descriptionDelete}
           answer={`${deleteUser?.email}`}
         />
-        ;
       </Wrapper>
     </>
   );
 };
 
-const Wrapper = styled.div`
-  background-color: white;
-  padding: 1rem;
-  margin-bottom: 2rem;
-  /* box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16); */
-  border-radius: 10px;
-`;
-
-export const PageTitle = styled.p`
-  font-size: 25px;
-  line-height: 30px;
-  color: rgb(112 112 112);
-  padding: 0;
-  margin: 0;
-`;
+const Wrapper = styled(CardLayout)``;
 
 const IconButton = styled(Button)`
   margin: 5px;

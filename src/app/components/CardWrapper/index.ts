@@ -2,7 +2,7 @@ import { Card } from 'antd';
 import styled from 'styled-components/macro';
 
 interface CardProps {
-  mainheight: string;
+  mainheight?: string;
   bodyheight: string;
   backgroundimg?: string;
 }
