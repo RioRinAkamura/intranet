@@ -32,8 +32,7 @@ export const ProjectsMessages = {
   listTMTitle: () => _t(translations.ProjectsPage.list.tm, 'Team members'),
   listPMTitle: () => _t(translations.ProjectsPage.list.pm, 'Project manager'),
   listLDTitle: () => _t(translations.ProjectsPage.list.ld, 'Leader'),
-  listQCTitle: () =>
-    _t(translations.ProjectsPage.list.qc, 'QC'),
+  listQCTitle: () => _t(translations.ProjectsPage.list.qc, 'QC'),
   listDEVTitle: () => _t(translations.ProjectsPage.list.dev, 'Developer'),
   listOTHERTitle: () => _t(translations.ProjectsPage.list.other, 'Other'),
   listStartedTitle: () => _t(translations.ProjectsPage.list.started, 'Started'),
