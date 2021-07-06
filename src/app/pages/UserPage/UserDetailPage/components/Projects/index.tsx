@@ -28,6 +28,7 @@ import {
 } from './slice/selectors';
 import { ProjectsMessages } from 'app/pages/ProjectPage/ProjectListPage/messages';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
+import { CardLayout } from 'app/components/CardLayout';
 
 export const Projects = memo(() => {
   const { t } = useTranslation();
@@ -208,11 +209,8 @@ export const Projects = memo(() => {
   );
 });
 
-const Wrapper = styled.div`
-  background-color: white;
-  padding: 1rem;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-  border-radius: 12px;
+const Wrapper = styled(CardLayout)`
+  margin: 0;
 `;
 
 const Header = styled.div`

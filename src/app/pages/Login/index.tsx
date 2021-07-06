@@ -48,7 +48,6 @@ const Form = styled(Col)`
   background-color: #fff;
   padding: 2em;
   border-radius: 5px;
-  box-shadow: 0px 0px 10px rgb(0 0 0 / 30%);
 `;
 
 const Wrapper = styled.div`

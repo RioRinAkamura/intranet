@@ -12,9 +12,8 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 
 import { config } from 'config';
-import { PageTitle } from 'app/components/PageTitle';
+import PageTitle from 'app/components/PageTitle';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
-import { WrapperTitlePage } from 'app/components/WrapperTitlePage';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
@@ -173,30 +172,25 @@ export function UserDetailPage(props: Props) {
 
   return (
     <>
-      <WrapperTitlePage>
-        <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col sm={16} xs={24}>
-            <PageTitle>
-              {isView
-                ? 'Employee Name'
-                : isEdit
-                ? 'Edit Employee'
-                : 'Create Employee'}
-            </PageTitle>
-          </Col>
-          {getDefaultTab === TabKeys.notes && (
-            <Col sm={8} xs={24}>
-              <TotalSearchForm
-                form={searchForm}
-                value={employeeNoteState.params.search}
-                loading={employeeNoteState.loading ? true : false}
-                onSearch={handleSearch}
-                onReset={resetSearchValue}
-              />
-            </Col>
-          )}
-        </Row>
-      </WrapperTitlePage>
+      <PageTitle
+        title={
+          isView
+            ? 'Employee Name'
+            : isEdit
+            ? 'Edit Employee'
+            : 'Create Employee'
+        }
+      >
+        {getDefaultTab === TabKeys.notes && (
+          <TotalSearchForm
+            form={searchForm}
+            value={employeeNoteState.params.search}
+            loading={employeeNoteState.loading ? true : false}
+            onSearch={handleSearch}
+            onReset={resetSearchValue}
+          />
+        )}
+      </PageTitle>
       {isView ? (
         <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
           <TabPane tab="Details" key={TabKeys.details}>
@@ -305,7 +299,4 @@ const WrapperAddBank = styled.div`
 
 const StyledTabs = styled(Tabs)`
   margin-top: 10px;
-  .ant-tabs-content-holder {
-    padding: 5px;
-  }
 `;

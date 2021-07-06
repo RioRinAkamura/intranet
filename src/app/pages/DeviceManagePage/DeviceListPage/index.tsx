@@ -19,7 +19,7 @@ import {
   Tooltip,
   Popover,
 } from 'antd';
-import { PageTitle } from 'app/components/PageTitle';
+import PageTitle from 'app/components/PageTitle';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Device } from './slice/types';
@@ -31,6 +31,7 @@ import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import fakeAPI from 'utils/fakeAPI';
 import { useTableConfig } from 'utils/tableConfig';
 import { Messages } from './translate';
+import { CardLayout } from 'app/components/CardLayout';
 
 interface Category {
   name: string;
@@ -287,22 +288,15 @@ export const DevicesManager = () => {
         <title>Device Manager Page</title>
         <meta name="description" content={'Device Manager'} />
       </Helmet>
-      <Wrapper>
-        <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col sm={16} xs={24}>
-            <PageTitle>Devices Manager</PageTitle>
-          </Col>
-          <Col sm={8} xs={24}>
-            <TotalSearchForm
-              form={searchForm}
-              value={state.params.search}
-              loading={state.loading ? true : false}
-              onSearch={totalSearch}
-              onReset={resetTotalSearch}
-            />
-          </Col>
-        </Row>
-      </Wrapper>
+      <PageTitle title="Devices Manager">
+        <TotalSearchForm
+          form={searchForm}
+          value={state.params.search}
+          loading={state.loading ? true : false}
+          onSearch={totalSearch}
+          onReset={resetTotalSearch}
+        />
+      </PageTitle>
       <Wrapper>
         <Row align="middle" justify="center">
           <Col span={8}>
@@ -395,13 +389,7 @@ const IconButton = styled(Button)`
   }
 `;
 
-const Wrapper = styled.div`
-  background-color: white;
-  padding: 1rem;
-  margin-bottom: 2rem;
-  /* box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16); */
-  border-radius: 10px;
-`;
+const Wrapper = styled(CardLayout)``;
 
 const TableWrapper = styled.div`
   .avatar {

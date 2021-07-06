@@ -35,7 +35,7 @@ import { useUserspageSlice } from 'app/pages/UserPage/UserListPage/slice';
 import { selectUserspage } from 'app/pages/UserPage/UserListPage/slice/selectors';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { PageTitle } from 'app/components/PageTitle';
+import PageTitle from 'app/components/PageTitle';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
@@ -51,6 +51,7 @@ import moment from 'moment';
 import { ProjectsMessages } from './messages';
 import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
 import { TeamMembers } from 'app/components/TeamMembers';
+import { CardLayout } from 'app/components/CardLayout';
 
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -426,23 +427,16 @@ export const ProjectsPage: React.FC = () => {
         <title>{t(ProjectsMessages.title())}</title>
         <meta name="description" content={t(ProjectsMessages.description())} />
       </Helmet>
-      <Wrapper>
-        <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col sm={16} xs={24}>
-            <PageTitle>{t(ProjectsMessages.title())}</PageTitle>
-          </Col>
-          <Col sm={8} xs={24}>
-            <TotalSearchForm
-              form={searchForm}
-              value={getProjectState.params.search}
-              loading={getProjectState.loading ? true : false}
-              messageTrans={ProjectsMessages}
-              onSearch={totalSearch}
-              onReset={resetTotalSearch}
-            />
-          </Col>
-        </Row>
-      </Wrapper>
+      <PageTitle title={t(ProjectsMessages.title())}>
+        <TotalSearchForm
+          form={searchForm}
+          value={getProjectState.params.search}
+          loading={getProjectState.loading ? true : false}
+          messageTrans={ProjectsMessages}
+          onSearch={totalSearch}
+          onReset={resetTotalSearch}
+        />
+      </PageTitle>
       {isMobileOnly ? (
         <ProjectList
           loading={getProjectState.loading ? true : false}
@@ -456,7 +450,7 @@ export const ProjectsPage: React.FC = () => {
           }}
         />
       ) : (
-        <Wrapper>
+        <CardLayout>
           <Row align="middle" justify="center">
             <Col span={8}>
               <Row justify="start">
@@ -519,7 +513,7 @@ export const ProjectsPage: React.FC = () => {
               </TableWrapper>
             </Col>
           </Row>
-        </Wrapper>
+        </CardLayout>
       )}
       <DeleteConfirmModal
         visible={isModalVisible}

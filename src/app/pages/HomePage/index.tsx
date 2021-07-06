@@ -10,7 +10,7 @@ import { Activities } from './components/Activities';
 import { PerformanceEmployees } from './components/PerformanceEmployees';
 import { NewEmployees } from './components/NewEmployees';
 import { Recruitments } from './components/Recruitments';
-import { PageTitle } from 'app/components/PageTitle';
+import PageTitle from 'app/components/PageTitle';
 
 export const HomePage: React.FC = () => {
   return (
@@ -25,7 +25,7 @@ export const HomePage: React.FC = () => {
       <PageWrapper>
         <TitleWrapper>
           <PieChartOutlined />
-          <PageTitle>Dashboard</PageTitle>
+          <PageTitle title="Dashboard" />
         </TitleWrapper>
         <WrapperItem>
           <Chart />

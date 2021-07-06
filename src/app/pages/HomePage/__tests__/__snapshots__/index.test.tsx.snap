@@ -17,9 +17,7 @@ exports[`<HomePage /> should render and match the snapshot 1`] = `
   <PageWrapper>
     <HomePage__TitleWrapper>
       <ForwardRef(PieChartOutlined) />
-      <PageTitle>
-        Dashboard
-      </PageTitle>
+      <PageTitle title="Dashboard" />
     </HomePage__TitleWrapper>
     <HomePage__WrapperItem>
       <Chart />

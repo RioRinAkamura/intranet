@@ -35,13 +35,14 @@ import {
   selectUserspageIsFilter,
   selectUserspageParams,
 } from './slice/selectors';
-import { PageTitle } from 'app/components/PageTitle';
+import PageTitle from 'app/components/PageTitle';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { useTableConfig } from 'utils/tableConfig';
 import { TagComponent } from 'app/components/Tags/components/Tag';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
+import { CardLayout } from 'app/components/CardLayout';
 
 type Employee = models.hr.Employee;
 
@@ -397,23 +398,16 @@ export const Users: React.FC = () => {
         <title>{t(UsersMessages.title())}</title>
         <meta name="description" content={t(UsersMessages.description())} />
       </Helmet>
-      <Wrapper>
-        <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col sm={16} xs={24}>
-            <PageTitle>{t(UsersMessages.title())}</PageTitle>
-          </Col>
-          <Col sm={8} xs={24}>
-            <TotalSearchForm
-              form={searchForm}
-              value={getUserListState.params.search}
-              loading={getUserListState.loading ? true : false}
-              messageTrans={UsersMessages}
-              onSearch={totalSearch}
-              onReset={resetTotalSearch}
-            />
-          </Col>
-        </Row>
-      </Wrapper>
+      <PageTitle title={t(UsersMessages.title())}>
+        <TotalSearchForm
+          form={searchForm}
+          value={getUserListState.params.search}
+          loading={getUserListState.loading ? true : false}
+          messageTrans={UsersMessages}
+          onSearch={totalSearch}
+          onReset={resetTotalSearch}
+        />
+      </PageTitle>
       {isMobileOnly ? (
         <UserList
           loading={getUserListState.loading ? true : false}
@@ -427,7 +421,7 @@ export const Users: React.FC = () => {
           }}
         />
       ) : (
-        <Wrapper>
+        <CardLayout>
           <Row align="middle" justify="center">
             <Col span={8}>
               <Row justify="start">
@@ -490,7 +484,7 @@ export const Users: React.FC = () => {
               </TableWrapper>
             </Col>
           </Row>
-        </Wrapper>
+        </CardLayout>
       )}
       <DeleteConfirmModal
         visible={isModalVisible}
@@ -514,14 +508,6 @@ const IconButton = styled(Button)`
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
   }
-`;
-
-const Wrapper = styled.div`
-  background-color: white;
-  padding: 1rem;
-  margin-bottom: 2rem;
-  /* box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16); */
-  border-radius: 10px;
 `;
 
 const TableWrapper = styled.div`

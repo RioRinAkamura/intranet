@@ -1,6 +1,6 @@
 import { Avatar, Col, DatePicker, Row, Table } from 'antd';
 import { CardWrapper } from 'app/components/CardWrapper';
-import { PageTitle } from 'app/components/PageTitle';
+import PageTitle from 'app/components/PageTitle';
 import moment from 'moment';
 import * as React from 'react';
 import styled from 'styled-components/macro';
@@ -80,13 +80,13 @@ export const NewEmployees = () => {
   return (
     <>
       <CardWrapper
-        mainheight="500px"
+        // mainheight="500px"
         bodyheight="435px"
         title={
           <>
             <Row justify="space-between">
               <Col>
-                <PageTitle>New Employees</PageTitle>
+                <PageTitle title="New Employees" />
               </Col>
               <Col>
                 <CustomDatePicker

@@ -9,7 +9,7 @@ import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 import { ColumnProps } from 'antd/lib/table';
 import { useSelector } from 'react-redux';
-import { PageTitle } from 'app/components/PageTitle';
+import PageTitle from 'app/components/PageTitle';
 import { useTableConfig } from 'utils/tableConfig';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import TableListModel from 'app/components/TableListModel/index';
@@ -19,6 +19,7 @@ import {
   useTableSlice,
 } from 'app/components/TableListModel/slice';
 import { RootState } from 'types';
+import {CardLayout} from "app/components/CardLayout"
 
 type EmployeeLeave = models.hr.EmployeeLeave;
 const model = 'employeeLeave';
@@ -122,24 +123,16 @@ export const LeaveApplications: React.FC = () => {
         <title>{t(Messages.title())}</title>
         <meta name="description" content={t(Messages.description())} />
       </Helmet>
-      <Wrapper>
-        <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col sm={16} xs={24}>
-            <PageTitle>{t(Messages.title())}</PageTitle>
-          </Col>
-          <Col sm={8} xs={24}>
-            <TotalSearchForm
-              form={searchForm}
-              value={params.search}
-              loading={loading || false}
-              messageTrans={Messages}
-              onSearch={totalSearch}
-              onReset={resetTotalSearch}
-            />
-          </Col>
-        </Row>
-      </Wrapper>
-
+      <PageTitle title={t(Messages.title())}>
+        <TotalSearchForm
+          form={searchForm}
+          value={params.search}
+          loading={loading || false}
+          messageTrans={Messages}
+          onSearch={totalSearch}
+          onReset={resetTotalSearch}
+        />
+      </PageTitle>
       <Wrapper>
         <Row align="middle" justify="center">
           <Col span={24}>
@@ -176,10 +169,4 @@ export const LeaveApplications: React.FC = () => {
   );
 };
 
-const Wrapper = styled.div`
-  background-color: white;
-  padding: 1rem;
-  margin-bottom: 2rem;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-  border-radius: 12px;
-`;
+const Wrapper = styled(CardLayout)``;
