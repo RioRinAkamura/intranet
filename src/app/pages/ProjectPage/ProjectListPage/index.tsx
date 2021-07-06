@@ -539,14 +539,6 @@ const IconButton = styled(Button)`
   }
 `;
 
-const Wrapper = styled.div`
-  background-color: white;
-  padding: 1rem;
-  margin-bottom: 2rem;
-  /* box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16); */
-  border-radius: 10px;
-`;
-
 const TextCenter = styled.span`
   text-align: center;
   width: 100%;
