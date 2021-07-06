@@ -3,16 +3,7 @@ import {
   MinusCircleOutlined,
   PhoneOutlined,
 } from '@ant-design/icons';
-import {
-  Button,
-  Col,
-  Form,
-  FormInstance,
-  Popover,
-  Row,
-  Tag,
-  Tooltip,
-} from 'antd';
+import { Col, Form, FormInstance, Popover, Row, Tag, Tooltip } from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import React, { useState } from 'react';
@@ -22,6 +13,7 @@ import { antColours } from 'utils/types';
 import { ProjectDetailMessages } from '../../messages';
 import { MemberModal } from '../MemberModal/Loadable';
 import { useHandleMember } from '../MemberModal/useHandleMember';
+import { Button } from 'app/components/Button';
 
 interface Props {
   isView?: boolean;

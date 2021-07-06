@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import {
   Table,
-  Button,
   Popover,
   Tooltip,
   Form,
@@ -36,6 +35,7 @@ import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { useHandleDataTable } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
 import { useTableConfig } from 'utils/tableConfig';
+import { Button } from 'app/components/Button';
 
 import { EmployeeNote } from './slice/types';
 import { useNotesSlice } from './slice';

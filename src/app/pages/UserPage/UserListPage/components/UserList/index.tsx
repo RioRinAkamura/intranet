@@ -5,7 +5,7 @@
  */
 import * as React from 'react';
 import styled from 'styled-components/macro';
-import { Button, Col, List, Row, Spin } from 'antd';
+import { Col, List, Row, Spin } from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import {
   DeleteOutlined,
@@ -17,6 +17,8 @@ import {
 } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { IconButton } from 'app/components/Button';
+import { CardLayout } from 'app/components/CardLayout';
 
 type Employee = models.hr.Employee;
 interface Props {
@@ -113,18 +115,6 @@ export const UserList = React.memo((props: Props) => {
   );
 });
 
-const IconButton = styled(Button)`
-  margin: 5px;
-  span {
-    position: absolute !important;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
-`;
-
 const ListItem = styled(List.Item)``;
 
 const ProfileDescription = styled(Row)`
@@ -141,10 +131,4 @@ const LoadMore = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
-  background-color: #fff;
-  padding: 1em;
-  box-shadow: 0 2px 2px 0 rgba(60, 75, 100, 0.14);
-  border-radius: 2px;
-  border: 1px solid lightgray;
-`;
+const Wrapper = styled(CardLayout)``;

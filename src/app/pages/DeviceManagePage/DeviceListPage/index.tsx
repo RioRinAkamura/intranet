@@ -10,7 +10,6 @@ import styled from 'styled-components/macro';
 import { ColumnProps } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import {
-  Button,
   Col,
   Row,
   Table,
@@ -32,6 +31,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { useTableConfig } from 'utils/tableConfig';
 import { Messages } from './translate';
 import { CardLayout } from 'app/components/CardLayout';
+import { Button } from 'app/components/Button';
 
 interface Category {
   name: string;

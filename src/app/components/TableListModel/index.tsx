@@ -1,4 +1,5 @@
-import { Button, Popover, Table, TablePaginationConfig, Tooltip } from 'antd';
+import { Row, Col, Popover, Table, TablePaginationConfig, Tooltip } from 'antd';
+import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
@@ -11,10 +12,13 @@ import {
   EditOutlined,
   EyeOutlined,
   MoreOutlined,
+  UserAddOutlined,
 } from '@ant-design/icons';
+
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { RootStateKeyType } from 'utils/types/injector-typings';
+import { Button, IconButton } from 'app/components/Button';
 
 interface Props {
   columns: any;
@@ -29,6 +33,8 @@ const TableListModel: React.FC<Props> = ({
   handleOnClickViewButton = () => {},
   handleOnClickEditButton = () => {},
 }) => {
+  const history = useHistory();
+
   const { actions } = useTableSlice(model);
   const state = useSelector(
     (state: RootState) => state[`${model}`] || initialState,
@@ -168,74 +174,84 @@ const TableListModel: React.FC<Props> = ({
   }
 
   return (
-    <TableWrapper>
-      {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
-        <Button
-          danger
-          size="large"
-          disabled={
-            !state?.selectedRowKeys?.length ||
-            state?.selectedRowKeys?.length === 0
-          }
-          icon={<DeleteOutlined />}
-          onClick={() => {
-            showDeleteModal();
-            setIsDeleteMulti(true);
-          }}
-        />
-      )}
-      <Table
-        rowSelection={{
-          columnWidth: 20,
-          selectedRowKeys: state.selectedRowKeys,
-          onChange: handleSelectedRows,
-        }}
-        columns={columns}
-        rowKey="id"
-        dataSource={state.results}
-        pagination={{
-          ...state.pagination,
-          onChange: (page: number, pageSize?: number) => {
-            setPagination({ current: page, pageSize });
-          },
-          showTotal: (total, range) => (
-            <div>
-              Showing{' '}
-              <span>
-                {range[0]}-{range[1]}
-              </span>{' '}
-              of {total} items
-            </div>
-          ),
-          pageSizeOptions: ['10', '20', '50', '100'],
-          showSizeChanger: true,
-        }}
-        loading={state.loading}
-        onChange={handleTableChange}
-        scroll={{ x: 1200 }}
-      />
-      <DeleteModal
-        open={isModalVisible}
-        handleDelete={handleConfirmDelete}
-        handleCancel={handleCancelDeleteModal}
-        content="Are you sure you want to delete this information?"
-      />
-    </TableWrapper>
+    <Row align="middle" justify="center">
+      <Col span={8}>
+        <Row justify="start">
+          {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
+            <Button
+              danger
+              size="large"
+              disabled={
+                !state?.selectedRowKeys?.length ||
+                state?.selectedRowKeys?.length === 0
+              }
+              icon={<DeleteOutlined />}
+              onClick={() => {
+                showDeleteModal();
+                setIsDeleteMulti(true);
+              }}
+            />
+          )}
+        </Row>
+      </Col>
+      <Col span={16}>
+        <Row justify="end">
+          <Button
+            style={{ marginBottom: 10 }}
+            size="large"
+            type="primary"
+            onClick={() => history.push('/leave_applications/create')}
+            icon={<UserAddOutlined />}
+          >
+            Create leave application
+          </Button>
+        </Row>
+      </Col>
+
+      <Col span={24}>
+        <TableWrapper>
+          <Table
+            rowSelection={{
+              columnWidth: 20,
+              selectedRowKeys: state.selectedRowKeys,
+              onChange: handleSelectedRows,
+            }}
+            columns={columns}
+            rowKey="id"
+            dataSource={state.results}
+            pagination={{
+              ...state.pagination,
+              onChange: (page: number, pageSize?: number) => {
+                setPagination({ current: page, pageSize });
+              },
+              showTotal: (total, range) => (
+                <div>
+                  Showing{' '}
+                  <span>
+                    {range[0]}-{range[1]}
+                  </span>{' '}
+                  of {total} items
+                </div>
+              ),
+              pageSizeOptions: ['10', '20', '50', '100'],
+              showSizeChanger: true,
+            }}
+            loading={state.loading}
+            onChange={handleTableChange}
+            scroll={{ x: 1200 }}
+          />
+          <DeleteModal
+            open={isModalVisible}
+            handleDelete={handleConfirmDelete}
+            handleCancel={handleCancelDeleteModal}
+            content="Are you sure you want to delete this information?"
+          />
+        </TableWrapper>
+      </Col>
+    </Row>
   );
 };
 
 const TableWrapper = styled.div``;
-
-const IconButton = styled(Button)`
-  margin: 5px;
-  span {
-    position: absolute !important;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
-`;
 
 export default TableListModel;

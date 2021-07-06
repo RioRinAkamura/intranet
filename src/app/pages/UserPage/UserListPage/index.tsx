@@ -1,5 +1,4 @@
 import {
-  Button,
   Col,
   Row,
   Table,
@@ -43,6 +42,7 @@ import { useTableConfig } from 'utils/tableConfig';
 import { TagComponent } from 'app/components/Tags/components/Tag';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { CardLayout } from 'app/components/CardLayout';
+import { Button, IconButton } from 'app/components/Button';
 
 type Employee = models.hr.Employee;
 
@@ -497,18 +497,6 @@ export const Users: React.FC = () => {
     </>
   );
 };
-
-const IconButton = styled(Button)`
-  margin: 5px;
-  span {
-    position: absolute !important;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
-`;
 
 const TableWrapper = styled.div`
   .avatar {

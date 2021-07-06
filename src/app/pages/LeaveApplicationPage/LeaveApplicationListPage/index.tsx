@@ -1,5 +1,4 @@
-import { Button, Col, Row, Form } from 'antd';
-import { UserAddOutlined } from '@ant-design/icons';
+import { Form } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Messages } from './messages';
@@ -134,36 +133,19 @@ export const LeaveApplications: React.FC = () => {
         />
       </PageTitle>
       <Wrapper>
-        <Row align="middle" justify="center">
-          <Col span={24}>
-            <Row justify="end">
-              <Button
-                style={{ marginBottom: 10 }}
-                size="large"
-                type="primary"
-                onClick={() => history.push('/leave_applications/create')}
-                icon={<UserAddOutlined />}
-              >
-                Create leave application
-              </Button>
-            </Row>
-          </Col>
-          <Col span={24}>
-            <TableListModel
-              model={model}
-              columns={columns}
-              handleOnClickViewButton={id => {
-                history.push(`/leave_applications/${id}`);
-              }}
-              handleOnClickEditButton={id => {
-                history.push({
-                  pathname: '/leave_applications/' + id,
-                  state: { edit: true },
-                });
-              }}
-            />
-          </Col>
-        </Row>
+        <TableListModel
+          model={model}
+          columns={columns}
+          handleOnClickViewButton={id => {
+            history.push(`/leave_applications/${id}`);
+          }}
+          handleOnClickEditButton={id => {
+            history.push({
+              pathname: '/leave_applications/' + id,
+              state: { edit: true },
+            });
+          }}
+        />
       </Wrapper>
     </>
   );

@@ -7,8 +7,9 @@ import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { DialogModal } from 'app/components/DialogModal';
-import { Button, Form, FormInstance, Input, InputProps, Select } from 'antd';
+import { Form, FormInstance, Input, InputProps, Select } from 'antd';
 import { UserDetailMessages } from '../../messages';
+import { Button } from 'app/components/Button';
 
 interface Props {
   isView?: boolean;

@@ -1,5 +1,4 @@
 import {
-  Button,
   Col,
   Row,
   Table,
@@ -52,6 +51,7 @@ import { ProjectsMessages } from './messages';
 import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
 import { TeamMembers } from 'app/components/TeamMembers';
 import { CardLayout } from 'app/components/CardLayout';
+import { Button, IconButton } from 'app/components/Button';
 
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -526,18 +526,6 @@ export const ProjectsPage: React.FC = () => {
     </>
   );
 };
-
-const IconButton = styled(Button)`
-  margin: 5px;
-  span {
-    position: absolute !important;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
-`;
 
 const TextCenter = styled.span`
   text-align: center;

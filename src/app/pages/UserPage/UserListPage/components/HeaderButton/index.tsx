@@ -3,16 +3,7 @@
  * HeaderButton
  *
  */
-import {
-  Button,
-  Col,
-  notification,
-  Progress,
-  Row,
-  Table,
-  Tooltip,
-  Upload,
-} from 'antd';
+import { Col, notification, Progress, Row, Table, Tooltip, Upload } from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { DialogModal } from 'app/components/DialogModal';
 import React, { useEffect, useRef, useState } from 'react';
@@ -29,6 +20,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import Papa from 'papaparse';
 import { TagComponent } from 'app/components/Tags/components/Tag';
+import { Button } from 'app/components/Button';
 
 type Employee = models.hr.Employee;
 

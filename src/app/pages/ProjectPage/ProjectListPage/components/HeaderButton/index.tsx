@@ -4,7 +4,6 @@
  *
  */
 import {
-  Button,
   Col,
   notification,
   Popover,
@@ -34,6 +33,7 @@ import { antColours } from 'utils/types';
 import { ColumnsType } from 'antd/lib/table';
 import fakeAPI from 'utils/fakeAPI';
 import Papa from 'papaparse';
+import { Button } from 'app/components/Button';
 
 interface HeaderButtonProps {
   pagination?: TablePaginationConfig;
