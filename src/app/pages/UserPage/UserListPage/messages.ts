@@ -10,7 +10,7 @@ export const UsersMessages = {
   title: () => _t(translations.UsersPage.title, 'Employees'),
   description: () => _t(translations.UsersPage.description, 'Employees'),
   createUserButton: () =>
-    _t(translations.UsersPage.createUserButton, 'Create Employee'),
+    _t(translations.UsersPage.createUserButton, 'Create employee'),
   exportCSV: () => _t(translations.UsersPage.exportCSV, 'Export as CSV'),
   exportAllUser: () =>
     _t(translations.UsersPage.exportAllUser, 'Export as CSV for all'),
@@ -30,9 +30,9 @@ export const UsersMessages = {
   listAvatarTitle: () => _t(translations.UsersPage.list.avatar, 'Avatar'),
   listNameTitle: () => _t(translations.UsersPage.list.name, 'Name'),
   listFirstNameTitle: () =>
-    _t(translations.UsersPage.list.firstName, 'First Name'),
+    _t(translations.UsersPage.list.firstName, 'First name'),
   listLastNameTitle: () =>
-    _t(translations.UsersPage.list.lastName, 'Last Name'),
+    _t(translations.UsersPage.list.lastName, 'Last name'),
   listEmailTitle: () => _t(translations.UsersPage.list.email, 'Email'),
   listOptionsTitle: () => _t(translations.UsersPage.list.options, 'Actions'),
   listViewTooltip: () => _t(translations.UsersPage.list.viewTooltip, 'View'),
@@ -59,13 +59,13 @@ export const UsersMessages = {
   searchResetButton: () =>
     _t(translations.UsersPage.search.resetButton, 'Reset'),
   modalCreateTitle: () =>
-    _t(translations.UsersPage.modal.createTitle, 'Create Employee'),
+    _t(translations.UsersPage.modal.createTitle, 'Create employee'),
   modalEditTitle: () =>
-    _t(translations.UsersPage.modal.editTitle, 'Edit Employee'),
+    _t(translations.UsersPage.modal.editTitle, 'Edit employee'),
   modalProfileTitle: () =>
-    _t(translations.UsersPage.modal.profileTitle, 'Employee Profile'),
+    _t(translations.UsersPage.modal.profileTitle, 'Employee profile'),
   modalPreviewCSVTitle: () =>
-    _t(translations.UsersPage.modal.previewCSVTitle, 'Preview Import File'),
+    _t(translations.UsersPage.modal.previewCSVTitle, 'Preview import file'),
   modalFormDeleteButton: () =>
     _t(translations.UsersPage.modal.form.deleteButton, 'Delete'),
   modalFormDeleteContent: () =>

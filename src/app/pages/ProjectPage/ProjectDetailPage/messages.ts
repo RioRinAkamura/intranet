@@ -7,56 +7,56 @@ import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
 export const ProjectDetailMessages = {
-  title: () => _t(translations.ProjectDetailPage.title, 'Project Detail'),
+  title: () => _t(translations.ProjectDetailPage.title, 'Project detail'),
   description: () =>
-    _t(translations.ProjectDetailPage.description, 'Project Detail'),
+    _t(translations.ProjectDetailPage.description, 'Project detail'),
   createTitle: () =>
-    _t(translations.ProjectDetailPage.createTitle, 'Create Project'),
-  editTitle: () => _t(translations.ProjectDetailPage.editTitle, 'Edit Project'),
-  addMember: () => _t(translations.ProjectDetailPage.addMember, 'Add Member'),
+    _t(translations.ProjectDetailPage.createTitle, 'Create project'),
+  editTitle: () => _t(translations.ProjectDetailPage.editTitle, 'Edit project'),
+  addMember: () => _t(translations.ProjectDetailPage.addMember, 'Add member'),
   editMember: () =>
-    _t(translations.ProjectDetailPage.editMember, 'Edit Member'),
+    _t(translations.ProjectDetailPage.editMember, 'Edit member'),
   formProjectNameLabel: () =>
-    _t(translations.ProjectDetailPage.form.projectName.label, 'Project Name'),
+    _t(translations.ProjectDetailPage.form.projectName.label, 'Project name'),
   formProjectNamePlaceholder: () =>
     _t(
       translations.ProjectDetailPage.form.projectName.placeholder,
-      'Enter Project Name',
+      'Enter name',
     ),
   formProjectNameEmpty: () =>
     _t(
       translations.ProjectDetailPage.form.projectName.empty,
-      'Please Enter Project Name!',
+      'Please enter name',
     ),
   formProjectStartedLabel: () =>
     _t(
       translations.ProjectDetailPage.form.projectStarted.label,
-      'Project Started',
+      'Project started',
     ),
   formProjectStartedPlaceholder: () =>
     _t(
       translations.ProjectDetailPage.form.projectStarted.placeholder,
-      'Select Project Started Date',
+      'Select started Date',
     ),
   formProjectStartedEmpty: () =>
     _t(
       translations.ProjectDetailPage.form.projectStarted.empty,
-      'Please Select Project Started Date!',
+      'Please started date',
     ),
   formProjectPriorityLabel: () =>
     _t(
       translations.ProjectDetailPage.form.projectPriority.label,
-      'Project Priority',
+      'Project priority',
     ),
   formProjectPriorityPlaceholder: () =>
     _t(
       translations.ProjectDetailPage.form.projectPriority.placeholder,
-      'Select Project Priority',
+      'Select priority',
     ),
   formProjectPriorityEmpty: () =>
     _t(
       translations.ProjectDetailPage.form.projectPriority.empty,
-      'Please Select Project Priority!',
+      'Please select priority',
     ),
   formProjectPriorityLow: () =>
     _t(translations.ProjectDetailPage.form.projectPriority.low, 'Low'),
@@ -67,17 +67,17 @@ export const ProjectDetailMessages = {
   formProjectStatusLabel: () =>
     _t(
       translations.ProjectDetailPage.form.projectStatus.label,
-      'Project Status',
+      'Project status',
     ),
   formProjectStatusPlaceholder: () =>
     _t(
       translations.ProjectDetailPage.form.projectStatus.placeholder,
-      'Select Project Status',
+      'Select status',
     ),
   formProjectStatusEmpty: () =>
     _t(
       translations.ProjectDetailPage.form.projectStatus.empty,
-      'Please Select Project Status!',
+      'Please select status',
     ),
   formProjectStatusPreparing: () =>
     _t(
@@ -93,25 +93,24 @@ export const ProjectDetailMessages = {
   formProjectOverviewLabel: () =>
     _t(
       translations.ProjectDetailPage.form.projectOverview.label,
-      'Project Overview',
+      'Project overview',
     ),
   formProjectOverviewPlaceholder: () =>
     _t(
       translations.ProjectDetailPage.form.projectOverview.placeholder,
-      'Enter Project Overview',
+      'Enter project overview',
     ),
   formProjectOverviewEmpty: () =>
     _t(
       translations.ProjectDetailPage.form.projectOverview.empty,
-      'Please Enter Project Overview!',
+      'Please enter project overview',
     ),
   memberTitle: () =>
-    _t(translations.ProjectDetailPage.member.title, 'Team Members'),
+    _t(translations.ProjectDetailPage.member.title, 'Team members'),
   memberPM: () =>
-    _t(translations.ProjectDetailPage.member.pm, 'Project Manager'),
-  memberTL: () => _t(translations.ProjectDetailPage.member.tl, 'Team Leader'),
-  memberQC: () =>
-    _t(translations.ProjectDetailPage.member.qc, 'Quality Controller'),
+    _t(translations.ProjectDetailPage.member.pm, 'Project manager'),
+  memberTL: () => _t(translations.ProjectDetailPage.member.tl, 'Team leader'),
+  memberQC: () => _t(translations.ProjectDetailPage.member.qc, 'QC'),
   memberDEV: () => _t(translations.ProjectDetailPage.member.dev, 'Developer'),
   memberOTHER: () => _t(translations.ProjectDetailPage.member.other, 'Other'),
   memberFormEmployeeLabel: () =>
@@ -119,27 +118,27 @@ export const ProjectDetailMessages = {
   memberFormEmployeePlaceholder: () =>
     _t(
       translations.ProjectDetailPage.member.form.employee.placeholder,
-      'Enter Member Name, Email',
+      'Enter name, email',
     ),
   memberFormEmployeeEmpty: () =>
     _t(
       translations.ProjectDetailPage.member.form.employee.empty,
-      'Please Enter Member Name, Email!',
+      'Please enter name, email',
     ),
   memberFormProjectRoleLabel: () =>
     _t(
       translations.ProjectDetailPage.member.form.projectRole.label,
-      'Project Role',
+      'Project role',
     ),
   memberFormProjectRolePlaceholder: () =>
     _t(
       translations.ProjectDetailPage.member.form.projectRole.placeholder,
-      'Select Project Role',
+      'Select project role',
     ),
   memberFormProjectRoleEmpty: () =>
     _t(
       translations.ProjectDetailPage.member.form.projectRole.empty,
-      'Please Select Project Role!',
+      'Please select project role',
     ),
   memberFormAllocationLabel: () =>
     _t(
@@ -149,32 +148,32 @@ export const ProjectDetailMessages = {
   memberFormAllocationPlaceholder: () =>
     _t(
       translations.ProjectDetailPage.member.form.allocation.placeholder,
-      'Select Allocation',
+      'Select allocation',
     ),
   memberFormAllocationEmpty: () =>
     _t(
       translations.ProjectDetailPage.member.form.allocation.empty,
-      'Please Select Allocation!',
+      'Please select allocation',
     ),
   messageCreateProjectSuccess: () =>
     _t(
       translations.ProjectDetailPage.message.createProjectSuccess,
-      'Create Project Successfully',
+      'Created project successfully',
     ),
   messageEditProjectSuccess: () =>
     _t(
       translations.ProjectDetailPage.message.editProjectSuccess,
-      'Edit Project Successfully',
+      'Updated project successfully',
     ),
   messageCreateMemberSuccess: () =>
     _t(
       translations.ProjectDetailPage.message.createMemberSuccess,
-      'Create Member Successfully',
+      'Created member successfully',
     ),
   messageEditMemberSuccess: () =>
     _t(
       translations.ProjectDetailPage.message.editMemberSuccess,
-      'Edit Member Successfully',
+      'Updated member successfully',
     ),
   buttonCreate: () =>
     _t(translations.ProjectDetailPage.button.create, 'Create'),

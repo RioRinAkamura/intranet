@@ -19,7 +19,7 @@ export const HomePage: React.FC = () => {
         <title>Home Page</title>
         <meta
           name="description"
-          content="A React Boilerplate application homepage"
+          content="A mini tool for managing HD's staffs"
         />
       </Helmet>
       <PageWrapper>

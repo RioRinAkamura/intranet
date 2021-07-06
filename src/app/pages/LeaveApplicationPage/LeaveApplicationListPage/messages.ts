@@ -7,9 +7,9 @@ import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
 export const Messages = {
-  title: () => _t(translations.LeaveApplication.title, 'Leave Applications'),
+  title: () => _t(translations.LeaveApplication.title, 'Leave applications'),
   description: () =>
-    _t(translations.LeaveApplication.description, 'Leave Applications'),
+    _t(translations.LeaveApplication.description, 'Leave applications'),
   createUserButton: () =>
     _t(
       translations.LeaveApplication.createUserButton,
@@ -61,13 +61,13 @@ export const Messages = {
   searchResetButton: () =>
     _t(translations.LeaveApplication.search.resetButton, 'Reset'),
   modalCreateTitle: () =>
-    _t(translations.LeaveApplication.modal.createTitle, 'Create Employee'),
+    _t(translations.LeaveApplication.modal.createTitle, 'Create employee'),
   modalEditTitle: () =>
-    _t(translations.LeaveApplication.modal.editTitle, 'Edit Employee'),
+    _t(translations.LeaveApplication.modal.editTitle, 'Edit employee'),
   modalPreviewCSVTitle: () =>
     _t(
       translations.LeaveApplication.modal.previewCSVTitle,
-      'Preview Import File',
+      'Preview import file',
     ),
   modalFormDeleteButton: () =>
     _t(translations.LeaveApplication.modal.form.deleteButton, 'Delete'),

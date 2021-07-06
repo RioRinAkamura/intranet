@@ -10,7 +10,7 @@ export const ProjectsMessages = {
   title: () => _t(translations.ProjectsPage.title, 'Projects'),
   description: () => _t(translations.ProjectsPage.description, 'Projects'),
   createProjectButton: () =>
-    _t(translations.ProjectsPage.createProjectButton, 'Create Project'),
+    _t(translations.ProjectsPage.createProjectButton, 'Create project'),
   exportCSV: () => _t(translations.ProjectsPage.exportCSV, 'Export as CSV'),
   exportAllProject: () =>
     _t(translations.ProjectsPage.exportAllProject, 'Export as CSV for all'),
@@ -29,11 +29,11 @@ export const ProjectsMessages = {
   importCSV: () => _t(translations.ProjectsPage.importCSV, 'Import CSV'),
   listAvatarTitle: () => _t(translations.ProjectsPage.list.avatar, 'Avatar'),
   listNameTitle: () => _t(translations.ProjectsPage.list.name, 'Name'),
-  listTMTitle: () => _t(translations.ProjectsPage.list.tm, 'Team Members'),
-  listPMTitle: () => _t(translations.ProjectsPage.list.pm, 'Project Manager'),
+  listTMTitle: () => _t(translations.ProjectsPage.list.tm, 'Team members'),
+  listPMTitle: () => _t(translations.ProjectsPage.list.pm, 'Project manager'),
   listLDTitle: () => _t(translations.ProjectsPage.list.ld, 'Leader'),
   listQCTitle: () =>
-    _t(translations.ProjectsPage.list.qc, 'Quality Controller'),
+    _t(translations.ProjectsPage.list.qc, 'QC'),
   listDEVTitle: () => _t(translations.ProjectsPage.list.dev, 'Developer'),
   listOTHERTitle: () => _t(translations.ProjectsPage.list.other, 'Other'),
   listStartedTitle: () => _t(translations.ProjectsPage.list.started, 'Started'),
@@ -69,13 +69,13 @@ export const ProjectsMessages = {
   searchResetButton: () =>
     _t(translations.ProjectsPage.search.resetButton, 'Reset'),
   modalCreateTitle: () =>
-    _t(translations.ProjectsPage.modal.createTitle, 'Create Project'),
+    _t(translations.ProjectsPage.modal.createTitle, 'Create project'),
   modalEditTitle: () =>
-    _t(translations.ProjectsPage.modal.editTitle, 'Edit Project'),
+    _t(translations.ProjectsPage.modal.editTitle, 'Edit project'),
   modalProfileTitle: () =>
-    _t(translations.ProjectsPage.modal.profileTitle, 'Project Profile'),
+    _t(translations.ProjectsPage.modal.profileTitle, 'Project details'),
   modalPreviewCSVTitle: () =>
-    _t(translations.ProjectsPage.modal.previewCSVTitle, 'Preview Import File'),
+    _t(translations.ProjectsPage.modal.previewCSVTitle, 'Preview import file'),
   modalFormDeleteButton: () =>
     _t(translations.ProjectsPage.modal.form.deleteButton, 'Delete'),
   modalFormDeleteContent: () =>

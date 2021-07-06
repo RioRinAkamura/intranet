@@ -48,10 +48,10 @@ export const Messages = {
     _t(translations.Device.search.searchButton, 'Search'),
   searchResetButton: () => _t(translations.Device.search.resetButton, 'Reset'),
   modalCreateTitle: () =>
-    _t(translations.Device.modal.createTitle, 'Create Device'),
-  modalEditTitle: () => _t(translations.Device.modal.editTitle, 'Edit Device'),
+    _t(translations.Device.modal.createTitle, 'Create device'),
+  modalEditTitle: () => _t(translations.Device.modal.editTitle, 'Edit device'),
   modalPreviewCSVTitle: () =>
-    _t(translations.Device.modal.previewCSVTitle, 'Preview Import File'),
+    _t(translations.Device.modal.previewCSVTitle, 'Preview import file'),
   modalFormDeleteButton: () =>
     _t(translations.Device.modal.form.deleteButton, 'Delete'),
   modalFormDeleteContent: () =>

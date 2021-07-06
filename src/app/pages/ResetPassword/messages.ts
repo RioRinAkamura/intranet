@@ -7,13 +7,13 @@ import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
 export const ResetPageMessages = {
-  title: () => _t(translations.ResetPasswordPage.title, 'Reset Password'),
+  title: () => _t(translations.ResetPasswordPage.title, 'Reset password'),
   description: () =>
-    _t(translations.ResetPasswordPage.description, 'Reset Password Page'),
+    _t(translations.ResetPasswordPage.description, 'Reset password'),
   formTitle: () =>
-    _t(translations.ResetPasswordPage.form.title, 'Reset Your Password'),
+    _t(translations.ResetPasswordPage.form.title, 'Reset your password'),
   newPassword: () =>
-    _t(translations.ResetPasswordPage.form.newPassword.label, 'New Password'),
+    _t(translations.ResetPasswordPage.form.newPassword.label, 'New password'),
   newPasswordPlaceholder: () =>
     _t(
       translations.ResetPasswordPage.form.newPassword.placeholder,
@@ -27,12 +27,12 @@ export const ResetPageMessages = {
   emptyNewPassword: () =>
     _t(
       translations.ResetPasswordPage.form.newPassword.empty,
-      'Please input your new password!',
+      'Please input your new password',
     ),
   retypePassword: () =>
     _t(
       translations.ResetPasswordPage.form.retypePassword.label,
-      'Confirm Password',
+      'Confirm password',
     ),
   retypePasswordPlaceholder: () =>
     _t(
@@ -42,7 +42,7 @@ export const ResetPageMessages = {
   emptyPasswordRetypePassword: () =>
     _t(
       translations.ResetPasswordPage.form.retypePassword.emptyNewPassword,
-      'Please input new password first!',
+      'Please input new password first',
     ),
   invalidRetypePassword: () =>
     _t(
@@ -52,12 +52,12 @@ export const ResetPageMessages = {
   emptyRetypePassword: () =>
     _t(
       translations.ResetPasswordPage.form.retypePassword.empty,
-      'Please confirm your new password!',
+      'Please confirm your new password',
     ),
   notMatchRetypePassword: () =>
     _t(
       translations.ResetPasswordPage.form.retypePassword.notMatch,
-      "Your new password and confirm password don't match!",
+      "Your new password and confirm password don't match",
     ),
   otpLabel: () => _t(translations.ResetPasswordPage.form.otp.label, 'OTP'),
   otpPlaceholder: () =>
@@ -66,9 +66,9 @@ export const ResetPageMessages = {
       'Input your OTP sent in your email',
     ),
   otpEmpty: () =>
-    _t(translations.ResetPasswordPage.form.otp.label, 'Please input OTP!'),
+    _t(translations.ResetPasswordPage.form.otp.label, 'Please input OTP'),
   resetButton: () =>
-    _t(translations.ResetPasswordPage.form.resetButton, 'Reset Password'),
+    _t(translations.ResetPasswordPage.form.resetButton, 'Reset password'),
   backtButton: () =>
     _t(translations.ResetPasswordPage.form.backButton, 'Back to login page'),
 };
