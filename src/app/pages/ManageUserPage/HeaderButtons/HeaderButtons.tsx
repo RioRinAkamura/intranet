@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { Button, Col, Row } from 'antd';
+import { Col, Row } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
+import { Button } from 'app/components/Button';
 
 export const HeaderButtons = () => {
   const history = useHistory();

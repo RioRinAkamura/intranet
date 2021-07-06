@@ -2,7 +2,6 @@ import React, { memo, useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components/macro';
 import {
   Table,
-  Button,
   Popover,
   Tooltip,
   Form,
@@ -23,6 +22,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { ColumnProps } from 'antd/lib/table';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { CardLayout } from 'app/components/CardLayout';
+import { Button } from 'app/components/Button';
 
 const { Option } = Select;
 interface DeviceResponse {

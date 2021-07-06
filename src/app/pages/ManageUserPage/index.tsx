@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, Key } from 'react';
 import { parse, stringify } from 'query-string';
-import { Button, Col, Row, Table, Tooltip, Popover, Switch, Form } from 'antd';
+import { Col, Row, Table, Tooltip, Popover, Switch, Form } from 'antd';
 
 import styled from 'styled-components/macro';
 import { HeaderButtons } from './HeaderButtons/HeaderButtons';
@@ -24,6 +24,7 @@ import { RootState } from 'types';
 import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
 import PageTitle from 'app/components/PageTitle';
 import { CardLayout } from 'app/components/CardLayout';
+import { Button, IconButton } from 'app/components/Button';
 
 type User = models.user.User;
 
@@ -394,15 +395,3 @@ export const ManageUserPage: React.FC = () => {
 };
 
 const Wrapper = styled(CardLayout)``;
-
-const IconButton = styled(Button)`
-  margin: 5px;
-  span {
-    position: absolute !important;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
-`;

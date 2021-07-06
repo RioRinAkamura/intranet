@@ -6,7 +6,7 @@
 import React, { memo, useState, useCallback, useEffect, Key } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Button, Popover, Table, TablePaginationConfig, Tooltip } from 'antd';
+import { Popover, Table, TablePaginationConfig, Tooltip } from 'antd';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -29,6 +29,7 @@ import {
 import { ProjectsMessages } from 'app/pages/ProjectPage/ProjectListPage/messages';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { CardLayout } from 'app/components/CardLayout';
+import { Button } from 'app/components/Button';
 
 export const Projects = memo(() => {
   const { t } = useTranslation();
