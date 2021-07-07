@@ -1,13 +1,18 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { TablePagination } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
-import { Key } from 'react';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
-import { projectsSaga } from './saga';
-import { FilterColumns, ProjectsState, QueryParams } from './types';
+import { userspageSaga } from './saga';
+import {
+  EmployeePageState,
+  UserResponse,
+  FilterColumns,
+  QueryParams,
+} from './types';
+import { Key } from 'react';
+import { TablePagination } from '../useHandleDataTable';
 
-export const initialState: ProjectsState = {
-  projects: [],
+export const initialState: EmployeePageState = {
+  employees: [],
   loading: false,
   deleteSuccess: false,
   deleteFailed: false,
@@ -26,21 +31,21 @@ export const initialState: ProjectsState = {
 };
 
 const slice = createSlice({
-  name: 'projects',
+  name: 'employeespage',
   initialState,
   reducers: {
-    fetchProjects(state, action: PayloadAction<ProjectsState>) {
+    fetchUsers(state, action: PayloadAction<EmployeePageState>) {
       state.loading = true;
     },
-    fetchProjectsSuccess(state, action: PayloadAction<any>) {
-      state.projects = action.payload.results;
+    fetchUsersSuccess(state, action: PayloadAction<UserResponse>) {
+      state.employees = action.payload.results;
       state.pagination!.total = Number(action.payload.count);
       state.pagination!.current = Number(state.params.page);
       state.pagination!.pageSize = Number(state.params.limit);
       state.loading = false;
       state.isFilter = true;
     },
-    fetchProjectsFailure(state, action: PayloadAction<ProjectsState>) {
+    fetchUsersFailure(state, action: PayloadAction<EmployeePageState>) {
       state.error = action.payload.error;
       state.loading = false;
     },
@@ -48,9 +53,14 @@ const slice = createSlice({
       state.params = { ...state.params, ...action.payload };
       state.filterColumns = {
         ...state.filterColumns,
-        name: action.payload.name,
-        priority: action.payload.priority,
-        status: action.payload.status,
+        first_name: action.payload.first_name,
+        last_name: action.payload.last_name,
+        code: action.payload.code,
+        email: action.payload.email,
+        phoneNumber: action.payload.phoneNumber,
+        tags: action.payload.tags,
+        from: action.payload.from,
+        to: action.payload.to,
       };
       state.pagination = {
         ...state.pagination,
@@ -99,17 +109,17 @@ const slice = createSlice({
       state.params.limit = action.payload.pageSize;
       state.params.page = action.payload.current;
     },
-    deleteProject(state, action: PayloadAction<string>) {
+    deleteUser(state, action: PayloadAction<string>) {
       state.isFilter = true;
       state.deleteSuccess = false;
       state.deleteFailed = false;
     },
-    deleteProjectSuccess(state) {
+    deleteUserSuccess(state) {
       state.isFilter = false;
       state.deleteSuccess = true;
       state.deleteFailed = false;
     },
-    deleteProjectFailure(state) {
+    deleteUserFailure(state) {
       state.deleteSuccess = false;
       state.deleteFailed = true;
     },
@@ -120,22 +130,10 @@ const slice = createSlice({
   },
 });
 
-export const { actions: projectsActions } = slice;
+export const { actions: userspageActions } = slice;
 
-export const useProjectsSlice = () => {
+export const useUserspageSlice = () => {
   useInjectReducer({ key: slice.name, reducer: slice.reducer });
-  useInjectSaga({ key: slice.name, saga: projectsSaga });
+  useInjectSaga({ key: slice.name, saga: userspageSaga });
   return { actions: slice.actions };
 };
-
-/**
- * Example Usage:
- *
- * export function MyComponentNeedingThisSlice() {
- *  const { actions } = useProjectsSlice();
- *
- *  const onButtonClick = (evt) => {
- *    dispatch(actions.someAction());
- *   };
- * }
- */

@@ -6,7 +6,7 @@ import { User } from '@hdwebsoft/boilerplate-api-sdk/libs/api/user/models';
 import fakeAPI from 'utils/fakeAPI';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router';
-import { AvatarPath } from 'app/pages/UserPage/UserDetailPage/components/AvatarPath';
+import { AvatarPath } from 'app/pages/EmployeePage/EmployeeDetailPage/components/AvatarPath';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 
 interface FormProps {

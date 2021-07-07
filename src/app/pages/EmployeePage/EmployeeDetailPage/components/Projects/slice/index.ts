@@ -3,10 +3,16 @@ import { TablePagination } from 'app/pages/EmployeePage/EmployeeListPage/useHand
 import { Key } from 'react';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
-import { projectsSaga } from './saga';
-import { FilterColumns, ProjectsState, QueryParams } from './types';
+import { employeeProjectSaga } from './saga';
+import {
+  AddProject,
+  EmployeeProjectState,
+  FilterColumns,
+  QueryParams,
+} from './types';
 
-export const initialState: ProjectsState = {
+export const initialState: EmployeeProjectState = {
+  id: '',
   projects: [],
   loading: false,
   deleteSuccess: false,
@@ -26,13 +32,13 @@ export const initialState: ProjectsState = {
 };
 
 const slice = createSlice({
-  name: 'projects',
+  name: 'employeeProject',
   initialState,
   reducers: {
-    fetchProjects(state, action: PayloadAction<ProjectsState>) {
+    fetchEmployeeProject(state, action: PayloadAction<EmployeeProjectState>) {
       state.loading = true;
     },
-    fetchProjectsSuccess(state, action: PayloadAction<any>) {
+    fetchEmployeeProjectSuccess(state, action: PayloadAction<any>) {
       state.projects = action.payload.results;
       state.pagination!.total = Number(action.payload.count);
       state.pagination!.current = Number(state.params.page);
@@ -40,7 +46,10 @@ const slice = createSlice({
       state.loading = false;
       state.isFilter = true;
     },
-    fetchProjectsFailure(state, action: PayloadAction<ProjectsState>) {
+    fetchEmployeeProjectFailure(
+      state,
+      action: PayloadAction<EmployeeProjectState>,
+    ) {
       state.error = action.payload.error;
       state.loading = false;
     },
@@ -48,9 +57,7 @@ const slice = createSlice({
       state.params = { ...state.params, ...action.payload };
       state.filterColumns = {
         ...state.filterColumns,
-        name: action.payload.name,
-        priority: action.payload.priority,
-        status: action.payload.status,
+        project__name: action.payload.project__name,
       };
       state.pagination = {
         ...state.pagination,
@@ -99,6 +106,42 @@ const slice = createSlice({
       state.params.limit = action.payload.pageSize;
       state.params.page = action.payload.current;
     },
+    addProject(state, action: PayloadAction<AddProject>) {
+      state.isFilter = true;
+      state.addSuccess = false;
+      state.addFailed = false;
+    },
+    addProjectSuccess(state) {
+      state.isFilter = false;
+      state.addSuccess = true;
+      state.addFailed = false;
+    },
+    addProjectFailure(state) {
+      state.addSuccess = false;
+      state.addFailed = true;
+    },
+    resetStateAddModal(state) {
+      state.addSuccess = false;
+      state.addFailed = false;
+    },
+    editProject(state, action: PayloadAction<AddProject>) {
+      state.isFilter = true;
+      state.editSuccess = false;
+      state.editFailed = false;
+    },
+    editProjectSuccess(state) {
+      state.isFilter = false;
+      state.editSuccess = true;
+      state.editFailed = false;
+    },
+    editProjectFailure(state) {
+      state.editSuccess = false;
+      state.editFailed = true;
+    },
+    resetStateEditModal(state) {
+      state.editSuccess = false;
+      state.editFailed = false;
+    },
     deleteProject(state, action: PayloadAction<string>) {
       state.isFilter = true;
       state.deleteSuccess = false;
@@ -120,22 +163,10 @@ const slice = createSlice({
   },
 });
 
-export const { actions: projectsActions } = slice;
+export const { actions: employeeProjectActions } = slice;
 
-export const useProjectsSlice = () => {
+export const useEmployeeProjectSlice = () => {
   useInjectReducer({ key: slice.name, reducer: slice.reducer });
-  useInjectSaga({ key: slice.name, saga: projectsSaga });
+  useInjectSaga({ key: slice.name, saga: employeeProjectSaga });
   return { actions: slice.actions };
 };
-
-/**
- * Example Usage:
- *
- * export function MyComponentNeedingThisSlice() {
- *  const { actions } = useProjectsSlice();
- *
- *  const onButtonClick = (evt) => {
- *    dispatch(actions.someAction());
- *   };
- * }
- */

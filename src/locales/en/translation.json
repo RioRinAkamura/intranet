@@ -35,6 +35,303 @@
   "translations": {
     "someThing": "default value"
   },
+  "Device": {
+    "title": "Device",
+    "description": "Device",
+    "createUserButton": "Create Device",
+    "exportCSV": "Export as CSV",
+    "exportAll": "Export as CSV for all",
+    "exportCSVMessage": "Click link below to download the export file",
+    "exportPerPage": "Export as CSV this page",
+    "exportSelected": "Export as CSV for selected rows",
+    "importCSV": "Import CSV",
+    "list": {
+      "email": "Email",
+      "options": "Actions",
+      "viewTooltip": "View",
+      "EditTooltip": "Edit",
+      "DeleteTooltip": "Delete",
+      "filter": {
+        "inputPlaceholder": "Search",
+        "searchButton": "Search",
+        "resetButton": "Reset",
+        "filterButton": "Filter"
+      }
+    },
+    "search": {
+      "title": "Search",
+      "search": {
+        "label": "Search",
+        "placeholder": "Search user's first name, last name, email and phone number"
+      },
+      "searchButton": "Search",
+      "resetButton": "Reset"
+    },
+    "modal": {
+      "createTitle": "Create device",
+      "editTitle": "Edit device",
+      "previewCSVTitle": "Preview import file",
+      "form": {
+        "deleteButton": "Delete",
+        "deleteContent": "Are you sure to delete this Device?",
+        "cancelButton": "Cancel",
+        "submitButton": "Save"
+      }
+    }
+  },
+  "NotesPage": {
+    "list": {
+      "type": "Type",
+      "summary": "Summary",
+      "date": "Date",
+      "content": "Content",
+      "actions": "Actions",
+      "viewTooltip": "View",
+      "editTooltip": "Edit",
+      "deleteTooltip": "Delete"
+    },
+    "modal": {
+      "viewTitle": "Note details",
+      "createTitle": "Create note",
+      "editTitle": "Edit note",
+      "form": {
+        "editButton": "Edit",
+        "cancelButton": "Cancel",
+        "submitButton": "Save"
+      }
+    }
+  },
+  "UsersPage": {
+    "list": {
+      "filter": {
+        "inputPlaceholder": "Search",
+        "searchButton": "Search",
+        "resetButton": "Reset",
+        "filterButton": "Filter"
+      },
+      "avatar": "Avatar",
+      "name": "Name",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "options": "Actions",
+      "viewTooltip": "View",
+      "EditTooltip": "Edit",
+      "DeleteTooltip": "Delete"
+    },
+    "search": {
+      "title": "Search",
+      "search": {
+        "label": "Search",
+        "placeholder": "Search user's first name, last name, email and phone number"
+      },
+      "searchButton": "Search",
+      "resetButton": "Reset"
+    },
+    "title": "Employees",
+    "description": "Employees",
+    "createUserButton": "Create employee",
+    "exportCSV": "Export as CSV",
+    "exportAllUser": "Export as CSV for all",
+    "exportCSVMessage": "Click link below to download the export file",
+    "exportPerPage": "Export as CSV this page",
+    "exportSelected": "Export as CSV for selected rows",
+    "importCSV": "Import CSV",
+    "modal": {
+      "createTitle": "Create employee",
+      "editTitle": "Edit employee",
+      "profileTitle": "Employee profile",
+      "previewCSVTitle": "Preview import file",
+      "form": {
+        "deleteButton": "Delete",
+        "deleteContent": "Are you sure to delete this user?",
+        "cancelButton": "Cancel",
+        "submitButton": "Save"
+      }
+    }
+  },
+  "Enter name": "",
+  "UserDetailPage": {
+    "title": "User detail",
+    "description": "User detail",
+    "createTitle": "Create user",
+    "modal": {
+      "form": {
+        "avatar": {
+          "upload": "Upload image",
+          "label": "Avatar",
+          "empty": "Please upload employee avatar"
+        },
+        "code": {
+          "label": "Employee code",
+          "placeholder": "Enter employee code",
+          "empty": "Please enter employee code"
+        },
+        "profile": {
+          "title": "Profile infomation",
+          "firstName": {
+            "label": "First name",
+            "placeholder": "First name",
+            "empty": "Please enter first name"
+          },
+          "lastName": {
+            "label": "Last name",
+            "placeholder": "Last name",
+            "empty": "Please enter last name"
+          },
+          "DOB": {
+            "label": "Date of birth",
+            "placeholder": "Select DOB",
+            "empty": "Please enter date of birth",
+            "invalid": "Only allow 16+ years old!"
+          },
+          "gender": {
+            "label": "Gender",
+            "male": {
+              "label": "Male"
+            },
+            "female": {
+              "label": "Female"
+            },
+            "other": {
+              "label": "Other"
+            },
+            "empty": "Please select gender"
+          },
+          "phoneNumber": {
+            "label": "Phone number",
+            "placeholder": "Phone number",
+            "empty": "Please enter phone number",
+            "invalid": "Phone mumber is invalid"
+          },
+          "skills": {
+            "label": "SKills"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Email",
+            "empty": "Please enter email",
+            "invalid": "Email is invalid"
+          },
+          "status": {
+            "label": "Status",
+            "single": {
+              "label": "Single"
+            },
+            "married": {
+              "label": "Married"
+            }
+          },
+          "idCard": {
+            "title": "ID card information"
+          },
+          "idNumber": {
+            "label": "ID number",
+            "placeholder": "ID number"
+          },
+          "issuedDate": {
+            "label": "Issued date",
+            "placeholder": "Issued date"
+          },
+          "issuedPlace": {
+            "label": "Issued place",
+            "placeholder": "Issued place"
+          },
+          "socialInsuranceNo": {
+            "label": "Social insurance #",
+            "placeholder": "Social insurance #"
+          }
+        },
+        "job": {
+          "title": "Job infomation",
+          "jobTitle": {
+            "label": "Job title",
+            "placeholder": "Input job title",
+            "empty": "Please enter job title"
+          },
+          "type": {
+            "label": "Type",
+            "fullTime": {
+              "label": "Full-time"
+            },
+            "partTim": {
+              "label": "Part-time"
+            },
+            "probation": {
+              "label": "Probation"
+            },
+            "etc": {
+              "label": "Etc"
+            }
+          },
+          "jobTags": {
+            "label": "Tags",
+            "placeholder": "Employee tags"
+          }
+        },
+        "bank": {
+          "title": "Bank account",
+          "name": {
+            "label": "Bank name",
+            "placeholder": "Select bank name",
+            "empty": "Please enter bank name"
+          },
+          "number": {
+            "label": "Account number",
+            "placeholder": "Enter account number",
+            "empty": "Please enter bank number"
+          },
+          "branch": {
+            "label": "Account holder",
+            "placeholder": "Enter account holder",
+            "empty": "Please enter bank branch"
+          },
+          "button": {
+            "add": "Add bank account"
+          }
+        },
+        "social": {
+          "title": "Social accounts",
+          "skype": {
+            "label": "Skype",
+            "placeholder": "Input Skype ID"
+          },
+          "twitter": {
+            "label": "Twitter",
+            "placeholder": "Input Twitter ID"
+          },
+          "facebook": {
+            "label": "Facebook",
+            "placeholder": "Input Facebook ID"
+          },
+          "linkedin": {
+            "label": "Linkedin",
+            "placeholder": "Input Linkedin ID"
+          },
+          "github": {
+            "label": "Github",
+            "placeholder": "Input Github ID"
+          },
+          "gitlab": {
+            "label": "Gitlab",
+            "placeholder": "Input Gitlab ID"
+          }
+        },
+        "button": {
+          "edit": "Edit",
+          "submit": "Save",
+          "cancel": "Cancel",
+          "back": "Back",
+          "addBank": "Add bank account",
+          "editBank": "Edit bank account",
+          "submitAddBank": "Submit"
+        }
+      },
+      "message": {
+        "sucess": "Update employee successful"
+      }
+    }
+  },
   "ForgotPasswordPage": {
     "title": "Forgot password",
     "description": "Forgot password",
@@ -267,55 +564,6 @@
       }
     }
   },
-  "UsersPage": {
-    "exportCSVMessage": "Click link below to download the export file",
-    "title": "Employees",
-    "description": "Employees",
-    "createUserButton": "Create employee",
-    "exportCSV": "Export as CSV",
-    "exportAllUser": "Export as CSV for all",
-    "exportPerPage": "Export as CSV this page",
-    "exportSelected": "Export as CSV for selected rows",
-    "importCSV": "Import CSV",
-    "list": {
-      "avatar": "Avatar",
-      "name": "Name",
-      "firstName": "First name",
-      "lastName": "Last name",
-      "email": "Email",
-      "options": "Actions",
-      "viewTooltip": "View",
-      "EditTooltip": "Edit",
-      "DeleteTooltip": "Delete",
-      "filter": {
-        "inputPlaceholder": "Search",
-        "searchButton": "Search",
-        "resetButton": "Reset",
-        "filterButton": "Filter"
-      }
-    },
-    "search": {
-      "title": "Search",
-      "search": {
-        "label": "Search",
-        "placeholder": "Search user's first name, last name, email and phone number"
-      },
-      "searchButton": "Search",
-      "resetButton": "Reset"
-    },
-    "modal": {
-      "createTitle": "Create employee",
-      "editTitle": "Edit employee",
-      "profileTitle": "Employee profile",
-      "previewCSVTitle": "Preview import file",
-      "form": {
-        "deleteButton": "Delete",
-        "deleteContent": "Are you sure to delete this user?",
-        "cancelButton": "Cancel",
-        "submitButton": "Save"
-      }
-    }
-  },
   "ResetPasswordPage": {
     "title": "Reset password",
     "description": "Reset password",
@@ -341,187 +589,6 @@
       },
       "resetButton": "Reset password",
       "backButton": "Back to login page"
-    }
-  },
-  "Enter name": "",
-  "UserDetailPage": {
-    "title": "User detail",
-    "description": "User detail",
-    "createTitle": "Create user",
-    "modal": {
-      "form": {
-        "avatar": {
-          "upload": "Upload image",
-          "label": "Avatar",
-          "empty": "Please upload employee avatar"
-        },
-        "code": {
-          "label": "Employee code",
-          "placeholder": "Enter employee code",
-          "empty": "Please enter employee code"
-        },
-        "profile": {
-          "title": "Profile infomation",
-          "firstName": {
-            "label": "First name",
-            "placeholder": "First name",
-            "empty": "Please enter first name"
-          },
-          "lastName": {
-            "label": "Last name",
-            "placeholder": "Last name",
-            "empty": "Please enter last name"
-          },
-          "DOB": {
-            "label": "Date of birth",
-            "placeholder": "Select DOB",
-            "empty": "Please enter date of birth",
-            "invalid": "Only allow 16+ years old!"
-          },
-          "gender": {
-            "label": "Gender",
-            "male": {
-              "label": "Male"
-            },
-            "female": {
-              "label": "Female"
-            },
-            "other": {
-              "label": "Other"
-            },
-            "empty": "Please select gender"
-          },
-          "phoneNumber": {
-            "label": "Phone number",
-            "placeholder": "Phone number",
-            "empty": "Please enter phone number",
-            "invalid": "Phone mumber is invalid"
-          },
-          "skills": {
-            "label": "SKills"
-          },
-          "email": {
-            "label": "Email",
-            "placeholder": "Email",
-            "empty": "Please enter email",
-            "invalid": "Email is invalid"
-          },
-          "status": {
-            "label": "Status",
-            "single": {
-              "label": "Single"
-            },
-            "married": {
-              "label": "Married"
-            }
-          },
-          "idCard": {
-            "title": "ID card information"
-          },
-          "idNumber": {
-            "label": "ID number",
-            "placeholder": "ID number"
-          },
-          "issuedDate": {
-            "label": "Issued date",
-            "placeholder": "Issued date"
-          },
-          "issuedPlace": {
-            "label": "Issued place",
-            "placeholder": "Issued place"
-          },
-          "socialInsuranceNo": {
-            "label": "Social insurance #"
-          }
-        },
-        "job": {
-          "title": "Job infomation",
-          "jobTitle": {
-            "label": "Job title",
-            "placeholder": "Input job title",
-            "empty": "Please enter job title"
-          },
-          "type": {
-            "label": "Type",
-            "fullTime": {
-              "label": "Full-time"
-            },
-            "partTim": {
-              "label": "Part-time"
-            },
-            "probation": {
-              "label": "Probation"
-            },
-            "etc": {
-              "label": "Etc"
-            }
-          },
-          "jobTags": {
-            "label": "Tags",
-            "placeholder": "Employee tags"
-          }
-        },
-        "bank": {
-          "title": "Bank account",
-          "name": {
-            "label": "Bank name",
-            "placeholder": "Select bank name",
-            "empty": "Please enter bank name"
-          },
-          "number": {
-            "label": "Account number",
-            "placeholder": "Enter account number",
-            "empty": "Please enter bank number"
-          },
-          "branch": {
-            "label": "Account holder",
-            "placeholder": "Enter account holder",
-            "empty": "Please enter bank branch"
-          },
-          "button": {
-            "add": "Add bank account"
-          }
-        },
-        "social": {
-          "title": "Social accounts",
-          "skype": {
-            "label": "Skype",
-            "placeholder": "Input Skype ID"
-          },
-          "twitter": {
-            "label": "Twitter",
-            "placeholder": "Input Twitter ID"
-          },
-          "facebook": {
-            "label": "Facebook",
-            "placeholder": "Input Facebook ID"
-          },
-          "linkedin": {
-            "label": "Linkedin",
-            "placeholder": "Input Linkedin ID"
-          },
-          "github": {
-            "label": "Github",
-            "placeholder": "Input Github ID"
-          },
-          "gitlab": {
-            "label": "Gitlab",
-            "placeholder": "Input Gitlab ID"
-          }
-        },
-        "button": {
-          "edit": "Edit",
-          "submit": "Save",
-          "cancel": "Cancel",
-          "back": "Back",
-          "addBank": "Add bank account",
-          "editBank": "Edit bank account",
-          "submitAddBank": "Submit"
-        }
-      },
-      "message": {
-        "sucess": "Update employee successful"
-      }
     }
   }
 }

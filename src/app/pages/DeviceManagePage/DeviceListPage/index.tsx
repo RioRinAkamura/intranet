@@ -29,7 +29,7 @@ import { useHandleDataTable } from './useHandleDataTable';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import fakeAPI from 'utils/fakeAPI';
 import { useTableConfig } from 'utils/tableConfig';
-import { Messages } from './translate';
+import { Messages } from './messages';
 import { CardLayout } from 'app/components/CardLayout';
 import { Button } from 'app/components/Button';
 

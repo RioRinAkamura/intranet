@@ -18,8 +18,8 @@ import { PrivateRoute, PublicRoute } from './components/Auth/Route';
 import { HomePage } from './pages/HomePage/Loadable';
 import { Login } from './pages/Login/Loadable';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
-import { Users } from './pages/UserPage/UserListPage/Loadable';
-import { UserDetailPage } from './pages/UserPage/UserDetailPage/Loadable';
+import { EmployeeListPage } from './pages/EmployeePage/EmployeeListPage/Loadable';
+import { EmployeeDetailPage } from './pages/EmployeePage/EmployeeDetailPage/Loadable';
 import { authProvider } from './components/Auth/defaultAuthProvider';
 import { AuthContextProvider } from './components/Auth/Context';
 import { ForgotPassword } from './pages/ForgotPassword/Loadable';
@@ -75,27 +75,27 @@ export function App() {
                 <PrivateRoute
                   exact
                   path={config.USERS_PATH}
-                  component={Users}
+                  component={EmployeeListPage}
                 />
                 <PrivateRoute
                   exact
                   path={`${config.USERS_PATH}/:id`}
-                  component={UserDetailPage}
+                  component={EmployeeDetailPage}
                 />
                 <PrivateRoute
                   exact
                   path={`${config.USERS_PATH}/:id/notes`}
-                  component={UserDetailPage}
+                  component={EmployeeDetailPage}
                 />
                 <PrivateRoute
                   exact
                   path={`${config.USERS_PATH}/:id/projects`}
-                  component={UserDetailPage}
+                  component={EmployeeDetailPage}
                 />
                 <PrivateRoute
                   exact
                   path={`${config.USERS_PATH}/create`}
-                  component={UserDetailPage}
+                  component={EmployeeListPage}
                 />
                 <PrivateRoute
                   exact

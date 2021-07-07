@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import { Button, Rate } from 'antd';
 import { PlusOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { UserDetailMessages } from 'app/pages/UserPage/UserDetailPage/messages';
+import { UserDetailMessages } from 'app/pages/EmployeePage/EmployeeDetailPage/messages';
 import { SkillsModal } from './components/SkillsModal';
 import { DeleteOutlined } from '@ant-design/icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';

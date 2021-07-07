@@ -30,8 +30,8 @@ import {
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 import { useProjectsSlice } from './slice';
-import { useUserspageSlice } from 'app/pages/UserPage/UserListPage/slice';
-import { selectUserspage } from 'app/pages/UserPage/UserListPage/slice/selectors';
+import { useUserspageSlice } from 'app/pages/EmployeePage/EmployeeListPage/slice';
+import { selectUserspage } from 'app/pages/EmployeePage/EmployeeListPage/slice/selectors';
 
 import { useDispatch, useSelector } from 'react-redux';
 import PageTitle from 'app/components/PageTitle';
@@ -39,7 +39,7 @@ import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { useTableConfig } from 'utils/tableConfig';
-import { useHandleDataTable } from 'app/pages/UserPage/UserListPage/useHandleDataTable';
+import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import {
   selectProjects,
   selectProjectsIsFilter,
@@ -65,7 +65,9 @@ export const ProjectsPage: React.FC = () => {
   const [idProjectDelete, setIdProjectDelete] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deleteProject, setDeleteProject] = useState<any>();
-  const deleteModalState = useSelector((state: RootState) => state.userspage);
+  const deleteModalState = useSelector(
+    (state: RootState) => state.employeespage,
+  );
   const deleteSuccess = deleteModalState?.deleteSuccess;
   const deleteFailed = deleteModalState?.deleteFailed;
   const [textCopy, setTextCopy] = useState(false);
@@ -118,8 +120,8 @@ export const ProjectsPage: React.FC = () => {
 
   useEffect(() => {
     const mapUsers: any =
-      getUserListState.users &&
-      [...getUserListState.users].map(user => {
+      getUserListState.employees &&
+      [...getUserListState.employees].map(user => {
         return {
           label: user.first_name + ' ' + user.last_name,
           value: user.id,
@@ -127,7 +129,7 @@ export const ProjectsPage: React.FC = () => {
       });
 
     setUserOptions(mapUsers);
-  }, [getUserListState.users]);
+  }, [getUserListState.employees]);
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
