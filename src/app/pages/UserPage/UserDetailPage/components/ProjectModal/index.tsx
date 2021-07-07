@@ -70,7 +70,7 @@ export const ProjectModal = memo((props: Props) => {
       memberForm.resetFields();
       notify({
         type: ToastMessageType.Info,
-        message: 'Add Success',
+        message: 'Add success',
         duration: 2,
       });
     } else if (addFailed) {
@@ -78,7 +78,7 @@ export const ProjectModal = memo((props: Props) => {
       memberForm.resetFields();
       notify({
         type: ToastMessageType.Error,
-        message: 'Add Failed',
+        message: 'Add failed',
         duration: 2,
       });
     }
@@ -90,7 +90,7 @@ export const ProjectModal = memo((props: Props) => {
       memberForm.resetFields();
       notify({
         type: ToastMessageType.Info,
-        message: 'Edit Success',
+        message: 'Update success',
         duration: 2,
       });
     } else if (editFailed) {
@@ -98,7 +98,7 @@ export const ProjectModal = memo((props: Props) => {
       memberForm.resetFields();
       notify({
         type: ToastMessageType.Error,
-        message: 'Edit Failed',
+        message: 'Update failed',
         duration: 2,
       });
     }
@@ -170,7 +170,7 @@ export const ProjectModal = memo((props: Props) => {
   return (
     <>
       <DialogModal
-        title={isAddProject ? 'Add Project' : 'Edit Project'}
+        title={isAddProject ? 'Add project' : 'Edit project'}
         isOpen={open}
         handleCancel={() => {
           setOpen(false);
@@ -194,7 +194,7 @@ export const ProjectModal = memo((props: Props) => {
             rules={[
               {
                 required: true,
-                message: 'Please Select Project!',
+                message: 'Please select project',
               },
             ]}
           >
@@ -207,7 +207,7 @@ export const ProjectModal = memo((props: Props) => {
               size="large"
               loading={searchLoad}
               disabled={selectedProject ? true : false}
-              placeholder={t('Enter Project Name')}
+              placeholder={t('Enter name')}
               onSearch={handleSearch}
               onChange={handleChange}
               notFoundContent={searchLoad ? <Spin size="default" /> : null}
@@ -217,15 +217,15 @@ export const ProjectModal = memo((props: Props) => {
           </FormSearchItem>
           <FormSearchItem
             name="project_role"
-            label="Project Role"
+            label="Project role"
             rules={[
               {
                 required: true,
-                message: 'Please Select Project Role!',
+                message: 'Please select role',
               },
             ]}
           >
-            <Select size="large" placeholder="Select Project Role">
+            <Select size="large" placeholder="Select role">
               {role &&
                 role.map((item, index: number) => {
                   return (
@@ -242,13 +242,13 @@ export const ProjectModal = memo((props: Props) => {
             rules={[
               {
                 required: true,
-                message: 'Please Select Allocation!',
+                message: 'Please select allocation',
               },
             ]}
           >
             <Select
               size="large"
-              placeholder="Select Allocation"
+              placeholder="Select allocation"
               showSearch
               optionFilterProp="children"
               filterOption={(input, option) => option?.value === Number(input)}

@@ -23,9 +23,9 @@ export const messages = {
   deleteModalDelete: () => _t(translations.deleteConfirmModal.delete, 'Delete'),
   deleteModalCancel: () => _t(translations.deleteConfirmModal.cancel, 'Cancel'),
   deleteModalSuccess: () =>
-    _t(translations.deleteConfirmModal.success, 'Delete Success'),
+    _t(translations.deleteConfirmModal.success, 'Delete successful'),
   deleteModalFailed: () =>
-    _t(translations.deleteConfirmModal.failed, 'Delete Failed'),
+    _t(translations.deleteConfirmModal.failed, 'Delete failed'),
   deleteModalTypeEmail: () =>
     _t(
       translations.deleteConfirmModal.typeEmail,

@@ -1,283 +1,20 @@
 {
-  "routingFeature": {
-    "title": "Industry-standard Routing",
-    "description": "It's natural to want to add pages (e.g. `/about`) to your application, and routing makes this possible."
-  },
-  "i18nFeature": {
-    "title": "i18n Internationalization & Pluralization",
-    "selectLanguage": "Select Language",
-    "description": "Scalable apps need to support multiple languages, easily add and support multiple languages. Change the language below to see how instantly it updates the page without refreshing."
-  },
-  "feedbackFeature": {
-    "title": "Instant Feedback",
-    "description": "Enjoy the best DX and code your app at the speed of thought! Your saved changes to the CSS and JS are reflected instantaneously without refreshing the page."
-  },
-  "scaffoldingFeature": {
-    "title": "Quick Scaffolding",
-    "description": "Automate the creation of components, features, routes, selectors and sagas - and their tests - right from the CLI! Avoid fighting the glue of your code and focus on your app!"
-  },
   "changPassword": {
-    "title": "Change Password",
+    "title": "Change password",
     "cancel": "Cancel",
-    "oldPassword": "Old Password",
-    "newPassword": "New Password",
-    "retypePassword": "Confirm Password",
+    "oldPassword": "Old password",
+    "newPassword": "New password",
+    "retypePassword": "Confirm password",
     "isRequired": "(*) This field is required",
     "minLength": "(*) Min length 8",
-    "complexPassword": "(*) Password includes letters, digits, capital characters, special characters, at least 8 characters",
+    "complexPassword": "complexPassword",
     "isNotMatch": "(*) The two passwords that you entered do not match!",
     "changePassSuccess": "Change password success",
     "changePassFailed": "Change password failed",
-    "wrongOldPassword": "Wrong Old Password",
-    "inputOldPassword": "Please input old password!",
-    "inputNewPassword": "Please input new password!",
-    "inputRetypePassword": "Please input retype password!"
-  },
-  "translations": {
-    "someThing": "default value"
-  },
-  "ForgotPasswordPage": {
-    "title": "Forgot Password",
-    "description": "Forgot Password Page",
-    "form": {
-      "title": "Forgot Your Password",
-      "description": "Enter your registered email below to receive password reset instruction.",
-      "email": {
-        "label": "Email Address",
-        "placeholder": "Your email",
-        "invalid": "Your email is invalid!",
-        "empty": "Please input your email address!"
-      },
-      "forgotButton": "Send Request",
-      "backButton": "Back to login page"
-    }
-  },
-  "LoginPage": {
-    "title": "Login",
-    "description": "Login Page",
-    "form": {
-      "title": "Login",
-      "email": "Email Address",
-      "invalidEmail": "Your email is invalid!",
-      "emptyEmail": "Please input your email address!",
-      "password": "Password",
-      "emptyPassword": "Please input your password!",
-      "rememberMe": "Remember me",
-      "forgotPassword": "Forgot your password",
-      "loginButton": "Login",
-      "registerLinkText": "register now!",
-      "loginFacebookButton": "Login with Facebook",
-      "loginGoogleButton": "Login with Google",
-      "dividerText": "Or"
-    }
-  },
-  "ResetPasswordPage": {
-    "title": "Reset Password",
-    "description": "Reset Password Page",
-    "form": {
-      "title": "Reset Your Password",
-      "newPassword": {
-        "label": "New Password",
-        "placeholder": "Input your new password",
-        "invalid": "Password at least 8 characters and including letters, digits, capital characters, special characters!",
-        "empty": "Please input your new password!"
-      },
-      "retypePassword": {
-        "label": "Confirm Password",
-        "placeholder": "Confirm your new password",
-        "emptyNewPassword": "Please input new password first!",
-        "invalid": "Confirm Password at least 8 characters and including letters, digits, capital characters, special characters!",
-        "empty": "Please confirm your new password!",
-        "notMatch": "Your new password and confirm password don't match!"
-      },
-      "otp": {
-        "label": "OTP",
-        "placeholder": "Input your OTP sent in your email"
-      },
-      "resetButton": "Reset Password",
-      "backButton": "Back to login page"
-    }
-  },
-  "UserDetailPage": {
-    "title": "User Detail",
-    "description": "User Detail",
-    "createTitle": "Create User",
-    "modal": {
-      "form": {
-        "avatar": {
-          "upload": "Upload Image",
-          "label": "Avatar",
-          "empty": "Please upload Employee avatar!"
-        },
-        "code": {
-          "label": "Employee Code",
-          "placeholder": "Enter employee code",
-          "empty": "Please enter employee code"
-        },
-        "profile": {
-          "title": "Profile Infomation",
-          "firstName": {
-            "label": "First Name",
-            "placeholder": "Enter Employee First Name",
-            "empty": "Please Enter Employee First Name!"
-          },
-          "lastName": {
-            "label": "Last Name",
-            "placeholder": "Employee Last Name",
-            "empty": "Please Enter Employee Last Name!"
-          },
-          "DOB": {
-            "label": "Date of Birth",
-            "placeholder": "Select Employee DOB",
-            "empty": "Please Enter Employee Date of Birth!",
-            "invalid": "Only allow 16+ years old!"
-          },
-          "gender": {
-            "label": "Gender",
-            "male": {
-              "label": "Male"
-            },
-            "female": {
-              "label": "Female"
-            },
-            "other": {
-              "label": "Other"
-            },
-            "empty": "Please Select Employee Gender"
-          },
-          "phoneNumber": {
-            "label": "Phone Number",
-            "placeholder": "Employee Phone Number",
-            "empty": "Please Enter Employee Phone Number!",
-            "invalid": "Employee Phone Number Is Invalid!"
-          },
-          "email": {
-            "label": "Email",
-            "placeholder": "Employee Email",
-            "empty": "Please Enter Employee Email!",
-            "invalid": "Employee Email Is Invalid!"
-          },
-          "skills": {
-            "label": "Skills"
-          },
-          "status": {
-            "label": "Status",
-            "single": {
-              "label": "Single"
-            },
-            "married": {
-              "label": "Married"
-            }
-          },
-          "idCard": {
-            "title": "Id Card Information"
-          },
-          "idNumber": {
-            "label": "Id Number",
-            "placeholder": "Employee Id Number"
-          },
-          "issuedDate": {
-            "label": "Issued Date",
-            "placeholder": "Employee Issued Date"
-          },
-          "issuedPlace": {
-            "label": "Issued Place",
-            "placeholder": "Employee Issued Place"
-          },
-          "socialInsuranceNo": {
-            "label": "Social Insurance No",
-            "placeholder": "Employee Social Insurance No"
-          }
-        },
-        "job": {
-          "title": "Job Infomation",
-          "jobTitle": {
-            "label": "Job Title",
-            "placeholder": "Input Employee Job Title!",
-            "empty": "Please Enter Employee Job Title!"
-          },
-          "type": {
-            "label": "Type",
-            "fullTime": {
-              "label": "Full-time"
-            },
-            "partTim": {
-              "label": "Part-time"
-            },
-            "probation": {
-              "label": "Probation"
-            },
-            "etc": {
-              "label": "Etc"
-            }
-          },
-          "jobTags": {
-            "label": "Tags",
-            "placeholder": "Employee Tags"
-          }
-        },
-        "bank": {
-          "title": "Bank Informations",
-          "name": {
-            "label": "Bank Name",
-            "placeholder": "Select Bank Name",
-            "empty": "Please Enter Employee Bank Name"
-          },
-          "number": {
-            "label": "Account Number/ Card Number",
-            "placeholder": "Enter Account Number/ Card Number",
-            "empty": "Please Enter Employee bank number"
-          },
-          "branch": {
-            "label": "Account Owner",
-            "placeholder": "Enter Account Owner's Name",
-            "empty": "Please Enter Employee Bank Branch"
-          },
-          "button": {
-            "add": "Add Bank Account"
-          }
-        },
-        "social": {
-          "title": "Social Network",
-          "skype": {
-            "label": "Skype",
-            "placeholder": "Input Employee Skype"
-          },
-          "twitter": {
-            "label": "Twitter",
-            "placeholder": "Input Employee Twitter"
-          },
-          "facebook": {
-            "label": "Facebook",
-            "placeholder": "Input Employee Facebook"
-          },
-          "linkedin": {
-            "label": "Linkedin",
-            "placeholder": "Input Employee Linkedin"
-          },
-          "github": {
-            "label": "Github",
-            "placeholder": "Input Employee Github"
-          },
-          "gitlab": {
-            "label": "Gitlab",
-            "placeholder": "Input Employee Gitlab"
-          }
-        },
-        "button": {
-          "edit": "Edit",
-          "submit": "Save",
-          "cancel": "Cancel",
-          "back": "Back",
-          "addBank": "Add Bank Account",
-          "editBank": "Edit Bank Account",
-          "submitAddBank": "Submit"
-        }
-      },
-      "message": {
-        "sucess": "Update employee successfully"
-      }
-    }
+    "wrongOldPassword": "Wrong old password",
+    "inputOldPassword": "Please input old password",
+    "inputNewPassword": "Please input new password",
+    "inputRetypePassword": "Please input retype password"
   },
   "deleteConfirmModal": {
     "title": "Delete",
@@ -286,24 +23,61 @@
     "isRequired": "(*) This field is required",
     "delete": "Delete",
     "cancel": "Cancel",
-    "success": "Delete Success",
-    "failed": "Delete Failed",
+    "success": "Delete successful",
+    "failed": "Delete failed",
     "typeEmail": "Type email address below to delete your employee"
   },
-  "UsersPage": {
-    "title": "Employees",
-    "description": "Employees",
-    "createUserButton": "Create Employee",
+  "someThing": "default value",
+  "tagsInput": {
+    "validate": "Please input more 1 word",
+    "searchTags": "Search Tags"
+  },
+  "translations": {
+    "someThing": "default value"
+  },
+  "ForgotPasswordPage": {
+    "title": "Forgot password",
+    "description": "Forgot password",
+    "form": {
+      "title": "Forgot your password",
+      "description": "Enter your registered email below to receive password reset instruction.",
+      "email": {
+        "label": "Email address",
+        "placeholder": "Your email",
+        "invalid": "Your email is invalid",
+        "empty": "Please input your email address"
+      },
+      "forgotButton": "Send request",
+      "backButton": "Back to login page"
+    }
+  },
+  "routingFeature": {
+    "title": "Industry-standard Routing",
+    "description": ""
+  },
+  "feedbackFeature": {
+    "title": "",
+    "description": ""
+  },
+  "scaffoldingFeature": {
+    "title": "",
+    "description": ""
+  },
+  "i18nFeature": {
+    "title": "",
+    "description": ""
+  },
+  "LeaveApplication": {
+    "title": "Leave applications",
+    "description": "Leave applications",
+    "createUserButton": "Create leave application",
     "exportCSV": "Export as CSV",
-    "exportAllUser": "Export as CSV for all",
+    "exportAll": "Export as CSV for all",
+    "exportCSVMessage": "Click link below to download the export file",
     "exportPerPage": "Export as CSV this page",
     "exportSelected": "Export as CSV for selected rows",
     "importCSV": "Import CSV",
     "list": {
-      "avatar": "Avatar",
-      "name": "Name",
-      "firstName": "First Name",
-      "lastName": "Last Name",
       "email": "Email",
       "options": "Actions",
       "viewTooltip": "View",
@@ -326,38 +100,140 @@
       "resetButton": "Reset"
     },
     "modal": {
-      "createTitle": "Create Employee",
-      "editTitle": "Edit Employee",
-      "profileTitle": "Employee Profile",
-      "previewCSVTitle": "Preview Import File",
+      "createTitle": "Create employee",
+      "editTitle": "Edit employee",
+      "previewCSVTitle": "Preview import file",
       "form": {
         "deleteButton": "Delete",
         "deleteContent": "Are you sure to delete this user?",
         "cancelButton": "Cancel",
         "submitButton": "Save"
       }
-    },
-    "exportCSVMessage": "Click link below to download the export file"
+    }
   },
-  "tagsInput": {
-    "validate": "Please input more 1 word",
-    "searchTags": "Search Tags"
+  "LoginPage": {
+    "title": "Login",
+    "description": "Login",
+    "form": {
+      "title": "Login",
+      "email": "Email address",
+      "invalidEmail": "Your email is invalid",
+      "emptyEmail": "Please input your email address",
+      "password": "Password",
+      "emptyPassword": "Please input your password!",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot your password",
+      "loginButton": "Login",
+      "registerLinkText": "Register now",
+      "loginFacebookButton": "Login with Facebook",
+      "loginGoogleButton": "Login with Google",
+      "dividerText": "Or"
+    }
+  },
+  "ProjectDetailPage": {
+    "title": "Project detail",
+    "description": "Project detail",
+    "createTitle": "Create project",
+    "editTitle": "Edit project",
+    "addMember": "Add member",
+    "editMember": "Edit member",
+    "form": {
+      "projectName": {
+        "label": "Project name",
+        "placeholder": "Enter name",
+        "empty": "Please enter name"
+      },
+      "projectStarted": {
+        "label": "Project started",
+        "placeholder": "Select started Date",
+        "empty": "Please started date"
+      },
+      "projectPriority": {
+        "label": "Project priority",
+        "placeholder": "Select priority",
+        "empty": "Please select priority",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "projectStatus": {
+        "label": "Project status",
+        "placeholder": "Select status",
+        "empty": "Please select status",
+        "preparing": "Preparing",
+        "going": "Going",
+        "released": "Released",
+        "archived": "Archived"
+      },
+      "projectOverview": {
+        "label": "Project overview",
+        "placeholder": "Enter project overview",
+        "empty": "Please enter project overview"
+      }
+    },
+    "member": {
+      "title": "Team members",
+      "pm": "Project manager",
+      "tl": "Team leader",
+      "qc": "QC",
+      "dev": "Developer",
+      "other": "Other",
+      "form": {
+        "employee": {
+          "label": "Employee",
+          "placeholder": "Enter name, email",
+          "empty": "Please enter name, email"
+        },
+        "projectRole": {
+          "label": "Project role",
+          "placeholder": "Select project role",
+          "empty": "Please select project role"
+        },
+        "allocation": {
+          "label": "Allocation",
+          "placeholder": "Select allocation",
+          "empty": "Please select allocation"
+        }
+      }
+    },
+    "message": {
+      "createProjectSuccess": "Create project successful",
+      "editProjectSuccess": "Update project successful",
+      "createMemberSuccess": "Create member successful",
+      "editMemberSuccess": "Update member successful"
+    },
+    "button": {
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "back": "Back",
+      "submit": "Submit"
+    }
   },
   "ProjectsPage": {
     "title": "Projects",
     "description": "Projects",
+    "createProjectButton": "Create project",
     "exportCSV": "Export as CSV",
+    "exportAllProject": "Export as CSV for all",
     "exportPerPage": "Export as CSV this page",
     "exportSelected": "Export as CSV for selected rows",
     "importCSV": "Import CSV",
     "list": {
       "avatar": "Avatar",
       "name": "Name",
+      "tm": "Team members",
+      "pm": "Project manager",
+      "ld": "Leader",
+      "qc": "QC",
+      "dev": "Developer",
+      "other": "Other",
       "started": "Started",
       "priority": "Priority",
       "status": "Status",
-      "totalMembers": "Total Members",
-      "totalWeeklyHours": "Total Weekly Hours",
+      "totalMembers": "",
+      "totalWeeklyHours": "",
       "options": "Actions",
       "viewTooltip": "View",
       "EditTooltip": "Edit",
@@ -367,13 +243,7 @@
         "searchButton": "Search",
         "resetButton": "Reset",
         "filterButton": "Filter"
-      },
-      "tm": "Team Members",
-      "pm": "Project Manager",
-      "ld": "Leader",
-      "qc": "Quality Controller",
-      "dev": "Developer",
-      "other": "Other"
+      }
     },
     "search": {
       "title": "Search",
@@ -385,218 +255,272 @@
       "resetButton": "Reset"
     },
     "modal": {
-      "createTitle": "Create Project",
-      "editTitle": "Edit Project",
-      "profileTitle": "Project Profile",
-      "previewCSVTitle": "Preview Import File",
+      "createTitle": "Create project",
+      "editTitle": "Edit project",
+      "profileTitle": "Project details",
+      "previewCSVTitle": "Preview import file",
       "form": {
         "deleteButton": "Delete",
         "deleteContent": "Are you sure to delete this project?",
         "cancelButton": "Cancel",
         "submitButton": "Save"
       }
-    },
-    "createProjectButton": "Create Project",
-    "exportAllProject": "Export as CSV for all"
+    }
   },
-  "ProjectDetailPage": {
-    "title": "Project Detail",
-    "description": "Project Detail",
-    "createTitle": "Create Project",
-    "editTitle": "Edit Project",
-    "form": {
-      "projectName": {
-        "label": "Project Name",
-        "placeholder": "Enter Project Name",
-        "empty": "Please Enter Project Name!"
-      },
-      "projectStarted": {
-        "label": "Project Started",
-        "placeholder": "Select Project Started Date",
-        "empty": "Please Select Project Started Date!"
-      },
-      "projectPriority": {
-        "label": "Project Priority",
-        "placeholder": "Select Project Priority",
-        "empty": "Please Select Project Priority!",
-        "low": "Low",
-        "medium": "Medium",
-        "high": "High"
-      },
-      "projectStatus": {
-        "label": "Project Status",
-        "placeholder": "Select Project Status",
-        "empty": "Please Select Project Status!",
-        "preparing": "Preparing",
-        "going": "Going",
-        "released": "Released",
-        "archived": "Archived"
-      },
-      "projectOverview": {
-        "label": "Project Overview",
-        "placeholder": "Enter Project Overview",
-        "empty": "Please Enter Project Overview!"
+  "UsersPage": {
+    "exportCSVMessage": "Click link below to download the export file",
+    "title": "Employees",
+    "description": "Employees",
+    "createUserButton": "Create employee",
+    "exportCSV": "Export as CSV",
+    "exportAllUser": "Export as CSV for all",
+    "exportPerPage": "Export as CSV this page",
+    "exportSelected": "Export as CSV for selected rows",
+    "importCSV": "Import CSV",
+    "list": {
+      "avatar": "Avatar",
+      "name": "Name",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "options": "Actions",
+      "viewTooltip": "View",
+      "EditTooltip": "Edit",
+      "DeleteTooltip": "Delete",
+      "filter": {
+        "inputPlaceholder": "Search",
+        "searchButton": "Search",
+        "resetButton": "Reset",
+        "filterButton": "Filter"
       }
     },
-    "button": {
-      "create": "Create",
-      "edit": "Edit",
-      "delete": "Delete",
-      "cancel": "Cancel",
-      "back": "Back",
-      "submit": "Submit"
+    "search": {
+      "title": "Search",
+      "search": {
+        "label": "Search",
+        "placeholder": "Search user's first name, last name, email and phone number"
+      },
+      "searchButton": "Search",
+      "resetButton": "Reset"
     },
-    "member": {
-      "pm": "Project Manager",
-      "tl": "Team Leader",
-      "qc": "Quality Controller",
-      "dev": "Developer",
-      "other": "Other",
+    "modal": {
+      "createTitle": "Create employee",
+      "editTitle": "Edit employee",
+      "profileTitle": "Employee profile",
+      "previewCSVTitle": "Preview import file",
       "form": {
-        "employee": {
-          "label": "Employee",
-          "placeholder": "Enter Member Name, Email",
-          "empty": "Please Enter Member Name, Email!"
+        "deleteButton": "Delete",
+        "deleteContent": "Are you sure to delete this user?",
+        "cancelButton": "Cancel",
+        "submitButton": "Save"
+      }
+    }
+  },
+  "ResetPasswordPage": {
+    "title": "Reset password",
+    "description": "Reset password",
+    "form": {
+      "title": "Reset your password",
+      "newPassword": {
+        "label": "New password",
+        "placeholder": "Input your new password",
+        "invalid": "Password at least 8 characters and including letters, digits, capital characters, special characters!",
+        "empty": "Please input your new password"
+      },
+      "retypePassword": {
+        "label": "Confirm password",
+        "placeholder": "Confirm your new password",
+        "emptyNewPassword": "Please input new password first",
+        "invalid": "Confirm Password at least 8 characters and including letters, digits, capital characters, special characters!",
+        "empty": "Please confirm your new password",
+        "notMatch": "Your new password and confirm password don't match"
+      },
+      "otp": {
+        "label": "OTP",
+        "placeholder": "Input your OTP sent in your email"
+      },
+      "resetButton": "Reset password",
+      "backButton": "Back to login page"
+    }
+  },
+  "Enter name": "",
+  "UserDetailPage": {
+    "title": "User detail",
+    "description": "User detail",
+    "createTitle": "Create user",
+    "modal": {
+      "form": {
+        "avatar": {
+          "upload": "Upload image",
+          "label": "Avatar",
+          "empty": "Please upload employee avatar"
         },
-        "projectRole": {
-          "label": "Project Role",
-          "placeholder": "Select Project Role",
-          "empty": "Please Select Project Role!"
+        "code": {
+          "label": "Employee code",
+          "placeholder": "Enter employee code",
+          "empty": "Please enter employee code"
         },
-        "allocation": {
-          "label": "Allocation",
-          "placeholder": "Select Allocation",
-          "empty": "Please Select Allocation!"
+        "profile": {
+          "title": "Profile infomation",
+          "firstName": {
+            "label": "First name",
+            "placeholder": "First name",
+            "empty": "Please enter first name"
+          },
+          "lastName": {
+            "label": "Last name",
+            "placeholder": "Last name",
+            "empty": "Please enter last name"
+          },
+          "DOB": {
+            "label": "Date of birth",
+            "placeholder": "Select DOB",
+            "empty": "Please enter date of birth",
+            "invalid": "Only allow 16+ years old!"
+          },
+          "gender": {
+            "label": "Gender",
+            "male": {
+              "label": "Male"
+            },
+            "female": {
+              "label": "Female"
+            },
+            "other": {
+              "label": "Other"
+            },
+            "empty": "Please select gender"
+          },
+          "phoneNumber": {
+            "label": "Phone number",
+            "placeholder": "Phone number",
+            "empty": "Please enter phone number",
+            "invalid": "Phone mumber is invalid"
+          },
+          "skills": {
+            "label": "SKills"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Email",
+            "empty": "Please enter email",
+            "invalid": "Email is invalid"
+          },
+          "status": {
+            "label": "Status",
+            "single": {
+              "label": "Single"
+            },
+            "married": {
+              "label": "Married"
+            }
+          },
+          "idCard": {
+            "title": "ID card information"
+          },
+          "idNumber": {
+            "label": "ID number",
+            "placeholder": "ID number"
+          },
+          "issuedDate": {
+            "label": "Issued date",
+            "placeholder": "Issued date"
+          },
+          "issuedPlace": {
+            "label": "Issued place",
+            "placeholder": "Issued place"
+          },
+          "socialInsuranceNo": {
+            "label": "Social insurance #"
+          }
+        },
+        "job": {
+          "title": "Job infomation",
+          "jobTitle": {
+            "label": "Job title",
+            "placeholder": "Input job title",
+            "empty": "Please enter job title"
+          },
+          "type": {
+            "label": "Type",
+            "fullTime": {
+              "label": "Full-time"
+            },
+            "partTim": {
+              "label": "Part-time"
+            },
+            "probation": {
+              "label": "Probation"
+            },
+            "etc": {
+              "label": "Etc"
+            }
+          },
+          "jobTags": {
+            "label": "Tags",
+            "placeholder": "Employee tags"
+          }
+        },
+        "bank": {
+          "title": "Bank account",
+          "name": {
+            "label": "Bank name",
+            "placeholder": "Select bank name",
+            "empty": "Please enter bank name"
+          },
+          "number": {
+            "label": "Account number",
+            "placeholder": "Enter account number",
+            "empty": "Please enter bank number"
+          },
+          "branch": {
+            "label": "Account holder",
+            "placeholder": "Enter account holder",
+            "empty": "Please enter bank branch"
+          },
+          "button": {
+            "add": "Add bank account"
+          }
+        },
+        "social": {
+          "title": "Social accounts",
+          "skype": {
+            "label": "Skype",
+            "placeholder": "Input Skype ID"
+          },
+          "twitter": {
+            "label": "Twitter",
+            "placeholder": "Input Twitter ID"
+          },
+          "facebook": {
+            "label": "Facebook",
+            "placeholder": "Input Facebook ID"
+          },
+          "linkedin": {
+            "label": "Linkedin",
+            "placeholder": "Input Linkedin ID"
+          },
+          "github": {
+            "label": "Github",
+            "placeholder": "Input Github ID"
+          },
+          "gitlab": {
+            "label": "Gitlab",
+            "placeholder": "Input Gitlab ID"
+          }
+        },
+        "button": {
+          "edit": "Edit",
+          "submit": "Save",
+          "cancel": "Cancel",
+          "back": "Back",
+          "addBank": "Add bank account",
+          "editBank": "Edit bank account",
+          "submitAddBank": "Submit"
         }
       },
-      "title": "Team Members"
-    },
-    "addMember": "Add Member",
-    "editMember": "Edit Member",
-    "message": {
-      "createProjectSuccess": "Create Project Successfully",
-      "editProjectSuccess": "Edit Project Successfully",
-      "createMemberSuccess": "Create Member Successfully",
-      "editMemberSuccess": "Edit Member Successfully"
-    }
-  },
-  "NotesPage": {
-    "title": "Notes",
-    "description": "Notes",
-    "list": {
-      "viewTooltip": "View",
-      "editTooltip": "Edit",
-      "deleteTooltip": "Delete",
-      "type": "Type",
-      "summary": "Summary",
-      "date": "Date",
-      "content": "Content",
-      "actions": "Actions"
-    },
-    "modal": {
-      "viewTitle": "Note Details",
-      "createTitle": "Create Note",
-      "editTitle": "Edit Note",
-      "form": {
-        "editButton": "Edit",
-        "cancelButton": "Cancel",
-        "submitButton": "Save"
-      }
-    }
-  },
-  "LeaveApplication": {
-    "title": "Device Manager",
-    "description": "Device Manager",
-    "createUserButton": "Create leave application",
-    "exportCSV": "Export as CSV",
-    "exportAll": "Export as CSV for all",
-    "exportPerPage": "Export as CSV this page",
-    "exportSelected": "Export as CSV for selected rows",
-    "importCSV": "Import CSV",
-    "exportCSVMessage": "Click link below to download the export file",
-    "list": {
-      "employeeName": "Employee Name",
-      "name": "Name",
-      "email": "Email",
-      "phone": "Phone",
-      "title": "title",
-      "options": "Actions",
-      "viewTooltip": "View",
-      "EditTooltip": "Edit",
-      "DeleteTooltip": "Delete",
-      "filter": {
-        "inputPlaceholder": "Search",
-        "searchButton": "Search",
-        "resetButton": "Reset",
-        "filterButton": "Filter"
-      }
-    },
-    "search": {
-      "title": "Search",
-      "search": {
-        "label": "Search",
-        "placeholder": "Search employee name, title and description"
-      },
-      "searchButton": "Search",
-      "resetButton": "Reset"
-    },
-    "modal": {
-      "createTitle": "Create leave application",
-      "editTitle": "Edit leave application",
-      "previewCSVTitle": "Preview Import File",
-      "form": {
-        "deleteButton": "Delete",
-        "deleteContent": "Are you sure to delete this leave application?",
-        "cancelButton": "Cancel",
-        "submitButton": "Save"
-      }
-    }
-  },
-  "Device": {
-    "title": "Device Manager",
-    "description": "Device Manager",
-    "createUserButton": "Create lDevice",
-    "exportCSV": "Export as CSV",
-    "exportAll": "Export as CSV for all",
-    "exportPerPage": "Export as CSV this page",
-    "exportSelected": "Export as CSV for selected rows",
-    "importCSV": "Import CSV",
-    "exportCSVMessage": "Click link below to download the export file",
-    "list": {
-      "employeeName": "Employee Name",
-      "name": "Name",
-      "email": "Email",
-      "phone": "Phone",
-      "title": "title",
-      "options": "Actions",
-      "viewTooltip": "View",
-      "EditTooltip": "Edit",
-      "DeleteTooltip": "Delete",
-      "filter": {
-        "inputPlaceholder": "Search",
-        "searchButton": "Search",
-        "resetButton": "Reset",
-        "filterButton": "Filter"
-      }
-    },
-    "search": {
-      "title": "Search",
-      "search": {
-        "label": "Search",
-        "placeholder": "Search employee name, title and description"
-      },
-      "searchButton": "Search",
-      "resetButton": "Reset"
-    },
-    "modal": {
-      "createTitle": "Create Device",
-      "editTitle": "Edit Device",
-      "previewCSVTitle": "Preview Import File",
-      "form": {
-        "deleteButton": "Delete",
-        "deleteContent": "Are you sure to delete this Device?",
-        "cancelButton": "Cancel",
-        "submitButton": "Save"
+      "message": {
+        "sucess": "Update employee successful"
       }
     }
   }

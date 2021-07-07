@@ -368,6 +368,6 @@ export const UserDetailMessages = {
   updateSuccessMessage: () =>
     _t(
       translations.UserDetailPage.modal.message.sucess,
-      'Updated employee successfully',
+      'Update employee successful',
     ),
 };

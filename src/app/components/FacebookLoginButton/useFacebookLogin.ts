@@ -24,7 +24,7 @@ export const useFacebookLogin = (): {
       notify({
         type: ToastMessageType.Info,
         duration: 2,
-        message: 'Login with Facebook successfully',
+        message: 'Login with Facebook successful',
       });
     } catch (error) {
       notify({

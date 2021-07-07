@@ -24,7 +24,7 @@ export const useGoogleLogin = (): {
       notify({
         type: ToastMessageType.Info,
         duration: 2,
-        message: 'Login with Google successfully',
+        message: 'Login with Google successful',
       });
     } catch (error) {
       notify({

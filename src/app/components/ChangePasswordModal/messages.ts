@@ -9,14 +9,14 @@ import { _t } from 'utils/messages';
 
 export const messages = {
   changePasswordTitle: () =>
-    _t(translations.changPassword.title, 'Change Password'),
+    _t(translations.changPassword.title, 'Change password'),
   changePasswordCancel: () => _t(translations.changPassword.cancel, 'Cancel'),
   changePasswordOld: () =>
-    _t(translations.changPassword.oldPassword, 'Old Password'),
+    _t(translations.changPassword.oldPassword, 'Old password'),
   changePasswordNew: () =>
-    _t(translations.changPassword.newPassword, 'New Password'),
+    _t(translations.changPassword.newPassword, 'New password'),
   changePasswordRetype: () =>
-    _t(translations.changPassword.retypePassword, 'Confirm Password'),
+    _t(translations.changPassword.retypePassword, 'Confirm password'),
   changePasswordIsRequired: () =>
     _t(translations.changPassword.isRequired, '(*) This field is required'),
   changePasswordMinLength: () =>
@@ -33,20 +33,20 @@ export const messages = {
   changePasswordFailed: () =>
     _t(translations.changPassword.changePassFailed, 'Change password failed'),
   changePasswordWrongOld: () =>
-    _t(translations.changPassword.wrongOldPassword, 'Wrong Old Password'),
+    _t(translations.changPassword.wrongOldPassword, 'Wrong old password'),
   changePasswordInputOld: () =>
     _t(
       translations.changPassword.inputOldPassword,
-      'Please input old password!',
+      'Please input old password',
     ),
   changePasswordInputNew: () =>
     _t(
       translations.changPassword.inputNewPassword,
-      'Please input new password!',
+      'Please input new password',
     ),
   changePasswordInputRetype: () =>
     _t(
       translations.changPassword.inputRetypePassword,
-      'Please input retype password!',
+      'Please input retype password',
     ),
 };

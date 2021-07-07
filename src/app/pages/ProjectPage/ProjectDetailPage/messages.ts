@@ -158,22 +158,22 @@ export const ProjectDetailMessages = {
   messageCreateProjectSuccess: () =>
     _t(
       translations.ProjectDetailPage.message.createProjectSuccess,
-      'Created project successfully',
+      'Create project successful',
     ),
   messageEditProjectSuccess: () =>
     _t(
       translations.ProjectDetailPage.message.editProjectSuccess,
-      'Updated project successfully',
+      'Update project successful',
     ),
   messageCreateMemberSuccess: () =>
     _t(
       translations.ProjectDetailPage.message.createMemberSuccess,
-      'Created member successfully',
+      'Create member successful',
     ),
   messageEditMemberSuccess: () =>
     _t(
       translations.ProjectDetailPage.message.editMemberSuccess,
-      'Updated member successfully',
+      'Update member successful',
     ),
   buttonCreate: () =>
     _t(translations.ProjectDetailPage.button.create, 'Create'),

@@ -29,7 +29,7 @@ export const useDeviceDetail = (): {
         notify({
           type: ToastMessageType.Info,
           duration: 2,
-          message: 'Create Device Successfully',
+          message: 'Create device successful',
         });
         history.push('/devices/' + response.id);
         return response;
@@ -54,7 +54,7 @@ export const useDeviceDetail = (): {
         notify({
           type: ToastMessageType.Info,
           duration: 2,
-          message: 'Update Device Successfully',
+          message: 'Update device successful',
         });
         return response;
       }

@@ -46,7 +46,7 @@ export const useLeaveApplicationDetail = (): {
         notify({
           type: ToastMessageType.Info,
           duration: 2,
-          message: 'Save the information successfully',
+          message: 'Save successful',
         });
         return response;
       }
@@ -78,7 +78,7 @@ export const useLeaveApplicationDetail = (): {
         notify({
           type: ToastMessageType.Info,
           duration: 2,
-          message: 'Create leave application successfully',
+          message: 'Create successful',
         });
         history.push('/leave_applications/' + response.id);
       }
@@ -102,7 +102,7 @@ export const useLeaveApplicationDetail = (): {
         notify({
           type: ToastMessageType.Info,
           duration: 2,
-          message: 'Approve leave application successfully',
+          message: 'Approve successful',
         });
         history.push('/leave_applications/');
       }
@@ -126,7 +126,7 @@ export const useLeaveApplicationDetail = (): {
         notify({
           type: ToastMessageType.Info,
           duration: 2,
-          message: 'Reject leave application successfully',
+          message: 'Reject successful',
         });
         history.push('/leave_applications/');
       }

@@ -40,7 +40,7 @@ export const DeviceCategory = (props: CategoryProps) => {
       notify({
         type: ToastMessageType.Info,
         duration: 2,
-        message: 'Delete Category Successfully',
+        message: 'Delete category successful',
       });
       setVisible(false);
       fetchCategories();

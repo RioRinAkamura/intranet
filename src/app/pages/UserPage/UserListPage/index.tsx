@@ -120,13 +120,13 @@ export const Users: React.FC = () => {
     if (deleteSuccess) {
       notify({
         type: ToastMessageType.Info,
-        message: 'Delete Success',
+        message: 'Delete successful',
         duration: 2,
       });
     } else if (deleteFailed) {
       notify({
         type: ToastMessageType.Error,
-        message: 'Delete Failed',
+        message: 'Delete failed',
         duration: 2,
       });
     }
@@ -136,7 +136,7 @@ export const Users: React.FC = () => {
     <p>
       You're about to permanently delete your employee{' '}
       <Tooltip
-        title={<div>{textCopy ? 'Copied!' : 'Click to copy!'}</div>}
+        title={<div>{textCopy ? 'Copied' : 'Click to copy'}</div>}
         onVisibleChange={visible => visible === true && setTextCopy(false)}
       >
         <strong
