@@ -267,12 +267,12 @@ export const Employees: React.FC = () => {
   const columns: ColumnProps<Employee>[] = [
     {
       dataIndex: 'avatar',
-      width: 25,
+      width: 30,
       align: 'center',
       className: 'avatar',
       render: (text, record: Employee) => (
         <Avatar
-          size={50}
+          size={40}
           src={text}
           alt={record.first_name + ' ' + record.last_name}
           name={record.first_name + ' ' + record.last_name}
@@ -310,7 +310,7 @@ export const Employees: React.FC = () => {
     {
       title: 'Tags',
       dataIndex: 'tags',
-      width: 95,
+      width: 90,
       ...getColumnSearchTagProps('tags'),
       render: (text, record: Employee, index: number) => {
         return (
@@ -379,6 +379,7 @@ export const Employees: React.FC = () => {
       dataIndex: 'id',
       width: 50,
       fixed: 'right',
+      align: 'center',
       render: (text, record: Employee, index: number) => {
         return (
           <>

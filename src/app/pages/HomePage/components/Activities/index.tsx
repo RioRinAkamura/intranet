@@ -37,7 +37,7 @@ export const Activities = () => {
     <>
       <CardWrapper
         // mainheight="328px"
-        bodyheight="240px"
+        bodyheight="237px"
         title={<PageTitle title="Activities" />}
       >
         {data &&
