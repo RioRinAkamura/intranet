@@ -33,6 +33,8 @@ import { UserManageDetailPage } from './pages/ManageUserPage/UserDetailPage/Load
 import { LeaveApplicationDetailPage } from './pages/LeaveApplicationPage/LeaveApplicationDetailPage/Loadable';
 import { DeviceManagerPage } from './pages/DeviceManagePage/DeviceListPage/Loadable';
 import { DeviceDetailPage } from './pages/DeviceManagePage/DeviceDetailPage/Loadable';
+import '../app.less';
+
 export function App() {
   const { i18n } = useTranslation();
   return (

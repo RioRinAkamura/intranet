@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "4.6.2",
+    "@craco/craco": "6.2.0",
     "@draft-js-plugins/anchor": "4.1.2",
     "@draft-js-plugins/editor": "4.1.0",
     "@draft-js-plugins/hashtag": "4.2.0",
@@ -34,6 +35,7 @@
     "@types/webpack-env": "1.15.2",
     "antd": "4.15.0",
     "chalk": "4.1.0",
+    "craco-less": "1.18.0",
     "cross-env": "7.0.2",
     "draft-js": "0.11.7",
     "eslint-config-prettier": "6.11.0",
@@ -93,10 +95,10 @@
     "web-vitals": "0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject",
     "test:generators": "ts-node --project=./internals/ts-node.tsconfig.json ./internals/testing/generators/test-generators.ts",
     "start:prod": "yarn run build && serve -s build",
     "checkTs": "tsc --noEmit",

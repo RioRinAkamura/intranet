@@ -38,7 +38,7 @@ export const Recruitments = () => {
       <CardWrapper
         backgroundimg={background}
         // mainheight="328px"
-        bodyheight="240px"
+        bodyheight="237px"
         title={<PageTitle title="Recruitment News" />}
       >
         <RowHeader gutter={[32, 0]} align="middle">
