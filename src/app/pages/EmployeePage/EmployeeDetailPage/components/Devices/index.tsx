@@ -333,7 +333,6 @@ export const Device = memo((props: DeviceProps) => {
     <Wrapper>
       <Header>
         <StyledButton
-          size="large"
           type="primary"
           icon={<FormOutlined />}
           onClick={() => {
@@ -341,7 +340,7 @@ export const Device = memo((props: DeviceProps) => {
             form.resetFields();
           }}
         >
-          Add Device
+          Add device
         </StyledButton>
       </Header>
       <Table

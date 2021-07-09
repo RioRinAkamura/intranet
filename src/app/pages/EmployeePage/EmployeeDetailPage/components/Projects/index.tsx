@@ -159,12 +159,11 @@ export const Projects = memo(() => {
     <Wrapper>
       <Header>
         <StyledButton
-          size="large"
           type="primary"
           icon={<ProjectOutlined />}
           onClick={() => setOpen(true)}
         >
-          Add Project
+          Add project
         </StyledButton>
       </Header>
 

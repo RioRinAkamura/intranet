@@ -287,7 +287,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formSocialInsuranceNoLabel())}
+              {t(UserDetailMessages.formInsuranceNoLabel())}
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               {' '}
@@ -298,7 +298,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                   placeholder={
                     isView
                       ? ''
-                      : t(UserDetailMessages.formSocialInsuranceNoPlaceholder())
+                      : t(UserDetailMessages.formInsuranceNoPlaceholder())
                   }
                 />
               </FormItem>

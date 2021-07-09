@@ -345,7 +345,6 @@ export const ManageUserPage: React.FC = () => {
                 userListState.selectedRowKeys.length > 0 && (
                   <Button
                     danger
-                    size="large"
                     disabled={
                       !userListState?.selectedRowKeys?.length ||
                       userListState?.selectedRowKeys?.length === 0

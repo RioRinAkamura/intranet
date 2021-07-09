@@ -6,13 +6,14 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Button, Col, Form, Row, Tabs } from 'antd';
+import { Col, Form, Row, Tabs } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 
 import { config } from 'config';
 import PageTitle from 'app/components/PageTitle';
+import Button from 'app/components/Button';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 
@@ -242,10 +243,8 @@ export function EmployeeDetailPage(props: Props) {
         <WrapperButton>
           <Row gutter={[8, 8]} justify="end">
             <Col>
-              <PageButton
+              <Button
                 block
-                size="large"
-                shape="round"
                 onClick={() => {
                   if (isEdit) {
                     setIsEdit(false);
@@ -257,14 +256,12 @@ export function EmployeeDetailPage(props: Props) {
                 }}
               >
                 {t(UserDetailMessages.formBackButton())}
-              </PageButton>
+              </Button>
             </Col>
             <Col>
-              <PageButton
+              <Button
                 loading={loading}
                 block
-                size="large"
-                shape="round"
                 type="primary"
                 onClick={() => {
                   if (isEdit) {
@@ -280,7 +277,7 @@ export function EmployeeDetailPage(props: Props) {
                 {isView
                   ? t(UserDetailMessages.formEditButton())
                   : t(UserDetailMessages.formSubmitButton())}
-              </PageButton>
+              </Button>
             </Col>
           </Row>
         </WrapperButton>
@@ -293,10 +290,6 @@ const WrapperButton = styled.div`
   margin-top: 3em;
   padding: 10px;
   height: 100%;
-`;
-
-const PageButton = styled(Button)`
-  width: 120px;
 `;
 
 const WrapperAddBank = styled.div`

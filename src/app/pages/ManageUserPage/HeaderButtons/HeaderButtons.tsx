@@ -12,7 +12,6 @@ export const HeaderButtons = () => {
       <Row justify="end">
         <OptionButton>
           <Button
-            size="large"
             type="primary"
             icon={<UserAddOutlined />}
             onClick={() => {

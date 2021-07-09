@@ -7,9 +7,7 @@ import {
   CheckboxOptionType,
   Tooltip,
   Popover,
-  // Tag,
 } from 'antd';
-// import { Avatar } from 'app/components/Avatar/Loadable';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
@@ -46,7 +44,6 @@ import {
   selectProjectsParams,
 } from './slice/selectors';
 import moment from 'moment';
-// import { antColours } from 'utils/types';
 import { ProjectsMessages } from './messages';
 import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
 import { TeamMembers } from 'app/components/TeamMembers';
@@ -287,48 +284,6 @@ export const ProjectsPage: React.FC = () => {
     </>
   );
 
-  // const memberChildren = (dataIndex: string) => ({
-  //   dataIndex: ['members'],
-  //   width: 250,
-  //   render: (text, record: any) => {
-  //     let members;
-  //     if (dataIndex === 'OTHER') {
-  //       members = text.filter(
-  //         item =>
-  //           item.project_role !== 'PM' &&
-  //           item.project_role !== 'LD' &&
-  //           item.project_role !== 'QC' &&
-  //           item.project_role !== 'DEV',
-  //       );
-  //     } else {
-  //       members = text.filter(item => item.project_role === dataIndex);
-  //     }
-  //     return (
-  //       <div>
-  //         {members.length > 0 &&
-  //           members.map(member => {
-  //             const info = member.employee;
-  //             return (
-  //               <div style={{ marginBottom: '5px' }}>
-  //                 <span>
-  //                   <Avatar
-  //                     src={info.avatar}
-  //                     name={info.first_name + ' ' + info.last_name}
-  //                     size={30}
-  //                   />
-  //                   {` ${info.first_name} ${info.last_name} `}
-  //                   <Tag color={antColours[member.allocation]}>
-  //                     {member.allocation}
-  //                   </Tag>
-  //                 </span>
-  //               </div>
-  //             );
-  //           })}
-  //       </div>
-  //     );
-  //   },
-  // });
-
   const columns: ColumnsType<any> = [
     {
       title: t(ProjectsMessages.listNameTitle()),
@@ -460,7 +415,6 @@ export const ProjectsPage: React.FC = () => {
                   getProjectState.selectedRowKeys.length > 0 && (
                     <Button
                       danger
-                      size="large"
                       disabled={
                         !getProjectState?.selectedRowKeys?.length ||
                         getProjectState?.selectedRowKeys?.length === 0

@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 import { selectCategories } from '../DeviceCategory/slice/selectors';
 import moment from 'moment';
 import {
-  Button,
   Col,
   DatePicker,
   Form,
@@ -28,6 +27,7 @@ import {
 } from 'utils/types';
 import { DeviceHistoryTab } from '../DeviceHistory/Loadable';
 import { CardLayout } from 'app/components/CardLayout';
+import Button from 'app/components/Button';
 
 const { Option } = Select;
 
@@ -233,26 +233,22 @@ export const DeviceDetailPage = props => {
         <WrapperButton>
           <Row gutter={[8, 8]} justify="end">
             <Col>
-              <PageButton
+              <Button
                 block
-                size="large"
                 shape="round"
                 onClick={() =>
                   isEdit ? setIsEdit(false) : history.push('/devices')
                 }
               >
                 Cancel
-              </PageButton>
+              </Button>
             </Col>
             <Col>
-              <PageButton
+              <Button
                 loading={loading}
                 block
-                size="large"
-                shape="round"
                 type="primary"
                 onClick={() => {
-                  // handleSubmit();
                   if (isEdit) {
                     handleSubmit();
                   } else if (isView) {
@@ -264,7 +260,7 @@ export const DeviceDetailPage = props => {
                 }}
               >
                 {isView ? 'Edit' : 'Submit'}
-              </PageButton>
+              </Button>
             </Col>
           </Row>
         </WrapperButton>
@@ -285,10 +281,6 @@ const FormItem = styled(Form.Item)`
     font-weight: 500;
     min-width: 150px;
   }
-`;
-
-const PageButton = styled(Button)`
-  width: 120px;
 `;
 
 const WrapperButton = styled.div`

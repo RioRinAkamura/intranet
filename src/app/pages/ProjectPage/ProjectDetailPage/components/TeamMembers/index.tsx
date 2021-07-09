@@ -157,18 +157,11 @@ export const TeamMembers = (props: Props) => {
     <>
       <>
         <Row gutter={[12, 12]} align="middle" style={{ marginBottom: 12 }}>
-          <Col>
-            <h3>{t(ProjectDetailMessages.memberTitle())}</h3>
-          </Col>
+          <Col>{t(ProjectDetailMessages.memberTitle())}</Col>
           <Col>
             {!isView && (
               <>
-                <Button
-                  type="primary"
-                  block
-                  size="large"
-                  onClick={() => setOpenModal(true)}
-                >
+                <Button type="primary" block onClick={() => setOpenModal(true)}>
                   {t(ProjectDetailMessages.addMember())}
                 </Button>
               </>

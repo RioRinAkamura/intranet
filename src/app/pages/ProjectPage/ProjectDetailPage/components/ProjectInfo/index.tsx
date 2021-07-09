@@ -86,7 +86,7 @@ export const ProjectInfo = (props: Props) => {
         <Col md={14} xs={24}>
           <Row gutter={[14, isView ? 32 : 12]} align="middle">
             <Col md={isView ? 8 : 24} xs={24}>
-              <h3>{t(ProjectDetailMessages.formProjectNameLabel())}</h3>
+              {t(ProjectDetailMessages.formProjectNameLabel())}
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem
@@ -119,7 +119,7 @@ export const ProjectInfo = (props: Props) => {
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
                 <Col md={isView ? 12 : 24} xs={24}>
-                  <h3>{t(ProjectDetailMessages.formProjectStartedLabel())}</h3>
+                  {t(ProjectDetailMessages.formProjectStartedLabel())}
                 </Col>
                 <Col md={isView ? 12 : 24} xs={24}>
                   <FormItem isView={isView} name="started">
@@ -143,7 +143,7 @@ export const ProjectInfo = (props: Props) => {
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
                 <Col md={isView ? 12 : 24} xs={24}>
-                  <h3>{t(ProjectDetailMessages.formProjectPriorityLabel())}</h3>
+                  {t(ProjectDetailMessages.formProjectPriorityLabel())}
                 </Col>
                 <Col md={isView ? 12 : 24} xs={24}>
                   <FormItem isView={isView} name="priority">
@@ -170,7 +170,7 @@ export const ProjectInfo = (props: Props) => {
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
                 <Col md={isView ? 12 : 24} xs={24}>
-                  <h3>{t(ProjectDetailMessages.formProjectStatusLabel())}</h3>
+                  {t(ProjectDetailMessages.formProjectStatusLabel())}
                 </Col>
                 <Col md={isView ? 12 : 24} xs={24}>
                   <FormItem isView={isView} name="status">
@@ -200,7 +200,7 @@ export const ProjectInfo = (props: Props) => {
         <Col md={10} xs={24}>
           <Row gutter={[0, 12]} align="middle">
             <Col md={24} xs={24}>
-              <h3>{t(ProjectDetailMessages.formProjectOverviewLabel())}</h3>
+              {t(ProjectDetailMessages.formProjectOverviewLabel())}
             </Col>
             <Col md={24} xs={24}>
               <FormItem isView={isView} name="overview">

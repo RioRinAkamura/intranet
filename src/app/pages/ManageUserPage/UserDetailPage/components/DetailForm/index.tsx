@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
-import { Col, Form, Input, Row, InputProps, Button } from 'antd';
+import { Col, Form, Input, Row, InputProps } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { User } from '@hdwebsoft/boilerplate-api-sdk/libs/api/user/models';
 import fakeAPI from 'utils/fakeAPI';
@@ -8,6 +8,7 @@ import { omit } from 'lodash';
 import { useHistory } from 'react-router';
 import { AvatarPath } from 'app/pages/EmployeePage/EmployeeDetailPage/components/AvatarPath';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import Button from 'app/components/Button';
 
 interface FormProps {
   isView: boolean;
@@ -415,15 +416,9 @@ export const DetailForm = memo((props: FormProps) => {
         <Row justify="end">
           <Col>
             <Form.Item>
-              <PageButton
-                block
-                size="large"
-                shape="round"
-                type="primary"
-                htmlType="submit"
-              >
+              <Button block type="primary" htmlType="submit">
                 Save
-              </PageButton>
+              </Button>
             </Form.Item>
           </Col>
         </Row>
@@ -476,8 +471,4 @@ const FormItem = styled(Form.Item)`
       margin-right: 10em;
     }
   }
-`;
-
-const PageButton = styled(Button)`
-  width: 120px;
 `;

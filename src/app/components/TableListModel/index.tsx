@@ -180,7 +180,6 @@ const TableListModel: React.FC<Props> = ({
           {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
             <Button
               danger
-              size="large"
               disabled={
                 !state?.selectedRowKeys?.length ||
                 state?.selectedRowKeys?.length === 0
@@ -198,7 +197,6 @@ const TableListModel: React.FC<Props> = ({
         <Row justify="end">
           <Button
             style={{ marginBottom: 10 }}
-            size="large"
             type="primary"
             onClick={() => history.push('/leave_applications/create')}
             icon={<UserAddOutlined />}

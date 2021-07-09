@@ -11,22 +11,6 @@ export const ProjectsMessages = {
   description: () => _t(translations.ProjectsPage.description, 'Projects'),
   createProjectButton: () =>
     _t(translations.ProjectsPage.createProjectButton, 'Create project'),
-  exportCSV: () => _t(translations.ProjectsPage.exportCSV, 'Export as CSV'),
-  exportAllProject: () =>
-    _t(translations.ProjectsPage.exportAllProject, 'Export as CSV for all'),
-  exportCSVMessage: () =>
-    _t(
-      translations.UsersPage.exportCSVMessage,
-      'Click link below to download the export file',
-    ),
-  exportPerPage: () =>
-    _t(translations.ProjectsPage.exportPerPage, 'Export as CSV this page'),
-  exportSelected: () =>
-    _t(
-      translations.ProjectsPage.exportSelected,
-      'Export as CSV for selected rows',
-    ),
-  importCSV: () => _t(translations.ProjectsPage.importCSV, 'Import CSV'),
   listAvatarTitle: () => _t(translations.ProjectsPage.list.avatar, 'Avatar'),
   listNameTitle: () => _t(translations.ProjectsPage.list.name, 'Name'),
   listTMTitle: () => _t(translations.ProjectsPage.list.tm, 'Team members'),
@@ -73,8 +57,6 @@ export const ProjectsMessages = {
     _t(translations.ProjectsPage.modal.editTitle, 'Edit project'),
   modalProfileTitle: () =>
     _t(translations.ProjectsPage.modal.profileTitle, 'Project details'),
-  modalPreviewCSVTitle: () =>
-    _t(translations.ProjectsPage.modal.previewCSVTitle, 'Preview import file'),
   modalFormDeleteButton: () =>
     _t(translations.ProjectsPage.modal.form.deleteButton, 'Delete'),
   modalFormDeleteContent: () =>

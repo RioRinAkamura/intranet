@@ -338,7 +338,6 @@ export const Notes = memo((props: Props) => {
     <Wrapper>
       <Header>
         <StyledButton
-          size="large"
           type="primary"
           icon={<FormOutlined />}
           onClick={() => {
@@ -346,7 +345,7 @@ export const Notes = memo((props: Props) => {
             form.resetFields();
           }}
         >
-          Create Notes
+          Create notes
         </StyledButton>
       </Header>
 

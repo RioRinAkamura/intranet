@@ -21,9 +21,9 @@ export const IconButton = styled(ButtonAntd)`
 `;
 
 const Button = props => {
-  const { children, shape } = props;
+  const { children, shape, size } = props;
   return (
-    <ButtonStyled shape={shape || 'round'} {...props}>
+    <ButtonStyled shape={shape || 'round'} size={size || 'large'} {...props}>
       {children}
     </ButtonStyled>
   );

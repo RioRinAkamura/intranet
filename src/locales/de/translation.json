@@ -130,13 +130,13 @@
     },
     "title": "Employees",
     "description": "Employees",
-    "createUserButton": "Create employee",
-    "exportCSV": "Export as CSV",
+    "createUserButton": "Create",
+    "exportCSV": "Export",
     "exportAllUser": "Export as CSV for all",
     "exportCSVMessage": "Click link below to download the export file",
     "exportPerPage": "Export as CSV this page",
     "exportSelected": "Export as CSV for selected rows",
-    "importCSV": "Import CSV",
+    "importCSV": "Import",
     "modal": {
       "createTitle": "Create employee",
       "editTitle": "Edit employee",
@@ -154,6 +154,7 @@
   "UserDetailPage": {
     "title": "User detail",
     "description": "User detail",
+    "cancel": "Cancel",
     "createTitle": "Create user",
     "modal": {
       "form": {
@@ -237,7 +238,7 @@
             "label": "Issued place",
             "placeholder": "Issued place"
           },
-          "socialInsuranceNo": {
+          "insuranceNo": {
             "label": "Social insurance #",
             "placeholder": "Social insurance #"
           }
@@ -433,6 +434,7 @@
     "createTitle": "Create project",
     "editTitle": "Edit project",
     "addMember": "Add member",
+    "cancel": "Cancel",
     "editMember": "Edit member",
     "form": {
       "projectName": {
@@ -441,12 +443,12 @@
         "empty": "Please enter name"
       },
       "projectStarted": {
-        "label": "Project started",
-        "placeholder": "Select started Date",
-        "empty": "Please started date"
+        "label": "Start date",
+        "placeholder": "Select start date",
+        "empty": "Please start date"
       },
       "projectPriority": {
-        "label": "Project priority",
+        "label": "Priority",
         "placeholder": "Select priority",
         "empty": "Please select priority",
         "low": "Low",
@@ -454,7 +456,7 @@
         "high": "High"
       },
       "projectStatus": {
-        "label": "Project status",
+        "label": "Status",
         "placeholder": "Select status",
         "empty": "Please select status",
         "preparing": "Preparing",
@@ -463,7 +465,7 @@
         "archived": "Archived"
       },
       "projectOverview": {
-        "label": "Project overview",
+        "label": "Overview",
         "placeholder": "Enter project overview",
         "empty": "Please enter project overview"
       }
@@ -482,9 +484,9 @@
           "empty": "Please enter name, email"
         },
         "projectRole": {
-          "label": "Project role",
-          "placeholder": "Select project role",
-          "empty": "Please select project role"
+          "label": "Role",
+          "placeholder": "Select role",
+          "empty": "Please select role"
         },
         "allocation": {
           "label": "Allocation",
@@ -512,11 +514,6 @@
     "title": "Projects",
     "description": "Projects",
     "createProjectButton": "Create project",
-    "exportCSV": "Export as CSV",
-    "exportAllProject": "Export as CSV for all",
-    "exportPerPage": "Export as CSV this page",
-    "exportSelected": "Export as CSV for selected rows",
-    "importCSV": "Import CSV",
     "list": {
       "avatar": "Avatar",
       "name": "Name",
@@ -555,7 +552,6 @@
       "createTitle": "Create project",
       "editTitle": "Edit project",
       "profileTitle": "Project details",
-      "previewCSVTitle": "Preview import file",
       "form": {
         "deleteButton": "Delete",
         "deleteContent": "Are you sure to delete this project?",

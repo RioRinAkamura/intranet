@@ -1,20 +1,6 @@
-/**
- *
- * LeaveApplicationDetailPage
- *
- */
 import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components/macro';
-import {
-  Button,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  Row,
-  Select,
-  SelectProps,
-} from 'antd';
+import { Col, DatePicker, Form, Input, Row, Select, SelectProps } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 import { useHistory, useLocation, useParams } from 'react-router';
 import moment from 'moment';
@@ -30,6 +16,7 @@ import { FORM_RULES, WORKING_TYPE } from 'constants/leave_application';
 import { calcBusinessDays } from 'utils/variable';
 import { useGetIdentity } from 'app/components/Auth/useGetIdentity';
 import { CardLayout } from 'app/components/CardLayout';
+import Button from 'app/components/Button';
 
 interface Props {}
 interface LocationState {
@@ -285,23 +272,19 @@ export const LeaveApplicationDetailPage = (props: Props) => {
       <WrapperButton>
         <Row gutter={[8, 8]} justify="end">
           <Col>
-            <PageButton
+            <Button
               block
-              size="large"
-              shape="round"
               onClick={() =>
                 isEdit ? setIsEdit(false) : history.push('/leave_applications')
               }
             >
               Cancel
-            </PageButton>
+            </Button>
           </Col>
           <Col>
-            <PageButton
+            <Button
               loading={loading}
               block
-              size="large"
-              shape="round"
               type="primary"
               onClick={() => {
                 if (isEdit) {
@@ -315,35 +298,31 @@ export const LeaveApplicationDetailPage = (props: Props) => {
               }}
             >
               {isView ? 'Edit' : 'Submit'}
-            </PageButton>
+            </Button>
           </Col>
           {isAccess && isView && data?.approval_status !== 'APPROVED' && (
             <Col>
-              <PageButton
+              <Button
                 loading={loading}
                 block
-                size="large"
-                shape="round"
                 type="primary"
                 onClick={() => approve(id)}
               >
                 Approve
-              </PageButton>
+              </Button>
             </Col>
           )}
           {isAccess && isView && data?.approval_status !== 'REJECTED' && (
             <Col>
-              <PageButton
+              <Button
                 loading={loading}
                 block
-                size="large"
-                shape="round"
                 type="primary"
                 danger
                 onClick={() => reject(id)}
               >
                 Reject
-              </PageButton>
+              </Button>
             </Col>
           )}
         </Row>
@@ -366,10 +345,6 @@ const WrapperText = styled.span`
   padding-left: 10px;
   font-size: 16px;
   color: #000000d9;
-`;
-
-const PageButton = styled(Button)`
-  width: 120px;
 `;
 
 const FormItem = styled(Form.Item)`

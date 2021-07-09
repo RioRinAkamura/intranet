@@ -155,8 +155,8 @@ export const AvatarPath = memo((props: Props) => {
             </FormItem>
             {!isView && (
               <StyledButton
-                size="large"
                 type="primary"
+                size="large"
                 onClick={() => setIsRefresh(true)}
                 icon={<SyncOutlined />}
               />

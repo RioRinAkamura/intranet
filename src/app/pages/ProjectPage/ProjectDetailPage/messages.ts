@@ -30,25 +30,19 @@ export const ProjectDetailMessages = {
       'Please enter name',
     ),
   formProjectStartedLabel: () =>
-    _t(
-      translations.ProjectDetailPage.form.projectStarted.label,
-      'Project started',
-    ),
+    _t(translations.ProjectDetailPage.form.projectStarted.label, 'Start date'),
   formProjectStartedPlaceholder: () =>
     _t(
       translations.ProjectDetailPage.form.projectStarted.placeholder,
-      'Select started Date',
+      'Select start date',
     ),
   formProjectStartedEmpty: () =>
     _t(
       translations.ProjectDetailPage.form.projectStarted.empty,
-      'Please started date',
+      'Please start date',
     ),
   formProjectPriorityLabel: () =>
-    _t(
-      translations.ProjectDetailPage.form.projectPriority.label,
-      'Project priority',
-    ),
+    _t(translations.ProjectDetailPage.form.projectPriority.label, 'Priority'),
   formProjectPriorityPlaceholder: () =>
     _t(
       translations.ProjectDetailPage.form.projectPriority.placeholder,
@@ -66,10 +60,7 @@ export const ProjectDetailMessages = {
   formProjectPriorityHigh: () =>
     _t(translations.ProjectDetailPage.form.projectPriority.high, 'High'),
   formProjectStatusLabel: () =>
-    _t(
-      translations.ProjectDetailPage.form.projectStatus.label,
-      'Project status',
-    ),
+    _t(translations.ProjectDetailPage.form.projectStatus.label, 'Status'),
   formProjectStatusPlaceholder: () =>
     _t(
       translations.ProjectDetailPage.form.projectStatus.placeholder,
@@ -92,10 +83,7 @@ export const ProjectDetailMessages = {
   formProjectStatusArchived: () =>
     _t(translations.ProjectDetailPage.form.projectStatus.archived, 'Archived'),
   formProjectOverviewLabel: () =>
-    _t(
-      translations.ProjectDetailPage.form.projectOverview.label,
-      'Project overview',
-    ),
+    _t(translations.ProjectDetailPage.form.projectOverview.label, 'Overview'),
   formProjectOverviewPlaceholder: () =>
     _t(
       translations.ProjectDetailPage.form.projectOverview.placeholder,
@@ -127,19 +115,16 @@ export const ProjectDetailMessages = {
       'Please enter name, email',
     ),
   memberFormProjectRoleLabel: () =>
-    _t(
-      translations.ProjectDetailPage.member.form.projectRole.label,
-      'Project role',
-    ),
+    _t(translations.ProjectDetailPage.member.form.projectRole.label, 'Role'),
   memberFormProjectRolePlaceholder: () =>
     _t(
       translations.ProjectDetailPage.member.form.projectRole.placeholder,
-      'Select project role',
+      'Select role',
     ),
   memberFormProjectRoleEmpty: () =>
     _t(
       translations.ProjectDetailPage.member.form.projectRole.empty,
-      'Please select project role',
+      'Please select role',
     ),
   memberFormAllocationLabel: () =>
     _t(

@@ -304,7 +304,6 @@ export const DevicesManager = () => {
               {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
                 <Button
                   danger
-                  size="large"
                   disabled={
                     !state?.selectedRowKeys?.length ||
                     state?.selectedRowKeys?.length === 0
@@ -322,12 +321,10 @@ export const DevicesManager = () => {
             <Row justify="end">
               <Button
                 style={{ marginBottom: 10 }}
-                size="large"
                 type="primary"
                 onClick={() => history.push('/devices/create')}
-                // icon={<LaptopOutlined />}
               >
-                Create Device
+                Create device
               </Button>
             </Row>
           </Col>

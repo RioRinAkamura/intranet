@@ -1,17 +1,13 @@
-/**
- *
- * ProjectDetailPage
- *
- */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Button, Col, Form, Input, Row } from 'antd';
+import { Col, Form, Input, Row } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
 import moment from 'moment';
 import { useProjectDetail } from './useProjectDetail';
 import PageTitle from 'app/components/PageTitle';
 import { CardLayout } from 'app/components/CardLayout';
+import Button from 'app/components/Button';
 import { config } from 'config';
 import { ProjectInfo } from './components/ProjectInfo';
 import { TeamMembers } from './components/TeamMembers';
@@ -120,10 +116,8 @@ export const ProjectDetailPage = (props: Props) => {
       <WrapperButton>
         <Row gutter={[8, 8]} justify="end">
           <Col>
-            <PageButton
+            <Button
               block
-              size="large"
-              shape="round"
               onClick={() => {
                 if (isEdit) {
                   setIsEdit(false);
@@ -133,14 +127,12 @@ export const ProjectDetailPage = (props: Props) => {
               }}
             >
               {t(ProjectDetailMessages.buttonCancel())}
-            </PageButton>
+            </Button>
           </Col>
           <Col>
-            <PageButton
+            <Button
               loading={loading}
               block
-              size="large"
-              shape="round"
               type="primary"
               onClick={() => {
                 if (isEdit) {
@@ -156,7 +148,7 @@ export const ProjectDetailPage = (props: Props) => {
               {isView
                 ? t(ProjectDetailMessages.buttonEdit())
                 : t(ProjectDetailMessages.buttonSubmit())}
-            </PageButton>
+            </Button>
           </Col>
         </Row>
       </WrapperButton>
@@ -168,8 +160,4 @@ const WrapperButton = styled.div`
   margin-top: 3em;
   padding: 10px;
   height: 100%;
-`;
-
-const PageButton = styled(Button)`
-  width: 120px;
 `;

@@ -432,7 +432,6 @@ export const Employees: React.FC = () => {
                   getUserListState.selectedRowKeys.length > 0 && (
                     <Button
                       danger
-                      size="large"
                       disabled={
                         !getUserListState?.selectedRowKeys?.length ||
                         getUserListState?.selectedRowKeys?.length === 0

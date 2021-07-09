@@ -232,7 +232,6 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     <Row justify="end">
       <OptionButton>
         <Button
-          size="large"
           type="primary"
           onClick={() => history.push('/employees/create')}
           icon={<UserAddOutlined />}
@@ -241,7 +240,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         </Button>
       </OptionButton>
       <OptionButton>
-        <Button block size="large" onClick={exportAll}>
+        <Button block onClick={exportAll}>
           <ExportOutlined /> {t(UsersMessages.exportCSV())}
         </Button>
       </OptionButton>
@@ -251,7 +250,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
           beforeUpload={beforeUpload}
           accept=".csv"
         >
-          <Button loading={loading} block size="large">
+          <Button loading={loading} block>
             <ImportOutlined /> {t(UsersMessages.importCSV())}
           </Button>
         </Upload>

@@ -48,13 +48,7 @@ export const ForgotForm: React.FC = () => {
           />
         </FormItem>
         <FormItem>
-          <Button
-            type="primary"
-            size="large"
-            htmlType="submit"
-            block
-            loading={loading}
-          >
+          <Button type="primary" htmlType="submit" block loading={loading}>
             {t(ForgotPageMessages.forgotButton())}
           </Button>
         </FormItem>

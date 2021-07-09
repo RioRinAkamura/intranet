@@ -196,15 +196,14 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.profile.issuedPlace.placeholder,
       'Issued place',
     ),
-  formSocialInsuranceNoLabel: () =>
+  formInsuranceNoLabel: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.socialInsuranceNo.label,
+      translations.UserDetailPage.modal.form.profile.insuranceNo.label,
       'Social insurance #',
     ),
-  formSocialInsuranceNoPlaceholder: () =>
+  formInsuranceNoPlaceholder: () =>
     _t(
-      translations.UserDetailPage.modal.form.profile.socialInsuranceNo
-        .placeholder,
+      translations.UserDetailPage.modal.form.profile.insuranceNo.placeholder,
       'Social insurance #',
     ),
   formJobTitle: () =>
