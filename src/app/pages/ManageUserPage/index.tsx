@@ -61,7 +61,6 @@ export const ManageUserPage: React.FC = () => {
   });
 
   const fetchUsers = useCallback(() => {
-    console.log('params', params);
     dispatch(actions.fetchUsers({ params: params }));
   }, [dispatch, actions, params]);
 
@@ -205,7 +204,7 @@ export const ManageUserPage: React.FC = () => {
   const columns: ColumnProps<User>[] = [
     {
       dataIndex: 'avatar',
-      width: 40,
+      width: 60,
       align: 'center',
       className: 'avatar',
       render: (text, record: User) => (
@@ -218,17 +217,31 @@ export const ManageUserPage: React.FC = () => {
       ),
     },
     {
+      title: 'First Name',
+      dataIndex: 'first_name',
+      width: 130,
+      align: 'left',
+      render: (text, record: User) => text,
+    },
+    {
+      title: 'Last Name',
+      dataIndex: 'last_name',
+      width: 130,
+      align: 'left',
+      render: (text, record: User) => text,
+    },
+    {
       title: 'Username',
       dataIndex: 'username',
       width: 130,
-      align: 'center',
+      align: 'left',
       render: (text, record: User) => text,
     },
     {
       title: 'Email',
       dataIndex: 'email',
       width: 130,
-      align: 'center',
+      align: 'left',
       render: (text, record: User) => text,
     },
 
@@ -236,7 +249,7 @@ export const ManageUserPage: React.FC = () => {
       title: 'Phone',
       dataIndex: 'phone',
       width: 130,
-      align: 'center',
+      align: 'left',
       render: (text, record: User) => text,
     },
     {
