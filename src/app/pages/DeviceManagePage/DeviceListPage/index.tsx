@@ -31,7 +31,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { useTableConfig } from 'utils/tableConfig';
 import { Messages } from './messages';
 import { CardLayout } from 'app/components/CardLayout';
-import { Button } from 'app/components/Button';
+import Button from 'app/components/Button';
 
 interface Category {
   name: string;

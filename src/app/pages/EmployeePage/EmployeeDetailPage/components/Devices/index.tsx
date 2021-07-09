@@ -22,7 +22,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { ColumnProps } from 'antd/lib/table';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { CardLayout } from 'app/components/CardLayout';
-import { Button } from 'app/components/Button';
+import Button from 'app/components/Button';
 
 const { Option } = Select;
 interface DeviceResponse {

@@ -42,7 +42,7 @@ import { useTableConfig } from 'utils/tableConfig';
 import { TagComponent } from 'app/components/Tags/components/Tag';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { CardLayout } from 'app/components/CardLayout';
-import { Button, IconButton } from 'app/components/Button';
+import Button, { IconButton } from 'app/components/Button';
 
 type Employee = models.hr.Employee;
 

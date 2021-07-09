@@ -4,7 +4,6 @@
  *
  */
 import * as React from 'react';
-import styled from 'styled-components/macro';
 import { Button, Modal } from 'antd';
 
 interface Props {
@@ -19,6 +18,7 @@ interface Props {
   loading?: boolean;
   okText?: string;
   width?: number | string;
+  handleOk?: (value) => void;
 }
 
 export const DialogModal = React.memo(
@@ -34,23 +34,26 @@ export const DialogModal = React.memo(
     okText,
     width,
     loading,
+    handleOk,
   }: Props) => {
     return (
       <Modal
-        title={<ModalTitle>{title}</ModalTitle>}
+        title={title}
         centered
         className={className}
         visible={isOpen}
         onCancel={handleCancel}
+        onOk={handleOk}
         footer={
-          cancelText && okText
+          footer
+            ? footer
+            : cancelText && okText
             ? [
-                <Button key="onCancel" size="large" onClick={handleCancel}>
+                <Button key="onCancel" onClick={handleCancel}>
                   {cancelText}
                 </Button>,
                 <Button
                   key="onSave"
-                  size="large"
                   type="primary"
                   loading={loading}
                   onClick={handleSubmit}
@@ -67,8 +70,3 @@ export const DialogModal = React.memo(
     );
   },
 );
-
-const ModalTitle = styled.h1`
-  text-align: center;
-  margin-top: 0.5rem;
-`;

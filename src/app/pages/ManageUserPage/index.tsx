@@ -24,7 +24,7 @@ import { RootState } from 'types';
 import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
 import PageTitle from 'app/components/PageTitle';
 import { CardLayout } from 'app/components/CardLayout';
-import { Button, IconButton } from 'app/components/Button';
+import Button, { IconButton } from 'app/components/Button';
 
 type User = models.user.User;
 

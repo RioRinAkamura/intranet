@@ -1,11 +1,11 @@
+import React from 'react';
 import styled from 'styled-components/macro';
 import { Button as ButtonAntd } from 'antd';
 
-export const Button = styled(ButtonAntd)`
+const ButtonStyled = styled(ButtonAntd)`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 40px !important;
 `;
 
 export const IconButton = styled(ButtonAntd)`
@@ -19,3 +19,14 @@ export const IconButton = styled(ButtonAntd)`
     transform: translate(-50%, -50%);
   }
 `;
+
+const Button = props => {
+  const { children, shape } = props;
+  return (
+    <ButtonStyled shape={shape || 'round'} {...props}>
+      {children}
+    </ButtonStyled>
+  );
+};
+
+export default Button;

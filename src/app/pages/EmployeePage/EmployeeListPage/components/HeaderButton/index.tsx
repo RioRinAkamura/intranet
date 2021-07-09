@@ -20,7 +20,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import Papa from 'papaparse';
 import { TagComponent } from 'app/components/Tags/components/Tag';
-import { Button } from 'app/components/Button';
+import Button from 'app/components/Button';
 
 type Employee = models.hr.Employee;
 

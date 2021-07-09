@@ -14,6 +14,7 @@ export const ProjectDetailMessages = {
     _t(translations.ProjectDetailPage.createTitle, 'Create project'),
   editTitle: () => _t(translations.ProjectDetailPage.editTitle, 'Edit project'),
   addMember: () => _t(translations.ProjectDetailPage.addMember, 'Add member'),
+  cancel: () => _t(translations.ProjectDetailPage.cancel, 'Cancel'),
   editMember: () =>
     _t(translations.ProjectDetailPage.editMember, 'Edit member'),
   formProjectNameLabel: () =>
