@@ -107,6 +107,9 @@ export function EmployeeDetailPage(props: Props) {
     if (history.location.pathname.includes('projects')) {
       return `${TabKeys.projects}`;
     }
+    if (history.location.pathname.includes('devices')) {
+      return `${TabKeys.devices}`;
+    }
     return `${TabKeys.details}`;
   }, [history.location.pathname]);
 
@@ -217,7 +220,7 @@ export function EmployeeDetailPage(props: Props) {
           <TabPane tab="Notes" key={TabKeys.notes}>
             <Notes />
           </TabPane>
-          <TabPane tab="Devices">
+          <TabPane tab="Devices" key={TabKeys.devices}>
             <Device id={id} />
           </TabPane>
         </StyledTabs>
