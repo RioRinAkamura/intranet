@@ -18,7 +18,7 @@ import {
 import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { RootStateKeyType } from 'utils/types/injector-typings';
-import { Button, IconButton } from 'app/components/Button';
+import Button, { IconButton } from 'app/components/Button';
 
 interface Props {
   columns: any;

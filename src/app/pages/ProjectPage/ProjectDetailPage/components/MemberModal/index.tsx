@@ -188,6 +188,16 @@ export const MemberModal = memo((props: Props) => {
     }
   }, [fetchUser, memberForm, selectedMember]);
 
+  function handleCancel() {
+    setOpen(false);
+    if (selectedMember) {
+      setSelectedMember(null);
+      setEmployees(undefined);
+    }
+    setIsAddMember(true);
+    memberForm.resetFields();
+  }
+
   return (
     <>
       <DialogModal
@@ -197,15 +207,7 @@ export const MemberModal = memo((props: Props) => {
             : t(ProjectDetailMessages.editMember())
         }
         isOpen={open}
-        handleCancel={() => {
-          setOpen(false);
-          if (selectedMember) {
-            setSelectedMember(null);
-            setEmployees(undefined);
-          }
-          setIsAddMember(true);
-          memberForm.resetFields();
-        }}
+        handleCancel={handleCancel}
       >
         <Form
           form={memberForm}
@@ -311,13 +313,10 @@ export const MemberModal = memo((props: Props) => {
             </Select>
           </FormSearchItem>
           <ModalButton>
-            <Button
-              loading={loadingMember}
-              htmlType="submit"
-              type="primary"
-              shape="round"
-              size="large"
-            >
+            <Button key="back" onClick={handleCancel}>
+              {t(ProjectDetailMessages.cancel())}
+            </Button>
+            <Button loading={loadingMember} htmlType="submit" type="primary">
               {t(ProjectDetailMessages.buttonSubmit())}
             </Button>
           </ModalButton>
@@ -330,8 +329,9 @@ export const MemberModal = memo((props: Props) => {
 const FormSearchItem = styled(Form.Item)``;
 
 const ModalButton = styled.div`
-  text-align: center;
+  text-align: right;
   button {
     padding: 0 2em !important;
+    margin-left: 8px;
   }
 `;

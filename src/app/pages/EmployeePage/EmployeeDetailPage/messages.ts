@@ -9,6 +9,7 @@ import { _t } from 'utils/messages';
 export const UserDetailMessages = {
   title: () => _t(translations.UserDetailPage.title, 'User detail'),
   description: () => _t(translations.UserDetailPage.description, 'User detail'),
+  cancel: () => _t(translations.UserDetailPage.cancel, 'Cancel'),
   createTitle: () => _t(translations.UserDetailPage.createTitle, 'Create user'),
   formAvatarUpload: () =>
     _t(translations.UserDetailPage.modal.form.avatar.upload, 'Upload image'),

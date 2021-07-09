@@ -155,6 +155,7 @@
     "title": "User detail",
     "description": "User detail",
     "createTitle": "Create user",
+    "cancel": "Cancel",
     "modal": {
       "form": {
         "avatar": {
@@ -434,6 +435,7 @@
     "editTitle": "Edit project",
     "addMember": "Add member",
     "editMember": "Edit member",
+    "cancel": "Cancel",
     "form": {
       "projectName": {
         "label": "Project name",

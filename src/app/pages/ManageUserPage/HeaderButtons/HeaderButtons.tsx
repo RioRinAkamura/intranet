@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 import { Col, Row } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { Button } from 'app/components/Button';
+import Button from 'app/components/Button';
 
 export const HeaderButtons = () => {
   const history = useHistory();

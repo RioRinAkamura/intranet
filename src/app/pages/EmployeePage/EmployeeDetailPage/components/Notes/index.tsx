@@ -35,7 +35,7 @@ import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import { useTableConfig } from 'utils/tableConfig';
-import { Button } from 'app/components/Button';
+import Button from 'app/components/Button';
 
 import { EmployeeNote } from './slice/types';
 import { useNotesSlice } from './slice';

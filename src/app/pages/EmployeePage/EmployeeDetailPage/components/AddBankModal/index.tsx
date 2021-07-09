@@ -7,10 +7,8 @@ import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { DialogModal } from 'app/components/DialogModal';
-import { Form, FormInstance, Input, InputProps, Select } from 'antd';
+import { Form, Button, FormInstance, Input, InputProps, Select } from 'antd';
 import { UserDetailMessages } from '../../messages';
-import { Button } from 'app/components/Button';
-
 interface Props {
   isView?: boolean;
   form: FormInstance;
@@ -76,6 +74,13 @@ export const AddBankModal = memo((props: Props) => {
     setModalAddBank(false);
   };
 
+  function handleCancel() {
+    setModalAddBank(false);
+    if (isAddBank) {
+      bankForm.resetFields();
+    }
+  }
+
   return (
     <>
       {!isView && (
@@ -85,6 +90,7 @@ export const AddBankModal = memo((props: Props) => {
             block
             size="large"
             onClick={() => setModalAddBank(true)}
+            shape="round"
           >
             {isAddBank
               ? t(UserDetailMessages.formAddBankButton())
@@ -99,12 +105,7 @@ export const AddBankModal = memo((props: Props) => {
             : t(UserDetailMessages.formEditBankButton())
         }
         isOpen={modalAddBank}
-        handleCancel={() => {
-          setModalAddBank(false);
-          if (isAddBank) {
-            bankForm.resetFields();
-          }
-        }}
+        handleCancel={handleCancel}
       >
         <Form
           form={bankForm}
@@ -173,7 +174,10 @@ export const AddBankModal = memo((props: Props) => {
             />
           </FormSearchItem>
           <ModalButton>
-            <Button htmlType="submit" type="primary" shape="round" size="large">
+            <Button key="back" onClick={handleCancel}>
+              {t(UserDetailMessages.cancel())}
+            </Button>
+            <Button htmlType="submit" type="primary">
               {t(UserDetailMessages.formSubmitAddBankButton())}
             </Button>
           </ModalButton>
@@ -186,8 +190,9 @@ export const AddBankModal = memo((props: Props) => {
 const FormSearchItem = styled(Form.Item)``;
 
 const ModalButton = styled.div`
-  text-align: center;
+  text-align: right;
   button {
     padding: 0 2em !important;
+    margin-left: 8px;
   }
 `;

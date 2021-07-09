@@ -167,20 +167,22 @@ export const ProjectModal = memo((props: Props) => {
     }
   }, [fetchProjects, memberForm, selectedProject]);
 
+  function handleCancel() {
+    setOpen(false);
+    if (selectedProject) {
+      setSelectedProject(null);
+      setProjects(undefined);
+    }
+    setIsAddProject(true);
+    memberForm.resetFields();
+  }
+
   return (
     <>
       <DialogModal
         title={isAddProject ? 'Add project' : 'Edit project'}
         isOpen={open}
-        handleCancel={() => {
-          setOpen(false);
-          if (selectedProject) {
-            setSelectedProject(null);
-            setProjects(undefined);
-          }
-          setIsAddProject(true);
-          memberForm.resetFields();
-        }}
+        handleCancel={handleCancel}
       >
         <Form
           form={memberForm}
@@ -277,13 +279,10 @@ export const ProjectModal = memo((props: Props) => {
             </Select>
           </FormSearchItem>
           <ModalButton>
-            <Button
-              loading={loadingProject}
-              htmlType="submit"
-              type="primary"
-              shape="round"
-              size="large"
-            >
+            <Button key="back" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button loading={loadingProject} htmlType="submit" type="primary">
               Submit
             </Button>
           </ModalButton>
@@ -296,8 +295,9 @@ export const ProjectModal = memo((props: Props) => {
 const FormSearchItem = styled(Form.Item)``;
 
 const ModalButton = styled.div`
-  text-align: center;
+  text-align: right;
   button {
     padding: 0 2em !important;
+    margin-left: 8px;
   }
 `;

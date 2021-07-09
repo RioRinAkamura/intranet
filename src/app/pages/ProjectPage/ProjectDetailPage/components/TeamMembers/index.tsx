@@ -13,7 +13,7 @@ import { antColours } from 'utils/types';
 import { ProjectDetailMessages } from '../../messages';
 import { MemberModal } from '../MemberModal/Loadable';
 import { useHandleMember } from '../MemberModal/useHandleMember';
-import { Button } from 'app/components/Button';
+import Button from 'app/components/Button';
 
 interface Props {
   isView?: boolean;
