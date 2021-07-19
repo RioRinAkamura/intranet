@@ -9,6 +9,7 @@ import { UsersManagePageState } from 'app/pages/ManageUserPage/slice/types';
 import { DevicesManagerState } from 'app/pages/DeviceManagePage/DeviceListPage/slice/types';
 import { CategoryState } from 'app/pages/DeviceManagePage/DeviceCategory/slice/types';
 import { TableListState } from 'app/components/TableListModel/slice/types';
+import { TaskManagerState } from 'app/pages/TaskManagerPage/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /*
@@ -31,5 +32,6 @@ export interface RootState {
   CategoryManager?: CategoryState;
   table: TableListState;
   employeeLeave: TableListState;
+  TaskManager: TaskManagerState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }
