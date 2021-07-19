@@ -41,8 +41,15 @@ interface useTableProps {
     options: CheckboxOptionType[],
     filterIndex?: number,
     filterOptions?: CheckboxOptionType[],
+    callback?: (form) => void,
   ) => {};
   getColumnSearchInputCheckboxProps: (
+    dataIndex: string[],
+    options: CheckboxOptionType[],
+    filterIndex?: number,
+    filterOptions?: CheckboxOptionType[],
+  ) => {};
+  getCustomColumnSearchInputCheckboxProps: (
     dataIndex: string[],
     options: CheckboxOptionType[],
     filterIndex?: number,
@@ -79,6 +86,12 @@ export const useTableConfig = (
     CheckboxOptionType[]
   >([]);
   const [searchData, setSearch] = React.useState<CheckboxOptionType[]>([]);
+  const [customSearchOptions, setCustomSearchOptions] = React.useState<
+    CheckboxOptionType[]
+  >([]);
+  const [customSearchData, setCustomSearch] = React.useState<
+    CheckboxOptionType[]
+  >([]);
 
   React.useLayoutEffect(() => {
     if (state.filterColumns) {
@@ -247,6 +260,13 @@ export const useTableConfig = (
     setSearchOptions(newOptions);
   };
 
+  const handleCustomSearchInput = e => {
+    const newOptions = [...customSearchData].filter((item: any) => {
+      return item.label.includes(e.target.value);
+    });
+    setSearchOptions(newOptions);
+  };
+
   const handleReset = (dataIndex: string, confirm: () => void) => {
     setSelectedKeys(prevState => ({
       ...prevState,
@@ -335,6 +355,7 @@ export const useTableConfig = (
     options: CheckboxOptionType[],
     filterIndex?: number,
     filterOptions?: CheckboxOptionType[],
+    callback?: (form) => void,
   ) => ({
     filterDropdown: ({ confirm }) => {
       return (
@@ -411,6 +432,10 @@ export const useTableConfig = (
         }
 
         try {
+          if (callback) {
+            callback(defaultForm);
+            return;
+          }
           await update(defaultForm);
         } catch (e) {
           console.log(e);
@@ -429,7 +454,7 @@ export const useTableConfig = (
         (state.params.search && state.params.search.length > 0) ? (
         <Select
           onChange={handleValueChange}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue.length > 0 ? defaultValue : text}
           style={{ width: '100%' }}
         >
           {options.map(option => {
@@ -457,7 +482,7 @@ export const useTableConfig = (
       ) : (
         <Select
           onChange={handleValueChange}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue.length > 0 ? defaultValue : text}
           style={{ width: '100%' }}
         >
           {options.map(option => {
@@ -483,13 +508,83 @@ export const useTableConfig = (
         <Wrapper>
           <Search
             onChange={handleSearchInput}
-            placeholder="Search member"
+            placeholder="Search"
             style={{ margin: '0 0 10px 0' }}
           />
           <WrapperCheckbox>
             <Checkbox.Group
               value={selectedKeys[dataIndex[filterIndex || 0]]}
               options={searchOptions}
+              onChange={e => {
+                setSelectedKeys(prevState => ({
+                  ...prevState,
+                  [dataIndex[filterIndex || 0]]: e ? e : null,
+                }));
+              }}
+            />
+          </WrapperCheckbox>
+          <Row gutter={[8, 0]}>
+            <Col>
+              <Button
+                type="primary"
+                onClick={() =>
+                  handleSearch(dataIndex[filterIndex || 0], confirm)
+                }
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90 }}
+                loading={state.loading}
+              >
+                {t(messageTrans.filterSearchButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                onClick={() =>
+                  handleReset(dataIndex[filterIndex || 0], confirm)
+                }
+                size="small"
+                loading={state.loading}
+                style={{ width: 90 }}
+              >
+                {t(messageTrans.filterResetButton())}
+              </Button>
+            </Col>
+          </Row>
+        </Wrapper>
+      );
+    },
+    onFilter: (value, record) =>
+      record[dataIndex[filterIndex || 0]]
+        ? record[dataIndex[filterIndex || 0]]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : '',
+  });
+
+  const getCustomColumnSearchInputCheckboxProps = (
+    dataIndex: string[],
+    options: CheckboxOptionType[],
+    filterIndex?: number,
+    filterOptions?: CheckboxOptionType[],
+  ) => ({
+    filterDropdown: ({ confirm }) => {
+      if (customSearchData.length === 0) {
+        setCustomSearchOptions(options);
+        setCustomSearch(options);
+      }
+      return (
+        <Wrapper>
+          <Search
+            onChange={handleCustomSearchInput}
+            placeholder="Search"
+            style={{ margin: '0 0 10px 0' }}
+          />
+          <WrapperCheckbox>
+            <Checkbox.Group
+              value={selectedKeys[dataIndex[filterIndex || 0]]}
+              options={customSearchOptions}
               onChange={e => {
                 setSelectedKeys(prevState => ({
                   ...prevState,
@@ -672,6 +767,7 @@ export const useTableConfig = (
     getColumnSearchSelectProps,
     ConfirmModal,
     getColumnSearchInputCheckboxProps,
+    getCustomColumnSearchInputCheckboxProps,
   };
 };
 

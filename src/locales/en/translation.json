@@ -586,5 +586,53 @@
       "resetButton": "Reset password",
       "backButton": "Back to login page"
     }
+  },
+  "Task": {
+    "title": "Task Manager",
+    "description": "Task Manager",
+    "createUserButton": "Create Task",
+    "exportCSV": "Export as CSV",
+    "exportAll": "Export as CSV for all",
+    "exportPerPage": "Export as CSV this page",
+    "exportSelected": "Export as CSV for selected rows",
+    "importCSV": "Import CSV",
+    "exportCSVMessage": "Click link below to download the export file",
+    "list": {
+      "employeeName": "Employee Name",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "title": "title",
+      "options": "Actions",
+      "viewTooltip": "View",
+      "EditTooltip": "Edit",
+      "DeleteTooltip": "Delete",
+      "filter": {
+        "inputPlaceholder": "Search",
+        "searchButton": "Search",
+        "resetButton": "Reset",
+        "filterButton": "Filter"
+      }
+    },
+    "search": {
+      "title": "Search",
+      "search": {
+        "label": "Search",
+        "placeholder": "Search employee name, title and description"
+      },
+      "searchButton": "Search",
+      "resetButton": "Reset"
+    },
+    "modal": {
+      "createTitle": "Create Device",
+      "editTitle": "Edit Device",
+      "previewCSVTitle": "Preview Import File",
+      "form": {
+        "deleteButton": "Delete",
+        "deleteContent": "Are you sure to delete this Device?",
+        "cancelButton": "Cancel",
+        "submitButton": "Save"
+      }
+    }
   }
 }

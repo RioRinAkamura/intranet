@@ -16,7 +16,7 @@ import PageTitle from 'app/components/PageTitle';
 import Button from 'app/components/Button';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
-
+import fakeAPI from 'utils/fakeAPI';
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { BankAccounts } from './components/BankAccounts/Loadable';
 import { UserDetailMessages } from './messages';
@@ -60,6 +60,8 @@ export function EmployeeDetailPage(props: Props) {
   const { create, update, loading } = useUpdateUserDetail();
 
   const [data, setData] = React.useState<Employee>();
+  const [users, setUsers] = React.useState<any[]>([]);
+
   const [isCreate, setIsCreate] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
 
@@ -84,6 +86,19 @@ export function EmployeeDetailPage(props: Props) {
 
   const { TabPane } = Tabs;
   const [isDetailTab, setIsDetailTab] = React.useState(true);
+
+  const fetchUser = async () => {
+    try {
+      const users: any = await fakeAPI.get('/users');
+      setUsers(users.results);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchUser();
+  }, []);
 
   const onChangeTab = (key: string) => {
     if (key === TabKeys.notes) {
@@ -209,7 +224,7 @@ export function EmployeeDetailPage(props: Props) {
               leftScreenItems={<IdCardInfo isView={isView} isEdit={isEdit} />}
               rightScreenItems={
                 <>
-                  <ProfileInfo isView={isView} isEdit={isEdit} />
+                  <ProfileInfo isView={isView} isEdit={isEdit} users={users} />
                   <BankAccounts isView={isView} isEdit={isEdit} form={form} />
                 </>
               }
@@ -236,7 +251,9 @@ export function EmployeeDetailPage(props: Props) {
               <AddBankModal isView={isView} form={form} />
             </WrapperAddBank>
           }
-          rightScreenItems={<ProfileInfo isView={isView} isEdit={isEdit} />}
+          rightScreenItems={
+            <ProfileInfo users={users} isView={isView} isEdit={isEdit} />
+          }
         />
       )}
       {isDetailTab && (

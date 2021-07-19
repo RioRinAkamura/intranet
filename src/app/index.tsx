@@ -33,6 +33,7 @@ import { UserManageDetailPage } from './pages/ManageUserPage/UserDetailPage/Load
 import { LeaveApplicationDetailPage } from './pages/LeaveApplicationPage/LeaveApplicationDetailPage/Loadable';
 import { DeviceManagerPage } from './pages/DeviceManagePage/DeviceListPage/Loadable';
 import { DeviceDetailPage } from './pages/DeviceManagePage/DeviceDetailPage/Loadable';
+import { TaskManagerPage } from './pages/TaskManagerPage/Loadable';
 import '../app.less';
 
 export function App() {
@@ -165,6 +166,12 @@ export function App() {
                   exact
                   path={'/devices/:id'}
                   component={DeviceDetailPage}
+                />
+
+                <PrivateRoute
+                  exact
+                  path={'/tasks'}
+                  component={TaskManagerPage}
                 />
               </Switch>
             </AppLayout>

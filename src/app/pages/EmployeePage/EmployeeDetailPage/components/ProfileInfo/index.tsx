@@ -13,10 +13,13 @@ import {
   Form,
   Input,
   InputProps,
+  SelectProps,
   Radio,
   Row,
+  Select,
 } from 'antd';
 import { UserDetailMessages } from '../../messages';
+import { SelectValue } from 'antd/lib/select';
 import { TitlePath } from '../TitlePath';
 import { RuleObject } from 'rc-field-form/lib/interface';
 import moment from 'moment';
@@ -25,6 +28,7 @@ import config from 'config';
 interface ProfileInfoProps {
   isView?: boolean;
   isEdit?: boolean;
+  users?: any[];
 }
 
 const inputProps: InputProps = {
@@ -40,11 +44,24 @@ const datePickerProps: DatePickerProps = {
   popupStyle: { display: 'none' },
 };
 
+const selectProps: SelectProps<SelectValue> = {
+  autoClearSearchValue: false,
+  bordered: false,
+  dropdownStyle: { display: 'none' },
+  removeIcon: null,
+  showArrow: false,
+  style: { pointerEvents: 'none' },
+  placeholder: '',
+};
+
 const DATE_FORMAT = config.DATE_FORMAT;
 
+const { Option } = Select;
+
 export const ProfileInfo = (props: ProfileInfoProps) => {
-  const { isView, isEdit } = props;
+  const { isView, isEdit, users } = props;
   const { t } = useTranslation();
+  console.log(users, ' users');
 
   const validateDob = (
     rule: RuleObject,
@@ -255,6 +272,22 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                     </Radio>
                   </Radio.Group>
                 )}
+              </FormItem>
+            </Col>
+            <Col md={isView ? 8 : 24} xs={24}>
+              User
+            </Col>
+            <Col md={isView ? 16 : 24} xs={24}>
+              <FormItem isView={isView} name="user">
+                <Select {...(isView ? selectProps : {})}>
+                  {users?.map(user => {
+                    return (
+                      <Option
+                        value={user.id}
+                      >{`${user.first_name} ${user.last_name}`}</Option>
+                    );
+                  })}
+                </Select>
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
