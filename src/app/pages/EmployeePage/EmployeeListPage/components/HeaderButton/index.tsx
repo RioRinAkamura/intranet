@@ -48,19 +48,29 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     } else {
       response = await fakeAPI.get('/hr/employees/export/');
     }
-    if (response) {
-      window.open(`${response.download_url}`);
-      notification.open({
+
+    if (response.status === 'Done') {
+      window.open(response.download_url);
+      notification.success({
         message: 'Exporting',
         key: 'export',
         description: (
-          <>
-            <div>
-              <b>{t(UsersMessages.exportCSVMessage())}</b>
-            </div>
-          </>
+          <div>
+            <b>{t(UsersMessages.exportCSVMessageSuccess())}</b>
+          </div>
         ),
-        duration: 0,
+        duration: 2,
+      });
+    } else {
+      notification.error({
+        message: 'Exporting',
+        key: 'export',
+        description: (
+          <div>
+            <b>{t(UsersMessages.exportCSVMessageFail())}</b>
+          </div>
+        ),
+        duration: 2,
       });
     }
   };

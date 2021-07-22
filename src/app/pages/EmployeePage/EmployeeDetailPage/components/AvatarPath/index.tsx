@@ -45,6 +45,7 @@ const inputProps: InputProps = {
 
 export const AvatarPath = memo((props: Props) => {
   const { isView, form, user, isEdit, hidden } = props;
+
   const { t } = useTranslation();
 
   const [imageURL, setImageURL] = useState<string | undefined>('');
@@ -148,19 +149,23 @@ export const AvatarPath = memo((props: Props) => {
               <Input
                 {...(isView ? inputProps : {})}
                 size="large"
+                disabled={user ? true : false}
                 placeholder={
                   isView ? '' : t(UserDetailMessages.formCodePlaceholder())
                 }
               />
             </FormItem>
-            {!isView && (
-              <StyledButton
-                type="primary"
-                size="large"
-                onClick={() => setIsRefresh(true)}
-                icon={<SyncOutlined />}
-              />
-            )}
+            {!isView &&
+              (user ? (
+                ''
+              ) : (
+                <StyledButton
+                  type="primary"
+                  size="large"
+                  onClick={() => setIsRefresh(true)}
+                  icon={<SyncOutlined />}
+                />
+              ))}
           </StyledEmployeeCode>
         )}
       </Row>
