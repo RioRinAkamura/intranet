@@ -49,11 +49,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
       response = await fakeAPI.get('/hr/employees/export/');
     }
     if (response) {
-      const link = document.createElement('a');
-      link.href = `${response.download_url}`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      window.open(`${response.download_url}`);
       notification.open({
         message: 'Exporting',
         key: 'export',
