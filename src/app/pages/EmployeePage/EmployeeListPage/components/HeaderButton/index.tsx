@@ -8,7 +8,7 @@ import { Avatar } from 'app/components/Avatar/Loadable';
 import { DialogModal } from 'app/components/DialogModal';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import styled from 'styled-components/macro';
 import { UsersMessages } from '../../messages';
 import {
@@ -29,11 +29,11 @@ interface HeaderButtonProps {
   setImported: (imported: boolean) => void;
   selectedRows?: Employee[];
 }
-
 export const HeaderButton = (props: HeaderButtonProps) => {
   const { imported, setImported } = props;
   const { t } = useTranslation();
   const history = useHistory();
+  const { search } = useLocation();
 
   const [previewModal, setPreviewModal] = useState(false);
   const [file, setFile] = useState<File>();
@@ -42,9 +42,18 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   const [loading, setLoading] = useState(false);
   const interval = useRef<number | null>(null);
 
-  const exportAll = async () => {
-    const response: any = await fakeAPI.get('/hr/employees/export/');
+  const exportEmployees = async () => {
+    if (search) {
+      var response: any = await fakeAPI.get(`/hr/employees/export${search}`);
+    } else {
+      response = await fakeAPI.get('/hr/employees/export/');
+    }
     if (response) {
+      const link = document.createElement('a');
+      link.href = `${response.download_url}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       notification.open({
         message: 'Exporting',
         key: 'export',
@@ -53,20 +62,6 @@ export const HeaderButton = (props: HeaderButtonProps) => {
             <div>
               <b>{t(UsersMessages.exportCSVMessage())}</b>
             </div>
-            <a
-              href="#0"
-              onClick={e => {
-                e.preventDefault();
-                window.open(
-                  response.download_url,
-                  '_blank',
-                  'noopener,noreferrer',
-                );
-                notification.close('export');
-              }}
-            >
-              {response.download_url}
-            </a>
           </>
         ),
         duration: 0,
@@ -240,7 +235,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         </Button>
       </OptionButton>
       <OptionButton>
-        <Button block onClick={exportAll}>
+        <Button block onClick={exportEmployees}>
           <ExportOutlined /> {t(UsersMessages.exportCSV())}
         </Button>
       </OptionButton>

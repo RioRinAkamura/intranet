@@ -16,7 +16,7 @@ export const UsersMessages = {
   exportCSVMessage: () =>
     _t(
       translations.UsersPage.exportCSVMessage,
-      'Click link below to download the export file',
+      'The file has been exported',
     ),
   exportPerPage: () =>
     _t(translations.UsersPage.exportPerPage, 'Export as CSV this page'),

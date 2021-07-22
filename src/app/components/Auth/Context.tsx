@@ -28,7 +28,7 @@ export const AuthContext = React.createContext<AuthContextValues>({
 export const useAuthContextProvider = (
   authProvider: AuthProvider,
 ): AuthContextValues => {
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(undefined);
   const [authenticated, setAuthenticated] = React.useState(false);
   const [identity, setIdentity] = React.useState<UserIdentity | null>();
