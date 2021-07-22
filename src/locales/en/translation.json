@@ -133,7 +133,7 @@
     "createUserButton": "Create",
     "exportCSV": "Export",
     "exportAllUser": "Export as CSV for all",
-    "exportCSVMessage": "Click link below to download the export file",
+    "exportCSVMessage": "The file has been exported",
     "exportPerPage": "Export as CSV this page",
     "exportSelected": "Export as CSV for selected rows",
     "importCSV": "Import",
