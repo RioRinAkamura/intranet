@@ -155,17 +155,14 @@ export const AvatarPath = memo((props: Props) => {
                 }
               />
             </FormItem>
-            {!isView &&
-              (user ? (
-                ''
-              ) : (
-                <StyledButton
-                  type="primary"
-                  size="large"
-                  onClick={() => setIsRefresh(true)}
-                  icon={<SyncOutlined />}
-                />
-              ))}
+            {!isView && !user && (
+              <StyledButton
+                type="primary"
+                size="large"
+                onClick={() => setIsRefresh(true)}
+                icon={<SyncOutlined />}
+              />
+            )}
           </StyledEmployeeCode>
         )}
       </Row>
