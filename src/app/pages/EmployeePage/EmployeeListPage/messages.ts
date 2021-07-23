@@ -13,8 +13,13 @@ export const UsersMessages = {
   exportCSV: () => _t(translations.UsersPage.exportCSV, 'Export'),
   exportAllUser: () =>
     _t(translations.UsersPage.exportAllUser, 'Export as CSV for all'),
-  exportCSVMessage: () =>
-    _t(translations.UsersPage.exportCSVMessage, 'The file has been exported'),
+  exportCSVMessageSuccess: () =>
+    _t(
+      translations.UsersPage.exportCSVMessageSuccess,
+      'The file has been exported',
+    ),
+  exportCSVMessageFail: () =>
+    _t(translations.UsersPage.exportCSVMessageFail, 'Export error file'),
   exportPerPage: () =>
     _t(translations.UsersPage.exportPerPage, 'Export as CSV this page'),
   exportSelected: () =>

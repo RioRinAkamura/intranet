@@ -31,6 +31,7 @@ interface Props {
 
 export const EmployeeList = React.memo((props: Props) => {
   const { loading, data, isMore, moreLoading, onDelete } = props;
+
   const history = useHistory();
   return (
     <Wrapper>
