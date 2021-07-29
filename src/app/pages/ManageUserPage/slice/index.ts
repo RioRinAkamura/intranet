@@ -15,6 +15,7 @@ export const initialState: UsersManagePageState = {
   loading: false,
   deleteSuccess: false,
   deleteFailed: false,
+  // errorCode: 0,
   selectedRowKeys: [],
   pagination: {
     pageSize: 20,

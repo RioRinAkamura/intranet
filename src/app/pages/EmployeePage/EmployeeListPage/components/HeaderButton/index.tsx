@@ -3,7 +3,7 @@
  * HeaderButton
  *
  */
-import { Col, notification, Progress, Row, Table, Tooltip, Upload } from 'antd';
+import { Col, notification, Row, Table, Upload } from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { DialogModal } from 'app/components/DialogModal';
 import React, { useEffect, useRef, useState } from 'react';
@@ -21,6 +21,8 @@ import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import Papa from 'papaparse';
 import { TagComponent } from 'app/components/Tags/components/Tag';
 import Button from 'app/components/Button';
+import ImportState from '../ImportState';
+import ExportState from '../ExportState';
 
 type Employee = models.hr.Employee;
 
@@ -29,6 +31,18 @@ interface HeaderButtonProps {
   setImported: (imported: boolean) => void;
   selectedRows?: Employee[];
 }
+export interface ObjErr {
+  record: string;
+}
+export interface ImportResult {
+  total_records: number;
+  success: number;
+  fails: number;
+  status: string;
+  download_url: string;
+  errors: Array<ObjErr>;
+}
+
 export const HeaderButton = (props: HeaderButtonProps) => {
   const { imported, setImported } = props;
   const { t } = useTranslation();
@@ -41,6 +55,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   const [logImportId, setLogImportId] = useState('');
   const [loading, setLoading] = useState(false);
   const interval = useRef<number | null>(null);
+  const [exportId, setExportId] = useState('');
+  const [exported, setExported] = useState(false);
 
   const exportEmployees = async () => {
     if (search) {
@@ -48,75 +64,57 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     } else {
       response = await fakeAPI.get('/hr/employees/export/');
     }
-
-    if (response.status === 'Done') {
-      window.open(response.download_url);
-      notification.success({
+    if (response) {
+      setExportId(response.id);
+      setExported(false);
+      notification.info({
         message: 'Exporting',
         key: 'export',
         description: (
           <div>
-            <b>{t(UsersMessages.exportCSVMessageSuccess())}</b>
+            <b>{t(UsersMessages.exportCSVMessageRequest())}</b>
           </div>
         ),
-        duration: 2,
-      });
-    } else {
-      notification.error({
-        message: 'Exporting',
-        key: 'export',
-        description: (
-          <div>
-            <b>{t(UsersMessages.exportCSVMessageFail())}</b>
-          </div>
-        ),
-        duration: 2,
+        duration: 0,
       });
     }
   };
 
+  const notificationExport = (response: ImportResult) => {
+    const total = response.total_records;
+    const success = response.success;
+    const fails = response.fails;
+    const successPercent = (response.success / total) * 100;
+    const failsPercent = (response.fails / total) * 100;
+    const percent = successPercent + failsPercent;
+    let type: string = '';
+    fails > 0 ? (type = 'error') : (type = 'success');
+    notification[type]({
+      message: 'Exported',
+      key: 'export',
+      description: (
+        <ExportState
+          success={success}
+          fails={fails}
+          percent={percent}
+          failsPercent={failsPercent}
+          successPercent={successPercent}
+        />
+      ) as React.ReactNode,
+      duration: 0,
+    });
+  };
+
   useEffect(() => {
-    if (logImportId && !imported) {
+    if (exportId && !exported) {
       let intervalId = setInterval(async () => {
         await fakeAPI
-          .get(`/hr/employees/import/${logImportId}/`)
+          .get(`/hr/employees/export/${exportId}`)
           .then((response: any) => {
-            const total = response.total_records;
-            const success = response.success;
-            const fails = response.fails;
-            const successPercent = (response.success / total) * 100;
-            const failsPercent = (response.fails / total) * 100;
-            const percent = successPercent + failsPercent;
-
-            notification.success({
-              message: 'Imported',
-              key: 'import',
-              description: (
-                <>
-                  <div>
-                    <b>
-                      {percent === 100
-                        ? 'Your data are imported'
-                        : 'Your data are importing...'}
-                    </b>
-                    <Tooltip
-                      title={success + ' Success and ' + fails + ' Failed'}
-                    >
-                      <Progress
-                        percent={percent}
-                        success={{ percent: successPercent }}
-                        status={failsPercent === 100 ? 'exception' : 'normal'}
-                        strokeColor="red"
-                      />
-                    </Tooltip>
-                  </div>
-                </>
-              ) as React.ReactNode,
-              duration: 0,
-            });
-
+            notificationExport(response);
             if (response.status === 'Done') {
-              setImported(true);
+              window.open(response.download_url);
+              setExported(true);
             }
           });
       }, 1000);
@@ -125,7 +123,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     return () => {
       if (interval.current) clearInterval(interval.current);
     };
-  }, [logImportId, imported, setImported]);
+  }, [exportId, exported, setExported]);
 
   const handleImport = async () => {
     if (file) {
@@ -146,17 +144,65 @@ export const HeaderButton = (props: HeaderButtonProps) => {
           message: 'Importing',
           key: 'import',
           description: (
-            <>
-              <div>
-                <b>Your data are importing...</b>
-              </div>
-            </>
+            <div>
+              <b>{t(UsersMessages.importCSVMessageRequest())}</b>
+            </div>
           ),
           duration: 0,
         });
       }
     }
   };
+
+  const notificationImport = (response: ImportResult) => {
+    const total = response.total_records;
+    const success = response.success;
+    const fails = response.fails;
+    const successPercent = (response.success / total) * 100;
+    const failsPercent = (response.fails / total) * 100;
+    const percent = successPercent + failsPercent;
+    const arrErr: Array<ObjErr> = [];
+    for (let item of response.errors) {
+      let arr: ObjErr = { record: `${Object.values(item)}` };
+      arrErr.push(arr);
+    }
+    let type: string = '';
+    fails > 0 ? (type = 'error') : (type = 'success');
+    notification[type]({
+      message: 'Imported',
+      key: 'import',
+      description: (
+        <ImportState
+          success={success}
+          fails={fails}
+          percent={percent}
+          arrErr={arrErr}
+          failsPercent={failsPercent}
+          successPercent={successPercent}
+        />
+      ) as React.ReactNode,
+      duration: 0,
+    });
+  };
+
+  useEffect(() => {
+    if (logImportId && !imported) {
+      let intervalId = setInterval(async () => {
+        await fakeAPI
+          .get(`/hr/employees/import/${logImportId}`)
+          .then((response: any) => {
+            notificationImport(response);
+            if (response.status === 'Done') {
+              setImported(true);
+            }
+          });
+      }, 1000);
+      interval.current = intervalId;
+    }
+    return () => {
+      if (interval.current) clearInterval(interval.current);
+    };
+  }, [logImportId, imported, setImported]);
 
   const columns = [
     {
@@ -228,7 +274,6 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     });
     return false;
   };
-
   return (
     <Row justify="end">
       <OptionButton>
@@ -257,7 +302,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         </Upload>
       </OptionButton>
       <DialogModal
-        title={t(UsersMessages.modalPreviewCSVTitle())}
+        // title={t(UsersMessages.modalPreviewCSVTitle())}
+        title={t(UsersMessages.modalConfirmCSVTitle())}
         isOpen={previewModal}
         handleCancel={() => {
           setPreviewModal(false);
@@ -266,14 +312,15 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         loading={loading}
         cancelText={t(UsersMessages.modalFormCancelButton())}
         okText={t(UsersMessages.modalFormSubmitButton())}
-        width={1500}
+        width={350}
       >
-        <Table
+        <Row>{file?.name}</Row>
+        {/* <Table
           columns={columns}
           rowKey="id"
           dataSource={data}
           pagination={false}
-        />
+        /> */}
       </DialogModal>
     </Row>
   );

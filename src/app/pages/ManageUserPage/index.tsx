@@ -372,7 +372,7 @@ export const ManageUserPage: React.FC = () => {
               dataSource={userListState.users}
               loading={userListState.loading}
               columns={columns}
-              scroll={{ x: 1200 }}
+              scroll={{ x: 800 }}
               pagination={{
                 ...userListState.pagination,
                 onChange: (page: number, pageSize?: number) => {
