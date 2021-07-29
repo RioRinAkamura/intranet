@@ -16,10 +16,25 @@ export const UsersMessages = {
   exportCSVMessageSuccess: () =>
     _t(
       translations.UsersPage.exportCSVMessageSuccess,
-      'The file has been exported',
+      'List employees are exported',
+    ),
+  exportCSVMessageRequest: () =>
+    _t(
+      translations.UsersPage.exportCSVMessageRequest,
+      'List employees are exporting...',
     ),
   exportCSVMessageFail: () =>
     _t(translations.UsersPage.exportCSVMessageFail, 'Export error file'),
+  importCSVMessageSuccess: () =>
+    _t(
+      translations.UsersPage.importCSVMessageSuccess,
+      'Your data are imported',
+    ),
+  importCSVMessageRequest: () =>
+    _t(
+      translations.UsersPage.importCSVMessageRequest,
+      'Your data are importing...',
+    ),
   exportPerPage: () =>
     _t(translations.UsersPage.exportPerPage, 'Export as CSV this page'),
   exportSelected: () =>
@@ -67,6 +82,11 @@ export const UsersMessages = {
     _t(translations.UsersPage.modal.profileTitle, 'Employee profile'),
   modalPreviewCSVTitle: () =>
     _t(translations.UsersPage.modal.previewCSVTitle, 'Preview import file'),
+  modalConfirmCSVTitle: () =>
+    _t(
+      translations.UsersPage.modal.confirmCSVTitle,
+      'Do you want to import this file ?',
+    ),
   modalFormDeleteButton: () =>
     _t(translations.UsersPage.modal.form.deleteButton, 'Delete'),
   modalFormDeleteContent: () =>

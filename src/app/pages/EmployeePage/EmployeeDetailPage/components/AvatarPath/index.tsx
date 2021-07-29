@@ -191,11 +191,11 @@ const FormItemAvatar = styled(Form.Item)`
 const FormItem = styled(Form.Item)`
   align-items: center;
   margin: 0;
-  margin-right: ${(props: ScreenProps) => !props.isView && '20px'};
-  width: ${(props: ScreenProps) => !props.isView && '60%'};
+  width: ${(props: ScreenProps) => !props.isView && '100%'};
   input {
     color: ${(props: ScreenProps) => props.isView && '#1890ff'};
     font-weight: ${(props: ScreenProps) => props.isView && 500};
+    text-align: center;
   }
 `;
 
@@ -230,4 +230,6 @@ const StyledButton = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 20px;
+  z-index: 10;
 `;
