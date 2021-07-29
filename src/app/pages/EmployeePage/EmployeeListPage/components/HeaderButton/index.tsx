@@ -3,8 +3,7 @@
  * HeaderButton
  *
  */
-import { Col, notification, Row, Table, Upload } from 'antd';
-import { Avatar } from 'app/components/Avatar/Loadable';
+import { Col, notification, Row, Upload } from 'antd';
 import { DialogModal } from 'app/components/DialogModal';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +18,6 @@ import {
 import fakeAPI from 'utils/fakeAPI';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import Papa from 'papaparse';
-import { TagComponent } from 'app/components/Tags/components/Tag';
 import Button from 'app/components/Button';
 import ImportState from '../ImportState';
 import ExportState from '../ExportState';
@@ -51,7 +49,6 @@ export const HeaderButton = (props: HeaderButtonProps) => {
 
   const [previewModal, setPreviewModal] = useState(false);
   const [file, setFile] = useState<File>();
-  const [data, setData] = useState<Employee[]>([]);
   const [logImportId, setLogImportId] = useState('');
   const [loading, setLoading] = useState(false);
   const interval = useRef<number | null>(null);
@@ -204,60 +201,6 @@ export const HeaderButton = (props: HeaderButtonProps) => {
     };
   }, [logImportId, imported, setImported]);
 
-  const columns = [
-    {
-      dataIndex: 'avatar',
-      render: (text, record: Employee) => (
-        <Avatar
-          size={50}
-          src={text}
-          alt={record.first_name + ' ' + record.last_name}
-          name={record.first_name + ' ' + record.last_name}
-        />
-      ),
-    },
-    {
-      title: t(UsersMessages.listNameTitle()),
-      dataIndex: 'first_name',
-      render: (text, record) => {
-        return <div>{record.first_name + ' ' + record.last_name}</div>;
-      },
-    },
-    {
-      title: 'Code',
-      dataIndex: 'code',
-    },
-    {
-      title: t(UsersMessages.listEmailTitle()),
-      dataIndex: 'email',
-    },
-    {
-      title: 'Phone Number',
-      dataIndex: 'phone',
-    },
-    {
-      title: 'Tags',
-      dataIndex: 'tags',
-      render: (text, record: Employee, index: number) => {
-        return (
-          <>
-            {text?.map(tag => {
-              return <TagComponent tag={tag} key={tag} />;
-            })}
-          </>
-        );
-      },
-    },
-    {
-      title: 'Type',
-      dataIndex: 'type',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-    },
-  ];
-
   const beforeUpload = (file: File) => {
     setFile(file);
     Papa.parse(file, {
@@ -267,9 +210,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
       dynamicTyping: true,
       skipEmptyLines: true,
       transformHeader: header => header.toLowerCase().replace(/\W/g, '_'),
-      complete: (results: Papa.ParseResult<Employee>) => {
+      complete: () => {
         setPreviewModal(true);
-        setData(results.data);
       },
     });
     return false;
@@ -302,7 +244,6 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         </Upload>
       </OptionButton>
       <DialogModal
-        // title={t(UsersMessages.modalPreviewCSVTitle())}
         title={t(UsersMessages.modalConfirmCSVTitle())}
         isOpen={previewModal}
         handleCancel={() => {
@@ -315,12 +256,6 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         width={350}
       >
         <Row>{file?.name}</Row>
-        {/* <Table
-          columns={columns}
-          rowKey="id"
-          dataSource={data}
-          pagination={false}
-        /> */}
       </DialogModal>
     </Row>
   );
