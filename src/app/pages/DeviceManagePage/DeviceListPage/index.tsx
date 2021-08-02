@@ -80,7 +80,7 @@ export const DevicesManager = () => {
   };
 
   const fetchCategories = async () => {
-    const response: any = await fakeAPI.get('/devices/categories');
+    const response: any = await fakeAPI.get('/hr/devices-categories');
 
     setCategories(response.results);
   };
@@ -152,7 +152,7 @@ export const DevicesManager = () => {
     if (isDeleteMulti) {
       const ids = state.selectedRowKeys || [];
       const arrPromise = await ids.map((id: string) => {
-        return fakeAPI.delete(`/device-management/devices/${id}`);
+        return fakeAPI.delete(`/hr/devices/${id}`);
       });
 
       await Promise.all(arrPromise);

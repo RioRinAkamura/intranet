@@ -17,22 +17,22 @@ export const statusStr = {
 export const EMPLOYEE_DEVICE_STATUS = [
   {
     label: 'Assigned',
-    value: 'assigned',
+    value: 'Assigned',
   },
   {
     label: 'Returned',
-    value: 'returned',
+    value: 'Returned',
   },
 ];
 
 export const HEALTH_STATUS = [
   {
     label: 'Good',
-    value: 'good',
+    value: 'Good',
   },
   {
     label: 'Bad',
-    value: 'bad',
+    value: 'Bad',
   },
 ];
 

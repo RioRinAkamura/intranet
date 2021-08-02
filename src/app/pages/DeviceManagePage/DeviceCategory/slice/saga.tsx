@@ -3,7 +3,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { categoryManageAction as actions } from '.';
 
 function fetchCategory() {
-  return fakeAPI.get('/devices/categories');
+  return fakeAPI.get('/hr/devices-categories');
 }
 
 function* fetchList(action) {

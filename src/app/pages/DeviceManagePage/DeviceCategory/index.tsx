@@ -36,7 +36,7 @@ export const DeviceCategory = (props: CategoryProps) => {
 
   const handleConfirmDelete = async () => {
     try {
-      await fakeAPI.delete(`devices/categories/${categoryId}/`);
+      await fakeAPI.delete(`/hr/devices-categories/${categoryId}/`);
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -58,7 +58,7 @@ export const DeviceCategory = (props: CategoryProps) => {
     if (e.keyCode === 13) {
       categoryForm.validateFields().then(async values => {
         try {
-          await fakeAPI.post('/devices/categories/', {
+          await fakeAPI.post('/hr/devices-categories/', {
             ...values,
             devices: [],
           });

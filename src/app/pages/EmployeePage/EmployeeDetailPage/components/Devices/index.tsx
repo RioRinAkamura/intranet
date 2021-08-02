@@ -57,7 +57,7 @@ const WrapperForm: React.FC<FormProps> = ({
 }) => {
   const [deviceItem, setDeviceItem] = useState<Devices>();
   const fetchDevice = async id => {
-    const response: any = await fakeAPI.get(`devices/${id}/`);
+    const response: any = await fakeAPI.get(`/hr/devices/${id}/`);
     setDeviceItem(response);
   };
   useEffect(() => {
@@ -90,7 +90,7 @@ const WrapperForm: React.FC<FormProps> = ({
       </Form.Item>
       <Form.Item
         rules={FORM_RULES.STATUS}
-        initialValue={'assigned'}
+        initialValue={'Assigned'}
         name="status"
         label="Status"
       >
@@ -133,7 +133,7 @@ export const Device = memo((props: DeviceProps) => {
     setLoading(true);
     try {
       const response: any = await fakeAPI.get(
-        '/devices/employee-devices/',
+        '/hr/devices-employee/',
         // {
         //   params: {
         //     employee: id,
@@ -155,10 +155,10 @@ export const Device = memo((props: DeviceProps) => {
 
   const fetchDevices = async () => {
     try {
-      const response: any = await fakeAPI.get('/devices/');
+      const response: any = await fakeAPI.get('/hr/devices/');
       setDeviceItems(response.results);
       const mapDevice = [...response.results].filter(
-        (device: any) => device.status === 'available',
+        (device: any) => device.status === 'Available',
       );
       setDevices(mapDevice);
     } catch (e) {
@@ -249,18 +249,18 @@ export const Device = memo((props: DeviceProps) => {
 
   const handleConfirmDelete = async () => {
     try {
-      await fakeAPI.patch(`devices/${deviceDelete?.device}/`, {
-        status: 'available',
+      await fakeAPI.patch(`/hr/devices/${deviceDelete?.device}/`, {
+        status: 'Available',
         employee: null,
       });
 
-      await fakeAPI.post(`devices/histories/`, {
+      await fakeAPI.post(`/hr/devices-history/`, {
         device: deviceDelete?.device,
         employee: id,
         note: `Unassign device from employee ${deviceDelete?.employee_name}`,
       });
 
-      await fakeAPI.delete(`devices/employee-devices/${deviceDelete?.id}`);
+      await fakeAPI.delete(`/hr/devices-employee/${deviceDelete?.id}`);
       fetchEmployeeDevices();
       setIsDelete(false);
     } catch (e) {
@@ -292,7 +292,7 @@ export const Device = memo((props: DeviceProps) => {
         setLoading(true);
 
         if (isCreate) {
-          await fakeAPI.post('/devices/employee-devices/', {
+          await fakeAPI.post('/hr/devices-employee/', {
             ...mapValue,
             employee: id,
           });
@@ -302,19 +302,19 @@ export const Device = memo((props: DeviceProps) => {
         }
         if (isUpdate) {
           if (mapValue.device !== deviceUpdate?.device) {
-            await fakeAPI.patch(`devices/${deviceUpdate?.device}/`, {
-              status: 'available',
+            await fakeAPI.patch(`/hr/devices/${deviceUpdate?.device}/`, {
+              status: 'Available',
               employee: null,
             });
 
-            await fakeAPI.post(`devices/histories/`, {
+            await fakeAPI.post(`/hr/devices-history/`, {
               device: deviceUpdate?.device,
               employee: id,
               note: `Unassign device from employee ${deviceUpdate?.employee_name}`,
             });
           }
 
-          await fakeAPI.put(`devices/employee-devices/${deviceUpdate?.id}/`, {
+          await fakeAPI.put(`/hr/devices-employee/${deviceUpdate?.id}/`, {
             ...mapValue,
           });
 

@@ -1,11 +1,9 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components/macro';
 import { Member } from './components/Member';
-// import { Button } from 'antd';
-import { TeamMemberModal } from './components/TeamMemberModal';
-
+import { useLocation, useHistory } from 'react-router-dom';
 import { SettingOutlined } from '@ant-design/icons';
-
+import { parse, stringify } from 'query-string';
 interface MemberType {
   allocation: number;
   project_role: string;
@@ -19,22 +17,32 @@ interface MemberType {
 interface TeamMembersProps {
   members?: Array<MemberType>;
   projId: string;
-  callback: () => void;
+  callback: (members) => void;
 }
 
 export const TeamMembers = memo((props: TeamMembersProps) => {
-  const [visible, setVisible] = useState(false);
+  const history = useHistory();
+  const location = useLocation();
+  const urlParams = parse(location.search, {
+    sort: false,
+  });
+
   const { members, projId, callback } = props;
 
-  const handleOk = () => {
-    setVisible(false);
-    callback();
+  const handlevisibleModal = () => {
+    history.replace({
+      search: stringify(
+        {
+          ...urlParams,
+          projMember: projId,
+        },
+        { sort: false },
+      ),
+    });
+
+    callback(members);
   };
 
-  const handleCancel = () => {
-    setVisible(false);
-    callback();
-  };
   return (
     <div
       style={{
@@ -42,13 +50,13 @@ export const TeamMembers = memo((props: TeamMembersProps) => {
         justifyContent: 'space-between',
       }}
     >
-      <TeamMemberModal
+      {/* <TeamMemberModal
         handleOk={handleOk}
         handleCancel={handleCancel}
         visibility={visible}
         members={members}
         projId={projId}
-      />
+      /> */}
       <MembersWrapper>
         {members &&
           members.map(member => {
@@ -59,7 +67,8 @@ export const TeamMembers = memo((props: TeamMembersProps) => {
       {/* <Button onClick={() => setVisible(true)} type="primary">
         Manage
       </Button> */}
-      <SettingOutlined onClick={() => setVisible(true)} />
+      {/* <SettingOutlined onClick={() => setVisible(true)} /> */}
+      <SettingOutlined onClick={handlevisibleModal} />
     </div>
   );
 });

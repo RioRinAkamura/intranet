@@ -57,7 +57,6 @@ export const MemberModal = memo((props: Props) => {
           allocation: values.members.allocation,
           project_role: values.members.project_role,
         };
-        console.log(members);
         form.setFieldsValue({
           members: members,
         });

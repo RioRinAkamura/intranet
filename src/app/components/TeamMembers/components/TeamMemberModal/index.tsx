@@ -41,11 +41,18 @@ interface MemberType {
   };
 }
 interface TeamMemberProps {
-  members?: Array<MemberType>;
   visibility: boolean;
   handleOk: () => void;
   handleCancel: () => void;
   projId: string;
+}
+
+interface ProjectType {
+  members: Array<MemberType>;
+  name?: string;
+  overview?: string;
+  status?: string;
+  total_member?: number;
 }
 
 type Employee = models.hr.Employee;
@@ -61,7 +68,7 @@ for (let i = 4; i <= 40; i += 4) {
 export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const history = useHistory();
   const { t } = useTranslation();
-
+  const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dataSource, setDatasource] = useState<MemberType[] | undefined>([]);
   const [memberEmail, setMemberEmail] = useState('');
@@ -75,9 +82,9 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const [modalWidth, setModalWidth] = useState(1000);
   const [activeKey, setActiveKey] = useState('1');
   const [textCopy, setTextCopy] = useState(false);
-
-  const { fetchUser } = useProjectDetail();
-  const { members, visibility, handleOk, handleCancel, projId } = props;
+  const [members, setMembers] = useState<MemberType[]>([]);
+  const { fetchUser, fetchId } = useProjectDetail();
+  const { visibility, handleOk, handleCancel, projId } = props;
 
   let computeDs = (members: Array<MemberType> = []) => {
     if (!members) return;
@@ -96,6 +103,22 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
     const newMembersArray = computeDs(members);
     setDatasource(newMembersArray);
   }, [members]);
+
+  useEffect(() => {
+    if (projId) {
+      (async () => {
+        try {
+          setLoading(true);
+          const projectRes: ProjectType = await fetchId(projId);
+          setMembers(projectRes.members);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+  }, [projId, fetchId]);
 
   // table
   const showDeleteModal = record => {
@@ -375,7 +398,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
         onChange={handleChangeTab}
       >
         <TabPane tab="Team Members" key="1">
-          <Table dataSource={dataSource} columns={columns} />
+          <Table dataSource={dataSource} loading={loading} columns={columns} />
           <DeleteConfirmModal
             visible={isModalVisible}
             handleOk={handleConfirmDelete}
