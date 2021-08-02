@@ -16,7 +16,7 @@ export const DeviceHistory = () => {
   const { id } = useParams<Record<string, string>>();
   const [histories, setHistories] = useState<DeviceHistoryType[]>([]);
   const fetchListHistory = useCallback(async () => {
-    const histories: any = await fakeAPI.get('/devices/histories', {
+    const histories: any = await fakeAPI.get('/hr/devices-history', {
       params: {
         device: id,
       },

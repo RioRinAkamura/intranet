@@ -25,12 +25,12 @@ import {
   EyeOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import styled from 'styled-components/macro';
 import { useProjectsSlice } from './slice';
 import { useUserspageSlice } from 'app/pages/EmployeePage/EmployeeListPage/slice';
 import { selectUserspage } from 'app/pages/EmployeePage/EmployeeListPage/slice/selectors';
-
+import { parse } from 'query-string';
 import { useDispatch, useSelector } from 'react-redux';
 import PageTitle from 'app/components/PageTitle';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
@@ -49,11 +49,12 @@ import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
 import { TeamMembers } from 'app/components/TeamMembers';
 import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
+import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMemberModal';
 
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
-
+  const location = useLocation();
   const [moreLoading, setMoreLoading] = useState(true);
   const [userList, setUserList] = useState<any[]>([]);
   const [isMore, setIsMore] = useState(true);
@@ -62,6 +63,9 @@ export const ProjectsPage: React.FC = () => {
   const [idProjectDelete, setIdProjectDelete] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deleteProject, setDeleteProject] = useState<any>();
+  const [memberModal, setMemberModal] = useState(false);
+  // const [projectId, setProjectId] = useState<any>();
+  const [projMemberId, setProjMemberId] = useState('');
   const deleteModalState = useSelector(
     (state: RootState) => state.employeespage,
   );
@@ -77,6 +81,9 @@ export const ProjectsPage: React.FC = () => {
   const params = useSelector(selectProjectsParams);
   const isFilter = useSelector(selectProjectsIsFilter);
   const getProjectState = useSelector(selectProjects);
+  const urlParams = parse(location.search, {
+    sort: false,
+  });
 
   const fetchUsers = useCallback(() => {
     dispatch(
@@ -127,6 +134,12 @@ export const ProjectsPage: React.FC = () => {
 
     setUserOptions(mapUsers);
   }, [getUserListState.employees]);
+
+  useEffect(() => {
+    if (urlParams.projMember) {
+      setMemberModal(true);
+    }
+  }, [urlParams.projMember]);
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
@@ -300,8 +313,10 @@ export const ProjectsPage: React.FC = () => {
       ...getColumnSorterProps('members', 2),
       render: (members, record: any) => (
         <TeamMembers
-          callback={() => {
-            dispatch(actions.fetchProjects({ params: params }));
+          callback={members => {
+            // dispatch(actions.fetchProjects({ params: params }));
+            setMemberModal(true);
+            setProjMemberId(record.id);
           }}
           projId={record.id}
           members={members}
@@ -377,8 +392,25 @@ export const ProjectsPage: React.FC = () => {
     },
   ];
 
+  const handleMemberModalOk = () => {
+    dispatch(actions.fetchProjects({ params: params }));
+    setMemberModal(false);
+  };
+
+  const handleMemberModalCancel = () => {
+    dispatch(actions.fetchProjects({ params: params }));
+    setMemberModal(false);
+    // remove params
+  };
+
   return (
     <>
+      <TeamMemberModal
+        visibility={memberModal}
+        handleOk={handleMemberModalOk}
+        handleCancel={handleMemberModalCancel}
+        projId={projMemberId}
+      />
       <ConfirmModal />
       <Helmet>
         <title>{t(ProjectsMessages.title())}</title>

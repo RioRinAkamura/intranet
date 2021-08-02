@@ -3,7 +3,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { deviceManagerAction as actions } from '.';
 
 function fetchDevicesAction(options) {
-  return fakeAPI.get('/devices', {
+  return fakeAPI.get('hr/devices', {
     params: {
       page: options.params.page,
       limit: options.params.limit,

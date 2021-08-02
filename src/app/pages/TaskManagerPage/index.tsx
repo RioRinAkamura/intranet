@@ -28,15 +28,21 @@ import fakeAPI from 'utils/fakeAPI';
 import { useAuth } from 'app/components/Auth/Context';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { PopoverBtn } from './components/PopoverBtn';
-interface Task {
-  project: string;
-  title: string;
-  description: string;
-  status: string;
-  assignee: string;
-  project_name: string;
-  assignee_name: string;
-}
+import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { api } from 'utils/api';
+import { CreateTaskQueryParam } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+
+// interface Task {
+//   project: string;
+//   title: string;
+//   description: string;
+//   status: string;
+//   assignee: string;
+//   project_name: string;
+//   assignee_name: string;
+// }
+
+type Task = models.hr.Task;
 
 export const TaskManager = () => {
   const { identity } = useAuth();
@@ -278,13 +284,21 @@ export const TaskManager = () => {
 
   const handleConfirmDelete = async () => {
     try {
+      console.log(isDeleteMulti, 'deletemulti');
       if (isDeleteMulti) {
+        console.log('multi');
         const ids = state.selectedRowKeys || [];
         const arrPromise = await ids.map((id: string) => {
-          return fakeAPI.delete(`/hr/tasks/${id}`);
+          // return fakeAPI.delete(`/hr/tasks/${id}`);
+          return api.hr.task.delete(id);
         });
         await Promise.all(arrPromise);
         dispatch(actions.deleteSuccess());
+        notify({
+          type: ToastMessageType.Info,
+          duration: 2,
+          message: 'Delete Task Successfully',
+        });
 
         setIsDeleteMulti(false);
         dispatch(
@@ -294,8 +308,8 @@ export const TaskManager = () => {
         return;
       }
 
-      await fakeAPI.delete(`/hr/tasks/${deleteId}`);
-
+      // await fakeAPI.delete(`/hr/tasks/${deleteId}`);
+      await api.hr.task.delete(deleteId);
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -322,9 +336,11 @@ export const TaskManager = () => {
       try {
         // create
         if (isCreate) {
-          const data: any = await fakeAPI.post('/hr/tasks/', {
-            ...values,
-          });
+          // const data: Task = await fakeAPI.post('/hr/tasks/', {
+          //   ...values,
+          // });
+          const newTask: CreateTaskQueryParam = { ...values };
+          const data: Task = await api.hr.task.create(newTask);
 
           await fakeAPI.post(`hr/tasks/${data?.id}/followers/`, {
             follower: identity?.id,
@@ -340,7 +356,6 @@ export const TaskManager = () => {
         // update
         if (isUpdate) {
           await fakeAPI.patch(`/hr/tasks/${values.id}`, { ...values });
-
           notify({
             type: ToastMessageType.Info,
             duration: 2,

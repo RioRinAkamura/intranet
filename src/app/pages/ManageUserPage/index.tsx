@@ -12,6 +12,7 @@ import { selectManageUserState, selectParams } from './slice/selectors';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import { DeleteModal } from 'app/components/DeleteModal';
 import { api } from 'utils/api';
 import {
   DeleteOutlined,
@@ -42,6 +43,7 @@ export const ManageUserPage: React.FC = () => {
   const history = useHistory();
   const [idUserDelete, setIdUserDelete] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalMultiDeleteVisible, setIsMultiDeleteVisible] = useState(false);
   const [deleteUser, setDeleteUser] = useState<User>();
   const [textCopy, setTextCopy] = useState(false);
   const [searchForm] = Form.useForm();
@@ -86,6 +88,10 @@ export const ManageUserPage: React.FC = () => {
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
+  };
+
+  const handleCancelMultidelete = () => {
+    setIsMultiDeleteVisible(false);
   };
 
   // modal
@@ -321,6 +327,7 @@ export const ManageUserPage: React.FC = () => {
       console.log(e);
     } finally {
       dispatch(actions.resetStateDeleteModal());
+      setIsMultiDeleteVisible(false);
       fetchUsers();
     }
   };
@@ -351,7 +358,8 @@ export const ManageUserPage: React.FC = () => {
                     }
                     icon={<DeleteOutlined />}
                     onClick={() => {
-                      handleRemoveMultiUser(userListState?.selectedRowKeys);
+                      setIsMultiDeleteVisible(true);
+                      // handleRemoveMultiUser(userListState?.selectedRowKeys);
                     }}
                   />
                 )}
@@ -401,6 +409,15 @@ export const ManageUserPage: React.FC = () => {
           description={descriptionDelete}
           answer={`${deleteUser?.email}`}
         />
+        <DeleteModal
+          open={isModalMultiDeleteVisible}
+          handleDelete={() =>
+            handleRemoveMultiUser(userListState?.selectedRowKeys)
+          }
+          handleCancel={handleCancelMultidelete}
+          content="Are you sure you want to delete this information?"
+        />
+        ;
       </Wrapper>
     </>
   );

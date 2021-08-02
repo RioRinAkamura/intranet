@@ -10,7 +10,7 @@ import { CardLayout } from 'app/components/CardLayout';
 import Button from 'app/components/Button';
 import { config } from 'config';
 import { ProjectInfo } from './components/ProjectInfo';
-import { TeamMembers } from './components/TeamMembers';
+// import { TeamMembers } from './components/TeamMembers';
 import { ProjectDetailMessages } from './messages';
 
 interface Props {}
@@ -110,7 +110,7 @@ export const ProjectDetailPage = (props: Props) => {
             <Input hidden />
           </Form.Item>
           <ProjectInfo isView={isView} form={form} data={data} />
-          <TeamMembers isView={isView} isEdit={isEdit} form={form} />
+          {/* <TeamMembers isView={isView} isEdit={isEdit} form={form} /> */}
         </Form>
       </CardLayout>
       <WrapperButton>

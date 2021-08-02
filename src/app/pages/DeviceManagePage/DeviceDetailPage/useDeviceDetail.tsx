@@ -16,14 +16,14 @@ export const useDeviceDetail = (): {
   const { notify } = useNotify();
 
   const detail = React.useCallback(async (id: string) => {
-    return await fakeAPI.get(`/devices/${id}`);
+    return await fakeAPI.get(`/hr/devices/${id}`);
   }, []);
 
   const create = async value => {
     setLoading(true);
 
     try {
-      const response: any = await fakeAPI.post('/devices/', value);
+      const response: any = await fakeAPI.post('/hr/devices/', value);
 
       if (response) {
         notify({
@@ -49,7 +49,10 @@ export const useDeviceDetail = (): {
   const update = async values => {
     setLoading(true);
     try {
-      const response: any = await fakeAPI.put(`/devices/${values.id}/`, values);
+      const response: any = await fakeAPI.put(
+        `/hr/devices/${values.id}/`,
+        values,
+      );
       if (response) {
         notify({
           type: ToastMessageType.Info,
