@@ -26,6 +26,16 @@ export const useHandleDataTable = (
   const { filterColumns, reload, loading } = state;
   const { ordering } = state.params;
 
+  React.useEffect(() => {
+    const searchParams = parse(location.search, {
+      sort: false,
+    });
+
+    if (isEmpty(searchParams)) {
+      dispatch(actions.resetSearch());
+    }
+  }, [dispatch, actions, location.search]);
+
   React.useLayoutEffect(() => {
     if (location.search && reload && !loading) {
       let params = parse(location.search, {
