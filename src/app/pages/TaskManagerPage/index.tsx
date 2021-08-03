@@ -30,17 +30,7 @@ import { Avatar } from 'app/components/Avatar/Loadable';
 import { PopoverBtn } from './components/PopoverBtn';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { api } from 'utils/api';
-import { CreateTaskQueryParam } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
-
-// interface Task {
-//   project: string;
-//   title: string;
-//   description: string;
-//   status: string;
-//   assignee: string;
-//   project_name: string;
-//   assignee_name: string;
-// }
+import { CreateTaskParam } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 type Task = models.hr.Task;
 
@@ -334,12 +324,8 @@ export const TaskManager = () => {
   const handleSubmitFormTask = () => {
     form.validateFields().then(async values => {
       try {
-        // create
         if (isCreate) {
-          // const data: Task = await fakeAPI.post('/hr/tasks/', {
-          //   ...values,
-          // });
-          const newTask: CreateTaskQueryParam = { ...values };
+          const newTask: CreateTaskParam = { ...values };
           const data: Task = await api.hr.task.create(newTask);
 
           await fakeAPI.post(`hr/tasks/${data?.id}/followers/`, {
