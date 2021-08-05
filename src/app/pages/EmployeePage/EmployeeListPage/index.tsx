@@ -17,7 +17,9 @@ import { Helmet } from 'react-helmet-async';
 import { HeaderButton } from './components/HeaderButton/Loadable';
 import { EmployeeList } from './components/EmployeeList/Loadable';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { DeleteModal } from 'app/components/DeleteModal';
 import { useHandleDataTable } from './useHandleDataTable';
+import qs from 'query-string';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -43,6 +45,7 @@ import { TagComponent } from 'app/components/Tags/components/Tag';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
+import fakeAPI from 'utils/fakeAPI';
 
 type Employee = models.hr.Employee;
 
@@ -57,6 +60,9 @@ export const Employees: React.FC = () => {
   const [searchForm] = Form.useForm();
   const [idUserDelete, setIdUserDelete] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalMultiDeleteVisible, setIsModalMultiDeleteVisible] = useState(
+    false,
+  );
   const [deleteEmployee, setDeleteEmployee] = useState<Employee>();
   const deleteModalState = useSelector(
     (state: RootState) => state.employeespage,
@@ -395,6 +401,31 @@ export const Employees: React.FC = () => {
     },
   ];
 
+  const handleMultiDelete = async () => {
+    try {
+      await fakeAPI.delete('/hr/employees/delete-multiple', {
+        params: {
+          id: getUserListState?.selectedRowKeys,
+        },
+        paramsSerializer: params => {
+          return qs.stringify(params);
+        },
+      });
+      dispatch(actions.deleteUserSuccess());
+      dispatch(actions.selectedRows({ selectedRowKeys: [], selectedRows: [] }));
+      fetchUsers();
+    } catch (e) {
+      dispatch(actions.deleteUserFailure());
+    } finally {
+      setIsModalMultiDeleteVisible(false);
+      dispatch(actions.resetStateDeleteModal());
+    }
+  };
+
+  const handleCancelMultiDeleteModal = () => {
+    setIsModalMultiDeleteVisible(false);
+  };
+
   return (
     <>
       <Helmet>
@@ -438,7 +469,8 @@ export const Employees: React.FC = () => {
                       }
                       icon={<DeleteOutlined />}
                       onClick={() => {
-                        console.log('Call Deleted');
+                        // handleMultiDelete();
+                        setIsModalMultiDeleteVisible(true);
                       }}
                     />
                   )}
@@ -495,6 +527,12 @@ export const Employees: React.FC = () => {
         title={`Remove ${deleteEmployee?.first_name} ${deleteEmployee?.last_name}`}
         description={descriptionDelete}
         answer={`${deleteEmployee?.email}`}
+      />
+      <DeleteModal
+        open={isModalMultiDeleteVisible}
+        handleDelete={handleMultiDelete}
+        handleCancel={handleCancelMultiDeleteModal}
+        content="Are you sure you want to delete this information?"
       />
     </>
   );

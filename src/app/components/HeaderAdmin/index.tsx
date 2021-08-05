@@ -1,7 +1,7 @@
 import React from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Breadcrumb } from 'antd';
-
+import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { BadgeList } from '../BadgeList';
@@ -15,6 +15,12 @@ interface Props {
 }
 
 const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
+  const location = useLocation();
+  const mapLocation = () => {
+    const breadcrumbs = location.pathname.split('/');
+    breadcrumbs.shift();
+    return breadcrumbs.join(' / ');
+  };
   return (
     <>
       <Wrapper>
@@ -63,7 +69,8 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
           <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
             <Breadcrumb.Item>
-              {window.location.pathname.substr(1)}
+              {/* {window.location.pathname.substr(1)} */}
+              {mapLocation()}
             </Breadcrumb.Item>
           </Breadcrumb>
         </SubHeader>

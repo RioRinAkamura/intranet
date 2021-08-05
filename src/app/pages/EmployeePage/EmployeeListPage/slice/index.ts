@@ -114,6 +114,11 @@ const slice = createSlice({
       state.deleteSuccess = false;
       state.deleteFailed = false;
     },
+    deleteMultiUser(state, action: PayloadAction<string>) {
+      state.isFilter = true;
+      state.deleteSuccess = false;
+      state.deleteFailed = false;
+    },
     deleteUserSuccess(state) {
       state.isFilter = false;
       state.deleteSuccess = true;
