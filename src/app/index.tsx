@@ -112,6 +112,16 @@ export function App() {
                 />
                 <PrivateRoute
                   exact
+                  path={'/projects/:id/members'}
+                  component={ProjectsPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={'/projects/:id/members/add'}
+                  component={ProjectsPage}
+                />
+                <PrivateRoute
+                  exact
                   path={'/leave_applications'}
                   component={LeaveApplicationPage}
                 />
@@ -167,7 +177,6 @@ export function App() {
                   path={'/devices/:id'}
                   component={DeviceDetailPage}
                 />
-
                 <PrivateRoute
                   exact
                   path={'/tasks'}

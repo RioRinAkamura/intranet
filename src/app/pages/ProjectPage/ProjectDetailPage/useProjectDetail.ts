@@ -96,7 +96,7 @@ export const useProjectDetail = (): {
           duration: 2,
           message: t(ProjectDetailMessages.messageCreateProjectSuccess()),
         });
-        history.push('/projects?projMember=' + response.id);
+        history.push('/projects/' + response.id + '/members/add');
       }
     } catch (error) {
       setError(error);

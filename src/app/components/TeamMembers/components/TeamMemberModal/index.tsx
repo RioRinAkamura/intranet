@@ -105,6 +105,23 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   }, [members]);
 
   useEffect(() => {
+    if (!visibility) {
+      // reset form
+      memberForm.resetFields();
+    }
+  }, [visibility, memberForm]);
+
+  useEffect(() => {
+    if (history.location.pathname.includes('add')) {
+      setActiveKey('2');
+      setModalWidth(600);
+    } else {
+      setActiveKey('1');
+      setModalWidth(1000);
+    }
+  }, [history.location.pathname]);
+
+  useEffect(() => {
     if (projId) {
       (async () => {
         try {

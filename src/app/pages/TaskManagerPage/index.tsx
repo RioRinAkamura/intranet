@@ -274,7 +274,6 @@ export const TaskManager = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      console.log(isDeleteMulti, 'deletemulti');
       if (isDeleteMulti) {
         console.log('multi');
         const ids = state.selectedRowKeys || [];

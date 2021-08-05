@@ -25,12 +25,11 @@ import {
   EyeOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
-import { useHistory, useLocation } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import styled from 'styled-components/macro';
 import { useProjectsSlice } from './slice';
 import { useUserspageSlice } from 'app/pages/EmployeePage/EmployeeListPage/slice';
 import { selectUserspage } from 'app/pages/EmployeePage/EmployeeListPage/slice/selectors';
-import { parse } from 'query-string';
 import { useDispatch, useSelector } from 'react-redux';
 import PageTitle from 'app/components/PageTitle';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
@@ -54,7 +53,6 @@ import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMembe
 export const ProjectsPage: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const location = useLocation();
   const [moreLoading, setMoreLoading] = useState(true);
   const [userList, setUserList] = useState<any[]>([]);
   const [isMore, setIsMore] = useState(true);
@@ -81,9 +79,7 @@ export const ProjectsPage: React.FC = () => {
   const params = useSelector(selectProjectsParams);
   const isFilter = useSelector(selectProjectsIsFilter);
   const getProjectState = useSelector(selectProjects);
-  const urlParams = parse(location.search, {
-    sort: false,
-  });
+  const { id } = useParams<Record<string, string>>();
 
   const fetchUsers = useCallback(() => {
     dispatch(
@@ -135,11 +131,15 @@ export const ProjectsPage: React.FC = () => {
     setUserOptions(mapUsers);
   }, [getUserListState.employees]);
 
+  // handle project member
   useEffect(() => {
-    if (urlParams.projMember) {
+    if (history.location.pathname.includes('members')) {
       setMemberModal(true);
+      setProjMemberId(id);
+    } else {
+      setMemberModal(false);
     }
-  }, [urlParams.projMember]);
+  }, [history.location.pathname, id]);
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
@@ -400,6 +400,7 @@ export const ProjectsPage: React.FC = () => {
   const handleMemberModalCancel = () => {
     dispatch(actions.fetchProjects({ params: params }));
     setMemberModal(false);
+    history.push('/projects');
     // remove params
   };
 

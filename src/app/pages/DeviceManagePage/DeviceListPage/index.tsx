@@ -5,6 +5,7 @@ import {
   EditOutlined,
   EyeOutlined,
   MoreOutlined,
+  ExportOutlined,
 } from '@ant-design/icons';
 import styled from 'styled-components/macro';
 import { ColumnProps } from 'antd/lib/table';
@@ -196,6 +197,10 @@ export const DevicesManager = () => {
     resetSearch();
   };
 
+  const handleExportCsv = () => {
+    console.log('export');
+  };
+
   const columns: ColumnProps<Device>[] = [
     {
       title: 'Code',
@@ -320,11 +325,14 @@ export const DevicesManager = () => {
           <Col span={16}>
             <Row justify="end">
               <Button
-                style={{ marginBottom: 10 }}
+                style={{ marginBottom: 10, marginRight: 10 }}
                 type="primary"
                 onClick={() => history.push('/devices/create')}
               >
                 Create device
+              </Button>
+              <Button onClick={handleExportCsv}>
+                <ExportOutlined /> Export CSV
               </Button>
             </Row>
           </Col>
