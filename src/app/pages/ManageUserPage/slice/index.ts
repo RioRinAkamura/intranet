@@ -27,6 +27,7 @@ export const initialState: UsersManagePageState = {
     page: 1,
   },
   filterColumns: {},
+  errorMessage: '',
 };
 
 const slice = createSlice({
@@ -83,7 +84,6 @@ const slice = createSlice({
       console.log('update user');
     },
     deleteUser(state, action: PayloadAction<string>) {
-      console.log('delete user');
       state.deleteSuccess = false;
       state.deleteFailed = false;
     },
@@ -91,13 +91,15 @@ const slice = createSlice({
       state.deleteSuccess = true;
       state.deleteFailed = false;
     },
-    deleteUserFailure(state) {
+    deleteUserFailure(state, action: PayloadAction<string>) {
       state.deleteSuccess = false;
       state.deleteFailed = true;
+      state.errorMessage = action.payload;
     },
     resetStateDeleteModal(state) {
       state.deleteSuccess = false;
       state.deleteFailed = false;
+      state.errorMessage = '';
     },
   },
 });

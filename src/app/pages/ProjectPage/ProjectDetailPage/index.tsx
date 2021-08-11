@@ -12,6 +12,7 @@ import { config } from 'config';
 import { ProjectInfo } from './components/ProjectInfo';
 // import { TeamMembers } from './components/TeamMembers';
 import { ProjectDetailMessages } from './messages';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 
 interface Props {}
 interface LocationState {
@@ -21,6 +22,7 @@ interface LocationState {
 const DATE_FORMAT = config.DATE_FORMAT;
 
 export const ProjectDetailPage = (props: Props) => {
+  const { setBreadCrumb } = useBreadCrumbContext();
   const { id } = useParams<Record<string, string>>();
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -55,13 +57,15 @@ export const ProjectDetailPage = (props: Props) => {
           const response = await fetchId(id);
           if (response) {
             setData(response);
+            setBreadCrumb(`Projects / ${response.name}`);
           }
         } catch (error) {}
       })();
     } else {
       setIsCreate(true);
+      setBreadCrumb(`Projects / Add Project`);
     }
-  }, [id, fetchId]);
+  }, [id, fetchId, setBreadCrumb]);
 
   useEffect(() => {
     if (location.state) {

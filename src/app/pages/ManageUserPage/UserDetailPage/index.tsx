@@ -5,12 +5,13 @@ import PageTitle from 'app/components/PageTitle';
 import { DetailForm } from './components/DetailForm';
 import fakeAPI from 'utils/fakeAPI';
 import { CardLayout } from 'app/components/CardLayout';
-
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 interface LocationState {
   edit: boolean;
 }
 
 export const UserManageDetailPage = props => {
+  const { setBreadCrumb } = useBreadCrumbContext();
   const { id } = useParams<Record<string, string>>();
   const location = useLocation<LocationState>();
   const history = useHistory();
@@ -23,21 +24,23 @@ export const UserManageDetailPage = props => {
   React.useEffect(() => {
     (async () => {
       try {
-        const response = await fakeAPI.get(`/users/${id}`);
+        const response: any = await fakeAPI.get(`/users/${id}`);
         setData(response);
+        setBreadCrumb(`Users / ${response.first_name}`);
       } catch (e) {
         console.log(e);
       }
     })();
-  }, [id]);
+  }, [id, setBreadCrumb]);
 
   React.useEffect(() => {
     if (history.location.pathname.includes('create')) {
       setIsCreate(true);
+      setBreadCrumb(`Users / Create`);
     } else {
       setIsCreate(false);
     }
-  }, [history.location.pathname]);
+  }, [history.location.pathname, setBreadCrumb]);
 
   React.useEffect(() => {
     if (location.state) {

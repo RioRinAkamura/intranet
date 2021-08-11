@@ -49,8 +49,13 @@ import { TeamMembers } from 'app/components/TeamMembers';
 import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
 import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMemberModal';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 
 export const ProjectsPage: React.FC = () => {
+  const { setBreadCrumb } = useBreadCrumbContext();
+  useEffect(() => {
+    setBreadCrumb('Projects');
+  }, [setBreadCrumb]);
   const { t } = useTranslation();
   const history = useHistory();
   const [moreLoading, setMoreLoading] = useState(true);

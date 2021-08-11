@@ -11,8 +11,15 @@ import { PerformanceEmployees } from './components/PerformanceEmployees';
 import { NewEmployees } from './components/NewEmployees';
 import { Recruitments } from './components/Recruitments';
 import PageTitle from 'app/components/PageTitle';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 
 export const HomePage: React.FC = () => {
+  const { setBreadCrumb } = useBreadCrumbContext();
+
+  React.useEffect(() => {
+    setBreadCrumb('');
+  }, [setBreadCrumb]);
+
   return (
     <>
       <Helmet>

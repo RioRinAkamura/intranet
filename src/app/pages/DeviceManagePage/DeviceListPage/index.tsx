@@ -33,6 +33,7 @@ import { useTableConfig } from 'utils/tableConfig';
 import { Messages } from './messages';
 import { CardLayout } from 'app/components/CardLayout';
 import Button from 'app/components/Button';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 
 interface Category {
   name: string;
@@ -46,6 +47,11 @@ interface Employee {
 }
 
 export const DevicesManager = () => {
+  const { setBreadCrumb } = useBreadCrumbContext();
+  useEffect(() => {
+    setBreadCrumb('Devices');
+  }, [setBreadCrumb]);
+
   const { actions } = useDeviceManagePage();
   const [searchForm] = Form.useForm();
   const dispatch = useDispatch();

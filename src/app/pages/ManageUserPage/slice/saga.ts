@@ -3,6 +3,7 @@ import { api } from 'utils/api';
 import fakeAPI from 'utils/fakeAPI';
 import { UserManageAction as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { mapErrorCode } from 'utils/errorMessages';
 
 function fetchUsersAction(options) {
   return fakeAPI.get('/users/', {
@@ -52,7 +53,8 @@ function* deleteUser(action: PayloadAction<string>) {
     yield call([api, api.user.deleteUser], idDelete);
     yield put(actions.deleteUserSuccess());
   } catch (err) {
-    yield put(actions.deleteUserFailure());
+    const errorMess = mapErrorCode(err);
+    yield put(actions.deleteUserFailure(errorMess));
   } finally {
     yield put(actions.resetStateDeleteModal());
   }

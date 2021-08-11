@@ -13,6 +13,7 @@ export interface UsersManagePageState {
   deleteFailed?: boolean;
   filterColumns?: object;
   selectedRows?: User[];
+  errorMessage?: string;
 }
 
 export interface UserManageResponse {

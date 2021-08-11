@@ -31,6 +31,7 @@ import { Projects } from './components/Projects/Loadable';
 import { useNotesSlice } from './components/Notes/slice';
 import { useHandleDataTable } from '../EmployeeListPage/useHandleDataTable';
 import { selectEmployeeNotes } from './components/Notes/slice/selectors';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 
 interface Props {}
 
@@ -55,6 +56,7 @@ export function EmployeeDetailPage(props: Props) {
   const [form] = Form.useForm();
   const location = useLocation<LocationState>();
   const history = useHistory();
+  const { setBreadCrumb } = useBreadCrumbContext();
 
   const { user } = useGetUserDetail(id);
   const { create, update, loading } = useUpdateUserDetail();
@@ -143,12 +145,14 @@ export function EmployeeDetailPage(props: Props) {
         dob: data.dob && moment(data.dob, DATE_FORMAT),
         issued_date: data.issued_date && moment(data.issued_date, DATE_FORMAT),
       });
+      setBreadCrumb('Employees / ' + data.code);
     }
-  }, [data, form, isEdit]);
+  }, [data, form, isEdit, setBreadCrumb]);
 
   React.useEffect(() => {
     if (history.location.pathname.includes('create')) {
       setIsCreate(true);
+      setBreadCrumb('Employees / Create');
     } else {
       setIsCreate(false);
     }
@@ -157,7 +161,7 @@ export function EmployeeDetailPage(props: Props) {
     } else if (history.location.pathname.includes('projects')) {
       setIsDetailTab(false);
     }
-  }, [history.location.pathname]);
+  }, [history.location.pathname, setBreadCrumb]);
 
   React.useEffect(() => {
     if (location.state) {

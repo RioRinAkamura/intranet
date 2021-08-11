@@ -8,7 +8,7 @@ export enum ToastMessageType {
 }
 interface ToastMessage {
   type: ToastMessageType;
-  message: string;
+  message?: string;
   description?: string;
   className?: string;
   duration?: number;
