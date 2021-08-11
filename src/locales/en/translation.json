@@ -639,5 +639,12 @@
         "submitButton": "Save"
       }
     }
+  },
+  "Errors": {
+    "error400": "Bad Request",
+    "error401": "Unauthorized",
+    "error403": "Forbitdden",
+    "error404": "Not Found",
+    "error500": "Internal Server Error"
   }
 }

@@ -28,6 +28,7 @@ import {
 import { DeviceHistoryTab } from '../DeviceHistory/Loadable';
 import { CardLayout } from 'app/components/CardLayout';
 import Button from 'app/components/Button';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 
 const { Option } = Select;
 
@@ -60,6 +61,7 @@ export const DeviceDetailPage = props => {
   const location = useLocation<LocationState>();
   const history = useHistory();
   const isView = isCreate || isEdit ? false : true;
+  const { setBreadCrumb } = useBreadCrumbContext();
 
   useEffect(() => {
     if (data) {
@@ -74,13 +76,15 @@ export const DeviceDetailPage = props => {
     if (id) {
       setIsCreate(false);
       (async () => {
-        const response = await detail(id);
+        const response: any = await detail(id);
         setData(response);
+        setBreadCrumb('Devices / ' + response.code);
       })();
     } else {
       setIsCreate(true);
+      setBreadCrumb('Devices / Create');
     }
-  }, [id, detail]);
+  }, [id, detail, setBreadCrumb]);
 
   // form handler
   const handleSubmit = () => {

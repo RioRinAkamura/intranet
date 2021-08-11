@@ -46,13 +46,17 @@ import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
 import fakeAPI from 'utils/fakeAPI';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 
 type Employee = models.hr.Employee;
 
 export const Employees: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
-
+  const { setBreadCrumb } = useBreadCrumbContext();
+  useEffect(() => {
+    setBreadCrumb('Employees');
+  }, [setBreadCrumb]);
   const [moreLoading, setMoreLoading] = useState(true);
   const [userList, setUserList] = useState<Employee[]>([]);
   const [isMore, setIsMore] = useState(true);

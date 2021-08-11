@@ -31,10 +31,15 @@ import { PopoverBtn } from './components/PopoverBtn';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { api } from 'utils/api';
 import { CreateTaskParam } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 
 type Task = models.hr.Task;
 
 export const TaskManager = () => {
+  const { setBreadCrumb } = useBreadCrumbContext();
+  useEffect(() => {
+    setBreadCrumb('Tasks');
+  }, [setBreadCrumb]);
   const { identity } = useAuth();
   const { notify } = useNotify();
   const { actions } = useTaskManagerPage();

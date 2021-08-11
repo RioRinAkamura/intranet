@@ -26,6 +26,7 @@ import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
 import PageTitle from 'app/components/PageTitle';
 import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 
 type User = models.user.User;
 
@@ -36,6 +37,10 @@ interface TablePagination {
 }
 
 export const ManageUserPage: React.FC = () => {
+  const { setBreadCrumb } = useBreadCrumbContext();
+  useEffect(() => {
+    setBreadCrumb('Users');
+  }, [setBreadCrumb]);
   const { notify } = useNotify();
   const { actions } = useUsersManagePageSlice();
   const dispatch = useDispatch();
@@ -80,7 +85,7 @@ export const ManageUserPage: React.FC = () => {
     } else if (deleteFailed) {
       notify({
         type: ToastMessageType.Error,
-        message: 'Delete Failed',
+        message: deleteModalState?.errorMessage,
         duration: 2,
       });
     }
