@@ -11,6 +11,7 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { parse } from 'query-string';
+import styled from 'styled-components/macro';
 
 import {
   selectEmployeeChangeLogs,
@@ -36,7 +37,7 @@ export const ChangeLogs = React.memo((props: Props) => {
 
   const columns: ColumnProps<any>[] = [
     {
-      title: `${t(ChangeLogsMessages.tableWhenColumn())}`,
+      title: `${t(ChangeLogsMessages.tableDateTimeColumn())}`,
       dataIndex: 'change_date',
       render: value => (value ? moment(value).format('DD-MM-YYYY HH:mm') : ''),
       defaultSortOrder: 'descend',
@@ -44,15 +45,39 @@ export const ChangeLogs = React.memo((props: Props) => {
         moment(prev.change_date).unix() - moment(next.change_date).unix(),
     },
     {
-      title: `${t(ChangeLogsMessages.tableWhoColumn())}`,
+      title: `${t(ChangeLogsMessages.tableUserColumn())}`,
       dataIndex: 'change_user_name',
       render: value => value,
       sorter: (prev, next) =>
         prev.change_user_name?.localeCompare(next.change_user_name),
     },
     {
-      title: `${t(ChangeLogsMessages.tableWhatColumn())}`,
+      title: `${t(ChangeLogsMessages.tableChangesColumn())}`,
+      dataIndex: 'change_diff',
+      width: '600px',
+      render: values => {
+        return values ? (
+          <table>
+            {values.map(item => (
+              <tr>
+                <StyledField>{item.field}</StyledField>
+                <td>
+                  <StyledOldValue>{item.old}</StyledOldValue>
+                  <br />
+                  <StyledNewValue>{item.new}</StyledNewValue>
+                </td>
+              </tr>
+            ))}
+          </table>
+        ) : (
+          ''
+        );
+      },
+    },
+    {
+      title: `${t(ChangeLogsMessages.tableTypeColumn())}`,
       dataIndex: 'change_type',
+      width: '150px',
       render: value => value,
     },
   ];
@@ -104,3 +129,17 @@ export const ChangeLogs = React.memo((props: Props) => {
     />
   );
 });
+
+const StyledField = styled.td`
+  width: 240px;
+  padding-right: 40px;
+`;
+
+const StyledOldValue = styled.span`
+  color: red;
+  text-decoration: line-through;
+`;
+
+const StyledNewValue = styled.span`
+  color: green;
+`;

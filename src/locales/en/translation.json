@@ -649,9 +649,10 @@
   },
   "ChangeLogsPage": {
     "table": {
-      "whenColumn": "When",
-      "whoColumn": "Who",
-      "whatColumn": "What"
+      "dateTimeColumn": "Date time",
+      "userColumn": "User",
+      "changesColumn": "Changes",
+      "typeColumn": "Type"
     }
   }
 }

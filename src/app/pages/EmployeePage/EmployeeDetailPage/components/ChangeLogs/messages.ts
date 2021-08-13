@@ -7,9 +7,12 @@ import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
 export const ChangeLogsMessages = {
-  tableWhenColumn: () =>
-    _t(translations.ChangeLogsPage.table.whenColumn, 'When'),
-  tableWhoColumn: () => _t(translations.ChangeLogsPage.table.whoColumn, 'Who'),
-  tableWhatColumn: () =>
-    _t(translations.ChangeLogsPage.table.whatColumn, 'What'),
+  tableDateTimeColumn: () =>
+    _t(translations.ChangeLogsPage.table.dateTimeColumn, 'Date time'),
+  tableUserColumn: () =>
+    _t(translations.ChangeLogsPage.table.userColumn, 'User'),
+  tableChangesColumn: () =>
+    _t(translations.ChangeLogsPage.table.changesColumn, 'Changes'),
+  tableTypeColumn: () =>
+    _t(translations.ChangeLogsPage.table.typeColumn, 'Type'),
 };
