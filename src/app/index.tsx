@@ -104,6 +104,11 @@ export function App() {
                   />
                   <PrivateRoute
                     exact
+                    path={`${config.USERS_PATH}/:id/change-logs`}
+                    component={EmployeeDetailPage}
+                  />
+                  <PrivateRoute
+                    exact
                     path={`${config.USERS_PATH}/create`}
                     component={EmployeeListPage}
                   />

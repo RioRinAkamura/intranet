@@ -32,6 +32,7 @@ import { useNotesSlice } from './components/Notes/slice';
 import { useHandleDataTable } from '../EmployeeListPage/useHandleDataTable';
 import { selectEmployeeNotes } from './components/Notes/slice/selectors';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import { ChangeLogs } from './components/ChangeLogs';
 
 interface Props {}
 
@@ -48,6 +49,7 @@ enum TabKeys {
   'notes' = 'notes',
   'projects' = 'projects',
   'devices' = 'devices',
+  'changeLogs' = 'changeLogs',
 }
 
 export function EmployeeDetailPage(props: Props) {
@@ -112,6 +114,9 @@ export function EmployeeDetailPage(props: Props) {
     } else if (key === TabKeys.devices) {
       setIsDetailTab(false);
       history.push(`/employees/${id}/devices`);
+    } else if (key === TabKeys.changeLogs) {
+      setIsDetailTab(false);
+      history.push(`/employees/${id}/change-logs`);
     } else {
       setIsDetailTab(true);
       history.push(`/employees/${id}`);
@@ -127,6 +132,9 @@ export function EmployeeDetailPage(props: Props) {
     }
     if (history.location.pathname.includes('devices')) {
       return `${TabKeys.devices}`;
+    }
+    if (history.location.pathname.includes('change-logs')) {
+      return `${TabKeys.changeLogs}`;
     }
     return `${TabKeys.details}`;
   }, [history.location.pathname]);
@@ -242,6 +250,9 @@ export function EmployeeDetailPage(props: Props) {
           </TabPane>
           <TabPane tab="Devices" key={TabKeys.devices}>
             <Device id={id} />
+          </TabPane>
+          <TabPane tab="Change Logs" key={TabKeys.changeLogs}>
+            <ChangeLogs />
           </TabPane>
         </StyledTabs>
       ) : (
