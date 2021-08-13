@@ -19,7 +19,6 @@ import { EmployeeList } from './components/EmployeeList/Loadable';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { useHandleDataTable } from './useHandleDataTable';
-import qs from 'query-string';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -409,17 +408,24 @@ export const Employees: React.FC = () => {
     try {
       await fakeAPI.delete('/hr/employees/delete-multiple', {
         params: {
-          id: getUserListState?.selectedRowKeys,
-        },
-        paramsSerializer: params => {
-          return qs.stringify(params);
+          id:
+            getUserListState?.selectedRowKeys &&
+            getUserListState?.selectedRowKeys.join(','),
         },
       });
-      dispatch(actions.deleteUserSuccess());
       dispatch(actions.selectedRows({ selectedRowKeys: [], selectedRows: [] }));
-      fetchUsers();
+      notify({
+        type: ToastMessageType.Info,
+        message: 'Delete successful',
+        duration: 2,
+      });
+      dispatch(actions.fetchUsers({ params: params }));
     } catch (e) {
-      dispatch(actions.deleteUserFailure());
+      notify({
+        type: ToastMessageType.Error,
+        message: 'Delete failed',
+        duration: 2,
+      });
     } finally {
       setIsModalMultiDeleteVisible(false);
       dispatch(actions.resetStateDeleteModal());
