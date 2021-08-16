@@ -162,6 +162,7 @@ export const Projects = memo(() => {
           type="primary"
           icon={<ProjectOutlined />}
           onClick={() => setOpen(true)}
+          size="middle"
         >
           Add project
         </StyledButton>

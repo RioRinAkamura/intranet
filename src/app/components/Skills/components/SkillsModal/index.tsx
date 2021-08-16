@@ -148,7 +148,24 @@ export const SkillsModal = memo((props: skillModalProps) => {
       visible={isVisibility}
       title={'Skill modal'}
       onCancel={handleCancelSkillModal}
-      onOk={handleOkModal}
+      footer={[
+        <Button
+          key="back"
+          shape="round"
+          size="large"
+          onClick={handleCancelSkillModal}
+        >
+          Cancel
+        </Button>,
+        <Button
+          type="primary"
+          shape="round"
+          size="large"
+          onClick={handleOkModal}
+        >
+          Submit
+        </Button>,
+      ]}
     >
       <Input
         placeholder={'Skill (ex: python)'}

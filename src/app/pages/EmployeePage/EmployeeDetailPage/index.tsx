@@ -209,7 +209,7 @@ export function EmployeeDetailPage(props: Props) {
       <PageTitle
         title={
           isView
-            ? `Employee ${data ? data.first_name + ' ' + data.last_name : ''}`
+            ? `${data ? data.first_name + ' ' + data.last_name : ''}`
             : isEdit
             ? 'Edit Employee'
             : 'Create Employee'

@@ -333,11 +333,12 @@ export const DevicesManager = () => {
               <Button
                 style={{ marginBottom: 10, marginRight: 10 }}
                 type="primary"
+                size="middle"
                 onClick={() => history.push('/devices/create')}
               >
                 Create device
               </Button>
-              <Button onClick={handleExportCsv}>
+              <Button onClick={handleExportCsv} size="middle">
                 <ExportOutlined /> Export CSV
               </Button>
             </Row>

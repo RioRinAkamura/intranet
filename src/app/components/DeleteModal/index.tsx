@@ -26,7 +26,7 @@ export const DeleteModal = React.memo((props: Props) => {
       visible={open}
       onCancel={handleCancel}
       footer={[
-        <Button key="cancel" onClick={handleCancel}>
+        <Button key="cancel" size="large" shape="round" onClick={handleCancel}>
           {cancelText || 'Cancel'}
         </Button>,
         <Button
@@ -34,6 +34,7 @@ export const DeleteModal = React.memo((props: Props) => {
           key="index"
           size="large"
           danger
+          shape="round"
           onClick={handleDelete}
         >
           {deleteText || 'Delete'}

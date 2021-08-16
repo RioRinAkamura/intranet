@@ -179,7 +179,7 @@ export const ProjectModal = memo((props: Props) => {
 
   return (
     <>
-      <DialogModal
+      <StyledDialogModal
         title={isAddProject ? 'Add project' : 'Edit project'}
         isOpen={open}
         handleCancel={handleCancel}
@@ -279,25 +279,47 @@ export const ProjectModal = memo((props: Props) => {
             </Select>
           </FormSearchItem>
           <ModalButton>
-            <Button key="back" onClick={handleCancel}>
+            <Button
+              key="back"
+              size="large"
+              shape="round"
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
-            <Button loading={loadingProject} htmlType="submit" type="primary">
+            <Button
+              loading={loadingProject}
+              size="large"
+              shape="round"
+              htmlType="submit"
+              type="primary"
+            >
               Submit
             </Button>
           </ModalButton>
         </Form>
-      </DialogModal>
+      </StyledDialogModal>
     </>
   );
 });
 
 const FormSearchItem = styled(Form.Item)``;
 
+const StyledDialogModal = styled(DialogModal)`
+  .ant-modal-body {
+    padding: 0;
+  }
+  .ant-form-item {
+    margin: 24px;
+  }
+`;
+
 const ModalButton = styled.div`
   text-align: right;
+  margin-top: 48px;
+  padding: 10px 16px;
+  border-top: 1px solid #f0f0f0;
   button {
-    padding: 0 2em !important;
     margin-left: 8px;
   }
 `;
