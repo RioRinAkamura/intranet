@@ -24,6 +24,7 @@ import { TitlePath } from '../TitlePath';
 import { RuleObject } from 'rc-field-form/lib/interface';
 import moment from 'moment';
 import config from 'config';
+import { api } from 'utils/api';
 
 interface ProfileInfoProps {
   isView?: boolean;
@@ -77,6 +78,10 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
     } else {
       callback();
     }
+  };
+
+  const getPositions = (): string[] => {
+    return api.hr.employee.getEmployeePositions();
   };
 
   return (
@@ -143,6 +148,22 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                     isView ? '' : t(UserDetailMessages.formDOBPlaceholder())
                   }
                 />
+              </FormItem>
+            </Col>
+            <Col md={isView ? 8 : 24} xs={24}>
+              User
+            </Col>
+            <Col md={isView ? 16 : 24} xs={24}>
+              <FormItem isView={isView} name="user">
+                <StyledSelect {...(isView ? selectProps : {})}>
+                  {users?.map(user => {
+                    return (
+                      <Option
+                        value={user.id}
+                      >{`${user.first_name} ${user.last_name}`}</Option>
+                    );
+                  })}
+                </StyledSelect>
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
@@ -271,19 +292,15 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              User
+              Position
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
-              <FormItem isView={isView} name="user">
-                <Select {...(isView ? selectProps : {})}>
-                  {users?.map(user => {
-                    return (
-                      <Option
-                        value={user.id}
-                      >{`${user.first_name} ${user.last_name}`}</Option>
-                    );
+              <FormItem isView={isView} name="position">
+                <StyledSelect {...(isView ? selectProps : {})}>
+                  {getPositions()?.map(value => {
+                    return <Option value={value}>{value}</Option>;
                   })}
-                </Select>
+                </StyledSelect>
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
@@ -365,5 +382,17 @@ const FormItem = styled(Form.Item)`
     label {
       margin-right: 10em;
     }
+  }
+`;
+
+const StyledSelect = styled(Select)`
+  .ant-select-selector {
+    height: 40px !important;
+  }
+
+  .ant-select-selection-item {
+    line-height: 40px !important;
+    font-size: 16px;
+    font-weight: 500;
   }
 `;
