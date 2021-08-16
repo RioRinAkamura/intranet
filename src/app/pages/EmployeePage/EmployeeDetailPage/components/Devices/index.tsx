@@ -339,6 +339,7 @@ export const Device = memo((props: DeviceProps) => {
             setIsCreate(true);
             form.resetFields();
           }}
+          size="middle"
         >
           Add device
         </StyledButton>

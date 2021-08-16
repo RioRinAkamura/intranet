@@ -49,12 +49,19 @@ export const DialogModal = React.memo(
             ? footer
             : cancelText && okText
             ? [
-                <Button key="onCancel" onClick={handleCancel}>
+                <Button
+                  key="onCancel"
+                  shape="round"
+                  size="large"
+                  onClick={handleCancel}
+                >
                   {cancelText}
                 </Button>,
                 <Button
                   key="onSave"
                   type="primary"
+                  shape="round"
+                  size="large"
                   loading={loading}
                   onClick={handleSubmit}
                 >

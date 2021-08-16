@@ -418,8 +418,8 @@ export const TaskManager = () => {
           <Col span={16}>
             <Row justify="end">
               <Button
+                shape="round"
                 style={{ marginBottom: 10 }}
-                size="large"
                 type="primary"
                 onClick={() => setIsCreate(true)}
                 // icon={<LaptopOutlined />}

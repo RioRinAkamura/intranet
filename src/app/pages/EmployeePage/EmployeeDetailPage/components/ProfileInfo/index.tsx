@@ -85,11 +85,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
         <b>{t(UserDetailMessages.formProfileTitle())}</b>
       </TitlePath>
       <Row gutter={[128, 0]} align="middle">
-        <Col
-          md={12}
-          xs={24}
-          style={isView ? { borderRight: '1px solid #c5c4c5' } : {}}
-        >
+        <Col md={12} xs={24}>
           <Row gutter={[0, 12]} align="middle">
             <Col md={isView ? 8 : 24} xs={24}>
               {t(UserDetailMessages.formFirstNameLabel())}

@@ -61,7 +61,7 @@ export const ChangePasswordModal = (props: Props) => {
       onOk={handleOk}
       onCancel={handleCancel}
       footer={[
-        <Button key="back" onClick={handleCancel}>
+        <Button key="back" shape="round" size="large" onClick={handleCancel}>
           {t(messages.changePasswordCancel())}
         </Button>,
         <Button
@@ -69,6 +69,8 @@ export const ChangePasswordModal = (props: Props) => {
           form="changePasswordModal"
           type="primary"
           htmlType="submit"
+          shape="round"
+          size="large"
         >
           {t(messages.changePasswordTitle())}
         </Button>,

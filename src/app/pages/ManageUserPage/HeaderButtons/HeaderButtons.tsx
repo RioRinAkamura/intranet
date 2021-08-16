@@ -13,6 +13,7 @@ export const HeaderButtons = () => {
         <OptionButton>
           <Button
             type="primary"
+            size="middle"
             icon={<UserAddOutlined />}
             onClick={() => {
               history.push('/users/create');

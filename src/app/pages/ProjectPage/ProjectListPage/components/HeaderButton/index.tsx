@@ -25,6 +25,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
           type="primary"
           onClick={() => history.push('/projects/create')}
           icon={<ProjectOutlined />}
+          size="middle"
         >
           {t(ProjectsMessages.createProjectButton())}
         </Button>

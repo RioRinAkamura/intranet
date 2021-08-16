@@ -53,7 +53,7 @@ export const DeleteConfirmModal = (props: Props) => {
       visible={visible}
       title={title || defaultParam.titleDefault}
       footer={[
-        <Button key="back" onClick={handleCancel}>
+        <Button key="back" shape="round" size="large" onClick={handleCancel}>
           {t(messages.deleteModalCancel())}
         </Button>,
         <Button
@@ -62,6 +62,8 @@ export const DeleteConfirmModal = (props: Props) => {
           danger
           form="deleteConfirmModal"
           htmlType="submit"
+          shape="round"
+          size="large"
           disabled={disabledButton}
         >
           {t(messages.deleteModalDelete())}

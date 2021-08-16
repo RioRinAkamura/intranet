@@ -273,6 +273,10 @@ export const Employees: React.FC = () => {
     </>
   );
 
+  const redirectToEmployeeDetails = (record: Employee) => {
+    history.push(`/employees/${record.id}`);
+  };
+
   const columns: ColumnProps<Employee>[] = [
     {
       dataIndex: 'avatar',
@@ -280,12 +284,14 @@ export const Employees: React.FC = () => {
       align: 'center',
       className: 'avatar',
       render: (text, record: Employee) => (
-        <Avatar
-          size={40}
-          src={text}
-          alt={record.first_name + ' ' + record.last_name}
-          name={record.first_name + ' ' + record.last_name}
-        />
+        <StyledWrapperAvatar onClick={() => redirectToEmployeeDetails(record)}>
+          <Avatar
+            size={40}
+            src={text}
+            alt={record.first_name + ' ' + record.last_name}
+            name={record.first_name + ' ' + record.last_name}
+          />
+        </StyledWrapperAvatar>
       ),
     },
     {
@@ -294,12 +300,20 @@ export const Employees: React.FC = () => {
       width: 75,
       ...getColumnSorterProps('first_name', 1),
       ...getColumnSearchInputProps(['first_name', 'last_name']),
+      render: (text, record: Employee) => (
+        <StyledName
+          onClick={() => redirectToEmployeeDetails(record)}
+          title={`${text} ${record.last_name}`}
+        >
+          {text} {record.last_name}
+        </StyledName>
+      ),
     },
     {
       title: 'Code',
       dataIndex: 'code',
       width: 60,
-      ...getColumnSorterProps('code', 5),
+      ...getColumnSorterProps('code', 2),
       ...getColumnSearchInputProps(['code']),
     },
     {
@@ -315,6 +329,22 @@ export const Employees: React.FC = () => {
       width: 85,
       ...getColumnSorterProps('phone', 4),
       ...getColumnSearchInputProps(['phone']),
+    },
+    {
+      title: 'Position',
+      dataIndex: 'position',
+      width: 85,
+      ...getColumnSorterProps('position', 5),
+      ...getColumnSearchInputProps(['position']),
+    },
+    {
+      title: 'Bank account',
+      dataIndex: 'bank_accounts',
+      width: 85,
+      ...getColumnSorterProps('bank_accounts', 6),
+      ...getColumnSearchInputProps(['position']),
+      render: values =>
+        values ? values.map(item => <p>{item.bank_name}</p>) : '',
     },
     {
       title: 'Tags',
@@ -569,4 +599,15 @@ const TableWrapper = styled.div`
   .totalAllocated {
     white-space: break-spaces;
   }
+`;
+
+const StyledWrapperAvatar = styled.div`
+  cursor: pointer;
+  border-radius: 50%;
+`;
+
+const StyledName = styled.div`
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;

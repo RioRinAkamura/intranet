@@ -98,7 +98,7 @@ export const AddBankModal = memo((props: Props) => {
           </Button>
         </>
       )}
-      <DialogModal
+      <StyledDialogModal
         title={
           isAddBank
             ? t(UserDetailMessages.formAddBankButton())
@@ -174,25 +174,41 @@ export const AddBankModal = memo((props: Props) => {
             />
           </FormSearchItem>
           <ModalButton>
-            <Button key="back" onClick={handleCancel}>
+            <Button
+              key="back"
+              size="large"
+              shape="round"
+              onClick={handleCancel}
+            >
               {t(UserDetailMessages.cancel())}
             </Button>
-            <Button htmlType="submit" type="primary">
+            <Button size="large" shape="round" htmlType="submit" type="primary">
               {t(UserDetailMessages.formSubmitAddBankButton())}
             </Button>
           </ModalButton>
         </Form>
-      </DialogModal>
+      </StyledDialogModal>
     </>
   );
 });
 
 const FormSearchItem = styled(Form.Item)``;
 
+const StyledDialogModal = styled(DialogModal)`
+  .ant-modal-body {
+    padding: 0;
+  }
+  .ant-form-item {
+    margin: 24px;
+  }
+`;
+
 const ModalButton = styled.div`
   text-align: right;
+  margin-top: 48px;
+  padding: 10px 16px;
+  border-top: 1px solid #f0f0f0;
   button {
-    padding: 0 2em !important;
     margin-left: 8px;
   }
 `;

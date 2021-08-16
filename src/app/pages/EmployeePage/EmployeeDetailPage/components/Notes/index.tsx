@@ -344,6 +344,7 @@ export const Notes = memo((props: Props) => {
             setIsCreate(true);
             form.resetFields();
           }}
+          size="middle"
         >
           Create notes
         </StyledButton>
