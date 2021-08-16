@@ -338,7 +338,7 @@ export const Employees: React.FC = () => {
       ...getColumnSearchInputProps(['position']),
     },
     {
-      title: 'Bank account',
+      title: 'Bank accounts',
       dataIndex: 'bank_accounts',
       width: 85,
       ...getColumnSorterProps('bank_accounts', 6),
