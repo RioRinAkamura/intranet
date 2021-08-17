@@ -191,6 +191,14 @@
             "empty": "Please enter date of birth",
             "invalid": "Only allow 16+ years old!"
           },
+          "user": {
+            "label": "User",
+            "placeholder": "Select user"
+          },
+          "position": {
+            "label": "Position",
+            "placeholder": "Select position"
+          },
           "gender": {
             "label": "Gender",
             "male": {

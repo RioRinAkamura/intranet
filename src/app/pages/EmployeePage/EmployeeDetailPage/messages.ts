@@ -83,6 +83,23 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.profile.DOB.empty,
       'Please enter date of birth',
     ),
+  formUserLabel: () =>
+    _t(translations.UserDetailPage.modal.form.profile.user.label, 'User'),
+  formUserPlaceholder: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.user.placeholder,
+      'Select user',
+    ),
+  formPositionLabel: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.position.label,
+      'Position',
+    ),
+  formPositionPlaceholder: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.position.placeholder,
+      'Select position',
+    ),
   formInvalidDOB: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.DOB.invalid,

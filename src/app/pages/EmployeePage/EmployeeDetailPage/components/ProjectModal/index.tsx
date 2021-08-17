@@ -7,9 +7,8 @@ import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { DialogModal } from 'app/components/DialogModal';
-import { Button, Form, Select, Spin } from 'antd';
+import { Button, Form, Input, Select, Spin } from 'antd';
 import { useHandleProject } from './useHandleProject';
-import { SelectValue } from 'antd/lib/select';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEmployeeProjectSlice } from '../Projects/slice';
@@ -30,11 +29,6 @@ interface Props {
 }
 const { Option } = Select;
 
-const allocations: number[] = [2];
-for (let i = 4; i <= 40; i += 4) {
-  allocations.push(i);
-}
-
 export const ProjectModal = memo((props: Props) => {
   const { t } = useTranslation();
   const { id, open, setOpen, selectedProject, setSelectedProject } = props;
@@ -45,7 +39,6 @@ export const ProjectModal = memo((props: Props) => {
   const [searchLoad, setSearchLoad] = useState(false);
   const [projects, setProjects] = useState<any>([]);
   const [value, setValue] = useState('');
-  const [allocation, setAllocation] = useState<SelectValue>();
   const { loadingProject, fetchProjects } = useHandleProject();
 
   const { actions } = useEmployeeProjectSlice();
@@ -209,7 +202,7 @@ export const ProjectModal = memo((props: Props) => {
               size="large"
               loading={searchLoad}
               disabled={selectedProject ? true : false}
-              placeholder={t('Enter name')}
+              placeholder="Enter name"
               onSearch={handleSearch}
               onChange={handleChange}
               notFoundContent={searchLoad ? <Spin size="default" /> : null}
@@ -238,46 +231,18 @@ export const ProjectModal = memo((props: Props) => {
                 })}
             </Select>
           </FormSearchItem>
-          <FormSearchItem
-            name="allocation"
+          <Form.Item
             label="Allocation"
+            name="allocation"
             rules={[
               {
                 required: true,
-                message: 'Please select allocation',
+                message: 'Please enter allocation',
               },
             ]}
           >
-            <Select
-              size="large"
-              placeholder="Select allocation"
-              showSearch
-              optionFilterProp="children"
-              filterOption={(input, option) => option?.value === Number(input)}
-              onSearch={value => {
-                setAllocation(value);
-              }}
-              onInputKeyDown={event => {
-                if (event.key === 'Enter') {
-                  if (!allocations.includes(Number(allocation))) {
-                    allocations.push(Number(allocation));
-                    memberForm.setFieldsValue({
-                      members: { allocation: Number(allocation) },
-                    });
-                  }
-                }
-              }}
-            >
-              {allocations &&
-                allocations.map((item, index) => {
-                  return (
-                    <Option key={index} value={item}>
-                      {item}
-                    </Option>
-                  );
-                })}
-            </Select>
-          </FormSearchItem>
+            <Input size="large" type="number" min={1} max={50} />
+          </Form.Item>
           <ModalButton>
             <Button
               key="back"

@@ -12,6 +12,9 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { parse } from 'query-string';
 import styled from 'styled-components/macro';
+import { isEmpty } from 'lodash';
+
+import config from 'config';
 
 import {
   selectEmployeeChangeLogs,
@@ -19,7 +22,8 @@ import {
 } from './slice/selectors';
 import { useEmployeeChangeLogsSlice } from './slice';
 import { ChangeLogsMessages } from './messages';
-import { isEmpty } from 'lodash';
+
+const DATE_FORMAT = config.DATE_FORMAT;
 
 interface Props {}
 
@@ -39,22 +43,30 @@ export const ChangeLogs = React.memo((props: Props) => {
     {
       title: `${t(ChangeLogsMessages.tableDateTimeColumn())}`,
       dataIndex: 'change_date',
-      render: value => (value ? moment(value).format('DD-MM-YYYY HH:mm') : ''),
+      width: '200px',
+      render: value => (
+        <p>
+          {moment(value).format('HH:mm')} <br />
+          {moment(value).format(DATE_FORMAT)}
+        </p>
+      ),
       defaultSortOrder: 'descend',
       sorter: (prev, next) =>
         moment(prev.change_date).unix() - moment(next.change_date).unix(),
     },
     {
       title: `${t(ChangeLogsMessages.tableUserColumn())}`,
-      dataIndex: 'change_user_name',
-      render: value => value,
-      sorter: (prev, next) =>
-        prev.change_user_name?.localeCompare(next.change_user_name),
+      dataIndex: 'change_user',
+      render: value => (value ? `${value.first_name} ${value.last_name}` : ''),
+      sorter: (prev, next) => {
+        const prevName = `${prev.change_user?.first_name} ${prev.change_user?.last_name}`;
+        const nextName = `${next.change_user?.first_name} ${next.change_user?.last_name}`;
+        return prevName.localeCompare(nextName);
+      },
     },
     {
       title: `${t(ChangeLogsMessages.tableChangesColumn())}`,
       dataIndex: 'change_diff',
-      width: '600px',
       render: values => {
         return values ? (
           <table>
@@ -77,7 +89,7 @@ export const ChangeLogs = React.memo((props: Props) => {
     {
       title: `${t(ChangeLogsMessages.tableTypeColumn())}`,
       dataIndex: 'change_type',
-      width: '150px',
+      width: '200px',
       render: value => value,
     },
   ];

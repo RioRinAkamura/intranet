@@ -151,11 +151,18 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              User
+              {t(UserDetailMessages.formUserLabel())}
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem isView={isView} name="user">
-                <StyledSelect {...(isView ? selectProps : {})}>
+                <StyledSelect
+                  {...(isView ? selectProps : {})}
+                  size="large"
+                  isView={isView}
+                  placeholder={
+                    !isView && t(UserDetailMessages.formUserPlaceholder())
+                  }
+                >
                   {users?.map(user => {
                     return (
                       <Option
@@ -292,11 +299,18 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              Position
+              {t(UserDetailMessages.formPositionLabel())}
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem isView={isView} name="position">
-                <StyledSelect {...(isView ? selectProps : {})}>
+                <StyledSelect
+                  {...(isView ? selectProps : {})}
+                  size="large"
+                  isView={isView}
+                  placeholder={
+                    !isView && t(UserDetailMessages.formPositionPlaceholder())
+                  }
+                >
                   {getPositions()?.map(value => {
                     return <Option value={value}>{value}</Option>;
                   })}
@@ -386,13 +400,7 @@ const FormItem = styled(Form.Item)`
 `;
 
 const StyledSelect = styled(Select)`
-  .ant-select-selector {
-    height: 40px !important;
-  }
-
   .ant-select-selection-item {
-    line-height: 40px !important;
-    font-size: 16px;
-    font-weight: 500;
+    font-weight: ${({ isView }: ScreenProps) => (isView ? 500 : 400)};
   }
 `;
