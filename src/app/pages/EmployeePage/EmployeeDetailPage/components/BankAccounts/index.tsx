@@ -63,8 +63,8 @@ export const BankAccounts = (props: BankAccountsProps) => {
                       <FormItem
                         isView={isView}
                         {...restField}
-                        name={[name, 'number']}
-                        fieldKey={[fieldKey, 'number']}
+                        name={[name, 'bank_account']}
+                        fieldKey={[fieldKey, 'bank_account']}
                       >
                         <Input bordered={false} readOnly={true} size="large" />
                       </FormItem>
@@ -80,8 +80,8 @@ export const BankAccounts = (props: BankAccountsProps) => {
                       <FormItem
                         isView={isView}
                         {...restField}
-                        name={[name, 'branch']}
-                        fieldKey={[fieldKey, 'branch']}
+                        name={[name, 'bank_branch']}
+                        fieldKey={[fieldKey, 'bank_branch']}
                       >
                         <Input bordered={false} readOnly={true} size="large" />
                       </FormItem>
