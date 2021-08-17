@@ -7,7 +7,7 @@ import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { DialogModal } from 'app/components/DialogModal';
-import { Button, Form, Input, Select, Spin } from 'antd';
+import { Button, Form, Select, Spin } from 'antd';
 import { useHandleProject } from './useHandleProject';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +19,7 @@ import {
   selectEmployeeProjectEditSuccess,
 } from '../Projects/slice/selectors';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import _ from 'lodash';
 
 interface Props {
   id: string;
@@ -28,6 +29,8 @@ interface Props {
   setSelectedProject: (member: any) => void;
 }
 const { Option } = Select;
+
+const allocations: number[] = [2, ..._.range(4, 44, 4)];
 
 export const ProjectModal = memo((props: Props) => {
   const { t } = useTranslation();
@@ -231,18 +234,26 @@ export const ProjectModal = memo((props: Props) => {
                 })}
             </Select>
           </FormSearchItem>
-          <Form.Item
-            label="Allocation"
+          <FormSearchItem
             name="allocation"
+            label="Allocation"
             rules={[
               {
                 required: true,
-                message: 'Please enter allocation',
+                message: 'Please select allocation',
               },
             ]}
           >
-            <Input size="large" type="number" min={1} max={50} />
-          </Form.Item>
+            <Select showSearch size="large" placeholder="Select allocation">
+              {allocations.map((item, index: number) => {
+                return (
+                  <Option key={index} value={item}>
+                    {item}
+                  </Option>
+                );
+              })}
+            </Select>
+          </FormSearchItem>
           <ModalButton>
             <Button
               key="back"

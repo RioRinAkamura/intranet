@@ -89,7 +89,7 @@ export const TagsInput = memo((props: Props) => {
         return (
           <TagOption
             color={colours[colourIndex] ? colours[colourIndex] : 'blue'}
-            style={{ padding: '6px 6px' }}
+            style={{ padding: '3px 5px' }}
           >
             {props.label}
             {!isView && <Link onClick={() => props.onClose()}>x</Link>}
@@ -120,7 +120,6 @@ const WrapperSelect = styled(Select)<ScreenProps>`
 
   .ant-select-selection-overflow {
     align-content: start;
-    height: 80px;
     width: 280px;
     overflow-y: auto;
     overflow-x: hidden;

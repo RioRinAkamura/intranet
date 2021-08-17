@@ -13,18 +13,14 @@ import {
   Form,
   Input,
   InputProps,
-  SelectProps,
   Radio,
   Row,
-  Select,
 } from 'antd';
 import { UserDetailMessages } from '../../messages';
-import { SelectValue } from 'antd/lib/select';
 import { TitlePath } from '../TitlePath';
 import { RuleObject } from 'rc-field-form/lib/interface';
 import moment from 'moment';
 import config from 'config';
-import { api } from 'utils/api';
 
 interface ProfileInfoProps {
   isView?: boolean;
@@ -45,19 +41,7 @@ const datePickerProps: DatePickerProps = {
   popupStyle: { display: 'none' },
 };
 
-const selectProps: SelectProps<SelectValue> = {
-  autoClearSearchValue: false,
-  bordered: false,
-  dropdownStyle: { display: 'none' },
-  removeIcon: null,
-  showArrow: false,
-  style: { pointerEvents: 'none' },
-  placeholder: '',
-};
-
 const DATE_FORMAT = config.DATE_FORMAT;
-
-const { Option } = Select;
 
 export const ProfileInfo = (props: ProfileInfoProps) => {
   const { isView, isEdit, users } = props;
@@ -78,10 +62,6 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
     } else {
       callback();
     }
-  };
-
-  const getPositions = (): string[] => {
-    return api.hr.employee.getEmployeePositions();
   };
 
   return (
@@ -148,29 +128,6 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                     isView ? '' : t(UserDetailMessages.formDOBPlaceholder())
                   }
                 />
-              </FormItem>
-            </Col>
-            <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formUserLabel())}
-            </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
-              <FormItem isView={isView} name="user">
-                <StyledSelect
-                  {...(isView ? selectProps : {})}
-                  size="large"
-                  isView={isView}
-                  placeholder={
-                    !isView && t(UserDetailMessages.formUserPlaceholder())
-                  }
-                >
-                  {users?.map(user => {
-                    return (
-                      <Option
-                        value={user.id}
-                      >{`${user.first_name} ${user.last_name}`}</Option>
-                    );
-                  })}
-                </StyledSelect>
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
@@ -299,25 +256,6 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formPositionLabel())}
-            </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
-              <FormItem isView={isView} name="position">
-                <StyledSelect
-                  {...(isView ? selectProps : {})}
-                  size="large"
-                  isView={isView}
-                  placeholder={
-                    !isView && t(UserDetailMessages.formPositionPlaceholder())
-                  }
-                >
-                  {getPositions()?.map(value => {
-                    return <Option value={value}>{value}</Option>;
-                  })}
-                </StyledSelect>
-              </FormItem>
-            </Col>
-            <Col md={isView ? 8 : 24} xs={24}>
               {t(UserDetailMessages.formPhoneNumberLabel())}
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
@@ -396,11 +334,5 @@ const FormItem = styled(Form.Item)`
     label {
       margin-right: 10em;
     }
-  }
-`;
-
-const StyledSelect = styled(Select)`
-  .ant-select-selection-item {
-    font-weight: ${({ isView }: ScreenProps) => (isView ? 500 : 400)};
   }
 `;

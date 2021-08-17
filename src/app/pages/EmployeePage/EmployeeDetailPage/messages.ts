@@ -83,13 +83,6 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.profile.DOB.empty,
       'Please enter date of birth',
     ),
-  formUserLabel: () =>
-    _t(translations.UserDetailPage.modal.form.profile.user.label, 'User'),
-  formUserPlaceholder: () =>
-    _t(
-      translations.UserDetailPage.modal.form.profile.user.placeholder,
-      'Select user',
-    ),
   formPositionLabel: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.position.label,
@@ -239,6 +232,11 @@ export const UserDetailMessages = {
     ),
   formTypeLabel: () =>
     _t(translations.UserDetailPage.modal.form.job.type.label, 'Type'),
+  formTypePlaceholder: () =>
+    _t(
+      translations.UserDetailPage.modal.form.job.type.placeholder,
+      'Select type',
+    ),
   formTypeFullTimeLabel: () =>
     _t(
       translations.UserDetailPage.modal.form.job.type.fullTime.label,
