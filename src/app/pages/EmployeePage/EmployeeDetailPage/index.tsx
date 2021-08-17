@@ -206,7 +206,7 @@ export function EmployeeDetailPage(props: Props) {
 
   return (
     <>
-      <PageTitle
+      <StyledPageTitle
         title={
           isView
             ? `${data ? data.first_name + ' ' + data.last_name : ''}`
@@ -214,6 +214,7 @@ export function EmployeeDetailPage(props: Props) {
             ? 'Edit Employee'
             : 'Create Employee'
         }
+        isNotesTab={getDefaultTab === TabKeys.notes}
       >
         {getDefaultTab === TabKeys.notes && (
           <TotalSearchForm
@@ -224,7 +225,7 @@ export function EmployeeDetailPage(props: Props) {
             onReset={resetSearchValue}
           />
         )}
-      </PageTitle>
+      </StyledPageTitle>
       {isView ? (
         <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
           <TabPane tab="Details" key={TabKeys.details}>
@@ -317,6 +318,18 @@ export function EmployeeDetailPage(props: Props) {
     </>
   );
 }
+
+interface StyledProps {
+  isNotesTab: boolean;
+}
+
+const StyledPageTitle = styled(PageTitle)`
+  padding: ${({ isNotesTab }: StyledProps) => (isNotesTab ? '0 1rem' : '1rem')};
+
+  > div {
+    padding: ${({ isNotesTab }: StyledProps) => (isNotesTab ? '11px 0' : '')};
+  }
+`;
 
 const WrapperButton = styled.div`
   margin-top: 3em;

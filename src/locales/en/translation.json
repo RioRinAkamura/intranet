@@ -276,7 +276,8 @@
             },
             "etc": {
               "label": "Etc"
-            }
+            },
+            "placeholder": "Select type"
           },
           "jobTags": {
             "label": "Tags",

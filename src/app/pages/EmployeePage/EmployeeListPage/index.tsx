@@ -277,6 +277,10 @@ export const Employees: React.FC = () => {
     history.push(`/employees/${record.id}`);
   };
 
+  const redirectToEmployeeProjects = (record: Employee) => {
+    history.push(`/employees/${record.id}/projects`);
+  };
+
   const columns: ColumnProps<Employee>[] = [
     {
       dataIndex: 'avatar',
@@ -301,12 +305,12 @@ export const Employees: React.FC = () => {
       ...getColumnSorterProps('first_name', 1),
       ...getColumnSearchInputProps(['first_name', 'last_name']),
       render: (text, record: Employee) => (
-        <StyledName
+        <StyledDiv
           onClick={() => redirectToEmployeeDetails(record)}
           title={`${text} ${record.last_name}`}
         >
           {text} {record.last_name}
-        </StyledName>
+        </StyledDiv>
       ),
     },
     {
@@ -315,6 +319,17 @@ export const Employees: React.FC = () => {
       width: 60,
       ...getColumnSorterProps('code', 2),
       ...getColumnSearchInputProps(['code']),
+      render: (text, record: Employee) =>
+        text ? (
+          <StyledDiv
+            onClick={() => redirectToEmployeeDetails(record)}
+            title={text}
+          >
+            {text}
+          </StyledDiv>
+        ) : (
+          ''
+        ),
     },
     {
       title: t(UsersMessages.listEmailTitle()),
@@ -336,15 +351,6 @@ export const Employees: React.FC = () => {
       width: 85,
       ...getColumnSorterProps('position', 5),
       ...getColumnSearchInputProps(['position']),
-    },
-    {
-      title: 'Bank accounts',
-      dataIndex: 'bank_accounts',
-      width: 85,
-      ...getColumnSorterProps('bank_accounts', 6),
-      ...getColumnSearchInputProps(['position']),
-      render: values =>
-        values ? values.map(item => <p>{item.bank_name}</p>) : '',
     },
     {
       title: 'Tags',
@@ -376,32 +382,14 @@ export const Employees: React.FC = () => {
         ],
         '40',
       ),
-    },
-    {
-      title: 'Projects',
-      width: 80,
-      dataIndex: 'projects',
-      render: (text, render) => {
-        return text?.map(project => {
-          return (
-            <div key={project.project_id}>
-              <a
-                href="#0"
-                onClick={e => {
-                  e.preventDefault();
-                  window.open(
-                    `/projects/${project.project_id}`,
-                    '_blank',
-                    'noopener,noreferrer',
-                  );
-                }}
-              >
-                {project.project_name}
-              </a>
-            </div>
-          );
-        });
-      },
+      render: (text, record: Employee) =>
+        text ? (
+          <StyledDiv onClick={() => redirectToEmployeeProjects(record)}>
+            {text}
+          </StyledDiv>
+        ) : (
+          ''
+        ),
     },
     {
       title: 'Type',
@@ -606,8 +594,12 @@ const StyledWrapperAvatar = styled.div`
   border-radius: 50%;
 `;
 
-const StyledName = styled.div`
+const StyledDiv = styled.div`
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #1890ff;
+  :hover {
+    text-decoration: underline;
+  }
 `;

@@ -21,6 +21,7 @@ import { SelectValue } from 'antd/lib/select';
 import { TitlePath } from '../TitlePath';
 import { TagsInput } from 'app/components/Tags';
 import { Skills } from 'app/components/Skills';
+import { api } from 'utils/api';
 
 const { Option } = Select;
 
@@ -46,12 +47,46 @@ export const JobInfo = (props: JobInfoProps) => {
   const { isView, form, isEdit } = props;
   const { t } = useTranslation();
   const isShowSkill = isEdit || isView ? true : false;
+
+  const getPositions = (): string[] => {
+    return api.hr.employee.getEmployeePositions();
+  };
+
   return (
     <>
       <TitlePath>
         <b>{t(UserDetailMessages.formJobTitle())}</b>
       </TitlePath>
       <Row gutter={[0, 12]} align="top">
+        <Col md={isView ? 4 : 24} xs={24}>
+          {isView ? (
+            <LabelWrapper>
+              {t(UserDetailMessages.formPositionLabel())}
+            </LabelWrapper>
+          ) : (
+            t(UserDetailMessages.formPositionLabel())
+          )}
+        </Col>
+        <Col md={isView ? 20 : 24} xs={24}>
+          <FormItem isView={isView} name="position">
+            {isView ? (
+              <Input {...inputProps} size="large" />
+            ) : (
+              <StyledSelect
+                {...(isView ? selectProps : {})}
+                size="large"
+                isView={isView}
+                placeholder={
+                  !isView && t(UserDetailMessages.formPositionPlaceholder())
+                }
+              >
+                {getPositions()?.map(value => {
+                  return <Option value={value}>{value}</Option>;
+                })}
+              </StyledSelect>
+            )}
+          </FormItem>
+        </Col>
         <Col md={isView ? 4 : 24} xs={24}>
           {isView ? (
             <LabelWrapper>
@@ -84,7 +119,11 @@ export const JobInfo = (props: JobInfoProps) => {
             {isView ? (
               <Input {...inputProps} size="large" />
             ) : (
-              <Select defaultValue="Full-time" size="large">
+              <Select
+                defaultValue="Full-time"
+                size="large"
+                placeholder={t(UserDetailMessages.formTypePlaceholder())}
+              >
                 <Option value="Full-time">
                   {t(UserDetailMessages.formTypeFullTimeLabel())}
                 </Option>
@@ -102,7 +141,13 @@ export const JobInfo = (props: JobInfoProps) => {
           </FormItem>
         </Col>
         <Col md={isView ? 4 : 24} xs={24}>
-          {t(UserDetailMessages.formJobTagsLabel())}
+          {isView ? (
+            <LabelWrapper>
+              {t(UserDetailMessages.formJobTagsLabel())}
+            </LabelWrapper>
+          ) : (
+            t(UserDetailMessages.formJobTagsLabel())
+          )}
         </Col>
         <Col md={isView ? 20 : 24} xs={24}>
           <FormItem isView={isView} name="tags">
@@ -146,4 +191,10 @@ const FormItem = styled(Form.Item)`
 
 const LabelWrapper = styled.div`
   margin: 7px 0;
+`;
+
+const StyledSelect = styled(Select)`
+  .ant-select-selection-item {
+    font-weight: ${({ isView }: ScreenProps) => (isView ? 500 : 400)};
+  }
 `;
