@@ -1,17 +1,16 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
-
-import { employeeChangeLogsSaga } from './saga';
+import { projectChangeLogsSaga } from './saga';
 import {
   QueryParams,
   FilterColumns,
-  EmployeeChangeLogsState,
-  EmployeeChangeLogsFetchData,
-  EmployeeChangeLogsPayloadAction,
+  ProjectChangeLogsState,
+  ProjectChangeLogsFetchData,
+  ProjectChangeLogsPayloadAction,
 } from './types';
 
-export const initialState: EmployeeChangeLogsState = {
+export const initialState: ProjectChangeLogsState = {
   changeLogs: [],
   loading: false,
   isSuccess: false,
@@ -27,29 +26,30 @@ export const initialState: EmployeeChangeLogsState = {
 };
 
 const slice = createSlice({
-  name: 'employeeChangeLogs',
+  name: 'projectChangeLogs',
   initialState,
   reducers: {
-    fetchEmployeeChangeLogs(
+    fetchProjectChangeLogs(
       state,
-      action: PayloadAction<EmployeeChangeLogsFetchData>,
+      action: PayloadAction<ProjectChangeLogsFetchData>,
     ) {
       state.loading = true;
     },
-    fetchEmployeeChangeLogsSuccess(
+    fetchProjectChangeLogsSuccess(
       state,
-      action: PayloadAction<EmployeeChangeLogsPayloadAction>,
+      action: PayloadAction<ProjectChangeLogsPayloadAction>,
     ) {
       state.loading = false;
       state.isSuccess = true;
+      state.isFilter = true;
       state.changeLogs = action.payload.results || [];
       state.pagination!.total = Number(action.payload.count);
       state.pagination!.current = Number(state.params.page);
       state.pagination!.pageSize = Number(state.params.limit);
     },
-    fetchEmployeeChangeLogsFailure(
+    fetchProjectChangeLogsFailure(
       state,
-      action: PayloadAction<EmployeeChangeLogsPayloadAction>,
+      action: PayloadAction<ProjectChangeLogsPayloadAction>,
     ) {
       state.error = action.payload.error;
       state.loading = false;
@@ -98,11 +98,11 @@ const slice = createSlice({
   },
 });
 
-export const { actions: employeeChangeLogsActions } = slice;
+export const { actions: projectChangeLogsActions } = slice;
 
-export const useEmployeeChangeLogsSlice = () => {
+export const useProjectChangeLogsSlice = () => {
   useInjectReducer({ key: slice.name, reducer: slice.reducer });
-  useInjectSaga({ key: slice.name, saga: employeeChangeLogsSaga });
+  useInjectSaga({ key: slice.name, saga: projectChangeLogsSaga });
   return { actions: slice.actions };
 };
 

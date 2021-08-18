@@ -85,10 +85,10 @@ export const ProjectInfo = (props: Props) => {
       <Row gutter={[32, 32]}>
         <Col md={14} xs={24}>
           <Row gutter={[14, isView ? 32 : 12]} align="middle">
-            <Col md={isView ? 8 : 24} xs={24}>
+            <Col md={isView ? 4 : 24} xs={24}>
               {t(ProjectDetailMessages.formProjectNameLabel())}
             </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
+            <Col md={isView ? 8 : 24} xs={24}>
               <FormItem
                 isView={isView}
                 name="name"
@@ -116,12 +116,12 @@ export const ProjectInfo = (props: Props) => {
                 />
               </FormItem>
             </Col>
-            <Col md={8} xs={24}>
-              <Row gutter={[0, 12]} align="middle">
-                <Col md={isView ? 12 : 24} xs={24}>
+            <Col md={isView ? 12 : 8} xs={24}>
+              <Row gutter={isView ? [0, 24] : [0, 12]} align="middle">
+                <Col md={isView ? 10 : 24} xs={24}>
                   {t(ProjectDetailMessages.formProjectStartedLabel())}
                 </Col>
-                <Col md={isView ? 12 : 24} xs={24}>
+                <Col md={isView ? 14 : 24} xs={24}>
                   <FormItem isView={isView} name="started">
                     <DatePicker
                       {...(isView ? datePickerViewProps : {})}
@@ -140,12 +140,12 @@ export const ProjectInfo = (props: Props) => {
                 </Col>
               </Row>
             </Col>
-            <Col md={8} xs={24}>
-              <Row gutter={[0, 12]} align="middle">
-                <Col md={isView ? 12 : 24} xs={24}>
+            <Col md={isView ? 12 : 8} xs={24}>
+              <Row gutter={isView ? [0, 24] : [0, 12]} align="middle">
+                <Col md={isView ? 10 : 24} xs={24}>
                   {t(ProjectDetailMessages.formProjectPriorityLabel())}
                 </Col>
-                <Col md={isView ? 12 : 24} xs={24}>
+                <Col md={isView ? 14 : 24} xs={24}>
                   <FormItem isView={isView} name="priority">
                     <Select
                       {...(isView && selectProps)}
@@ -167,12 +167,12 @@ export const ProjectInfo = (props: Props) => {
                 </Col>
               </Row>
             </Col>
-            <Col md={8} xs={24}>
+            <Col md={isView ? 12 : 8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
-                <Col md={isView ? 12 : 24} xs={24}>
+                <Col md={isView ? 10 : 24} xs={24}>
                   {t(ProjectDetailMessages.formProjectStatusLabel())}
                 </Col>
-                <Col md={isView ? 12 : 24} xs={24}>
+                <Col md={isView ? 14 : 24} xs={24}>
                   <FormItem isView={isView} name="status">
                     <Select
                       {...(isView && selectProps)}
@@ -248,9 +248,7 @@ const FormItem = styled(Form.Item)`
   align-items: center;
   margin-bottom: ${(props: ScreenProps) => (props.isView ? '0px' : '12px')};
 
-  label {
-    font-weight: 500;
-  }
+  font-weight: 500;
   input {
     font-weight: ${(props: ScreenProps) => props.isView && 500};
   }

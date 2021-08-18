@@ -11,6 +11,7 @@ import { CategoryState } from 'app/pages/DeviceManagePage/DeviceCategory/slice/t
 import { TableListState } from 'app/components/TableListModel/slice/types';
 import { TaskManagerState } from 'app/pages/TaskManagerPage/slice/types';
 import { EmployeeChangeLogsState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/ChangeLogs/slice/types';
+import { ProjectChangeLogsState } from 'app/pages/ProjectPage/ProjectDetailPage/components/ChangeLogs/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /*
@@ -24,6 +25,7 @@ export interface RootState {
   employeespage?: EmployeePageState;
   changePassword?: State;
   projects?: ProjectsState;
+  projectChangeLogs?: ProjectChangeLogsState;
   employeeDetails?: EmployeeDetailsState;
   employeeProject?: EmployeeProjectState;
   employeeNote?: EmployeeNoteState;

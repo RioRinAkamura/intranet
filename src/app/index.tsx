@@ -124,6 +124,11 @@ export function App() {
                   />
                   <PrivateRoute
                     exact
+                    path={'/projects/:id/change-logs'}
+                    component={ProjectDetailPage}
+                  />
+                  <PrivateRoute
+                    exact
                     path={'/projects/:id/members/add'}
                     component={ProjectsPage}
                   />

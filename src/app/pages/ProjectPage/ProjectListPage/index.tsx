@@ -50,6 +50,7 @@ import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
 import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMemberModal';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 export const ProjectsPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -302,6 +303,10 @@ export const ProjectsPage: React.FC = () => {
     </>
   );
 
+  const redirectToProjectDetails = (record: Project) => {
+    history.push(`/projects/${record.id}`);
+  };
+
   const columns: ColumnsType<any> = [
     {
       title: t(ProjectsMessages.listNameTitle()),
@@ -310,6 +315,14 @@ export const ProjectsPage: React.FC = () => {
       fixed: 'left',
       ...getColumnSorterProps('name', 1),
       ...getColumnSearchInputProps(['name']),
+      render: (text, record: Project) => (
+        <StyledDiv
+          onClick={() => redirectToProjectDetails(record)}
+          title={text}
+        >
+          {text}
+        </StyledDiv>
+      ),
     },
     {
       title: 'Member',
@@ -369,6 +382,23 @@ export const ProjectsPage: React.FC = () => {
           { label: 'Release', value: 3 },
         ],
       ),
+    },
+    {
+      title: t(ProjectsMessages.listCode()),
+      dataIndex: 'code',
+      width: 130,
+      ...getColumnSorterProps('code', 3),
+      render: (text, record: Project) =>
+        text ? (
+          <StyledDiv
+            onClick={() => redirectToProjectDetails(record)}
+            title={text}
+          >
+            {text}
+          </StyledDiv>
+        ) : (
+          ''
+        ),
     },
     {
       title: t(ProjectsMessages.listTotalWeeklyHours()),
@@ -543,5 +573,15 @@ const TableWrapper = styled.div`
     span {
       color: blue;
     }
+  }
+`;
+
+const StyledDiv = styled.div`
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #1890ff;
+  :hover {
+    text-decoration: underline;
   }
 `;

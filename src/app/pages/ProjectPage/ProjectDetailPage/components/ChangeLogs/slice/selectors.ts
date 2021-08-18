@@ -4,19 +4,19 @@ import { RootState } from 'types';
 import { initialState } from '.';
 
 const selectSlice = (state: RootState) =>
-  state.employeeChangeLogs || initialState;
+  state.projectChangeLogs || initialState;
 
-export const selectEmployeeChangeLogs = createSelector(
+export const selectProjectChangeLogs = createSelector(
   [selectSlice],
   state => state,
 );
 
-export const selectEmployeeChangeLogsIsFilter = createSelector(
+export const selectProjectChangeLogsIsFilter = createSelector(
   [selectSlice],
   state => state.isFilter,
 );
 
-export const selectEmployeeChangeLogsParams = createSelector(
+export const selectProjectChangeLogsParams = createSelector(
   [selectSlice],
   state => state.params,
 );
