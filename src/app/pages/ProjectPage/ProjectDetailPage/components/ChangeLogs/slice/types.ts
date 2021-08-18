@@ -1,7 +1,7 @@
 import { ChangeLog } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 /* --- STATE --- */
-export interface EmployeeChangeLogsState {
+export interface ProjectChangeLogsState {
   changeLogs: ChangeLog[];
   loading?: boolean;
   isFilter?: boolean;
@@ -31,12 +31,12 @@ export interface Pagination {
   total?: number;
 }
 
-export interface EmployeeChangeLogsFetchData {
-  employee_id: string;
+export interface ProjectChangeLogsFetchData {
+  project_id: string;
   params: QueryParams;
 }
 
-export interface EmployeeChangeLogsPayloadAction {
+export interface ProjectChangeLogsPayloadAction {
   results?: ChangeLog[];
   count?: number;
   error?: Error;

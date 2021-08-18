@@ -7,23 +7,23 @@ import React from 'react';
 import { Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
-import { useParams } from 'react-router-dom';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 
 import config from 'config';
 
 import {
-  selectEmployeeChangeLogs,
-  selectEmployeeChangeLogsIsFilter,
-  selectEmployeeChangeLogsParams,
+  selectProjectChangeLogs,
+  selectProjectChangeLogsParams,
+  selectProjectChangeLogsIsFilter,
 } from './slice/selectors';
-import { useEmployeeChangeLogsSlice } from './slice';
+import { useProjectChangeLogsSlice } from './slice';
 import { ChangeLogsMessages } from './messages';
-import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import { useTableConfig } from 'utils/tableConfig';
+import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
@@ -31,22 +31,22 @@ interface Props {}
 
 export const ChangeLogs = React.memo((props: Props) => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
 
   const { id } = useParams<Record<string, string>>();
 
-  const { actions } = useEmployeeChangeLogsSlice();
-  const params = useSelector(selectEmployeeChangeLogsParams);
-  const isFilter = useSelector(selectEmployeeChangeLogsIsFilter);
-  const employeeChangeLogsState = useSelector(selectEmployeeChangeLogs);
+  const dispatch = useDispatch();
+  const { actions } = useProjectChangeLogsSlice();
+  const params = useSelector(selectProjectChangeLogsParams);
+  const isFilter = useSelector(selectProjectChangeLogsIsFilter);
+  const projectChangeLogsState = useSelector(selectProjectChangeLogs);
 
   const { setOrdering, setPagination, setFilterText } = useHandleDataTable(
-    employeeChangeLogsState,
+    projectChangeLogsState,
     actions,
   );
 
   const { getColumnSorterProps } = useTableConfig(
-    employeeChangeLogsState,
+    projectChangeLogsState,
     ChangeLogsMessages,
     setFilterText,
   );
@@ -107,27 +107,27 @@ export const ChangeLogs = React.memo((props: Props) => {
     },
   ];
 
-  const fetchEmployeeChangeLogs = React.useCallback(() => {
+  const fetchProjectChangeLogs = React.useCallback(() => {
     if (!isFilter) {
       dispatch(
-        actions.fetchEmployeeChangeLogs({ employee_id: id, params: params }),
+        actions.fetchProjectChangeLogs({ project_id: id, params: params }),
       );
     }
   }, [actions, dispatch, id, isFilter, params]);
 
   React.useEffect(() => {
-    fetchEmployeeChangeLogs();
-  }, [fetchEmployeeChangeLogs]);
+    fetchProjectChangeLogs();
+  }, [fetchProjectChangeLogs]);
 
   return (
     <Table
       bordered
-      dataSource={employeeChangeLogsState.changeLogs}
+      dataSource={projectChangeLogsState.changeLogs}
       columns={columns}
       rowKey="change_id"
       scroll={{ x: 1100 }}
       pagination={{
-        ...employeeChangeLogsState.pagination,
+        ...projectChangeLogsState.pagination,
         onChange: (page: number, pageSize?: number) => {
           setPagination({ current: page, pageSize });
         },
@@ -143,7 +143,7 @@ export const ChangeLogs = React.memo((props: Props) => {
         pageSizeOptions: ['10', '20', '50', '100'],
         showSizeChanger: true,
       }}
-      loading={employeeChangeLogsState.loading}
+      loading={projectChangeLogsState.loading}
       onChange={handleTableChange}
     />
   );

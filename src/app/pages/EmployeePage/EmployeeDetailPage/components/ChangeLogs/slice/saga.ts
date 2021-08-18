@@ -11,6 +11,7 @@ function* fetchEmployeeChangeLogs(action) {
       employee_id,
       params.page,
       params.limit,
+      params.ordering,
     );
     yield put(actions.fetchEmployeeChangeLogsSuccess(response));
   } catch (err) {
