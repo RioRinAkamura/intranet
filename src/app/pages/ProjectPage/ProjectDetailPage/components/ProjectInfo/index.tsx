@@ -80,7 +80,44 @@ export const ProjectInfo = (props: Props) => {
     }
   }, [data]);
 
-  return (
+  return isView ? (
+    <>
+      <StyledWrapperDiv>
+        <StyledTitle>
+          {t(ProjectDetailMessages.formProjectNameLabel())}
+        </StyledTitle>
+        <StyledData>{data?.name || 'N/A'}</StyledData>
+      </StyledWrapperDiv>
+
+      <StyledWrapperDiv>
+        <StyledTitle>
+          {t(ProjectDetailMessages.formProjectStartedLabel())}
+        </StyledTitle>
+        <StyledData>{data?.started || 'N/A'}</StyledData>
+      </StyledWrapperDiv>
+
+      <StyledWrapperDiv>
+        <StyledTitle>
+          {t(ProjectDetailMessages.formProjectPriorityLabel())}
+        </StyledTitle>
+        <StyledData>{data?.priority || 'N/A'}</StyledData>
+      </StyledWrapperDiv>
+
+      <StyledWrapperDiv>
+        <StyledTitle>
+          {t(ProjectDetailMessages.formProjectStatusLabel())}
+        </StyledTitle>
+        <StyledData>{data?.status || 'N/A'}</StyledData>
+      </StyledWrapperDiv>
+
+      <StyledWrapperDiv>
+        <StyledTitle>
+          {t(ProjectDetailMessages.formProjectOverviewLabel())}
+        </StyledTitle>
+        <StyledData>{data?.overview || 'N/A'}</StyledData>
+      </StyledWrapperDiv>
+    </>
+  ) : (
     <Wrapper isView={isView}>
       <Row gutter={[32, 32]}>
         <Col md={14} xs={24}>
@@ -248,8 +285,27 @@ const FormItem = styled(Form.Item)`
   align-items: center;
   margin-bottom: ${(props: ScreenProps) => (props.isView ? '0px' : '12px')};
 
-  font-weight: 500;
   input {
     font-weight: ${(props: ScreenProps) => props.isView && 500};
   }
+`;
+
+const StyledWrapperDiv = styled.div`
+  display: flex;
+`;
+
+const StyledDiv = styled.div`
+  box-shadow: rgba(27, 31, 35, 0.1) 0px 1px 0px,
+    rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
+  padding: 10px;
+  margin-bottom: 20px;
+`;
+
+const StyledTitle = styled(StyledDiv)`
+  width: 180px;
+`;
+const StyledData = styled(StyledDiv)`
+  width: 400px;
+  font-weight: 500;
+  font-size: 16px;
 `;
