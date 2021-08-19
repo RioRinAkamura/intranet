@@ -22,7 +22,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { ColumnProps } from 'antd/lib/table';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { CardLayout } from 'app/components/CardLayout';
-import Button from 'app/components/Button';
+import Button, { IconButton } from 'app/components/Button';
 
 const { Option } = Select;
 interface DeviceResponse {
@@ -396,16 +396,4 @@ const StyledButton = styled(Button)`
 
 const StyledDatePicker = styled(DatePicker)`
   width: 100%;
-`;
-
-const IconButton = styled(Button)`
-  margin: 5px;
-  span {
-    position: absolute !important;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
 `;

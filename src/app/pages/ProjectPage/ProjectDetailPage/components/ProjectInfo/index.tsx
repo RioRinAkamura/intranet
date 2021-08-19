@@ -295,17 +295,20 @@ const StyledWrapperDiv = styled.div`
 `;
 
 const StyledDiv = styled.div`
-  box-shadow: rgba(27, 31, 35, 0.1) 0px 1px 0px,
-    rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
+  border: 1px solid lightgrey;
   padding: 10px;
-  margin-bottom: 20px;
+  margin-bottom: -1px;
+  margin-left: -1px;
 `;
 
 const StyledTitle = styled(StyledDiv)`
-  width: 180px;
+  width: 250px;
+  background-color: #f2f2f2;
+  opacity: 0.7;
 `;
 const StyledData = styled(StyledDiv)`
-  width: 400px;
+  width: 100%;
   font-weight: 500;
+  padding-left: 20px;
   font-size: 16px;
 `;

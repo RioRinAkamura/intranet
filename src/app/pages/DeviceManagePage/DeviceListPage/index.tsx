@@ -32,7 +32,7 @@ import fakeAPI from 'utils/fakeAPI';
 import { useTableConfig } from 'utils/tableConfig';
 import { Messages } from './messages';
 import { CardLayout } from 'app/components/CardLayout';
-import Button from 'app/components/Button';
+import Button, { IconButton } from 'app/components/Button';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 
 interface Category {
@@ -388,18 +388,6 @@ export const DevicesManager = () => {
     </>
   );
 };
-
-const IconButton = styled(Button)`
-  margin: 5px;
-  span {
-    position: absolute !important;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
-`;
 
 const Wrapper = styled(CardLayout)``;
 

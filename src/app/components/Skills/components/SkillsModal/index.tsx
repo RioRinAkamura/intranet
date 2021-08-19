@@ -1,15 +1,12 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Modal, Input, Button, Tag, Popover, Tooltip } from 'antd';
 import styled from 'styled-components/macro';
-import {
-  EllipsisOutlined,
-  DeleteOutlined,
-  ExclamationCircleOutlined,
-} from '@ant-design/icons';
+import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
 // import fakeAPI from 'utils/fakeAPI';
 import { api } from 'utils/api';
 import { useGetSkills } from '../../useGetSkill';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { DeleteModal } from 'app/components/DeleteModal';
 
 interface skillModalProps {
   isVisibility: boolean;
@@ -24,7 +21,6 @@ interface Skill {
   type: string;
   employeeSkillId: string;
 }
-const { confirm } = Modal;
 export const SkillsModal = memo((props: skillModalProps) => {
   const { data } = useGetSkills();
   const [pickedSkill, setPickedSkill] = useState<any>([]);
@@ -32,6 +28,8 @@ export const SkillsModal = memo((props: skillModalProps) => {
 
   const { isVisibility, onCancel, onOk, currentSkills } = props;
   const [suggestSkills, setSuggestSkill] = useState<any>([]);
+  const [skillId, setSkillId] = useState<string>('');
+  const [visible, setVisible] = useState<boolean>(false);
 
   useEffect(() => {
     setSuggestSkill(data ? data.results : []);
@@ -120,7 +118,8 @@ export const SkillsModal = memo((props: skillModalProps) => {
           icon={<DeleteOutlined />}
           onClick={e => {
             e.stopPropagation();
-            handleDeleteSkill(id);
+            setVisible(true);
+            setSkillId(id);
           }}
         />
       </Tooltip>
@@ -128,95 +127,99 @@ export const SkillsModal = memo((props: skillModalProps) => {
   };
 
   // handle delete skill
-  const handleDeleteSkill = (id: string) => {
-    confirm({
-      title: 'Do you Want to delete this item?',
-      icon: <ExclamationCircleOutlined />,
-      async onOk() {
-        await api.hr.skill.delete(id);
-        const newSuggesteSkills = [...suggestSkills].filter(
-          (item: Skill) => item.id !== id,
-        );
-        setSuggestSkill(newSuggesteSkills);
-      },
-    });
+  const handleDeleteSkill = async (id: string) => {
+    await api.hr.skill.delete(id);
+    const newSuggesteSkills = [...suggestSkills].filter(
+      (item: Skill) => item.id !== id,
+    );
+    setSuggestSkill(newSuggesteSkills);
+    setVisible(false);
   };
 
   return (
-    <Modal
-      width={600}
-      visible={isVisibility}
-      title={'Skill modal'}
-      onCancel={handleCancelSkillModal}
-      footer={[
-        <Button
-          key="back"
-          shape="round"
-          size="large"
-          onClick={handleCancelSkillModal}
-        >
-          Cancel
-        </Button>,
-        <Button
-          type="primary"
-          shape="round"
-          size="large"
-          onClick={handleOkModal}
-        >
-          Submit
-        </Button>,
-      ]}
-    >
-      <Input
-        placeholder={'Skill (ex: python)'}
-        value={customSkill}
-        onChange={e => setCustomSkill(e.target.value)}
-        onKeyDown={handleAddCustomSkill}
-      />
-
-      <FlexWrapper className="mt-10">
-        {pickedSkill.map((skill: Skill, index: number) => (
-          <CustomTag
-            key={skill.id}
-            closable
-            onClose={() => handleRemoveSkill(skill)}
+    <>
+      <Modal
+        width={600}
+        visible={isVisibility}
+        title={'Skill modal'}
+        onCancel={handleCancelSkillModal}
+        footer={[
+          <Button
+            key="back"
+            shape="round"
+            size="large"
+            onClick={handleCancelSkillModal}
           >
-            {skill.name}{' '}
-          </CustomTag>
-        ))}
-      </FlexWrapper>
+            Cancel
+          </Button>,
+          <Button
+            type="primary"
+            shape="round"
+            size="large"
+            onClick={handleOkModal}
+          >
+            Submit
+          </Button>,
+        ]}
+      >
+        <Input
+          placeholder={'Skill (ex: python)'}
+          value={customSkill}
+          onChange={e => setCustomSkill(e.target.value)}
+          onKeyDown={handleAddCustomSkill}
+        />
 
-      <ModalHelpText>Suggested skills:</ModalHelpText>
+        <FlexWrapper className="mt-10">
+          {pickedSkill.map((skill: Skill, index: number) => (
+            <CustomTag
+              key={skill.id}
+              closable
+              onClose={() => handleRemoveSkill(skill)}
+            >
+              {skill.name}{' '}
+            </CustomTag>
+          ))}
+        </FlexWrapper>
 
-      <FlexWrapper>
-        {suggestSkills &&
-          suggestSkills.map((skill, index: number) => {
-            return (
-              <ButtonIcon
-                style={{ margin: '5px 5px 5px 0' }}
-                onClick={e => {
-                  handleAddSkill(skill);
-                }}
-                shape={'round'}
-                key={skill.id}
-              >
-                {skill.name}
-                <Popover
-                  content={() => moreButtons(skill.id)}
-                  placement="bottom"
+        <ModalHelpText>Suggested skills:</ModalHelpText>
+
+        <FlexWrapper>
+          {suggestSkills &&
+            suggestSkills.map((skill, index: number) => {
+              return (
+                <ButtonIcon
+                  style={{ margin: '5px 5px 5px 0' }}
+                  onClick={e => {
+                    handleAddSkill(skill);
+                  }}
+                  shape={'round'}
+                  key={skill.id}
                 >
-                  <ButtonIcon
-                    style={{ margin: '0 0 0 5px' }}
-                    shape="circle"
-                    icon={<EllipsisOutlined />}
-                    size="small"
-                  />
-                </Popover>
-              </ButtonIcon>
-            );
-          })}
-      </FlexWrapper>
-    </Modal>
+                  {skill.name}
+                  <Popover
+                    content={() => moreButtons(skill.id)}
+                    placement="bottom"
+                  >
+                    <ButtonIcon
+                      style={{ margin: '0 0 0 5px' }}
+                      shape="circle"
+                      icon={<EllipsisOutlined />}
+                      size="small"
+                    />
+                  </Popover>
+                </ButtonIcon>
+              );
+            })}
+        </FlexWrapper>
+      </Modal>
+
+      <DeleteModal
+        open={visible}
+        handleCancel={() => setVisible(false)}
+        handleDelete={() => handleDeleteSkill(skillId)}
+        content="Do you want to delete this item?"
+      />
+    </>
   );
 });
 

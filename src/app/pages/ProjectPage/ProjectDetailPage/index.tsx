@@ -137,7 +137,10 @@ export const ProjectDetailPage = (props: Props) => {
       {isView ? (
         <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
           <TabPane tab="Details" key={TabKeys.details}>
-            <CardLayout padding="3rem">
+            <CardLayout
+              padding="3rem"
+              style={isView ? { marginBottom: '0' } : {}}
+            >
               <Form form={form} labelAlign="left">
                 <Form.Item hidden name="id">
                   <Input hidden />

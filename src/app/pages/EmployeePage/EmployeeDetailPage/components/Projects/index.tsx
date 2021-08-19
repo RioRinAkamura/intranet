@@ -29,7 +29,7 @@ import {
 import { ProjectsMessages } from 'app/pages/ProjectPage/ProjectListPage/messages';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { CardLayout } from 'app/components/CardLayout';
-import Button from 'app/components/Button';
+import Button, { IconButton } from 'app/components/Button';
 
 export const Projects = memo(() => {
   const { t } = useTranslation();
@@ -223,17 +223,5 @@ const Header = styled.div`
 const StyledButton = styled(Button)`
   svg {
     vertical-align: baseline;
-  }
-`;
-
-const IconButton = styled(Button)`
-  margin: 5px;
-  span {
-    position: absolute !important;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
   }
 `;

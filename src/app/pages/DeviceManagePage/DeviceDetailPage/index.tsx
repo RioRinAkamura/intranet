@@ -152,87 +152,130 @@ export const DeviceDetailPage = props => {
       >
         <SettingOutlined onClick={() => setVisible(true)} />
       </PageTitle>
-      <StyledTabs defaultActiveKey="detail" onChange={handleTabChange}>
-        <TabPane tab={isEdit || isView ? ' Detail ' : 'Create'} key="detail">
-          <WrapperMainItem>
-            <Form form={form} labelAlign="left">
-              <Form.Item hidden name="id">
-                <Input hidden />
-              </Form.Item>
-              <FormItem name="code" rules={FORM_RULES.CODE} label="Device Code">
-                <Input
-                  {...(isView ? inputViewProps : {})}
-                  placeholder="Device Code"
-                  size="large"
-                ></Input>
-              </FormItem>
-              <FormItem
-                rules={FORM_RULES.CATEGORY}
-                name="category"
-                label="Category"
-              >
-                <Select
-                  placeholder="Category"
-                  {...(isView ? selectProps : {})}
-                  size="large"
-                  style={{
-                    width: '100%',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {categories?.map(category => {
-                    return (
-                      <Option key={category.id} value={category.id}>
-                        {category.name}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </FormItem>
-              <FormItem name="description" label="Description">
-                <Input.TextArea
-                  {...(isView ? textareaViewProps : {})}
-                  placeholder="Descriptions"
-                  size="large"
-                ></Input.TextArea>
-              </FormItem>
-              <FormItem rules={FORM_RULES.SINCE} name="since" label="Since">
-                <DatePicker
-                  {...(isView ? datePickerViewProps : {})}
-                  picker="year"
-                  size="large"
-                  format="YYYY"
-                />
-              </FormItem>
+      {isView ? (
+        <StyledTabs defaultActiveKey="detail" onChange={handleTabChange}>
+          <TabPane tab={isEdit || isView ? ' Detail ' : 'Create'} key="detail">
+            <CardLayout
+              padding="3rem"
+              style={isView ? { marginBottom: '0' } : {}}
+            >
+              <StyledWrapperDiv>
+                <StyledTitle>Device Code</StyledTitle>
+                <StyledData>{data?.code || 'N/A'}</StyledData>
+              </StyledWrapperDiv>
 
-              <FormItem
-                rules={FORM_RULES.HEALTH_STATUS}
-                name="health_status"
-                label="Health Status"
-              >
-                <Select
-                  {...(isView ? selectProps : {})}
-                  size="large"
-                  placeholder="Select Health Status"
-                >
-                  {HEALTH_STATUS.map(i => (
-                    <Option value={i.value}>{i.label}</Option>
-                  ))}
-                </Select>
-              </FormItem>
-              {/* </Col> */}
-              {/* </Row> */}
-            </Form>
-          </WrapperMainItem>
-        </TabPane>
-        {(isEdit || isView) && (
-          <TabPane tab="History" key="history">
-            <WrapperMainItem>
-              <DeviceHistoryTab />
-            </WrapperMainItem>
+              <StyledWrapperDiv>
+                <StyledTitle>Category</StyledTitle>
+                <StyledData>{data?.category_name || 'N/A'}</StyledData>
+              </StyledWrapperDiv>
+
+              <StyledWrapperDiv>
+                <StyledTitle>Since</StyledTitle>
+                <StyledData>{data?.since || 'N/A'}</StyledData>
+              </StyledWrapperDiv>
+
+              <StyledWrapperDiv>
+                <StyledTitle>Health Status</StyledTitle>
+                <StyledData>{data?.health_status || 'N/A'}</StyledData>
+              </StyledWrapperDiv>
+
+              <StyledWrapperDiv>
+                <StyledTitle>Description</StyledTitle>
+                <StyledData>{data?.description || 'N/A'}</StyledData>
+              </StyledWrapperDiv>
+            </CardLayout>
           </TabPane>
-        )}
-      </StyledTabs>
+          <TabPane tab="History" key="history">
+            <DeviceHistoryTab />
+          </TabPane>
+        </StyledTabs>
+      ) : (
+        <CardLayout padding="3rem">
+          <Form form={form} labelAlign="left">
+            <Form.Item hidden name="id">
+              <Input hidden />
+            </Form.Item>
+            <Row gutter={[32, 32]}>
+              <Col span={12}>
+                <FormItem
+                  name="code"
+                  rules={FORM_RULES.CODE}
+                  label="Device Code"
+                >
+                  <Input
+                    {...(isView ? inputViewProps : {})}
+                    placeholder="Device Code"
+                    size="large"
+                    disabled={isEdit}
+                  />
+                </FormItem>
+              </Col>
+              <Col span={12}>
+                <FormItem
+                  rules={FORM_RULES.CATEGORY}
+                  name="category"
+                  label="Category"
+                >
+                  <Select
+                    placeholder="Category"
+                    {...(isView ? selectProps : {})}
+                    size="large"
+                    style={{
+                      width: '100%',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {categories?.map(category => {
+                      return (
+                        <Option key={category.id} value={category.id}>
+                          {category.name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={[32, 32]}>
+              <Col span={12}>
+                <FormItem rules={FORM_RULES.SINCE} name="since" label="Since">
+                  <StyledDatePicker
+                    {...(isView ? datePickerViewProps : {})}
+                    picker="year"
+                    size="large"
+                    format="YYYY"
+                  />
+                </FormItem>
+              </Col>
+              <Col span={12}>
+                <FormItem
+                  rules={FORM_RULES.HEALTH_STATUS}
+                  name="health_status"
+                  label="Health Status"
+                >
+                  <Select
+                    {...(isView ? selectProps : {})}
+                    size="large"
+                    placeholder="Select Health Status"
+                  >
+                    {HEALTH_STATUS.map(i => (
+                      <Option value={i.value}>{i.label}</Option>
+                    ))}
+                  </Select>
+                </FormItem>
+              </Col>
+            </Row>
+            <FormItem name="description" label="Description">
+              <Input.TextArea
+                {...(isView ? textareaViewProps : {})}
+                placeholder="Descriptions"
+                size="large"
+              />
+            </FormItem>
+          </Form>
+        </CardLayout>
+      )}
+
       {isDetailTab && (
         <WrapperButton>
           <Row gutter={[8, 8]} justify="end">
@@ -273,11 +316,6 @@ export const DeviceDetailPage = props => {
   );
 };
 
-const WrapperMainItem = styled(CardLayout)`
-  padding: 3em;
-  margin-top: 0;
-`;
-
 const FormItem = styled(Form.Item)`
   align-items: center;
 
@@ -297,4 +335,32 @@ const StyledTabs = styled(Tabs)`
   margin-top: 10px;
   .ant-tabs-content-holder {
   }
+`;
+
+const StyledWrapperDiv = styled.div`
+  display: flex;
+`;
+
+const StyledDiv = styled.div`
+  border: 1px solid lightgrey;
+  padding: 10px;
+  margin-bottom: -1px;
+  margin-left: -1px;
+`;
+
+const StyledTitle = styled(StyledDiv)`
+  width: 250px;
+  background-color: #f2f2f2;
+  opacity: 0.7;
+`;
+
+const StyledData = styled(StyledDiv)`
+  width: 100%;
+  font-weight: 500;
+  padding-left: 20px;
+  font-size: 16px;
+`;
+
+const StyledDatePicker = styled(DatePicker)`
+  width: 100%;
 `;
