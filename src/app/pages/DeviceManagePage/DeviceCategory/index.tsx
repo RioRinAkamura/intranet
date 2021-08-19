@@ -90,7 +90,7 @@ export const DeviceCategory = (props: CategoryProps) => {
         visible={visible}
         onCancel={onCancel}
         footer={[
-          <Button type="primary" onClick={onCancel}>
+          <Button type="primary" shape="round" size="large" onClick={onCancel}>
             Close
           </Button>,
         ]}

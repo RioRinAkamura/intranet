@@ -29,6 +29,7 @@ import { useHistory } from 'react-router';
 import { SelectValue } from 'antd/lib/select';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
+import { IconButton } from 'app/components/Button';
 
 interface MemberType {
   allocation: number;
@@ -389,7 +390,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
       onCancel={handleCancel}
       visible={visibility}
       footer={[
-        <Button key="back" onClick={handleCancel}>
+        <Button key="back" shape="round" size="large" onClick={handleCancel}>
           Close
         </Button>,
         <Button
@@ -399,6 +400,8 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
           loading={loadingMember}
           htmlType="submit"
           type="primary"
+          shape="round"
+          size="large"
           onClick={() => {
             memberForm.validateFields().then(values => {
               handleAddMember(values);
@@ -555,18 +558,6 @@ const MembersModal = styled(Modal)`
 
   .ant-pagination {
     display: none;
-  }
-`;
-
-const IconButton = styled(Button)`
-  margin: 5px;
-  span {
-    position: absolute !important;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
   }
 `;
 

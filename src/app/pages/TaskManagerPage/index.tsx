@@ -32,6 +32,7 @@ import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { api } from 'utils/api';
 import { CreateTaskParam } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import { IconButton } from 'app/components/Button';
 
 type Task = models.hr.Task;
 
@@ -503,18 +504,6 @@ export const PageTitle = styled.p`
   color: rgb(112 112 112);
   padding: 0;
   margin: 0;
-`;
-
-const IconButton = styled(Button)`
-  margin: 5px;
-  span {
-    position: absolute !important;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
 `;
 
 const FlexWrapper = styled.div`
