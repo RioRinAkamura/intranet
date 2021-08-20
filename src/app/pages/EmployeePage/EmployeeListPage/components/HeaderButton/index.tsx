@@ -21,6 +21,7 @@ import Papa from 'papaparse';
 import Button from 'app/components/Button';
 import ImportState from '../ImportState';
 import ExportState from '../ExportState';
+import { PrivatePath } from 'utils/url.const';
 
 type Employee = models.hr.Employee;
 
@@ -223,7 +224,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
       <OptionButton>
         <Button
           type="primary"
-          onClick={() => history.push('/employees/create')}
+          onClick={() => history.push(PrivatePath.EMPLOYEES_CREATE)}
           icon={<UserAddOutlined />}
           size="middle"
         >

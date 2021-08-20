@@ -13,6 +13,7 @@ export interface ProjectsState {
   selectedRows?: any;
   deleteSuccess?: boolean;
   deleteFailed?: boolean;
+  identity?: string;
 }
 
 export interface FilterColumns {
@@ -42,4 +43,10 @@ interface Pagination {
   current?: number;
   pageSize?: number;
   total?: number;
+}
+
+export interface IdentityPayload {
+  identity?: string;
+  loading: boolean;
+  error?: Error;
 }

@@ -46,10 +46,12 @@ import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
 import fakeAPI from 'utils/fakeAPI';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import { PrivatePath } from 'utils/url.const';
+import { StyledLink } from 'styles/StyledCommon';
 
 type Employee = models.hr.Employee;
 
-export const Employees: React.FC = () => {
+export const EmployeeListPage: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -240,7 +242,7 @@ export const Employees: React.FC = () => {
           size="small"
           icon={<EyeOutlined />}
           onClick={() => {
-            history.push(`/employees/${text}`);
+            history.push(`${PrivatePath.EMPLOYEES}/${text}`);
           }}
         />
       </Tooltip>
@@ -251,7 +253,7 @@ export const Employees: React.FC = () => {
           size="small"
           onClick={() => {
             history.push({
-              pathname: '/employees/' + text,
+              pathname: `${PrivatePath.EMPLOYEES}/${text}`,
               state: { edit: true },
             });
           }}
@@ -273,14 +275,6 @@ export const Employees: React.FC = () => {
     </>
   );
 
-  const redirectToEmployeeDetails = (record: Employee) => {
-    history.push(`/employees/${record.id}`);
-  };
-
-  const redirectToEmployeeProjects = (record: Employee) => {
-    history.push(`/employees/${record.id}/projects`);
-  };
-
   const columns: ColumnProps<Employee>[] = [
     {
       dataIndex: 'avatar',
@@ -288,14 +282,14 @@ export const Employees: React.FC = () => {
       align: 'center',
       className: 'avatar',
       render: (text, record: Employee) => (
-        <StyledWrapperAvatar onClick={() => redirectToEmployeeDetails(record)}>
+        <StyledLink to={`${PrivatePath.EMPLOYEES}/${record.id}`}>
           <Avatar
             size={40}
             src={text}
             alt={record.first_name + ' ' + record.last_name}
             name={record.first_name + ' ' + record.last_name}
           />
-        </StyledWrapperAvatar>
+        </StyledLink>
       ),
     },
     {
@@ -305,12 +299,12 @@ export const Employees: React.FC = () => {
       ...getColumnSorterProps('first_name', 1),
       ...getColumnSearchInputProps(['first_name', 'last_name']),
       render: (text, record: Employee) => (
-        <StyledDiv
-          onClick={() => redirectToEmployeeDetails(record)}
+        <StyledLink
+          to={`${PrivatePath.EMPLOYEES}/${record.id}`}
           title={`${text} ${record.last_name}`}
         >
           {text} {record.last_name}
-        </StyledDiv>
+        </StyledLink>
       ),
     },
     {
@@ -321,12 +315,9 @@ export const Employees: React.FC = () => {
       ...getColumnSearchInputProps(['code']),
       render: (text, record: Employee) =>
         text ? (
-          <StyledDiv
-            onClick={() => redirectToEmployeeDetails(record)}
-            title={text}
-          >
+          <StyledLink to={`${PrivatePath.EMPLOYEES}/${record.id}`} title={text}>
             {text}
-          </StyledDiv>
+          </StyledLink>
         ) : (
           ''
         ),
@@ -384,9 +375,12 @@ export const Employees: React.FC = () => {
       ),
       render: (text, record: Employee) =>
         text ? (
-          <StyledDiv onClick={() => redirectToEmployeeProjects(record)}>
+          <StyledLink
+            to={`${PrivatePath.EMPLOYEES}/${record.id}/projects`}
+            title={text}
+          >
             {text}
-          </StyledDiv>
+          </StyledLink>
         ) : (
           ''
         ),
@@ -586,20 +580,5 @@ const TableWrapper = styled.div`
 
   .totalAllocated {
     white-space: break-spaces;
-  }
-`;
-
-const StyledWrapperAvatar = styled.div`
-  cursor: pointer;
-  border-radius: 50%;
-`;
-
-const StyledDiv = styled.div`
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #1890ff;
-  :hover {
-    text-decoration: underline;
   }
 `;

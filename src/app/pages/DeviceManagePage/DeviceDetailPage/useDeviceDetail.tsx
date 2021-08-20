@@ -2,6 +2,7 @@ import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import * as React from 'react';
 import { useHistory } from 'react-router';
 import fakeAPI from 'utils/fakeAPI';
+import { PrivatePath } from 'utils/url.const';
 
 export const useDeviceDetail = (): {
   loading: boolean;
@@ -31,7 +32,7 @@ export const useDeviceDetail = (): {
           duration: 2,
           message: 'Create device successful',
         });
-        history.push('/devices/' + response.id);
+        history.push(`${PrivatePath.DEVICES}/${response.id}`);
         return response;
       }
     } catch (e) {

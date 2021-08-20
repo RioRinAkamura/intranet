@@ -34,6 +34,8 @@ import { Messages } from './messages';
 import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import { PrivatePath } from 'utils/url.const';
+import { StyledLink } from 'styles/StyledCommon';
 
 interface Category {
   name: string;
@@ -46,7 +48,7 @@ interface Employee {
   last_name: string;
 }
 
-export const DevicesManager = () => {
+export const DeviceListPage = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
   useEffect(() => {
     setBreadCrumb('Devices');
@@ -123,7 +125,7 @@ export const DevicesManager = () => {
           size="small"
           icon={<EyeOutlined />}
           onClick={() => {
-            history.push(`/devices/${text}`);
+            history.push(`${PrivatePath.DEVICES}/${text}`);
           }}
         />
       </Tooltip>
@@ -134,7 +136,7 @@ export const DevicesManager = () => {
           size="small"
           onClick={() => {
             history.push({
-              pathname: '/devices/' + text,
+              pathname: `${PrivatePath.DEVICES}/${text}`,
               state: { edit: true },
             });
           }}
@@ -207,13 +209,17 @@ export const DevicesManager = () => {
     console.log('export');
   };
 
-  const columns: ColumnProps<Device>[] = [
+  const columns: ColumnProps<any>[] = [
     {
       title: 'Code',
       dataIndex: 'code',
       width: 100,
-      render: text => text,
       ...getColumnSearchInputProps(['code'], 0, 'string'),
+      render: (text, record) => (
+        <StyledLink to={`${PrivatePath.DEVICES}/${record.id}`}>
+          {text}
+        </StyledLink>
+      ),
     },
     {
       title: 'Category',
@@ -334,7 +340,7 @@ export const DevicesManager = () => {
                 style={{ marginBottom: 10, marginRight: 10 }}
                 type="primary"
                 size="middle"
-                onClick={() => history.push('/devices/create')}
+                onClick={() => history.push(PrivatePath.DEVICES_CREATE)}
               >
                 Create device
               </Button>

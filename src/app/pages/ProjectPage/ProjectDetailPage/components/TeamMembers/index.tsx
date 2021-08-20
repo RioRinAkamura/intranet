@@ -14,6 +14,7 @@ import { ProjectDetailMessages } from '../../messages';
 import { MemberModal } from '../MemberModal/Loadable';
 import { useHandleMember } from '../MemberModal/useHandleMember';
 import Button from 'app/components/Button';
+import { PrivatePath } from 'utils/url.const';
 
 interface Props {
   isView?: boolean;
@@ -48,7 +49,7 @@ export const TeamMembers = (props: Props) => {
         <Col span={18}>
           <h2>
             <LinkTo
-              href={`/employees/${member.id}`}
+              href={`${PrivatePath.EMPLOYEES}/${member.id}`}
               target="_blank"
               rel="noreferrer"
             >
@@ -83,7 +84,7 @@ export const TeamMembers = (props: Props) => {
               setSelectedMember(info);
             } else {
               window.open(
-                `/employees/${info.employee.id}`,
+                `${PrivatePath.EMPLOYEES}/${info.employee.id}`,
                 '_blank',
                 'noopener,noreferrer',
               );

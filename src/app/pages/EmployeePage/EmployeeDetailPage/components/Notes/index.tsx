@@ -27,7 +27,6 @@ import {
 } from '@ant-design/icons';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
 
 import { config } from 'config';
 import { DialogModal } from 'app/components/DialogModal';
@@ -35,7 +34,7 @@ import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import { useTableConfig } from 'utils/tableConfig';
-import Button from 'app/components/Button';
+import Button, { IconButton } from 'app/components/Button';
 
 import { EmployeeNote } from './slice/types';
 import { useNotesSlice } from './slice';
@@ -50,7 +49,9 @@ import { CardLayout } from 'app/components/CardLayout';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
-interface Props {}
+interface NotesProps {
+  employee_id: string;
+}
 interface FormProps {
   form: FormInstance;
   note?: EmployeeNote;
@@ -115,7 +116,7 @@ const Actions: React.FC<ActionsProps> = ({
       content={() => (
         <>
           <Tooltip title={t(EmployeeNoteMessages.listViewTooltip())}>
-            <StyledIconButton
+            <IconButton
               type="primary"
               shape="circle"
               size="small"
@@ -127,7 +128,7 @@ const Actions: React.FC<ActionsProps> = ({
             />
           </Tooltip>
           <Tooltip title={t(EmployeeNoteMessages.listEditTooltip())}>
-            <StyledIconButton
+            <IconButton
               shape="circle"
               size="small"
               icon={<EditOutlined />}
@@ -138,7 +139,7 @@ const Actions: React.FC<ActionsProps> = ({
             />
           </Tooltip>
           <Tooltip title={t(EmployeeNoteMessages.listDeleteTooltip())}>
-            <StyledIconButton
+            <IconButton
               danger
               shape="circle"
               size="small"
@@ -152,12 +153,12 @@ const Actions: React.FC<ActionsProps> = ({
         </>
       )}
     >
-      <StyledButton shape="circle" size="small" icon={<MoreOutlined />} />
+      <IconButton shape="circle" size="small" icon={<MoreOutlined />} />
     </Popover>
   );
 };
 
-export const Notes = memo((props: Props) => {
+export const Notes = memo(({ employee_id }: NotesProps) => {
   const { t } = useTranslation();
   const [isCreate, setIsCreate] = useState<boolean>(false);
   const [isCopy, setIsCopy] = useState<boolean>(false);
@@ -173,7 +174,6 @@ export const Notes = memo((props: Props) => {
 
   const dispatch = useDispatch();
 
-  const { id } = useParams<Record<string, string>>();
   const params = useSelector(selectEmployeeNotesParams);
   const isFilter = useSelector(selectEmployeeNoteIsFilter);
   const isSuccess = useSelector(selectEmployeeNoteIsSuccess);
@@ -211,7 +211,7 @@ export const Notes = memo((props: Props) => {
     dispatch(
       actions.createEmployeeNote({
         ...form.getFieldsValue(),
-        employee: id,
+        employee: employee_id,
         date: moment(form.getFieldsValue().date).format(DATE_FORMAT),
       }),
     );
@@ -222,16 +222,14 @@ export const Notes = memo((props: Props) => {
       actions.updateEmployeeNote({
         ...form.getFieldsValue(),
         date: moment(form.getFieldValue('date')).format(DATE_FORMAT),
-        employee_id: id,
+        employee_id,
         note_id: note?.id,
       }),
     );
   };
 
   const handleNoteDelete = () => {
-    dispatch(
-      actions.deleteEmployeeNote({ employee_id: id, note_id: note?.id }),
-    );
+    dispatch(actions.deleteEmployeeNote({ employee_id, note_id: note?.id }));
   };
 
   const handleCancel = () => {
@@ -267,9 +265,9 @@ export const Notes = memo((props: Props) => {
 
   useEffect(() => {
     if (!isFilter) {
-      dispatch(actions.fetchEmployeeNotes({ employee_id: id, params }));
+      dispatch(actions.fetchEmployeeNotes({ employee_id, params }));
     }
-  }, [actions, dispatch, id, isFilter, params]);
+  }, [actions, dispatch, employee_id, isFilter, params]);
 
   const columns: ColumnProps<EmployeeNote>[] = [
     {
@@ -432,10 +430,6 @@ const StyledButton = styled(Button)`
   svg {
     vertical-align: baseline;
   }
-`;
-
-const StyledIconButton = styled(StyledButton)`
-  margin: 5px;
 `;
 
 const StyledDatePicker = styled(DatePicker)`

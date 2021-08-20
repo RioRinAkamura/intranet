@@ -1,10 +1,25 @@
 import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
 import { call, put, takeLatest } from 'redux-saga/effects';
 // import { api } from 'utils/api';
 import { projectsActions as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
 import qs from 'query-string';
 // import { PayloadAction } from '@reduxjs/toolkit';
+
+function* fetchProjectIdentity() {
+  try {
+    const response = yield api.hr.project.identity();
+    yield put(
+      actions.fetchIdentitySuccess({
+        identity: response,
+        loading: false,
+      }),
+    );
+  } catch (error) {
+    yield put(actions.fetchIdentityFailure);
+  }
+}
 
 function* fetchProjects(action) {
   try {
@@ -59,5 +74,6 @@ export function* projectsSaga() {
   yield* [
     takeLatest(actions.fetchProjects.type, fetchProjects),
     takeLatest(actions.deleteProject.type, deleteProject),
+    takeLatest(actions.fetchIdentity.type, fetchProjectIdentity),
   ];
 }

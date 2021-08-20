@@ -11,9 +11,9 @@ const LoadingWrapper = styled.div`
   justify-content: center;
 `;
 
-export const DeviceManagerPage = lazyLoad(
+export const DeviceListPage = lazyLoad(
   () => import('./index'),
-  module => module.DevicesManager,
+  module => module.DeviceListPage,
   {
     fallback: (
       <LoadingWrapper>

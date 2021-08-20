@@ -4,7 +4,7 @@ import { Actions as actions } from '.';
 
 export function* fetchIdentity() {
   try {
-    const response = yield api.hr.identity.get();
+    const response = yield api.hr.employee.identity();
     yield put(
       actions.fetchIdentitySuccess({
         identity: response,

@@ -22,6 +22,7 @@ export interface DevicesManagerState {
   selectedRows?: Device[];
   deleteSuccess?: boolean;
   deleteFailed?: boolean;
+  identity?: string;
 }
 
 export interface FilterColumns {
@@ -51,4 +52,10 @@ export interface Pagination {
 export interface Delete {
   IdDelete: string;
   ids?: string[];
+}
+
+export interface IdentityPayload {
+  identity?: string;
+  loading: boolean;
+  error?: Error;
 }

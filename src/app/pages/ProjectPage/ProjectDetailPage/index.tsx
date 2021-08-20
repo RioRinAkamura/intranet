@@ -14,6 +14,8 @@ import { ProjectInfo } from './components/ProjectInfo';
 import { ProjectDetailMessages } from './messages';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { ChangeLogs } from './components/ChangeLogs';
+import { PrivatePath } from 'utils/url.const';
+import { Route, Switch } from 'react-router-dom';
 
 interface Props {}
 interface LocationState {
@@ -56,12 +58,23 @@ export const ProjectDetailPage = (props: Props) => {
   const onChangeTab = (key: string) => {
     if (key === TabKeys.changeLogs) {
       setIsDetailTab(false);
-      history.push(`/projects/${id}/change-logs`);
+      history.push(`${PrivatePath.PROJECTS}/${id}/change-logs`);
     } else {
       setIsDetailTab(true);
-      history.push(`/projects/${id}`);
+      history.push(`${PrivatePath.PROJECTS}/${id}`);
     }
   };
+
+  const projectDetailForm = () => (
+    <CardLayout padding="3rem" style={isView ? { margin: '0 auto' } : {}}>
+      <Form form={form} labelAlign="left">
+        <Form.Item hidden name="id">
+          <Input hidden />
+        </Form.Item>
+        <ProjectInfo isView={isView} form={form} data={data} />
+      </Form>
+    </CardLayout>
+  );
 
   useEffect(() => {
     if (data) {
@@ -135,32 +148,36 @@ export const ProjectDetailPage = (props: Props) => {
         }
       />
       {isView ? (
-        <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
-          <TabPane tab="Details" key={TabKeys.details}>
-            <CardLayout
-              padding="3rem"
-              style={isView ? { marginBottom: '0' } : {}}
-            >
-              <Form form={form} labelAlign="left">
-                <Form.Item hidden name="id">
-                  <Input hidden />
-                </Form.Item>
-                <ProjectInfo isView={isView} form={form} data={data} />
-              </Form>
-            </CardLayout>
-          </TabPane>
+        <>
+          <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
+            <TabPane tab="Details" key={TabKeys.details} />
+            <TabPane tab="Change logs" key={TabKeys.changeLogs} />
+          </StyledTabs>
 
-          <TabPane tab="Change logs" key={TabKeys.changeLogs}>
-            <ChangeLogs />
-          </TabPane>
-        </StyledTabs>
+          <Switch>
+            <Route
+              exact
+              path={PrivatePath.PROJECTS_ID}
+              component={() => projectDetailForm()}
+            />
+            <Route
+              path={PrivatePath.PROJECTS_ID_CHANGELOGS}
+              component={() => <ChangeLogs project_id={id} />}
+            />
+          </Switch>
+        </>
       ) : (
         <CardLayout padding="3rem">
-          <Form form={form} labelAlign="left">
+          <Form form={form} layout="vertical">
             <Form.Item hidden name="id">
               <Input hidden />
             </Form.Item>
-            <ProjectInfo isView={isView} form={form} data={data} />
+            <ProjectInfo
+              isView={isView}
+              form={form}
+              data={data}
+              isEdit={isEdit}
+            />
           </Form>
         </CardLayout>
       )}
@@ -175,7 +192,7 @@ export const ProjectDetailPage = (props: Props) => {
                   if (isEdit) {
                     setIsEdit(false);
                   } else {
-                    history.push('/projects');
+                    history.push(PrivatePath.PROJECTS);
                   }
                 }}
               >

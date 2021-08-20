@@ -7,6 +7,7 @@ import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
+import { PrivatePath } from 'utils/url.const';
 import { LoginMessages } from '../../messages';
 
 const layout = {
@@ -51,7 +52,7 @@ export const LoginForm: React.FC = () => {
 
   const onFinish = async (values: { email: string; password: string }) => {
     await login({ ...values });
-    history.push('/employees');
+    history.push(PrivatePath.EMPLOYEES);
   };
 
   return (

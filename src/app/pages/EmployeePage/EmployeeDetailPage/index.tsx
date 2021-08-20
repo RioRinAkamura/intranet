@@ -33,6 +33,8 @@ import { useHandleDataTable } from '../EmployeeListPage/useHandleDataTable';
 import { selectEmployeeNotes } from './components/Notes/slice/selectors';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { ChangeLogs } from './components/ChangeLogs';
+import { PrivatePath } from 'utils/url.const';
+import { Route, Switch } from 'react-router-dom';
 
 interface Props {}
 
@@ -107,19 +109,19 @@ export function EmployeeDetailPage(props: Props) {
   const onChangeTab = (key: string) => {
     if (key === TabKeys.notes) {
       setIsDetailTab(false);
-      history.push(`/employees/${id}/notes`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/notes`);
     } else if (key === TabKeys.projects) {
       setIsDetailTab(false);
-      history.push(`/employees/${id}/projects`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/projects`);
     } else if (key === TabKeys.devices) {
       setIsDetailTab(false);
-      history.push(`/employees/${id}/devices`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/devices`);
     } else if (key === TabKeys.changeLogs) {
       setIsDetailTab(false);
-      history.push(`/employees/${id}/change-logs`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/change-logs`);
     } else {
       setIsDetailTab(true);
-      history.push(`/employees/${id}`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}`);
     }
   };
 
@@ -204,6 +206,22 @@ export function EmployeeDetailPage(props: Props) {
       .catch(err => console.log(err));
   };
 
+  const employeeDetailForm = () => (
+    <DetailForm
+      form={form}
+      data={data}
+      isEdit={isEdit}
+      isView={isView}
+      leftScreenItems={<IdCardInfo isView={isView} isEdit={isEdit} />}
+      rightScreenItems={
+        <>
+          <ProfileInfo isView={isView} isEdit={isEdit} users={users} />
+          <BankAccounts isView={isView} isEdit={isEdit} form={form} />
+        </>
+      }
+    />
+  );
+
   return (
     <>
       <StyledPageTitle
@@ -227,35 +245,38 @@ export function EmployeeDetailPage(props: Props) {
         )}
       </StyledPageTitle>
       {isView ? (
-        <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
-          <TabPane tab="Details" key={TabKeys.details}>
-            <DetailForm
-              form={form}
-              data={data}
-              isEdit={isEdit}
-              isView={isView}
-              leftScreenItems={<IdCardInfo isView={isView} isEdit={isEdit} />}
-              rightScreenItems={
-                <>
-                  <ProfileInfo isView={isView} isEdit={isEdit} users={users} />
-                  <BankAccounts isView={isView} isEdit={isEdit} form={form} />
-                </>
-              }
+        <>
+          <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
+            <TabPane tab="Details" key={TabKeys.details} />
+            <TabPane tab="Projects" key={TabKeys.projects} />
+            <TabPane tab="Notes" key={TabKeys.notes} />
+            <TabPane tab="Devices" key={TabKeys.devices} />
+            <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
+          </StyledTabs>
+
+          <Switch>
+            <Route
+              exact
+              path={PrivatePath.EMPLOYEES_ID}
+              component={() => employeeDetailForm()}
             />
-          </TabPane>
-          <TabPane tab="Projects" key={TabKeys.projects}>
-            <Projects />
-          </TabPane>
-          <TabPane tab="Notes" key={TabKeys.notes}>
-            <Notes />
-          </TabPane>
-          <TabPane tab="Devices" key={TabKeys.devices}>
-            <Device id={id} />
-          </TabPane>
-          <TabPane tab="Change Logs" key={TabKeys.changeLogs}>
-            <ChangeLogs />
-          </TabPane>
-        </StyledTabs>
+            <Route path={PrivatePath.EMPLOYEES_ID_NOTES}>
+              <Notes employee_id={id} />
+            </Route>
+            <Route
+              path={PrivatePath.EMPLOYEES_ID_PROJECTS}
+              component={() => <Projects employee_id={id} />}
+            />
+            <Route
+              path={PrivatePath.EMPLOYEES_ID_DEVICES}
+              component={() => <Device id={id} />}
+            />
+            <Route
+              path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}
+              component={() => <ChangeLogs employee_id={id} />}
+            />
+          </Switch>
+        </>
       ) : (
         <DetailForm
           form={form}
@@ -282,9 +303,9 @@ export function EmployeeDetailPage(props: Props) {
                   if (isEdit) {
                     setIsEdit(false);
                   } else if (isView) {
-                    history.push('/employees');
+                    history.push(PrivatePath.EMPLOYEES);
                   } else if (isCreate) {
-                    history.push('/employees');
+                    history.push(PrivatePath.EMPLOYEES);
                   }
                 }}
               >

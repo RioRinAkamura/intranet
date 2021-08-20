@@ -37,7 +37,7 @@ function* createEmployeeNote(action) {
   try {
     yield call(
       fakeAPI.post,
-      `/hr/employees/${action.payload.employee}/notes`,
+      `/hr/employees/${action.payload.employee}/notes/`,
       action.payload,
     );
     yield put(actions.createEmployeeNoteSuccess());

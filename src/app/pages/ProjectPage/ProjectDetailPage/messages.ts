@@ -17,8 +17,20 @@ export const ProjectDetailMessages = {
   cancel: () => _t(translations.ProjectDetailPage.cancel, 'Cancel'),
   editMember: () =>
     _t(translations.ProjectDetailPage.editMember, 'Edit member'),
+  formProjectCodeLabel: () =>
+    _t(translations.ProjectDetailPage.form.projectCode.label, 'Code'),
+  formProjectCodePlaceholder: () =>
+    _t(
+      translations.ProjectDetailPage.form.projectCode.placeholder,
+      'Enter code',
+    ),
+  formProjectCodeEmpty: () =>
+    _t(
+      translations.ProjectDetailPage.form.projectCode.empty,
+      'Please enter code',
+    ),
   formProjectNameLabel: () =>
-    _t(translations.ProjectDetailPage.form.projectName.label, 'Project name'),
+    _t(translations.ProjectDetailPage.form.projectName.label, 'Name'),
   formProjectNamePlaceholder: () =>
     _t(
       translations.ProjectDetailPage.form.projectName.placeholder,

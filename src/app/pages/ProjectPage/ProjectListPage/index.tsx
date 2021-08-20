@@ -51,8 +51,10 @@ import Button, { IconButton } from 'app/components/Button';
 import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMemberModal';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { PrivatePath } from 'utils/url.const';
+import { StyledLink } from 'styles/StyledCommon';
 
-export const ProjectsPage: React.FC = () => {
+export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
   useEffect(() => {
     setBreadCrumb('Projects');
@@ -270,7 +272,7 @@ export const ProjectsPage: React.FC = () => {
           size="small"
           icon={<EyeOutlined />}
           onClick={() => {
-            history.push(`/projects/${text}`);
+            history.push(`${PrivatePath.PROJECTS}/${text}`);
           }}
         />
       </Tooltip>
@@ -281,7 +283,7 @@ export const ProjectsPage: React.FC = () => {
           size="small"
           onClick={() => {
             history.push({
-              pathname: '/projects/' + text,
+              pathname: `${PrivatePath.PROJECTS}/${text}`,
               state: { edit: true },
             });
           }}
@@ -303,10 +305,6 @@ export const ProjectsPage: React.FC = () => {
     </>
   );
 
-  const redirectToProjectDetails = (record: Project) => {
-    history.push(`/projects/${record.id}`);
-  };
-
   const columns: ColumnsType<any> = [
     {
       title: t(ProjectsMessages.listNameTitle()),
@@ -316,12 +314,9 @@ export const ProjectsPage: React.FC = () => {
       ...getColumnSorterProps('name', 1),
       ...getColumnSearchInputProps(['name']),
       render: (text, record: Project) => (
-        <StyledDiv
-          onClick={() => redirectToProjectDetails(record)}
-          title={text}
-        >
+        <StyledLink to={`${PrivatePath.PROJECTS}/${record.id}`} title={text}>
           {text}
-        </StyledDiv>
+        </StyledLink>
       ),
     },
     {
@@ -390,12 +385,9 @@ export const ProjectsPage: React.FC = () => {
       ...getColumnSorterProps('code', 3),
       render: (text, record: Project) =>
         text ? (
-          <StyledDiv
-            onClick={() => redirectToProjectDetails(record)}
-            title={text}
-          >
+          <StyledLink to={`${PrivatePath.PROJECTS}/${record.id}`} title={text}>
             {text}
-          </StyledDiv>
+          </StyledLink>
         ) : (
           ''
         ),
@@ -435,7 +427,7 @@ export const ProjectsPage: React.FC = () => {
   const handleMemberModalCancel = () => {
     dispatch(actions.fetchProjects({ params: params }));
     setMemberModal(false);
-    history.push('/projects');
+    history.push(PrivatePath.PROJECTS);
     // remove params
   };
 
@@ -573,15 +565,5 @@ const TableWrapper = styled.div`
     span {
       color: blue;
     }
-  }
-`;
-
-const StyledDiv = styled.div`
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #1890ff;
-  :hover {
-    text-decoration: underline;
   }
 `;

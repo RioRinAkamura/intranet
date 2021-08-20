@@ -27,6 +27,10 @@ import PageTitle from 'app/components/PageTitle';
 import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import { PrivateRoute } from 'app/components/Auth/Route';
+import { Switch as SwitchRoute } from 'react-router-dom';
+import { PrivatePath } from 'utils/url.const';
+import { UserManageDetailPage } from './UserDetailPage/Loadable';
 
 type User = models.user.User;
 
@@ -36,7 +40,7 @@ interface TablePagination {
   total?: number;
 }
 
-export const ManageUserPage: React.FC = () => {
+const ManageUserPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
   useEffect(() => {
     setBreadCrumb('Users');
@@ -179,7 +183,7 @@ export const ManageUserPage: React.FC = () => {
           size="small"
           icon={<EyeOutlined />}
           onClick={() => {
-            history.push(`/users/${text}`);
+            history.push(`${PrivatePath.USERS}/${text}`);
           }}
         />
       </Tooltip>
@@ -190,7 +194,7 @@ export const ManageUserPage: React.FC = () => {
           size="small"
           onClick={() => {
             history.push({
-              pathname: '/users/' + text,
+              pathname: `${PrivatePath.USERS}/${text}`,
               state: { edit: true },
             });
           }}
@@ -425,6 +429,22 @@ export const ManageUserPage: React.FC = () => {
         ;
       </Wrapper>
     </>
+  );
+};
+
+export const UserPage: React.FC = () => {
+  return (
+    <SwitchRoute>
+      <PrivateRoute exact path={PrivatePath.USERS} component={ManageUserPage} />
+      <PrivateRoute
+        path={PrivatePath.USERS_CREATE}
+        component={UserManageDetailPage}
+      />
+      <PrivateRoute
+        path={PrivatePath.USERS_ID}
+        component={UserManageDetailPage}
+      />
+    </SwitchRoute>
   );
 };
 
