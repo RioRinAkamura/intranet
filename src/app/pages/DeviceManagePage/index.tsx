@@ -23,10 +23,6 @@ export const DeviceManagePage: React.FC = () => {
         path={PrivatePath.DEVICES_ID}
         component={DeviceDetailPage}
       />
-      <PrivateRoute
-        path={PrivatePath.DEVICES_ID_HISTORY}
-        component={DeviceDetailPage}
-      />
     </Switch>
   );
 };

@@ -21,8 +21,8 @@ import { EMPLOYEE_DEVICE_STATUS, FORM_RULES } from 'constants/deviceManager';
 import fakeAPI from 'utils/fakeAPI';
 import { ColumnProps } from 'antd/lib/table';
 import { DeleteModal } from 'app/components/DeleteModal';
-import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
+import { Wrapper } from 'styles/StyledCommon';
 
 const { Option } = Select;
 interface DeviceResponse {
@@ -377,10 +377,6 @@ export const Device = memo((props: DeviceProps) => {
     </Wrapper>
   );
 });
-
-const Wrapper = styled(CardLayout)`
-  margin-top: 0;
-`;
 
 const Header = styled.div`
   display: flex;

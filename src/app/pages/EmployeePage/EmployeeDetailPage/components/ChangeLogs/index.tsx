@@ -23,6 +23,7 @@ import { useEmployeeChangeLogsSlice } from './slice';
 import { ChangeLogsMessages } from './messages';
 import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import { useTableConfig } from 'utils/tableConfig';
+import { Wrapper } from 'styles/StyledCommon';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
@@ -119,32 +120,34 @@ export const ChangeLogs = React.memo(({ employee_id }: ChangeLogsProps) => {
   }, [fetchEmployeeChangeLogs]);
 
   return (
-    <Table
-      bordered
-      dataSource={employeeChangeLogsState.changeLogs}
-      columns={columns}
-      rowKey="change_id"
-      scroll={{ x: 1100 }}
-      pagination={{
-        ...employeeChangeLogsState.pagination,
-        onChange: (page: number, pageSize?: number) => {
-          setPagination({ current: page, pageSize });
-        },
-        showTotal: (total, range) => (
-          <div>
-            Showing{' '}
-            <span>
-              {range[0]}-{range[1]}
-            </span>{' '}
-            of {total} items
-          </div>
-        ),
-        pageSizeOptions: ['10', '20', '50', '100'],
-        showSizeChanger: true,
-      }}
-      loading={employeeChangeLogsState.loading}
-      onChange={handleTableChange}
-    />
+    <Wrapper>
+      <Table
+        bordered
+        dataSource={employeeChangeLogsState.changeLogs}
+        columns={columns}
+        rowKey="change_id"
+        scroll={{ x: 1100 }}
+        pagination={{
+          ...employeeChangeLogsState.pagination,
+          onChange: (page: number, pageSize?: number) => {
+            setPagination({ current: page, pageSize });
+          },
+          showTotal: (total, range) => (
+            <div>
+              Showing{' '}
+              <span>
+                {range[0]}-{range[1]}
+              </span>{' '}
+              of {total} items
+            </div>
+          ),
+          pageSizeOptions: ['10', '20', '50', '100'],
+          showSizeChanger: true,
+        }}
+        loading={employeeChangeLogsState.loading}
+        onChange={handleTableChange}
+      />
+    </Wrapper>
   );
 });
 

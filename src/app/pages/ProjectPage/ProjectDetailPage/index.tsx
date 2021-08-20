@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Col, Form, Input, Row, Tabs } from 'antd';
+import { Form, Input, Tabs } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
 import moment from 'moment';
 import { useProjectDetail } from './useProjectDetail';
 import PageTitle from 'app/components/PageTitle';
-import { CardLayout } from 'app/components/CardLayout';
-import Button from 'app/components/Button';
 import { config } from 'config';
 import { ProjectInfo } from './components/ProjectInfo';
 // import { TeamMembers } from './components/TeamMembers';
@@ -16,6 +14,7 @@ import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { ChangeLogs } from './components/ChangeLogs';
 import { PrivatePath } from 'utils/url.const';
 import { Route, Switch } from 'react-router-dom';
+import { CardForm } from 'app/components/CardForm';
 
 interface Props {}
 interface LocationState {
@@ -44,7 +43,6 @@ export const ProjectDetailPage = (props: Props) => {
   const [data, setData] = useState<any>();
   const [isCreate, setIsCreate] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [isDetailTab, setIsDetailTab] = React.useState(true);
 
   const isView = isCreate || isEdit ? false : true;
 
@@ -57,24 +55,11 @@ export const ProjectDetailPage = (props: Props) => {
 
   const onChangeTab = (key: string) => {
     if (key === TabKeys.changeLogs) {
-      setIsDetailTab(false);
       history.push(`${PrivatePath.PROJECTS}/${id}/change-logs`);
     } else {
-      setIsDetailTab(true);
       history.push(`${PrivatePath.PROJECTS}/${id}`);
     }
   };
-
-  const projectDetailForm = () => (
-    <CardLayout padding="3rem" style={isView ? { margin: '0 auto' } : {}}>
-      <Form form={form} labelAlign="left">
-        <Form.Item hidden name="id">
-          <Input hidden />
-        </Form.Item>
-        <ProjectInfo isView={isView} form={form} data={data} />
-      </Form>
-    </CardLayout>
-  );
 
   useEffect(() => {
     if (data) {
@@ -116,6 +101,14 @@ export const ProjectDetailPage = (props: Props) => {
     }
   }, [history, location]);
 
+  const onCancel = () => {
+    if (isEdit) {
+      setIsEdit(false);
+    } else {
+      history.push(PrivatePath.PROJECTS);
+    }
+  };
+
   const handleSubmit = () => {
     form
       .validateFields()
@@ -135,6 +128,33 @@ export const ProjectDetailPage = (props: Props) => {
       })
       .catch(err => console.log(err));
   };
+
+  const onSubmit = () => {
+    if (isEdit) {
+      handleSubmit();
+    } else if (isView) {
+      setIsEdit(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (isCreate) {
+      handleSubmit();
+    }
+  };
+
+  const projectDetailForm = () => (
+    <CardForm
+      isView={isView}
+      onCancel={onCancel}
+      onSubmit={onSubmit}
+      loading={loading}
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item hidden name="id">
+          <Input hidden />
+        </Form.Item>
+        <ProjectInfo isView={isView} form={form} data={data} isEdit={isEdit} />
+      </Form>
+    </CardForm>
+  );
 
   return (
     <>
@@ -167,61 +187,7 @@ export const ProjectDetailPage = (props: Props) => {
           </Switch>
         </>
       ) : (
-        <CardLayout padding="3rem">
-          <Form form={form} layout="vertical">
-            <Form.Item hidden name="id">
-              <Input hidden />
-            </Form.Item>
-            <ProjectInfo
-              isView={isView}
-              form={form}
-              data={data}
-              isEdit={isEdit}
-            />
-          </Form>
-        </CardLayout>
-      )}
-
-      {isDetailTab && (
-        <WrapperButton>
-          <Row gutter={[8, 8]} justify="end">
-            <Col>
-              <Button
-                block
-                onClick={() => {
-                  if (isEdit) {
-                    setIsEdit(false);
-                  } else {
-                    history.push(PrivatePath.PROJECTS);
-                  }
-                }}
-              >
-                {t(ProjectDetailMessages.buttonCancel())}
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                loading={loading}
-                block
-                type="primary"
-                onClick={() => {
-                  if (isEdit) {
-                    handleSubmit();
-                  } else if (isView) {
-                    setIsEdit(true);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  } else if (isCreate) {
-                    handleSubmit();
-                  }
-                }}
-              >
-                {isView
-                  ? t(ProjectDetailMessages.buttonEdit())
-                  : t(ProjectDetailMessages.buttonSubmit())}
-              </Button>
-            </Col>
-          </Row>
-        </WrapperButton>
+        <StyledWrapperForm>{projectDetailForm()}</StyledWrapperForm>
       )}
     </>
   );
@@ -231,8 +197,9 @@ const StyledTabs = styled(Tabs)`
   margin-top: 10px;
 `;
 
-const WrapperButton = styled.div`
-  margin-top: 3em;
-  padding: 10px;
-  height: 100%;
+const StyledWrapperForm = styled.div`
+  margin-top: 2rem;
+  > div > div:last-child {
+    margin-top: 0;
+  }
 `;

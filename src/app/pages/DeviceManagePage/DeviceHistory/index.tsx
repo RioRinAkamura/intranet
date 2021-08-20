@@ -4,7 +4,6 @@ import styled from 'styled-components/macro';
 import { ColumnProps } from 'antd/lib/table';
 import { Col, Row, Table } from 'antd';
 import fakeAPI from 'utils/fakeAPI';
-import { useParams } from 'react-router';
 
 interface DeviceHistoryType {
   user: string;
@@ -12,18 +11,21 @@ interface DeviceHistoryType {
   note: string;
 }
 
-export const DeviceHistory = () => {
-  const { id } = useParams<Record<string, string>>();
+interface DeviceHistoryProps {
+  device_id: string;
+}
+
+export const DeviceHistory = ({ device_id }: DeviceHistoryProps) => {
   const [histories, setHistories] = useState<DeviceHistoryType[]>([]);
   const fetchListHistory = useCallback(async () => {
     const histories: any = await fakeAPI.get('/hr/devices-history', {
       params: {
-        device: id,
+        device: device_id,
       },
     });
 
     setHistories(histories.results);
-  }, [id]);
+  }, [device_id]);
 
   useEffect(() => {
     fetchListHistory();
