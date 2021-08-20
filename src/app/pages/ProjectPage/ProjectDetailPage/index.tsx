@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Col, Form, Input, Row, Tabs } from 'antd';
+import { Form, Input, Tabs } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
 import moment from 'moment';
 import { useProjectDetail } from './useProjectDetail';

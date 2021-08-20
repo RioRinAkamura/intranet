@@ -45,7 +45,6 @@ import {
   selectEmployeeNoteIsSuccess,
 } from './slice/selectors';
 import { EmployeeNoteMessages } from './messages';
-import { CardLayout } from 'app/components/CardLayout';
 import { Wrapper } from 'styles/StyledCommon';
 
 const DATE_FORMAT = config.DATE_FORMAT;

@@ -28,7 +28,6 @@ import {
 } from './slice/selectors';
 import { ProjectsMessages } from 'app/pages/ProjectPage/ProjectListPage/messages';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
-import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink, Wrapper } from 'styles/StyledCommon';
