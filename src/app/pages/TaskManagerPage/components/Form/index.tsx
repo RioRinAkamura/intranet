@@ -20,29 +20,29 @@ export const TaskForm: React.FC<FormProps> = ({
 }) => {
   return (
     <Form layout="vertical" form={form}>
-      <Form.Item name="id">
-        <Input hidden></Input>
+      <Form.Item name="id" hidden>
+        <Input />
       </Form.Item>
       <Form.Item name="title" rules={FORM_RULES.TITLE} label="Title">
-        <Input></Input>
+        <Input size="large" />
       </Form.Item>
       <Form.Item name="project" rules={FORM_RULES.PROJECT} label="Project">
         {/* <Input size="large" placeholder="Type" disabled={isView} /> */}
-        <Select placeholder="Project" disabled={isView}>
+        <Select placeholder="Project" disabled={isView} size="large">
           {projects.map(project => {
             return <Option value={project.id}>{project.name}</Option>;
           })}
         </Select>
       </Form.Item>
       <Form.Item name="status" label="Status" initialValue={'Open'}>
-        <Select disabled={isView} placeholder="Status">
+        <Select disabled={isView} placeholder="Status" size="large">
           {STATUS.map(i => (
             <Option value={i.value}>{i.label}</Option>
           ))}
         </Select>
       </Form.Item>
       <Form.Item name="assignee" label="Assignee">
-        <Select placeholder="assignee" disabled={isView}>
+        <Select placeholder="assignee" disabled={isView} size="large">
           {employees.map(employee => {
             return (
               <Option value={employee.id}>

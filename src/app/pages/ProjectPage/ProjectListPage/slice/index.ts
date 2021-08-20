@@ -4,7 +4,12 @@ import { Key } from 'react';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { projectsSaga } from './saga';
-import { FilterColumns, ProjectsState, QueryParams } from './types';
+import {
+  FilterColumns,
+  ProjectsState,
+  QueryParams,
+  IdentityPayload,
+} from './types';
 
 export const initialState: ProjectsState = {
   projects: [],
@@ -29,6 +34,16 @@ const slice = createSlice({
   name: 'projects',
   initialState,
   reducers: {
+    fetchIdentity(state) {
+      state.loading = true;
+    },
+    fetchIdentitySuccess(state, action: PayloadAction<IdentityPayload>) {
+      state.identity = action.payload.identity;
+      state.loading = action.payload.loading;
+    },
+    fetchIdentityFailure(state, action: PayloadAction<IdentityPayload>) {
+      state.error = action.payload.error;
+    },
     fetchProjects(state, action: PayloadAction<ProjectsState>) {
       state.loading = true;
     },

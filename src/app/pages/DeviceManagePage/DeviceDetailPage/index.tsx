@@ -4,7 +4,7 @@ import PageTitle from 'app/components/PageTitle';
 import { SettingOutlined } from '@ant-design/icons';
 import { FORM_RULES, HEALTH_STATUS } from 'constants/deviceManager';
 import { DeviceCategory } from '../DeviceCategory';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectCategories } from '../DeviceCategory/slice/selectors';
 import moment from 'moment';
 import {
@@ -29,11 +29,19 @@ import { DeviceHistoryTab } from '../DeviceHistory/Loadable';
 import { CardLayout } from 'app/components/CardLayout';
 import Button from 'app/components/Button';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import { useDeviceManagePage } from '../DeviceListPage/slice';
+import { selectState } from '../DeviceListPage/slice/selectors';
+import { PrivatePath } from 'utils/url.const';
 
 const { Option } = Select;
 
 interface LocationState {
   edit: boolean;
+}
+
+enum TabKeys {
+  'details' = 'details',
+  'history' = 'history',
 }
 
 const selectProps: SelectProps<SelectValue> = {
@@ -62,6 +70,9 @@ export const DeviceDetailPage = props => {
   const history = useHistory();
   const isView = isCreate || isEdit ? false : true;
   const { setBreadCrumb } = useBreadCrumbContext();
+  const dispatch = useDispatch();
+  const { actions } = useDeviceManagePage();
+  const deviceState = useSelector(selectState);
 
   useEffect(() => {
     if (data) {
@@ -120,9 +131,11 @@ export const DeviceDetailPage = props => {
 
   // tab handler
   const handleTabChange = key => {
-    if (key === 'detail') {
+    if (key === TabKeys.details) {
+      history.push(`${PrivatePath.DEVICES}/${id}`);
       setIsDetailTab(true);
     } else {
+      history.push(`${PrivatePath.DEVICES}/${id}/history`);
       setIsDetailTab(false);
     }
   };
@@ -130,6 +143,13 @@ export const DeviceDetailPage = props => {
   const handleCloseModal = () => {
     setVisible(false);
   };
+
+  const getDefaultTab = React.useMemo(() => {
+    if (history.location.pathname.includes('history')) {
+      return `${TabKeys.history}`;
+    }
+    return `${TabKeys.details}`;
+  }, [history.location.pathname]);
 
   useEffect(() => {
     if (location.state) {
@@ -140,6 +160,16 @@ export const DeviceDetailPage = props => {
       }
     }
   }, [history, location]);
+
+  useEffect(() => {
+    dispatch(actions.fetchIdentity());
+  }, [actions, dispatch]);
+
+  useEffect(() => {
+    if (deviceState.identity && !isEdit) {
+      form.setFieldsValue({ code: deviceState.identity });
+    }
+  }, [deviceState, form, isEdit]);
 
   return (
     <>
@@ -153,11 +183,14 @@ export const DeviceDetailPage = props => {
         <SettingOutlined onClick={() => setVisible(true)} />
       </PageTitle>
       {isView ? (
-        <StyledTabs defaultActiveKey="detail" onChange={handleTabChange}>
-          <TabPane tab={isEdit || isView ? ' Detail ' : 'Create'} key="detail">
+        <StyledTabs defaultActiveKey={getDefaultTab} onChange={handleTabChange}>
+          <TabPane
+            tab={isEdit || isView ? ' Detail ' : 'Create'}
+            key={TabKeys.details}
+          >
             <CardLayout
               padding="3rem"
-              style={isView ? { marginBottom: '0' } : {}}
+              style={isView ? { margin: '0 auto' } : {}}
             >
               <StyledWrapperDiv>
                 <StyledTitle>Device Code</StyledTitle>
@@ -185,7 +218,7 @@ export const DeviceDetailPage = props => {
               </StyledWrapperDiv>
             </CardLayout>
           </TabPane>
-          <TabPane tab="History" key="history">
+          <TabPane tab="History" key={TabKeys.history}>
             <DeviceHistoryTab />
           </TabPane>
         </StyledTabs>
@@ -284,7 +317,7 @@ export const DeviceDetailPage = props => {
                 block
                 shape="round"
                 onClick={() =>
-                  isEdit ? setIsEdit(false) : history.push('/devices')
+                  isEdit ? setIsEdit(false) : history.push(PrivatePath.DEVICES)
                 }
               >
                 Cancel
@@ -317,8 +350,6 @@ export const DeviceDetailPage = props => {
 };
 
 const FormItem = styled(Form.Item)`
-  align-items: center;
-
   label {
     font-weight: 500;
     min-width: 150px;

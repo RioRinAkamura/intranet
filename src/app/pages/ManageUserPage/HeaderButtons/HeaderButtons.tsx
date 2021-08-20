@@ -4,6 +4,7 @@ import { Col, Row } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import Button from 'app/components/Button';
+import { PrivatePath } from 'utils/url.const';
 
 export const HeaderButtons = () => {
   const history = useHistory();
@@ -16,7 +17,7 @@ export const HeaderButtons = () => {
             size="middle"
             icon={<UserAddOutlined />}
             onClick={() => {
-              history.push('/users/create');
+              history.push(PrivatePath.USERS_CREATE);
             }}
           >
             Create User

@@ -9,6 +9,7 @@ import { useHistory } from 'react-router';
 import { AvatarPath } from 'app/pages/EmployeePage/EmployeeDetailPage/components/AvatarPath';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import Button from 'app/components/Button';
+import { PrivatePath } from 'utils/url.const';
 
 interface FormProps {
   isView: boolean;
@@ -75,7 +76,7 @@ export const DetailForm = memo((props: FormProps) => {
 
         const userResponse: any = { ...response };
 
-        history.push(`/users/${userResponse.id}`);
+        history.push(`${PrivatePath.USERS}/${userResponse.id}`);
       } else {
         let updateUser = isEditPass
           ? omit(value, ['password2'])
@@ -99,7 +100,7 @@ export const DetailForm = memo((props: FormProps) => {
 
         const userResponse: any = { ...response };
 
-        history.push(`/users/${userResponse.id}`);
+        history.push(`${PrivatePath.USERS}/${userResponse.id}`);
 
         notify({
           type: ToastMessageType.Info,

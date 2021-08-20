@@ -452,9 +452,14 @@
     "editMember": "Edit member",
     "form": {
       "projectName": {
-        "label": "Project name",
+        "label": "Name",
         "placeholder": "Enter name",
         "empty": "Please enter name"
+      },
+      "projectCode": {
+        "label": "Code",
+        "placeholder": "Enter code",
+        "empty": "Please enter code"
       },
       "projectStarted": {
         "label": "Start date",

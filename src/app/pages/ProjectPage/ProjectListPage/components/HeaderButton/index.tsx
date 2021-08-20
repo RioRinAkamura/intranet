@@ -7,6 +7,7 @@ import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { ProjectOutlined } from '@ant-design/icons';
 import { ProjectsMessages } from '../../messages';
 import Button from 'app/components/Button';
+import { PrivatePath } from 'utils/url.const';
 
 interface HeaderButtonProps {
   pagination?: TablePaginationConfig;
@@ -23,7 +24,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
       <OptionButton>
         <Button
           type="primary"
-          onClick={() => history.push('/projects/create')}
+          onClick={() => history.push(PrivatePath.PROJECTS_CREATE)}
           icon={<ProjectOutlined />}
           size="middle"
         >

@@ -14,6 +14,7 @@ import { ProjectInfo } from './components/ProjectInfo';
 import { ProjectDetailMessages } from './messages';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { ChangeLogs } from './components/ChangeLogs';
+import { PrivatePath } from 'utils/url.const';
 
 interface Props {}
 interface LocationState {
@@ -56,10 +57,10 @@ export const ProjectDetailPage = (props: Props) => {
   const onChangeTab = (key: string) => {
     if (key === TabKeys.changeLogs) {
       setIsDetailTab(false);
-      history.push(`/projects/${id}/change-logs`);
+      history.push(`${PrivatePath.PROJECTS}/${id}/change-logs`);
     } else {
       setIsDetailTab(true);
-      history.push(`/projects/${id}`);
+      history.push(`${PrivatePath.PROJECTS}/${id}`);
     }
   };
 
@@ -139,7 +140,7 @@ export const ProjectDetailPage = (props: Props) => {
           <TabPane tab="Details" key={TabKeys.details}>
             <CardLayout
               padding="3rem"
-              style={isView ? { marginBottom: '0' } : {}}
+              style={isView ? { margin: '0 auto' } : {}}
             >
               <Form form={form} labelAlign="left">
                 <Form.Item hidden name="id">
@@ -156,11 +157,16 @@ export const ProjectDetailPage = (props: Props) => {
         </StyledTabs>
       ) : (
         <CardLayout padding="3rem">
-          <Form form={form} labelAlign="left">
+          <Form form={form} layout="vertical">
             <Form.Item hidden name="id">
               <Input hidden />
             </Form.Item>
-            <ProjectInfo isView={isView} form={form} data={data} />
+            <ProjectInfo
+              isView={isView}
+              form={form}
+              data={data}
+              isEdit={isEdit}
+            />
           </Form>
         </CardLayout>
       )}
@@ -175,7 +181,7 @@ export const ProjectDetailPage = (props: Props) => {
                   if (isEdit) {
                     setIsEdit(false);
                   } else {
-                    history.push('/projects');
+                    history.push(PrivatePath.PROJECTS);
                   }
                 }}
               >

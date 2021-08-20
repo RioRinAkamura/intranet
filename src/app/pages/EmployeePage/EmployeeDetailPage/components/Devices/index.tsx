@@ -79,7 +79,7 @@ const WrapperForm: React.FC<FormProps> = ({
     <Form layout="vertical" form={form}>
       <Form.Item rules={FORM_RULES.DEVICE} name="device" label="Device">
         {/* <Input size="large" placeholder="Type" disabled={isView} /> */}
-        <Select placeholder="device" disabled={isView}>
+        <Select placeholder="device" disabled={isView} size="large">
           {deviceUpdate && deviceItem && (
             <Option value={deviceItem?.id}>{deviceItem?.code}</Option>
           )}
@@ -95,7 +95,7 @@ const WrapperForm: React.FC<FormProps> = ({
         label="Status"
       >
         {/* <Input size="large" placeholder="Summary" disabled={isView} /> */}
-        <Select disabled={isView} placeholder="Status">
+        <Select disabled={isView} placeholder="Status" size="large">
           {EMPLOYEE_DEVICE_STATUS.map(status => (
             <Option value={status.value}>{status.label}</Option>
           ))}

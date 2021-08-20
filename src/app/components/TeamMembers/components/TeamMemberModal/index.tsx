@@ -30,6 +30,7 @@ import { SelectValue } from 'antd/lib/select';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { IconButton } from 'app/components/Button';
+import { PrivatePath } from 'utils/url.const';
 
 interface MemberType {
   allocation: number;
@@ -173,7 +174,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
           size="small"
           icon={<EyeOutlined />}
           onClick={() => {
-            history.push(`/employees/${text}`);
+            history.push(`${PrivatePath.EMPLOYEES}/${text}`);
           }}
         />
       </Tooltip>
@@ -184,7 +185,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
           size="small"
           onClick={() => {
             history.push({
-              pathname: `/employees/` + text,
+              pathname: `${PrivatePath.EMPLOYEES}/${text}`,
               state: { edit: true },
             });
           }}
@@ -377,8 +378,10 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const handleChangeTab = key => {
     setActiveKey(key);
     if (key === '1') {
+      history.push(`${PrivatePath.PROJECTS}/${projId}/members`);
       setModalWidth(1000);
     } else {
+      history.push(`${PrivatePath.PROJECTS}/${projId}/members/add`);
       setModalWidth(600);
     }
   };

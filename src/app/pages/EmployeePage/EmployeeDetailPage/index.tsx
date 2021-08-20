@@ -33,6 +33,7 @@ import { useHandleDataTable } from '../EmployeeListPage/useHandleDataTable';
 import { selectEmployeeNotes } from './components/Notes/slice/selectors';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { ChangeLogs } from './components/ChangeLogs';
+import { PrivatePath } from 'utils/url.const';
 
 interface Props {}
 
@@ -107,19 +108,19 @@ export function EmployeeDetailPage(props: Props) {
   const onChangeTab = (key: string) => {
     if (key === TabKeys.notes) {
       setIsDetailTab(false);
-      history.push(`/employees/${id}/notes`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/notes`);
     } else if (key === TabKeys.projects) {
       setIsDetailTab(false);
-      history.push(`/employees/${id}/projects`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/projects`);
     } else if (key === TabKeys.devices) {
       setIsDetailTab(false);
-      history.push(`/employees/${id}/devices`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/devices`);
     } else if (key === TabKeys.changeLogs) {
       setIsDetailTab(false);
-      history.push(`/employees/${id}/change-logs`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/change-logs`);
     } else {
       setIsDetailTab(true);
-      history.push(`/employees/${id}`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}`);
     }
   };
 
@@ -282,9 +283,9 @@ export function EmployeeDetailPage(props: Props) {
                   if (isEdit) {
                     setIsEdit(false);
                   } else if (isView) {
-                    history.push('/employees');
+                    history.push(PrivatePath.EMPLOYEES);
                   } else if (isCreate) {
-                    history.push('/employees');
+                    history.push(PrivatePath.EMPLOYEES);
                   }
                 }}
               >

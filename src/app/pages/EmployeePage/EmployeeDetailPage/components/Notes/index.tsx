@@ -35,7 +35,7 @@ import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import { useTableConfig } from 'utils/tableConfig';
-import Button from 'app/components/Button';
+import Button, { IconButton } from 'app/components/Button';
 
 import { EmployeeNote } from './slice/types';
 import { useNotesSlice } from './slice';
@@ -115,7 +115,7 @@ const Actions: React.FC<ActionsProps> = ({
       content={() => (
         <>
           <Tooltip title={t(EmployeeNoteMessages.listViewTooltip())}>
-            <StyledIconButton
+            <IconButton
               type="primary"
               shape="circle"
               size="small"
@@ -127,7 +127,7 @@ const Actions: React.FC<ActionsProps> = ({
             />
           </Tooltip>
           <Tooltip title={t(EmployeeNoteMessages.listEditTooltip())}>
-            <StyledIconButton
+            <IconButton
               shape="circle"
               size="small"
               icon={<EditOutlined />}
@@ -138,7 +138,7 @@ const Actions: React.FC<ActionsProps> = ({
             />
           </Tooltip>
           <Tooltip title={t(EmployeeNoteMessages.listDeleteTooltip())}>
-            <StyledIconButton
+            <IconButton
               danger
               shape="circle"
               size="small"
@@ -152,7 +152,7 @@ const Actions: React.FC<ActionsProps> = ({
         </>
       )}
     >
-      <StyledButton shape="circle" size="small" icon={<MoreOutlined />} />
+      <IconButton shape="circle" size="small" icon={<MoreOutlined />} />
     </Popover>
   );
 };
@@ -432,10 +432,6 @@ const StyledButton = styled(Button)`
   svg {
     vertical-align: baseline;
   }
-`;
-
-const StyledIconButton = styled(StyledButton)`
-  margin: 5px;
 `;
 
 const StyledDatePicker = styled(DatePicker)`

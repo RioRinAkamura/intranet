@@ -5,7 +5,12 @@ import { Key } from 'react';
 import { deviceManagerPageSaga } from './saga';
 import { TablePagination } from '../useHandleDataTable';
 
-import { DevicesManagerState, FilterColumns, Delete } from './types';
+import {
+  DevicesManagerState,
+  FilterColumns,
+  Delete,
+  IdentityPayload,
+} from './types';
 
 export const initialState: DevicesManagerState = {
   results: [],
@@ -30,6 +35,16 @@ const slice = createSlice({
   name: 'DeviceManager',
   initialState,
   reducers: {
+    fetchIdentity(state) {
+      state.loading = true;
+    },
+    fetchIdentitySuccess(state, action: PayloadAction<IdentityPayload>) {
+      state.identity = action.payload.identity;
+      state.loading = action.payload.loading;
+    },
+    fetchIdentityFailure(state, action: PayloadAction<IdentityPayload>) {
+      state.error = action.payload.error;
+    },
     fetchList(state, action: PayloadAction<DevicesManagerState>) {
       state.loading = true;
     },

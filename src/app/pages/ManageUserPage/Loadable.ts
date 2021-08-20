@@ -1,6 +1,6 @@
 import { lazyLoad } from 'utils/loadable';
 
-export const ManageUserPage = lazyLoad(
+export const UserPage = lazyLoad(
   () => import('./index'),
-  module => module.ManageUserPage,
+  module => module.UserPage,
 );

@@ -30,6 +30,8 @@ import { ProjectsMessages } from 'app/pages/ProjectPage/ProjectListPage/messages
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
+import { PrivatePath } from 'utils/url.const';
+import { StyledLink } from 'styles/StyledCommon';
 
 export const Projects = memo(() => {
   const { t } = useTranslation();
@@ -77,7 +79,7 @@ export const Projects = memo(() => {
           size="small"
           icon={<EyeOutlined />}
           onClick={() => {
-            history.push(`/projects/${text}`);
+            history.push(`${PrivatePath.PROJECTS}/${text}`);
           }}
         />
       </Tooltip>
@@ -114,6 +116,11 @@ export const Projects = memo(() => {
       dataIndex: ['project_name'],
       ...getColumnSorterProps('project_name', 1),
       ...getColumnSearchInputProps(['project_name']),
+      render: (text, record) => (
+        <StyledLink to={`${PrivatePath.PROJECTS}/${record.project_id}`}>
+          {text}
+        </StyledLink>
+      ),
     },
     {
       title: 'Allocation',

@@ -1,6 +1,21 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
 import { deviceManagerAction as actions } from '.';
+
+function* fetchDeviceIdentity() {
+  try {
+    const response = yield api.hr.device.identity();
+    yield put(
+      actions.fetchIdentitySuccess({
+        identity: response,
+        loading: false,
+      }),
+    );
+  } catch (error) {
+    yield put(actions.fetchIdentityFailure);
+  }
+}
 
 function fetchDevicesAction(options) {
   return fakeAPI.get('hr/devices', {
@@ -46,6 +61,9 @@ function* deleteDeviceAction(action) {
 }
 
 export function* deviceManagerPageSaga() {
-  yield* [takeLatest(actions.fetchList.type, fetchListDevice)];
-  yield* [takeLatest(actions.delete.type, deleteDeviceAction)];
+  yield* [
+    takeLatest(actions.fetchList.type, fetchListDevice),
+    takeLatest(actions.delete.type, deleteDeviceAction),
+    takeLatest(actions.fetchIdentity.type, fetchDeviceIdentity),
+  ];
 }

@@ -231,5 +231,4 @@ const StyledButton = styled(Button)`
   justify-content: center;
   align-items: center;
   margin-left: 20px;
-  z-index: 10;
 `;

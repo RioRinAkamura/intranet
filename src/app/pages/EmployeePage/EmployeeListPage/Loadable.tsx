@@ -14,7 +14,7 @@ const LoadingWrapper = styled.div`
 
 export const EmployeeListPage = lazyLoad(
   () => import('./index'),
-  module => module.Employees,
+  module => module.EmployeeListPage,
   {
     fallback: (
       <LoadingWrapper>

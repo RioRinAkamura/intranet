@@ -6,6 +6,8 @@ import { DetailForm } from './components/DetailForm';
 import fakeAPI from 'utils/fakeAPI';
 import { CardLayout } from 'app/components/CardLayout';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import { User } from '@hdwebsoft/boilerplate-api-sdk/libs/api/user/models';
+
 interface LocationState {
   edit: boolean;
 }
@@ -19,7 +21,13 @@ export const UserManageDetailPage = props => {
   const [isCreate, setIsCreate] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const isView = isCreate || isEdit ? false : true;
-  const [data, setData] = useState({});
+  const [data, setData] = useState<User>();
+
+  const getUserName = () => {
+    if (data) return `${data.first_name} ${data.last_name}`;
+
+    return 'Unknown';
+  };
 
   React.useEffect(() => {
     (async () => {
@@ -55,7 +63,7 @@ export const UserManageDetailPage = props => {
   return (
     <>
       <PageTitle
-        title={isView ? 'User Name' : isEdit ? 'Edit User' : 'Create User'}
+        title={isView ? getUserName() : isEdit ? 'Edit User' : 'Create User'}
       />
       <CardLayout>
         <DetailForm
