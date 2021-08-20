@@ -31,7 +31,7 @@ import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
-import { StyledLink } from 'styles/StyledCommon';
+import { StyledLink, Wrapper } from 'styles/StyledCommon';
 
 interface ProjectsProps {
   employee_id: string;
@@ -221,10 +221,6 @@ export const Projects = memo(({ employee_id }: ProjectsProps) => {
     </Wrapper>
   );
 });
-
-const Wrapper = styled(CardLayout)`
-  margin: 0;
-`;
 
 const Header = styled.div`
   display: flex;
