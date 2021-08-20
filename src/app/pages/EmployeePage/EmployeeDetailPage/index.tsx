@@ -34,7 +34,8 @@ import { selectEmployeeNotes } from './components/Notes/slice/selectors';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { ChangeLogs } from './components/ChangeLogs';
 import { PrivatePath } from 'utils/url.const';
-
+import { Switch } from 'react-router-dom';
+import { PrivateRoute } from 'app/components/Auth/Route';
 interface Props {}
 
 interface LocationState {
@@ -228,35 +229,63 @@ export function EmployeeDetailPage(props: Props) {
         )}
       </StyledPageTitle>
       {isView ? (
-        <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
-          <TabPane tab="Details" key={TabKeys.details}>
-            <DetailForm
-              form={form}
-              data={data}
-              isEdit={isEdit}
-              isView={isView}
-              leftScreenItems={<IdCardInfo isView={isView} isEdit={isEdit} />}
-              rightScreenItems={
-                <>
-                  <ProfileInfo isView={isView} isEdit={isEdit} users={users} />
-                  <BankAccounts isView={isView} isEdit={isEdit} form={form} />
-                </>
-              }
+        <>
+          <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
+            <TabPane tab="Details" key={TabKeys.details} />
+            <TabPane tab="Projects" key={TabKeys.projects} />
+            <TabPane tab="Notes" key={TabKeys.notes} />
+            <TabPane tab="Devices" key={TabKeys.devices} />
+            <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
+          </StyledTabs>
+
+          <Switch>
+            <PrivateRoute
+              exact
+              path={PrivatePath.EMPLOYEES_ID}
+              component={() => (
+                <DetailForm
+                  form={form}
+                  data={data}
+                  isEdit={isEdit}
+                  isView={isView}
+                  leftScreenItems={
+                    <IdCardInfo isView={isView} isEdit={isEdit} />
+                  }
+                  rightScreenItems={
+                    <>
+                      <ProfileInfo
+                        isView={isView}
+                        isEdit={isEdit}
+                        users={users}
+                      />
+                      <BankAccounts
+                        isView={isView}
+                        isEdit={isEdit}
+                        form={form}
+                      />
+                    </>
+                  }
+                />
+              )}
             />
-          </TabPane>
-          <TabPane tab="Projects" key={TabKeys.projects}>
-            <Projects />
-          </TabPane>
-          <TabPane tab="Notes" key={TabKeys.notes}>
-            <Notes />
-          </TabPane>
-          <TabPane tab="Devices" key={TabKeys.devices}>
-            <Device id={id} />
-          </TabPane>
-          <TabPane tab="Change Logs" key={TabKeys.changeLogs}>
-            <ChangeLogs />
-          </TabPane>
-        </StyledTabs>
+            <PrivateRoute
+              path={PrivatePath.EMPLOYEES_ID_NOTES}
+              component={Notes}
+            />
+            <PrivateRoute
+              path={PrivatePath.EMPLOYEES_ID_PROJECTS}
+              component={Projects}
+            />
+            <PrivateRoute
+              path={PrivatePath.EMPLOYEES_ID_DEVICES}
+              component={() => <Device id={id} />}
+            />
+            <PrivateRoute
+              path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}
+              component={ChangeLogs}
+            />
+          </Switch>
+        </>
       ) : (
         <DetailForm
           form={form}

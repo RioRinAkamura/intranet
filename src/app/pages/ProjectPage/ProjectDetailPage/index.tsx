@@ -15,6 +15,8 @@ import { ProjectDetailMessages } from './messages';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { ChangeLogs } from './components/ChangeLogs';
 import { PrivatePath } from 'utils/url.const';
+import { Switch } from 'react-router-dom';
+import { PrivateRoute } from 'app/components/Auth/Route';
 
 interface Props {}
 interface LocationState {
@@ -136,25 +138,36 @@ export const ProjectDetailPage = (props: Props) => {
         }
       />
       {isView ? (
-        <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
-          <TabPane tab="Details" key={TabKeys.details}>
-            <CardLayout
-              padding="3rem"
-              style={isView ? { margin: '0 auto' } : {}}
-            >
-              <Form form={form} labelAlign="left">
-                <Form.Item hidden name="id">
-                  <Input hidden />
-                </Form.Item>
-                <ProjectInfo isView={isView} form={form} data={data} />
-              </Form>
-            </CardLayout>
-          </TabPane>
+        <>
+          <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
+            <TabPane tab="Details" key={TabKeys.details} />
+            <TabPane tab="Change logs" key={TabKeys.changeLogs} />
+          </StyledTabs>
 
-          <TabPane tab="Change logs" key={TabKeys.changeLogs}>
-            <ChangeLogs />
-          </TabPane>
-        </StyledTabs>
+          <Switch>
+            <PrivateRoute
+              exact
+              path={PrivatePath.PROJECTS_ID}
+              component={() => (
+                <CardLayout
+                  padding="3rem"
+                  style={isView ? { margin: '0 auto' } : {}}
+                >
+                  <Form form={form} labelAlign="left">
+                    <Form.Item hidden name="id">
+                      <Input hidden />
+                    </Form.Item>
+                    <ProjectInfo isView={isView} form={form} data={data} />
+                  </Form>
+                </CardLayout>
+              )}
+            />
+            <PrivateRoute
+              path={PrivatePath.PROJECTS_ID_CHANGELOGS}
+              component={ChangeLogs}
+            />
+          </Switch>
+        </>
       ) : (
         <CardLayout padding="3rem">
           <Form form={form} layout="vertical">

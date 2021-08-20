@@ -23,22 +23,6 @@ export const EmployeePage: React.FC = () => {
         path={PrivatePath.EMPLOYEES_ID}
         component={EmployeeDetailPage}
       />
-      <PrivateRoute
-        path={PrivatePath.EMPLOYEES_ID_NOTES}
-        component={EmployeeDetailPage}
-      />
-      <PrivateRoute
-        path={PrivatePath.EMPLOYEES_ID_PROJECTS}
-        component={EmployeeDetailPage}
-      />
-      <PrivateRoute
-        path={PrivatePath.EMPLOYEES_ID_DEVICES}
-        component={EmployeeDetailPage}
-      />
-      <PrivateRoute
-        path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}
-        component={EmployeeDetailPage}
-      />
     </Switch>
   );
 };

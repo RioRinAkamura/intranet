@@ -423,4 +423,3 @@ const TableWrapper = styled.div`
 const Capitalize = styled.span`
   text-transform: capitalize;
 `;
-

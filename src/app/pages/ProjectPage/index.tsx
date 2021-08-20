@@ -32,10 +32,6 @@ export const ProjectPage: React.FC = () => {
           path={PrivatePath.PROJECTS_ID}
           component={ProjectDetailPage}
         />
-        <PrivateRoute
-          path={PrivatePath.PROJECTS_ID_CHANGELOGS}
-          component={ProjectDetailPage}
-        />
       </Switch>
     </>
   );
