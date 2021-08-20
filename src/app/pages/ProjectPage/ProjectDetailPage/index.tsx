@@ -15,8 +15,7 @@ import { ProjectDetailMessages } from './messages';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { ChangeLogs } from './components/ChangeLogs';
 import { PrivatePath } from 'utils/url.const';
-import { Switch } from 'react-router-dom';
-import { PrivateRoute } from 'app/components/Auth/Route';
+import { Route, Switch } from 'react-router-dom';
 
 interface Props {}
 interface LocationState {
@@ -65,6 +64,17 @@ export const ProjectDetailPage = (props: Props) => {
       history.push(`${PrivatePath.PROJECTS}/${id}`);
     }
   };
+
+  const projectDetailForm = () => (
+    <CardLayout padding="3rem" style={isView ? { margin: '0 auto' } : {}}>
+      <Form form={form} labelAlign="left">
+        <Form.Item hidden name="id">
+          <Input hidden />
+        </Form.Item>
+        <ProjectInfo isView={isView} form={form} data={data} />
+      </Form>
+    </CardLayout>
+  );
 
   useEffect(() => {
     if (data) {
@@ -145,26 +155,14 @@ export const ProjectDetailPage = (props: Props) => {
           </StyledTabs>
 
           <Switch>
-            <PrivateRoute
+            <Route
               exact
               path={PrivatePath.PROJECTS_ID}
-              component={() => (
-                <CardLayout
-                  padding="3rem"
-                  style={isView ? { margin: '0 auto' } : {}}
-                >
-                  <Form form={form} labelAlign="left">
-                    <Form.Item hidden name="id">
-                      <Input hidden />
-                    </Form.Item>
-                    <ProjectInfo isView={isView} form={form} data={data} />
-                  </Form>
-                </CardLayout>
-              )}
+              component={() => projectDetailForm()}
             />
-            <PrivateRoute
+            <Route
               path={PrivatePath.PROJECTS_ID_CHANGELOGS}
-              component={ChangeLogs}
+              component={() => <ChangeLogs project_id={id} />}
             />
           </Switch>
         </>

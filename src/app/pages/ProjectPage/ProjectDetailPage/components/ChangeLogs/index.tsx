@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 
@@ -27,12 +26,12 @@ import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useH
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
-interface Props {}
+interface ChangeLogsProps {
+  project_id: string;
+}
 
-export const ChangeLogs = React.memo((props: Props) => {
+export const ChangeLogs = React.memo(({ project_id }: ChangeLogsProps) => {
   const { t } = useTranslation();
-
-  const { id } = useParams<Record<string, string>>();
 
   const dispatch = useDispatch();
   const { actions } = useProjectChangeLogsSlice();
@@ -109,11 +108,9 @@ export const ChangeLogs = React.memo((props: Props) => {
 
   const fetchProjectChangeLogs = React.useCallback(() => {
     if (!isFilter) {
-      dispatch(
-        actions.fetchProjectChangeLogs({ project_id: id, params: params }),
-      );
+      dispatch(actions.fetchProjectChangeLogs({ project_id, params: params }));
     }
-  }, [actions, dispatch, id, isFilter, params]);
+  }, [actions, dispatch, project_id, isFilter, params]);
 
   React.useEffect(() => {
     fetchProjectChangeLogs();

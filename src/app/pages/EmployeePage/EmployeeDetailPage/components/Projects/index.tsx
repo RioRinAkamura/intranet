@@ -15,7 +15,7 @@ import {
   ProjectOutlined,
 } from '@ant-design/icons';
 import { UsersMessages } from 'app/pages/EmployeePage/EmployeeListPage/messages';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { ProjectModal } from '../ProjectModal';
 import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import { useTableConfig } from 'utils/tableConfig';
@@ -33,9 +33,12 @@ import Button, { IconButton } from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
 
-export const Projects = memo(() => {
+interface ProjectsProps {
+  employee_id: string;
+}
+
+export const Projects = memo(({ employee_id }: ProjectsProps) => {
   const { t } = useTranslation();
-  const { id } = useParams<Record<string, string>>();
   const history = useHistory();
   const [open, setOpen] = useState<boolean>(false);
   const [selectedProject, setSelectedProject] = useState<any>();
@@ -62,9 +65,11 @@ export const Projects = memo(() => {
 
   const fetchEmployeeProject = useCallback(() => {
     if (!isFilter) {
-      dispatch(actions.fetchEmployeeProject({ id: id, params: params }));
+      dispatch(
+        actions.fetchEmployeeProject({ id: employee_id, params: params }),
+      );
     }
-  }, [actions, dispatch, id, isFilter, params]);
+  }, [actions, dispatch, employee_id, isFilter, params]);
 
   useEffect(() => {
     fetchEmployeeProject();
@@ -207,7 +212,7 @@ export const Projects = memo(() => {
       />
 
       <ProjectModal
-        id={id}
+        id={employee_id}
         open={open}
         setOpen={setOpen}
         selectedProject={selectedProject}

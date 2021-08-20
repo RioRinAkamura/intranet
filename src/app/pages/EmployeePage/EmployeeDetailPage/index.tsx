@@ -34,8 +34,8 @@ import { selectEmployeeNotes } from './components/Notes/slice/selectors';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { ChangeLogs } from './components/ChangeLogs';
 import { PrivatePath } from 'utils/url.const';
-import { Switch } from 'react-router-dom';
-import { PrivateRoute } from 'app/components/Auth/Route';
+import { Route, Switch } from 'react-router-dom';
+
 interface Props {}
 
 interface LocationState {
@@ -206,6 +206,22 @@ export function EmployeeDetailPage(props: Props) {
       .catch(err => console.log(err));
   };
 
+  const employeeDetailForm = () => (
+    <DetailForm
+      form={form}
+      data={data}
+      isEdit={isEdit}
+      isView={isView}
+      leftScreenItems={<IdCardInfo isView={isView} isEdit={isEdit} />}
+      rightScreenItems={
+        <>
+          <ProfileInfo isView={isView} isEdit={isEdit} users={users} />
+          <BankAccounts isView={isView} isEdit={isEdit} form={form} />
+        </>
+      }
+    />
+  );
+
   return (
     <>
       <StyledPageTitle
@@ -239,50 +255,25 @@ export function EmployeeDetailPage(props: Props) {
           </StyledTabs>
 
           <Switch>
-            <PrivateRoute
+            <Route
               exact
               path={PrivatePath.EMPLOYEES_ID}
-              component={() => (
-                <DetailForm
-                  form={form}
-                  data={data}
-                  isEdit={isEdit}
-                  isView={isView}
-                  leftScreenItems={
-                    <IdCardInfo isView={isView} isEdit={isEdit} />
-                  }
-                  rightScreenItems={
-                    <>
-                      <ProfileInfo
-                        isView={isView}
-                        isEdit={isEdit}
-                        users={users}
-                      />
-                      <BankAccounts
-                        isView={isView}
-                        isEdit={isEdit}
-                        form={form}
-                      />
-                    </>
-                  }
-                />
-              )}
+              component={() => employeeDetailForm()}
             />
-            <PrivateRoute
-              path={PrivatePath.EMPLOYEES_ID_NOTES}
-              component={Notes}
-            />
-            <PrivateRoute
+            <Route path={PrivatePath.EMPLOYEES_ID_NOTES}>
+              <Notes employee_id={id} />
+            </Route>
+            <Route
               path={PrivatePath.EMPLOYEES_ID_PROJECTS}
-              component={Projects}
+              component={() => <Projects employee_id={id} />}
             />
-            <PrivateRoute
+            <Route
               path={PrivatePath.EMPLOYEES_ID_DEVICES}
               component={() => <Device id={id} />}
             />
-            <PrivateRoute
+            <Route
               path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}
-              component={ChangeLogs}
+              component={() => <ChangeLogs employee_id={id} />}
             />
           </Switch>
         </>

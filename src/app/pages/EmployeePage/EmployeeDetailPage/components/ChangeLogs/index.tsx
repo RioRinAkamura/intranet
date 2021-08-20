@@ -7,7 +7,6 @@ import React from 'react';
 import { Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
-import { useParams } from 'react-router-dom';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
@@ -27,13 +26,13 @@ import { useTableConfig } from 'utils/tableConfig';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
-interface Props {}
+interface ChangeLogsProps {
+  employee_id: string;
+}
 
-export const ChangeLogs = React.memo((props: Props) => {
+export const ChangeLogs = React.memo(({ employee_id }: ChangeLogsProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-
-  const { id } = useParams<Record<string, string>>();
 
   const { actions } = useEmployeeChangeLogsSlice();
   const params = useSelector(selectEmployeeChangeLogsParams);
@@ -110,10 +109,10 @@ export const ChangeLogs = React.memo((props: Props) => {
   const fetchEmployeeChangeLogs = React.useCallback(() => {
     if (!isFilter) {
       dispatch(
-        actions.fetchEmployeeChangeLogs({ employee_id: id, params: params }),
+        actions.fetchEmployeeChangeLogs({ employee_id, params: params }),
       );
     }
-  }, [actions, dispatch, id, isFilter, params]);
+  }, [actions, dispatch, employee_id, isFilter, params]);
 
   React.useEffect(() => {
     fetchEmployeeChangeLogs();
