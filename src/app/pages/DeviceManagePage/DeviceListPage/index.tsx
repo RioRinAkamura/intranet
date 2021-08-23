@@ -173,6 +173,7 @@ export const DeviceListPage = () => {
       title: 'Code',
       dataIndex: 'code',
       width: 100,
+      ...getColumnSorterProps('code', 0),
       ...getColumnSearchInputProps(['code'], 0, 'string'),
       render: (text, record) => (
         <StyledLink to={`${PrivatePath.DEVICES}/${record.id}`}>

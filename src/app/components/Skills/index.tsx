@@ -1,5 +1,4 @@
 import React, { memo, useState, useEffect } from 'react';
-import fakeAPI from 'utils/fakeAPI';
 import styled from 'styled-components/macro';
 import { Button, Rate } from 'antd';
 import { PlusOutlined, UnorderedListOutlined } from '@ant-design/icons';
@@ -18,7 +17,7 @@ interface Skill {
 }
 
 interface SkillsProps {
-  employeeId?: string;
+  employeeId: string;
 }
 
 const reorder = (list, startIndex, endIndex) => {
@@ -37,7 +36,6 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
 
   const getSkills = React.useCallback(async () => {
     try {
-      if (!employeeId) return;
       const response = await api.hr.employee.getSkills(employeeId);
       setData(response);
     } catch (e) {
@@ -67,7 +65,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
             skill_id: item.id,
             employee_id: employeeId,
           };
-          return fakeAPI.post(`hr/employees/${employeeId}/skills/`, mapItem);
+          return api.hr.employee.postSkill(employeeId, mapItem);
         });
 
         Promise.all(arrPromise).then(values => {
@@ -89,22 +87,20 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
 
       try {
         const deleteArr = await deleteItems.map(i =>
-          fakeAPI.delete(`/hr/employees/${employeeId}/skills/${i}`),
+          api.hr.employee.deleteSkill(employeeId, i),
         );
         const createArr = await newItems.map(i => {
           const mapItem = {
             skill_id: i.id,
             employee_id: employeeId,
           };
-          return fakeAPI.post(`hr/employees/${employeeId}/skills/`, mapItem);
+          return api.hr.employee.postSkill(employeeId, mapItem);
         });
 
         const arrPromise = [...deleteArr, ...createArr];
         Promise.all(arrPromise).then(async () => {
           try {
-            const response = await fakeAPI.get(
-              `/hr/employees/${employeeId}/skills/`,
-            );
+            const response = await api.hr.employee.getSkills(employeeId);
             setData(response);
           } catch (e) {
             console.log(e);
@@ -122,7 +118,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
       const newSkillList = [...data].filter(item => item.id !== skill.id);
       setData(newSkillList);
 
-      await fakeAPI.delete(`/hr/employees/${employeeId}/skills/${skill.id}`);
+      await api.hr.employee.deleteSkill(employeeId, skill.id);
     } catch (e) {
       console.log(e, 'error');
     }
@@ -142,7 +138,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
 
         setData(newSkillList);
 
-        await fakeAPI.put(`/hr/employees/${employeeId}/skills/`, {
+        await api.hr.employee.putSkill(employeeId, {
           ...skill,
           level: value,
           skill_id: skill.skill.id,

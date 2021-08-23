@@ -1,9 +1,9 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
-import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
 import { categoryManageAction as actions } from '.';
 
 function fetchCategory() {
-  return fakeAPI.get('/hr/devices-categories');
+  return api.hr.deviceCategory.list();
 }
 
 function* fetchList(action) {
