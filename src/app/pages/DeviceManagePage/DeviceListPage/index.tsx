@@ -28,7 +28,6 @@ import { selectState, selectIsFilter, selectParams } from './slice/selectors';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { useHandleDataTable } from './useHandleDataTable';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
-import fakeAPI from 'utils/fakeAPI';
 import { useTableConfig } from 'utils/tableConfig';
 import { Messages } from './messages';
 import { CardLayout } from 'app/components/CardLayout';
@@ -36,17 +35,6 @@ import Button, { IconButton } from 'app/components/Button';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
-
-interface Category {
-  name: string;
-  id: string;
-}
-
-interface Employee {
-  id: string;
-  first_name: string;
-  last_name: string;
-}
 
 export const DeviceListPage = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -79,28 +67,6 @@ export const DeviceListPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteMulti, setIsDeleteMulti] = useState(false);
   const [selectedId, setSelectedId] = useState('');
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [employee, setEmployee] = useState<Employee[]>([]);
-
-  const fetchEmployee = async () => {
-    const response: any = await fakeAPI.get('/hr/employees');
-
-    setEmployee(response.results);
-  };
-
-  const fetchCategories = async () => {
-    const response: any = await fakeAPI.get('/hr/devices-categories');
-
-    setCategories(response.results);
-  };
-
-  useEffect(() => {
-    fetchEmployee();
-  }, []);
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
 
   const fetchListDevice = useCallback(() => {
     if (!isFilter) {
@@ -160,18 +126,11 @@ export const DeviceListPage = () => {
   const handleConfirmDelete = async () => {
     if (isDeleteMulti) {
       const ids = state.selectedRowKeys || [];
-      const arrPromise = await ids.map((id: string) => {
-        return fakeAPI.delete(`/hr/devices/${id}`);
-      });
-
-      await Promise.all(arrPromise);
-      dispatch(actions.deleteSuccess());
-
-      setIsDeleteMulti(false);
-
+      dispatch(actions.deleteMulti({ ids }));
       dispatch(actions.selectedRows({ selectedRowKeys: [], selectedRows: [] }));
+      setIsDeleteMulti(false);
     } else {
-      await dispatch(actions.delete({ IdDelete: selectedId }));
+      dispatch(actions.delete({ IdDelete: selectedId }));
     }
     setIsModalVisible(false);
   };
@@ -223,14 +182,8 @@ export const DeviceListPage = () => {
     },
     {
       title: 'Category',
-      dataIndex: 'category',
+      dataIndex: 'category_name',
       width: 100,
-      render: categoryId => {
-        const category: any = [...categories].find(
-          (category: Category) => category.id === categoryId,
-        );
-        return <Capitalize>{category ? category.name : ''}</Capitalize>;
-      },
     },
     {
       title: 'Since',
@@ -242,15 +195,9 @@ export const DeviceListPage = () => {
     },
     {
       title: 'Employee',
-      dataIndex: 'employee',
+      dataIndex: 'employee_name',
       width: 150,
-      render: employeeId => {
-        const item: any = [...employee].find((emp: Employee) => {
-          return emp.id === employeeId;
-        });
-        const textStr = item && item.first_name + ' ' + item.last_name;
-        return <Capitalize>{textStr}</Capitalize>;
-      },
+      render: data => (data ? data : ''),
     },
     {
       title: 'Health Status',

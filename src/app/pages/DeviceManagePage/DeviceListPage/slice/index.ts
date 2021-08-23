@@ -95,7 +95,6 @@ const slice = createSlice({
     },
 
     filterColumns(state, action: PayloadAction<FilterColumns>) {
-      console.log(action.payload);
       state.filterColumns = { ...state.filterColumns, ...action.payload };
       state.params = { ...state.params, ...action.payload };
     },
@@ -124,6 +123,20 @@ const slice = createSlice({
       state.deleteFailed = false;
     },
     deleteFailure(state) {
+      state.deleteSuccess = false;
+      state.deleteFailed = true;
+    },
+    deleteMulti(state, action: PayloadAction<Delete>) {
+      state.isFilter = true;
+      state.deleteSuccess = false;
+      state.deleteFailed = false;
+    },
+    deleteMultiSuccess(state) {
+      state.isFilter = false;
+      state.deleteSuccess = true;
+      state.deleteFailed = false;
+    },
+    deleteMultiFailure(state) {
       state.deleteSuccess = false;
       state.deleteFailed = true;
     },

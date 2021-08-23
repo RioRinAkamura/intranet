@@ -50,10 +50,9 @@ export interface Pagination {
 }
 
 export interface Delete {
-  IdDelete: string;
+  IdDelete?: string;
   ids?: string[];
 }
-
 export interface IdentityPayload {
   identity?: string;
   loading: boolean;
