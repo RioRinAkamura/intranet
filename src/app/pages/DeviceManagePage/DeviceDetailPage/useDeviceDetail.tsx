@@ -1,7 +1,7 @@
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import * as React from 'react';
 import { useHistory } from 'react-router';
-import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
 import { PrivatePath } from 'utils/url.const';
 
 export const useDeviceDetail = (): {
@@ -17,14 +17,14 @@ export const useDeviceDetail = (): {
   const { notify } = useNotify();
 
   const detail = React.useCallback(async (id: string) => {
-    return await fakeAPI.get(`/hr/devices/${id}`);
+    return await api.hr.device.get(id);
   }, []);
 
   const create = async value => {
     setLoading(true);
 
     try {
-      const response: any = await fakeAPI.post('/hr/devices/', value);
+      const response: any = await api.hr.device.create(value);
 
       if (response) {
         notify({
@@ -50,10 +50,7 @@ export const useDeviceDetail = (): {
   const update = async values => {
     setLoading(true);
     try {
-      const response: any = await fakeAPI.put(
-        `/hr/devices/${values.id}/`,
-        values,
-      );
+      const response: any = await api.hr.device.update(values);
       if (response) {
         notify({
           type: ToastMessageType.Info,

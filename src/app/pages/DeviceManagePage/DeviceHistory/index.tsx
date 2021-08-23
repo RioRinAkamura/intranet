@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { ColumnProps } from 'antd/lib/table';
 import { Col, Row, Table } from 'antd';
-import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
 
 interface DeviceHistoryType {
   user: string;
@@ -18,10 +18,8 @@ interface DeviceHistoryProps {
 export const DeviceHistory = ({ device_id }: DeviceHistoryProps) => {
   const [histories, setHistories] = useState<DeviceHistoryType[]>([]);
   const fetchListHistory = useCallback(async () => {
-    const histories: any = await fakeAPI.get('/hr/devices-history', {
-      params: {
-        device: device_id,
-      },
+    const histories: any = await api.hr.deviceHistory.list('', {
+      device: device_id,
     });
 
     setHistories(histories.results);

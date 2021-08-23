@@ -16,7 +16,6 @@ import { ColumnsType } from 'antd/lib/table/interface';
 import { antColours } from 'utils/types';
 import styled from 'styled-components/macro';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
-import fakeAPI from 'utils/fakeAPI';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import {
   DeleteOutlined,
@@ -31,6 +30,7 @@ import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/usePro
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { IconButton } from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
+import { api } from 'utils/api';
 
 interface MemberType {
   allocation: number;
@@ -149,7 +149,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const handleConfirmDelete = async () => {
     setIsModalVisible(false);
     try {
-      await fakeAPI.delete(`/hr/projects/${projId}/members/${mid}`);
+      await api.hr.project.deleteMember(projId, mid);
       const newMemberList =
         dataSource &&
         [...dataSource].filter(
@@ -316,14 +316,15 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
     try {
       setLoadingMember(true);
       if (projId) {
-        const response = await fakeAPI.post(`/hr/projects/${projId}/members/`, {
+        const response = await api.hr.project.createMember(projId, {
           ...values.members,
           project: projId,
         });
         if (response) {
           memberForm.resetFields();
-          const employee = await fakeAPI.get(
-            `/hr/projects/${projId}/members/${values.members.employee}/`,
+          const employee = await api.hr.project.getMemberDetail(
+            projId,
+            values.members.employee,
           );
           const newMember: any = {
             ...employee,

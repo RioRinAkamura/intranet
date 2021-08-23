@@ -26,7 +26,7 @@ import { api } from 'utils/api';
 const { Option } = Select;
 
 interface JobInfoProps {
-  employeeId?: string;
+  employeeId: string;
   isView?: boolean;
   isEdit?: boolean;
   form: FormInstance;

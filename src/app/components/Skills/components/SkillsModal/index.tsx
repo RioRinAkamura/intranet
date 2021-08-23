@@ -2,7 +2,6 @@ import React, { memo, useState, useEffect } from 'react';
 import { Modal, Input, Button, Tag, Popover, Tooltip } from 'antd';
 import styled from 'styled-components/macro';
 import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
-// import fakeAPI from 'utils/fakeAPI';
 import { api } from 'utils/api';
 import { useGetSkills } from '../../useGetSkill';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
@@ -87,7 +86,6 @@ export const SkillsModal = memo((props: skillModalProps) => {
           name: customSkill,
           type: models.hr.SkillType.ENGINEERING,
         };
-        // const response = await fakeAPI.post('/hr/skills/', newSkill);
         const response = await api.hr.skill.create(newSkill);
         setPickedSkill([...pickedSkill, response]);
         setCustomSkill('');

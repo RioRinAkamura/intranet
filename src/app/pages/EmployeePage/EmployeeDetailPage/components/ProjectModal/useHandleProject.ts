@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { useCallback, useState } from 'react';
-import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
+
 export const useHandleProject = (): {
   loadingProject: boolean;
   fetchProjects: (search: string) => any;
@@ -12,11 +13,7 @@ export const useHandleProject = (): {
 
   const fetchProjects = useCallback(async (search: string) => {
     try {
-      const response: any = await fakeAPI.get('/hr/projects/', {
-        params: {
-          search: search,
-        },
-      });
+      const response: any = await api.hr.project.list(search);
       return response.results;
     } catch (error) {
       console.log(error);
@@ -31,10 +28,7 @@ export const useHandleProject = (): {
       const member = cloneDeep(data);
       member.employee = id;
       member.allocation = parseFloat(member.allocation).toFixed(1);
-      const response = await fakeAPI.post(
-        `/hr/projects/${data.project}/members/`,
-        member,
-      );
+      const response = await api.hr.project.createMember(data.project, member);
       return response;
     } catch (error) {
       console.log(error);
@@ -49,8 +43,9 @@ export const useHandleProject = (): {
       const member = cloneDeep(data);
       member.employee = id;
       member.allocation = parseFloat(member.allocation).toFixed(1);
-      const response = await fakeAPI.patch(
-        `/hr/projects/${data.project}/members/${id}/`,
+      const response = await api.hr.project.updateMember(
+        data.project,
+        id,
         member,
       );
       return response;
@@ -64,7 +59,7 @@ export const useHandleProject = (): {
   const deleteProject = async (id: string, mid: string) => {
     setLoadingProject(true);
     try {
-      await fakeAPI.delete(`/hr/projects/${id}/members/${mid}`);
+      await api.hr.project.deleteMember(id, mid);
       return true;
     } catch (error) {
       console.log(error);

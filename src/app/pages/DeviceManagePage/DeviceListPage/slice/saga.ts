@@ -1,5 +1,5 @@
-import { takeLatest, call, put } from 'redux-saga/effects';
 import fakeAPI from 'utils/fakeAPI';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import { api } from 'utils/api';
 import { deviceManagerAction as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';

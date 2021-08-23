@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useDeviceCategorySlice } from './slice';
 import { selectCategories } from './slice/selectors';
 import { categoryResponse } from './slice/types';
-import fakeAPI from 'utils/fakeAPI';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import { api } from 'utils/api';
 
 interface CategoryProps {
   visible: boolean;
@@ -36,7 +36,7 @@ export const DeviceCategory = (props: CategoryProps) => {
 
   const handleConfirmDelete = async () => {
     try {
-      await fakeAPI.delete(`/hr/devices-categories/${categoryId}/`);
+      await api.hr.deviceCategory.delete(categoryId);
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -58,7 +58,7 @@ export const DeviceCategory = (props: CategoryProps) => {
     if (e.keyCode === 13) {
       categoryForm.validateFields().then(async values => {
         try {
-          await fakeAPI.post('/hr/devices-categories/', {
+          await api.hr.deviceCategory.create({
             ...values,
             devices: [],
           });
