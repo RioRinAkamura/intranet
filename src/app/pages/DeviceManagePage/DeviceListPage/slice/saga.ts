@@ -2,6 +2,8 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import fakeAPI from 'utils/fakeAPI';
 import { api } from 'utils/api';
 import { deviceManagerAction as actions } from '.';
+import { PayloadAction } from '@reduxjs/toolkit';
+import { Delete } from './types';
 
 function* fetchDeviceIdentity() {
   try {
@@ -17,30 +19,25 @@ function* fetchDeviceIdentity() {
   }
 }
 
-function fetchDevicesAction(options) {
-  return fakeAPI.get('hr/devices', {
-    params: {
-      page: options.params.page,
-      limit: options.params.limit,
-      search: options.params.search,
-      status: options.params.status,
-      health_status: options.params.health_status,
-      code: options.params.code,
-      ordering: options.params.ordering,
-    },
-  });
-}
-
-function deleteDevice(options) {
-  return fakeAPI.delete(`/devices/${options.id}`);
-}
-
 function* fetchListDevice(action) {
   const { params } = action.payload;
   try {
-    const response = yield call(fetchDevicesAction, {
-      params,
-    });
+    const queryParams = {
+      code: params.code,
+      health_status: params.health_status,
+      status: params.status,
+    };
+
+    const response = yield call(
+      [api, api.hr.device.list],
+      params.search,
+      {
+        ...queryParams,
+      },
+      params.ordering,
+      params.page,
+      params.limit,
+    );
     yield put(actions.fetchListSuccess(response));
   } catch (e) {
     console.log(e);
@@ -48,13 +45,29 @@ function* fetchListDevice(action) {
   }
 }
 
-function* deleteDeviceAction(action) {
+function* deleteDeviceAction(action: PayloadAction<Delete>) {
   try {
     const id = action.payload.IdDelete;
-    yield call(deleteDevice, { id });
+    if (id) yield call([api, api.hr.device.delete], id);
     yield put(actions.deleteSuccess());
   } catch (err) {
     yield put(actions.deleteFailure());
+  } finally {
+    yield put(actions.resetStateDeleteModal());
+  }
+}
+
+function* deleteMultiDevice(action: PayloadAction<Delete>) {
+  try {
+    const ids = action.payload.ids;
+    fakeAPI.delete('/hr/devices/delete-multiple/', {
+      params: {
+        id: ids?.toString(),
+      },
+    });
+    yield put(actions.deleteMultiSuccess());
+  } catch (err) {
+    yield put(actions.deleteMultiFailure());
   } finally {
     yield put(actions.resetStateDeleteModal());
   }
@@ -64,6 +77,7 @@ export function* deviceManagerPageSaga() {
   yield* [
     takeLatest(actions.fetchList.type, fetchListDevice),
     takeLatest(actions.delete.type, deleteDeviceAction),
+    takeLatest(actions.deleteMulti.type, deleteMultiDevice),
     takeLatest(actions.fetchIdentity.type, fetchDeviceIdentity),
   ];
 }
