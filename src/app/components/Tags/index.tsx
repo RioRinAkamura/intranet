@@ -58,7 +58,7 @@ export const TagsInput = memo((props: Props) => {
     className,
     callback,
   } = props;
-  const { tags } = useGetUserTags();
+  const { tags } = useGetUserTags(!isView);
   const { t } = useTranslation();
 
   const handleOnChangeTags = value => {

@@ -276,10 +276,7 @@ export const UserDetailMessages = {
       'Please enter bank name',
     ),
   formBankNumberLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.number.label,
-      'Account number',
-    ),
+    _t(translations.UserDetailPage.modal.form.bank.number.label, 'Bank number'),
   formBankNumberPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.bank.number.placeholder,
@@ -291,10 +288,7 @@ export const UserDetailMessages = {
       'Please enter bank number',
     ),
   formBankBranchLabel: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.branch.label,
-      'Account holder',
-    ),
+    _t(translations.UserDetailPage.modal.form.bank.branch.label, 'Bank branch'),
   formBankBranchPlaceholder: () =>
     _t(
       translations.UserDetailPage.modal.form.bank.branch.placeholder,

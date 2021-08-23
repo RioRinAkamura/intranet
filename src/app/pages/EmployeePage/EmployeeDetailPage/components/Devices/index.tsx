@@ -47,7 +47,7 @@ interface FormProps {
 }
 
 interface DeviceProps {
-  id: string;
+  employeeId: string;
 }
 const WrapperForm: React.FC<FormProps> = ({
   form,
@@ -116,7 +116,7 @@ const WrapperForm: React.FC<FormProps> = ({
 };
 
 export const Device = memo((props: DeviceProps) => {
-  const { id } = props;
+  const { employeeId } = props;
   const [form] = Form.useForm();
   const [employeeDevices, setEmployeeDevices] = useState([]);
   const [devices, setDevices] = useState<Devices[]>([]);
@@ -132,17 +132,10 @@ export const Device = memo((props: DeviceProps) => {
   const fetchEmployeeDevices = useCallback(async () => {
     setLoading(true);
     try {
-      const response: any = await fakeAPI.get(
-        '/hr/devices-employee/',
-        // {
-        //   params: {
-        //     employee: id,
-        //   },
-        // },
-      );
+      const response: any = await fakeAPI.get('/hr/devices-employee/');
 
       const mapResponse: any = [...response.results].filter(
-        device => device.employee === id,
+        device => device.employee === employeeId,
       );
 
       setEmployeeDevices(mapResponse);
@@ -151,7 +144,7 @@ export const Device = memo((props: DeviceProps) => {
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [employeeId]);
 
   const fetchDevices = async () => {
     try {
@@ -256,7 +249,7 @@ export const Device = memo((props: DeviceProps) => {
 
       await fakeAPI.post(`/hr/devices-history/`, {
         device: deviceDelete?.device,
-        employee: id,
+        employee: employeeId,
         note: `Unassign device from employee ${deviceDelete?.employee_name}`,
       });
 
@@ -294,7 +287,7 @@ export const Device = memo((props: DeviceProps) => {
         if (isCreate) {
           await fakeAPI.post('/hr/devices-employee/', {
             ...mapValue,
-            employee: id,
+            employee: employeeId,
           });
           setIsCreate(false);
           fetchEmployeeDevices();
@@ -309,7 +302,7 @@ export const Device = memo((props: DeviceProps) => {
 
             await fakeAPI.post(`/hr/devices-history/`, {
               device: deviceUpdate?.device,
-              employee: id,
+              employee: employeeId,
               note: `Unassign device from employee ${deviceUpdate?.employee_name}`,
             });
           }

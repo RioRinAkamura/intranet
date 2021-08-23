@@ -33,10 +33,10 @@ import { PrivatePath } from 'utils/url.const';
 import { StyledLink, Wrapper } from 'styles/StyledCommon';
 
 interface ProjectsProps {
-  employee_id: string;
+  employeeId: string;
 }
 
-export const Projects = memo(({ employee_id }: ProjectsProps) => {
+export const Projects = memo(({ employeeId }: ProjectsProps) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [open, setOpen] = useState<boolean>(false);
@@ -65,10 +65,10 @@ export const Projects = memo(({ employee_id }: ProjectsProps) => {
   const fetchEmployeeProject = useCallback(() => {
     if (!isFilter) {
       dispatch(
-        actions.fetchEmployeeProject({ id: employee_id, params: params }),
+        actions.fetchEmployeeProject({ id: employeeId, params: params }),
       );
     }
-  }, [actions, dispatch, employee_id, isFilter, params]);
+  }, [actions, dispatch, employeeId, isFilter, params]);
 
   useEffect(() => {
     fetchEmployeeProject();
@@ -211,7 +211,7 @@ export const Projects = memo(({ employee_id }: ProjectsProps) => {
       />
 
       <ProjectModal
-        id={employee_id}
+        id={employeeId}
         open={open}
         setOpen={setOpen}
         selectedProject={selectedProject}

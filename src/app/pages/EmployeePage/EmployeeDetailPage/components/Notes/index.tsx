@@ -50,7 +50,7 @@ import { Wrapper } from 'styles/StyledCommon';
 const DATE_FORMAT = config.DATE_FORMAT;
 
 interface NotesProps {
-  employee_id: string;
+  employeeId: string;
 }
 interface FormProps {
   form: FormInstance;
@@ -158,7 +158,7 @@ const Actions: React.FC<ActionsProps> = ({
   );
 };
 
-export const Notes = memo(({ employee_id }: NotesProps) => {
+export const Notes = memo(({ employeeId }: NotesProps) => {
   const { t } = useTranslation();
   const [isCreate, setIsCreate] = useState<boolean>(false);
   const [isCopy, setIsCopy] = useState<boolean>(false);
@@ -211,7 +211,7 @@ export const Notes = memo(({ employee_id }: NotesProps) => {
     dispatch(
       actions.createEmployeeNote({
         ...form.getFieldsValue(),
-        employee: employee_id,
+        employee: employeeId,
         date: moment(form.getFieldsValue().date).format(DATE_FORMAT),
       }),
     );
@@ -222,14 +222,19 @@ export const Notes = memo(({ employee_id }: NotesProps) => {
       actions.updateEmployeeNote({
         ...form.getFieldsValue(),
         date: moment(form.getFieldValue('date')).format(DATE_FORMAT),
-        employee_id,
+        employee_id: employeeId,
         note_id: note?.id,
       }),
     );
   };
 
   const handleNoteDelete = () => {
-    dispatch(actions.deleteEmployeeNote({ employee_id, note_id: note?.id }));
+    dispatch(
+      actions.deleteEmployeeNote({
+        employee_id: employeeId,
+        note_id: note?.id,
+      }),
+    );
   };
 
   const handleCancel = () => {
@@ -265,9 +270,9 @@ export const Notes = memo(({ employee_id }: NotesProps) => {
 
   useEffect(() => {
     if (!isFilter) {
-      dispatch(actions.fetchEmployeeNotes({ employee_id, params }));
+      dispatch(actions.fetchEmployeeNotes({ employee_id: employeeId, params }));
     }
-  }, [actions, dispatch, employee_id, isFilter, params]);
+  }, [actions, dispatch, employeeId, isFilter, params]);
 
   const columns: ColumnProps<EmployeeNote>[] = [
     {

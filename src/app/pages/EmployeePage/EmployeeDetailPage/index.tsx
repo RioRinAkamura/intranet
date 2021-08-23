@@ -16,7 +16,6 @@ import PageTitle from 'app/components/PageTitle';
 import Button from 'app/components/Button';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
-import fakeAPI from 'utils/fakeAPI';
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { BankAccounts } from './components/BankAccounts/Loadable';
 import { UserDetailMessages } from './messages';
@@ -66,7 +65,6 @@ export function EmployeeDetailPage(props: Props) {
   const { create, update, loading } = useUpdateUserDetail();
 
   const [data, setData] = React.useState<Employee>();
-  const [users, setUsers] = React.useState<any[]>([]);
 
   const [isCreate, setIsCreate] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
@@ -92,19 +90,6 @@ export function EmployeeDetailPage(props: Props) {
 
   const { TabPane } = Tabs;
   const [isDetailTab, setIsDetailTab] = React.useState(true);
-
-  const fetchUser = async () => {
-    try {
-      const users: any = await fakeAPI.get('/users');
-      setUsers(users.results);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchUser();
-  }, []);
 
   const onChangeTab = (key: string) => {
     if (key === TabKeys.notes) {
@@ -215,7 +200,7 @@ export function EmployeeDetailPage(props: Props) {
       leftScreenItems={<IdCardInfo isView={isView} isEdit={isEdit} />}
       rightScreenItems={
         <>
-          <ProfileInfo isView={isView} isEdit={isEdit} users={users} />
+          <ProfileInfo isView={isView} isEdit={isEdit} />
           <BankAccounts isView={isView} isEdit={isEdit} form={form} />
         </>
       }
@@ -255,26 +240,21 @@ export function EmployeeDetailPage(props: Props) {
           </StyledTabs>
 
           <Switch>
-            <Route
-              exact
-              path={PrivatePath.EMPLOYEES_ID}
-              component={() => employeeDetailForm()}
-            />
-            <Route path={PrivatePath.EMPLOYEES_ID_NOTES}>
-              <Notes employee_id={id} />
+            <Route exact path={PrivatePath.EMPLOYEES_ID}>
+              {employeeDetailForm()}
             </Route>
-            <Route
-              path={PrivatePath.EMPLOYEES_ID_PROJECTS}
-              component={() => <Projects employee_id={id} />}
-            />
-            <Route
-              path={PrivatePath.EMPLOYEES_ID_DEVICES}
-              component={() => <Device id={id} />}
-            />
-            <Route
-              path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}
-              component={() => <ChangeLogs employee_id={id} />}
-            />
+            <Route path={PrivatePath.EMPLOYEES_ID_NOTES}>
+              <Notes employeeId={id} />
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_PROJECTS}>
+              <Projects employeeId={id} />
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_DEVICES}>
+              <Device employeeId={id} />
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}>
+              <ChangeLogs employeeId={id} />
+            </Route>
           </Switch>
         </>
       ) : (
@@ -288,9 +268,7 @@ export function EmployeeDetailPage(props: Props) {
               <AddBankModal isView={isView} form={form} />
             </WrapperAddBank>
           }
-          rightScreenItems={
-            <ProfileInfo users={users} isView={isView} isEdit={isEdit} />
-          }
+          rightScreenItems={<ProfileInfo isView={isView} isEdit={isEdit} />}
         />
       )}
       {isDetailTab && (
