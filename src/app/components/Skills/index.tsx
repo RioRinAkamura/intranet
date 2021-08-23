@@ -18,7 +18,7 @@ interface Skill {
 }
 
 interface SkillsProps {
-  id?: string;
+  employeeId?: string;
 }
 
 const reorder = (list, startIndex, endIndex) => {
@@ -29,7 +29,7 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-export const Skills: React.FC<SkillsProps> = memo(({ id }) => {
+export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
   const [visibility, setVisibility] = useState(false);
   const [data, setData] = useState<any>();
   const [skills, setSkills] = useState<any>([]);
@@ -37,13 +37,13 @@ export const Skills: React.FC<SkillsProps> = memo(({ id }) => {
 
   const getSkills = React.useCallback(async () => {
     try {
-      if (!id) return;
-      const response = await api.hr.employee.getSkills(id);
+      if (!employeeId) return;
+      const response = await api.hr.employee.getSkills(employeeId);
       setData(response);
     } catch (e) {
       console.log(e);
     }
-  }, [id]);
+  }, [employeeId]);
 
   useEffect(() => {
     getSkills();
@@ -65,9 +65,9 @@ export const Skills: React.FC<SkillsProps> = memo(({ id }) => {
           // add new item
           const mapItem = {
             skill_id: item.id,
-            employee_id: id,
+            employee_id: employeeId,
           };
-          return fakeAPI.post(`hr/employees/${id}/skills/`, mapItem);
+          return fakeAPI.post(`hr/employees/${employeeId}/skills/`, mapItem);
         });
 
         Promise.all(arrPromise).then(values => {
@@ -89,20 +89,22 @@ export const Skills: React.FC<SkillsProps> = memo(({ id }) => {
 
       try {
         const deleteArr = await deleteItems.map(i =>
-          fakeAPI.delete(`/hr/employees/${id}/skills/${i}`),
+          fakeAPI.delete(`/hr/employees/${employeeId}/skills/${i}`),
         );
         const createArr = await newItems.map(i => {
           const mapItem = {
             skill_id: i.id,
-            employee_id: id,
+            employee_id: employeeId,
           };
-          return fakeAPI.post(`hr/employees/${id}/skills/`, mapItem);
+          return fakeAPI.post(`hr/employees/${employeeId}/skills/`, mapItem);
         });
 
         const arrPromise = [...deleteArr, ...createArr];
         Promise.all(arrPromise).then(async () => {
           try {
-            const response = await fakeAPI.get(`/hr/employees/${id}/skills/`);
+            const response = await fakeAPI.get(
+              `/hr/employees/${employeeId}/skills/`,
+            );
             setData(response);
           } catch (e) {
             console.log(e);
@@ -120,7 +122,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ id }) => {
       const newSkillList = [...data].filter(item => item.id !== skill.id);
       setData(newSkillList);
 
-      await fakeAPI.delete(`/hr/employees/${id}/skills/${skill.id}`);
+      await fakeAPI.delete(`/hr/employees/${employeeId}/skills/${skill.id}`);
     } catch (e) {
       console.log(e, 'error');
     }
@@ -140,11 +142,11 @@ export const Skills: React.FC<SkillsProps> = memo(({ id }) => {
 
         setData(newSkillList);
 
-        await fakeAPI.put(`/hr/employees/${id}/skills/`, {
+        await fakeAPI.put(`/hr/employees/${employeeId}/skills/`, {
           ...skill,
           level: value,
           skill_id: skill.skill.id,
-          employee_id: id,
+          employee_id: employeeId,
         });
       }
     } catch (e) {

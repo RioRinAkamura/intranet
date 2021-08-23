@@ -70,7 +70,7 @@ export const DetailForm = memo((props: FormProps) => {
               form={form}
               isEdit={isEdit}
               isView={isView}
-              id={data?.id}
+              employeeId={data?.id}
             />
           </WrapperItem>
         </Col>

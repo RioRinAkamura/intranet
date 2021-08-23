@@ -26,7 +26,7 @@ import { api } from 'utils/api';
 const { Option } = Select;
 
 interface JobInfoProps {
-  id?: string;
+  employeeId?: string;
   isView?: boolean;
   isEdit?: boolean;
   form: FormInstance;
@@ -45,7 +45,7 @@ const selectProps: SelectProps<SelectValue> = {
 };
 
 export const JobInfo = (props: JobInfoProps) => {
-  const { isView, form, isEdit, id } = props;
+  const { isView, form, isEdit, employeeId } = props;
   const { t } = useTranslation();
   const isShowSkill = isEdit || isView ? true : false;
 
@@ -167,7 +167,7 @@ export const JobInfo = (props: JobInfoProps) => {
         </Col>
         {isShowSkill && (
           <Col md={24} xs={24}>
-            <Skills id={id} />
+            <Skills employeeId={employeeId} />
           </Col>
         )}
       </Row>

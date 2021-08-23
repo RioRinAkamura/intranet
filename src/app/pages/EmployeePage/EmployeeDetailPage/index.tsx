@@ -244,16 +244,16 @@ export function EmployeeDetailPage(props: Props) {
               {employeeDetailForm()}
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_NOTES}>
-              <Notes employee_id={id} />
+              <Notes employeeId={id} />
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_PROJECTS}>
-              <Projects employee_id={id} />
+              <Projects employeeId={id} />
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_DEVICES}>
-              <Device id={id} />
+              <Device employeeId={id} />
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}>
-              <ChangeLogs employee_id={id} />
+              <ChangeLogs employeeId={id} />
             </Route>
           </Switch>
         </>

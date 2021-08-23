@@ -28,10 +28,10 @@ import { Wrapper } from 'styles/StyledCommon';
 const DATE_FORMAT = config.DATE_FORMAT;
 
 interface ChangeLogsProps {
-  employee_id: string;
+  employeeId: string;
 }
 
-export const ChangeLogs = React.memo(({ employee_id }: ChangeLogsProps) => {
+export const ChangeLogs = React.memo(({ employeeId }: ChangeLogsProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -110,10 +110,13 @@ export const ChangeLogs = React.memo(({ employee_id }: ChangeLogsProps) => {
   const fetchEmployeeChangeLogs = React.useCallback(() => {
     if (!isFilter) {
       dispatch(
-        actions.fetchEmployeeChangeLogs({ employee_id, params: params }),
+        actions.fetchEmployeeChangeLogs({
+          employee_id: employeeId,
+          params: params,
+        }),
       );
     }
-  }, [actions, dispatch, employee_id, isFilter, params]);
+  }, [actions, dispatch, employeeId, isFilter, params]);
 
   React.useEffect(() => {
     fetchEmployeeChangeLogs();
