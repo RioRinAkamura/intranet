@@ -113,7 +113,7 @@ export const AddBankModal = memo((props: Props) => {
           wrapperCol={{ span: 24 }}
           onFinish={handleAddBank}
         >
-          <FormSearchItem
+          <Form.Item
             name={['bank_accounts', 0, 'bank_name']}
             label={t(UserDetailMessages.formBankNameLabel())}
             rules={[
@@ -136,8 +136,8 @@ export const AddBankModal = memo((props: Props) => {
                   );
                 })}
             </Select>
-          </FormSearchItem>
-          <FormSearchItem
+          </Form.Item>
+          <Form.Item
             name={['bank_accounts', 0, 'number']}
             label={t(UserDetailMessages.formBankNumberLabel())}
             rules={[
@@ -154,8 +154,8 @@ export const AddBankModal = memo((props: Props) => {
                 isView ? '' : t(UserDetailMessages.formBankNumberPlaceholder())
               }
             />
-          </FormSearchItem>
-          <FormSearchItem
+          </Form.Item>
+          <Form.Item
             name={['bank_accounts', 0, 'branch']}
             label={t(UserDetailMessages.formBankBranchLabel())}
             rules={[
@@ -172,7 +172,7 @@ export const AddBankModal = memo((props: Props) => {
                 isView ? '' : t(UserDetailMessages.formBankBranchPlaceholder())
               }
             />
-          </FormSearchItem>
+          </Form.Item>
           <ModalButton>
             <Button
               key="back"
@@ -191,8 +191,6 @@ export const AddBankModal = memo((props: Props) => {
     </>
   );
 });
-
-const FormSearchItem = styled(Form.Item)``;
 
 const StyledDialogModal = styled(DialogModal)`
   .ant-modal-body {

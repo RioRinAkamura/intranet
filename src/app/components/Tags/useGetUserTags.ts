@@ -4,7 +4,9 @@ import { models } from '@hdwebsoft/boilerplate-api-sdk';
 
 type Tags = models.hr.Tags;
 
-export const useGetUserTags = (): {
+export const useGetUserTags = (
+  isCall: boolean = true,
+): {
   loading: boolean;
   error?: Error;
   tags: Tags[] | undefined;
@@ -14,6 +16,8 @@ export const useGetUserTags = (): {
   const [tags, setTags] = React.useState<Tags[] | undefined>();
 
   React.useEffect(() => {
+    if (!isCall) return;
+
     setLoading(true);
     (async () => {
       try {
@@ -25,7 +29,7 @@ export const useGetUserTags = (): {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [isCall]);
   return {
     loading,
     error,

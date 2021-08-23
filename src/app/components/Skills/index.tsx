@@ -8,7 +8,6 @@ import { UserDetailMessages } from 'app/pages/EmployeePage/EmployeeDetailPage/me
 import { SkillsModal } from './components/SkillsModal';
 import { DeleteOutlined } from '@ant-design/icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useParams } from 'react-router-dom';
 import { api } from 'utils/api';
 
 interface Skill {
@@ -16,6 +15,10 @@ interface Skill {
   name: string;
   type: string;
   employeeSkillId: string;
+}
+
+interface SkillsProps {
+  id?: string;
 }
 
 const reorder = (list, startIndex, endIndex) => {
@@ -26,23 +29,25 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-export const Skills = memo(props => {
+export const Skills: React.FC<SkillsProps> = memo(({ id }) => {
   const [visibility, setVisibility] = useState(false);
   const [data, setData] = useState<any>();
   const [skills, setSkills] = useState<any>([]);
   const { t } = useTranslation();
-  const { id } = useParams<Record<string, string>>();
-  useEffect(() => {
-    (async () => {
-      try {
-        // const response = await fakeAPI.get(`/hr/employees/${id}/skills/`);
-        const response = await api.hr.employee.getSkills(id);
-        setData(response);
-      } catch (e) {
-        console.log(e);
-      }
-    })();
+
+  const getSkills = React.useCallback(async () => {
+    try {
+      if (!id) return;
+      const response = await api.hr.employee.getSkills(id);
+      setData(response);
+    } catch (e) {
+      console.log(e);
+    }
   }, [id]);
+
+  useEffect(() => {
+    getSkills();
+  }, [getSkills]);
 
   const handleCancel = () => {
     setVisibility(false);

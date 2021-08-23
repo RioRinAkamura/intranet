@@ -25,7 +25,6 @@ import config from 'config';
 interface ProfileInfoProps {
   isView?: boolean;
   isEdit?: boolean;
-  users?: any[];
 }
 
 const inputProps: InputProps = {
@@ -44,9 +43,8 @@ const datePickerProps: DatePickerProps = {
 const DATE_FORMAT = config.DATE_FORMAT;
 
 export const ProfileInfo = (props: ProfileInfoProps) => {
-  const { isView, isEdit, users } = props;
+  const { isView, isEdit } = props;
   const { t } = useTranslation();
-  console.log(users, ' users');
 
   const validateDob = (
     rule: RuleObject,

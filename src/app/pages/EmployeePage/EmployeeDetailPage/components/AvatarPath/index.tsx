@@ -78,9 +78,11 @@ export const AvatarPath = memo((props: Props) => {
   };
 
   useEffect(() => {
+    if (isView || isEdit) return;
+
     dispatch(actions.fetchIdentity());
     setIsRefresh(false);
-  }, [actions, dispatch, isRefresh]);
+  }, [actions, dispatch, isRefresh, isView, isEdit]);
 
   useEffect(() => {
     if ((userDetails.identity && !isView && !isEdit) || isRefresh) {
