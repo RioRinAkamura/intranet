@@ -44,10 +44,10 @@ import { TagComponent } from 'app/components/Tags/components/Tag';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
-import fakeAPI from 'utils/fakeAPI';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
+import { api } from 'utils/api';
 
 type Employee = models.hr.Employee;
 
@@ -418,13 +418,9 @@ export const EmployeeListPage: React.FC = () => {
 
   const handleMultiDelete = async () => {
     try {
-      await fakeAPI.delete('/hr/employees/delete-multiple', {
-        params: {
-          id:
-            getUserListState?.selectedRowKeys &&
-            getUserListState?.selectedRowKeys.join(','),
-        },
-      });
+      await api.hr.employee.deleteMultiple(
+        (getUserListState?.selectedRowKeys as string[]) || [],
+      );
       dispatch(actions.selectedRows({ selectedRowKeys: [], selectedRows: [] }));
       notify({
         type: ToastMessageType.Info,

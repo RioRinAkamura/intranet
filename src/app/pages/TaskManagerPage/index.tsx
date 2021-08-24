@@ -24,7 +24,6 @@ import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { DialogModal } from 'app/components/DialogModal';
 import { TaskForm } from './components/Form';
-import fakeAPI from 'utils/fakeAPI';
 import { useAuth } from 'app/components/Auth/Context';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { PopoverBtn } from './components/PopoverBtn';
@@ -80,7 +79,7 @@ export const TaskManager = () => {
 
   const fetchListEmployee = async () => {
     try {
-      const employees: any = await fakeAPI.get('/hr/employees');
+      const employees: any = await api.hr.employee.list();
       const mapEmployeeOption: any = [...employees.results].map(employee => {
         return {
           label: employee.first_name + ' ' + employee.last_name,
@@ -96,7 +95,7 @@ export const TaskManager = () => {
   };
   const fetchListProject = async () => {
     try {
-      const projects: any = await fakeAPI.get('/hr/projects');
+      const projects: any = await api.hr.project.list();
       const mapProjectsOption: any = [...projects.results].map(project => {
         return {
           label: project.name,
@@ -220,7 +219,7 @@ export const TaskManager = () => {
           { label: 'Done', value: 'Done' },
         ],
         async value => {
-          await fakeAPI.patch(`/hr/tasks/${value.id}`, { ...value });
+          await api.hr.task.update({ ...value });
         },
       ),
       // render: text => text,
@@ -284,7 +283,6 @@ export const TaskManager = () => {
         console.log('multi');
         const ids = state.selectedRowKeys || [];
         const arrPromise = await ids.map((id: string) => {
-          // return fakeAPI.delete(`/hr/tasks/${id}`);
           return api.hr.task.delete(id);
         });
         await Promise.all(arrPromise);
@@ -303,7 +301,6 @@ export const TaskManager = () => {
         return;
       }
 
-      // await fakeAPI.delete(`/hr/tasks/${deleteId}`);
       await api.hr.task.delete(deleteId);
       notify({
         type: ToastMessageType.Info,
@@ -333,8 +330,10 @@ export const TaskManager = () => {
           const newTask: CreateTaskParam = { ...values };
           const data: Task = await api.hr.task.create(newTask);
 
-          await fakeAPI.post(`hr/tasks/${data?.id}/followers/`, {
-            follower: identity?.id,
+          if (!data || !identity) return;
+
+          await api.hr.task.createFollower(data.id, {
+            follower: identity.id,
           });
 
           notify({
@@ -346,7 +345,7 @@ export const TaskManager = () => {
 
         // update
         if (isUpdate) {
-          await fakeAPI.patch(`/hr/tasks/${values.id}`, { ...values });
+          await api.hr.task.update({ ...values });
           notify({
             type: ToastMessageType.Info,
             duration: 2,

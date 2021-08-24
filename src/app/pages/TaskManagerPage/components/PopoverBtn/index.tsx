@@ -3,8 +3,7 @@ import { Popover } from 'antd';
 import styled from 'styled-components/macro';
 import { Select, Spin, Button } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
-// import { Avatar } from 'app/components/Avatar/Loadable';
-import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
 
 interface popoverProps {
   followers: any[];
@@ -22,11 +21,7 @@ export const PopoverBtn = (props: popoverProps) => {
 
   const fetchUser = useCallback(async (search: string) => {
     try {
-      const response: any = await fakeAPI.get('/users', {
-        params: {
-          search,
-        },
-      });
+      const response: any = await api.user.list(search);
       return response.results;
     } catch (error) {
       console.log('error', error);
@@ -58,13 +53,11 @@ export const PopoverBtn = (props: popoverProps) => {
     };
 
     const handleAddFollower = async () => {
-      console.log('add follower');
       try {
-        await fakeAPI.post(`/hr/tasks/${task.id}/followers/`, {
+        await api.hr.task.createFollower(task.id, {
           follower: value,
         });
         setVisible(false);
-        console.log('111');
         callback();
       } catch (e) {
         console.log(e);

@@ -1,22 +1,23 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { api } from 'utils/api';
-import fakeAPI from 'utils/fakeAPI';
 import { UserManageAction as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { mapErrorCode } from 'utils/errorMessages';
 
 function fetchUsersAction(options) {
-  return fakeAPI.get('/users/', {
-    params: {
-      page: options.params.page,
-      limit: options.params.limit,
-      search: options.params.search,
+  return api.user.list(
+    options.params.search,
+    {
+      email: options.params.email,
     },
-  });
+    options.params.ordering,
+    options.params.page,
+    options.params.limit,
+  );
 }
 
 function updateUserAction(data) {
-  return fakeAPI.patch(`/users/${data.id}`, data);
+  return api.user.updateUser(data);
 }
 
 function* fetchUsers(action) {

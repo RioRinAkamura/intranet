@@ -15,13 +15,14 @@ import {
   ImportOutlined,
   UserAddOutlined,
 } from '@ant-design/icons';
-import fakeAPI from 'utils/fakeAPI';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import Papa from 'papaparse';
 import Button from 'app/components/Button';
 import ImportState from '../ImportState';
 import ExportState from '../ExportState';
 import { PrivatePath } from 'utils/url.const';
+import { api } from 'utils/api';
+import qs from 'query-string';
 
 type Employee = models.hr.Employee;
 
@@ -57,11 +58,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   const [exported, setExported] = useState(false);
 
   const exportEmployees = async () => {
-    if (search) {
-      var response: any = await fakeAPI.get(`/hr/employees/export${search}`);
-    } else {
-      response = await fakeAPI.get('/hr/employees/export/');
-    }
+    const params = qs.parse(search);
+    const response = await api.hr.employee.exportEmployees({ ...params });
     if (response) {
       setExportId(response.id);
       setExported(false);
@@ -106,8 +104,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   useEffect(() => {
     if (exportId && !exported) {
       let intervalId = setInterval(async () => {
-        await fakeAPI
-          .get(`/hr/employees/export/${exportId}`)
+        await api.hr.employee
+          .exportEmployeeLogById(exportId)
           .then((response: any) => {
             notificationExport(response);
             if (response.status === 'Done') {
@@ -131,10 +129,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
       const formData = new FormData();
       formData.append('upload_file', file);
       formData.append('upsert', '1');
-      const response: any = await fakeAPI.post(
-        '/hr/employees/import/',
-        formData,
-      );
+      const response: any = await api.hr.employee.importEmployee(formData);
       if (response) {
         setPreviewModal(false);
         setLoading(false);
@@ -188,8 +183,8 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   useEffect(() => {
     if (logImportId && !imported) {
       let intervalId = setInterval(async () => {
-        await fakeAPI
-          .get(`/hr/employees/import/${logImportId}`)
+        await api.hr.employee
+          .importEmployeeLogById(logImportId)
           .then((response: any) => {
             notificationImport(response);
             if (response.status === 'Done') {
