@@ -1,6 +1,5 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
-
-import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
 
 import { Actions as actions } from '.';
 import { QueryParams } from './types';
@@ -10,21 +9,19 @@ export function* fetchEmployeeNotes(action) {
     const employee_id = action.payload.employee_id;
     const { params } = action.payload;
     const queryParams: QueryParams = {
-      search: params.search,
-      ordering: params.ordering,
       type: params.type,
       content: params.content,
       summary: params.summary,
-      page: params.page,
-      limit: params.limit,
     };
 
     const response = yield call(
-      fakeAPI.get,
-      `/hr/employees/${employee_id}/notes`,
-      {
-        params: { ...queryParams },
-      },
+      [api, api.hr.employee.getNotes],
+      employee_id,
+      params.search,
+      { ...queryParams },
+      params.ordering,
+      params.page,
+      params.limit,
     );
 
     yield put(actions.fetchEmployeeNotesSuccess(response));
@@ -36,8 +33,8 @@ export function* fetchEmployeeNotes(action) {
 function* createEmployeeNote(action) {
   try {
     yield call(
-      fakeAPI.post,
-      `/hr/employees/${action.payload.employee}/notes/`,
+      [api, api.hr.employee.postNote],
+      action.payload.employee,
       action.payload,
     );
     yield put(actions.createEmployeeNoteSuccess());
@@ -51,8 +48,9 @@ function* createEmployeeNote(action) {
 function* updateEmployeeNote(action) {
   try {
     yield call(
-      fakeAPI.put,
-      `/hr/employees/${action.payload.employee_id}/notes/${action.payload.note_id}`,
+      [api, api.hr.employee.putNote],
+      action.payload.employee_id,
+      action.payload.note_id,
       action.payload,
     );
     yield put(actions.updateEmployeeNoteSuccess());
@@ -66,8 +64,9 @@ function* updateEmployeeNote(action) {
 function* deleteEmployeeNote(action) {
   try {
     yield call(
-      fakeAPI.delete,
-      `/hr/employees/${action.payload.employee_id}/notes/${action.payload.note_id}`,
+      [api, api.hr.employee.deleteNote],
+      action.payload.employee_id,
+      action.payload.note_id,
     );
     yield put(actions.deleteEmployeeNoteSuccess());
   } catch (err) {

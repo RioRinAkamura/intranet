@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import fakeAPI from 'utils/fakeAPI';
+import { api } from 'utils/api';
+
 export const useHandleMember = (): {
   loadingMember: boolean;
   addMember: (id: string, data: any) => any;
@@ -11,10 +12,7 @@ export const useHandleMember = (): {
     setLoadingMember(true);
     try {
       data.members.allocation = parseFloat(data.members.allocation).toFixed(1);
-      const response = await fakeAPI.post(
-        `/hr/projects/${id}/members/`,
-        data.members,
-      );
+      const response = await api.hr.project.createMember(id, data.members);
       return response;
     } catch (error) {
       console.log(error);
@@ -27,8 +25,9 @@ export const useHandleMember = (): {
     setLoadingMember(true);
     try {
       data.members.allocation = parseFloat(data.members.allocation).toFixed(1);
-      const response = await fakeAPI.patch(
-        `/hr/projects/${id}/members/${data.members.employee}/`,
+      const response = await api.hr.project.updateMember(
+        id,
+        data.members.employee,
         data.members,
       );
       return response;
@@ -42,7 +41,7 @@ export const useHandleMember = (): {
   const deleteMember = async (id: string, mid: string) => {
     setLoadingMember(true);
     try {
-      await fakeAPI.delete(`/hr/projects/${id}/members/${mid}`);
+      await api.hr.project.deleteMember(id, mid);
       return true;
     } catch (error) {
       console.log(error);

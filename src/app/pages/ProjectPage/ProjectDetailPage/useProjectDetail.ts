@@ -1,4 +1,3 @@
-import fakeAPI from 'utils/fakeAPI';
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import * as React from 'react';
@@ -39,7 +38,7 @@ export const useProjectDetail = (): {
 
   const fetchId = React.useCallback(async (id: string) => {
     try {
-      const response: any = await fakeAPI.get('/hr/projects/' + id);
+      const response: any = await api.hr.project.get(id);
       return response;
     } catch (error) {
       setError(error);
@@ -57,7 +56,7 @@ export const useProjectDetail = (): {
           return member;
         });
       }
-      const response = await fakeAPI.patch(`/hr/projects/${data.id}/`, data);
+      const response = await api.hr.project.update(data);
       if (response) {
         notify({
           type: ToastMessageType.Info,
@@ -89,7 +88,7 @@ export const useProjectDetail = (): {
           return member;
         });
       }
-      const response: any = await fakeAPI.post('/hr/projects/', data);
+      const response: any = await api.hr.project.create(data);
       if (response) {
         notify({
           type: ToastMessageType.Info,

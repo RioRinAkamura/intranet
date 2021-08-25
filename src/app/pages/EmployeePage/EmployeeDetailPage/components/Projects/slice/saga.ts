@@ -1,11 +1,9 @@
-import fakeAPI from 'utils/fakeAPI';
 import { call, put, takeLatest } from 'redux-saga/effects';
-// import { api } from 'utils/api';
+import { api } from 'utils/api';
 import { employeeProjectActions as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { AddProject } from './types';
 import { cloneDeep } from 'lodash';
-// import { PayloadAction } from '@reduxjs/toolkit';
 
 function* fetchEmployeeProject(action) {
   try {
@@ -19,10 +17,9 @@ function* fetchEmployeeProject(action) {
       limit: params.limit,
     };
 
-    const response = yield call(fakeAPI.get, `/hr/employees/${id}/projects`, {
-      params: { ...queryParams },
+    const response = yield call([api, api.hr.employee.getProjects], id, {
+      ...queryParams,
     });
-
     yield put(actions.fetchEmployeeProjectSuccess(response));
   } catch (err) {
     yield put(actions.fetchEmployeeProjectFailure);
@@ -33,7 +30,7 @@ function* addProject(action: PayloadAction<AddProject>) {
   try {
     const member = cloneDeep(action.payload);
     member.allocation = parseFloat(member.allocation).toFixed(1);
-    yield call(fakeAPI.post, `/hr/projects/${member.project}/members/`, member);
+    yield api.hr.project.createMember(member.project, member as any);
     yield put(actions.addProjectSuccess());
   } catch (err) {
     yield put(actions.addProjectFailure());
@@ -46,10 +43,11 @@ function* editProject(action: PayloadAction<AddProject>) {
   try {
     const member = cloneDeep(action.payload);
     member.allocation = parseFloat(member.allocation).toFixed(1);
-    yield call(
-      fakeAPI.patch,
-      `/hr/projects/${member.project}/members/${member.employee}/`,
-      member,
+
+    yield api.hr.project.updateMember(
+      member.project,
+      member.employee,
+      member as any,
     );
     yield put(actions.editProjectSuccess());
   } catch (err) {
@@ -62,7 +60,7 @@ function* editProject(action: PayloadAction<AddProject>) {
 function* deleteProject(action: PayloadAction<string>) {
   try {
     const idDelete = action.payload;
-    yield call(fakeAPI.delete, `/hr/projects/${idDelete}/`);
+    yield call([api, api.hr.project.delete], idDelete);
     yield put(actions.deleteProjectSuccess());
   } catch (err) {
     yield put(actions.deleteProjectFailure());

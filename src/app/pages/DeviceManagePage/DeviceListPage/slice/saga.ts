@@ -1,4 +1,3 @@
-import fakeAPI from 'utils/fakeAPI';
 import { takeLatest, call, put } from 'redux-saga/effects';
 import { api } from 'utils/api';
 import { deviceManagerAction as actions } from '.';
@@ -60,11 +59,7 @@ function* deleteDeviceAction(action: PayloadAction<Delete>) {
 function* deleteMultiDevice(action: PayloadAction<Delete>) {
   try {
     const ids = action.payload.ids;
-    fakeAPI.delete('/hr/devices/delete-multiple/', {
-      params: {
-        id: ids?.toString(),
-      },
-    });
+    if (ids) yield api.hr.device.deleteMultiple(ids);
     yield put(actions.deleteMultiSuccess());
   } catch (err) {
     yield put(actions.deleteMultiFailure());

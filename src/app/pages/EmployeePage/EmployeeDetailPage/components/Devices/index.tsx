@@ -18,11 +18,12 @@ import {
 import moment from 'moment';
 import { DialogModal } from 'app/components/DialogModal';
 import { EMPLOYEE_DEVICE_STATUS, FORM_RULES } from 'constants/deviceManager';
-import fakeAPI from 'utils/fakeAPI';
 import { ColumnProps } from 'antd/lib/table';
 import { DeleteModal } from 'app/components/DeleteModal';
 import Button, { IconButton } from 'app/components/Button';
 import { Wrapper } from 'styles/StyledCommon';
+import { api } from 'utils/api';
+import { DeviceStatus } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 const { Option } = Select;
 interface DeviceResponse {
@@ -57,7 +58,7 @@ const WrapperForm: React.FC<FormProps> = ({
 }) => {
   const [deviceItem, setDeviceItem] = useState<Devices>();
   const fetchDevice = async id => {
-    const response: any = await fakeAPI.get(`/hr/devices/${id}/`);
+    const response: any = await api.hr.device.get(id);
     setDeviceItem(response);
   };
   useEffect(() => {
@@ -132,7 +133,7 @@ export const Device = memo((props: DeviceProps) => {
   const fetchEmployeeDevices = useCallback(async () => {
     setLoading(true);
     try {
-      const response: any = await fakeAPI.get('/hr/devices-employee/');
+      const response: any = await api.hr.deviceEmployee.list();
 
       const mapResponse: any = [...response.results].filter(
         device => device.employee === employeeId,
@@ -148,7 +149,7 @@ export const Device = memo((props: DeviceProps) => {
 
   const fetchDevices = async () => {
     try {
-      const response: any = await fakeAPI.get('/hr/devices/');
+      const response: any = await api.hr.device.list();
       setDeviceItems(response.results);
       const mapDevice = [...response.results].filter(
         (device: any) => device.status === 'Available',
@@ -221,7 +222,7 @@ export const Device = memo((props: DeviceProps) => {
       render: text => text,
     },
     {
-      title: 'actions',
+      title: 'Actions',
       dataIndex: 'id',
       width: 45,
       fixed: 'right',
@@ -242,18 +243,23 @@ export const Device = memo((props: DeviceProps) => {
 
   const handleConfirmDelete = async () => {
     try {
-      await fakeAPI.patch(`/hr/devices/${deviceDelete?.device}/`, {
-        status: 'Available',
-        employee: null,
+      if (!deviceDelete) return;
+
+      const device = await api.hr.device.get(deviceDelete.device);
+
+      await api.hr.device.update({
+        ...device,
+        employee: '',
+        status: DeviceStatus.AVAILABLE,
       });
 
-      await fakeAPI.post(`/hr/devices-history/`, {
-        device: deviceDelete?.device,
+      await api.hr.deviceHistory.create({
+        device: deviceDelete.device,
         employee: employeeId,
-        note: `Unassign device from employee ${deviceDelete?.employee_name}`,
+        note: `Unassign device from employee ${deviceDelete.employee_name}`,
       });
 
-      await fakeAPI.delete(`/hr/devices-employee/${deviceDelete?.id}`);
+      await api.hr.deviceEmployee.delete(deviceDelete.id);
       fetchEmployeeDevices();
       setIsDelete(false);
     } catch (e) {
@@ -285,7 +291,7 @@ export const Device = memo((props: DeviceProps) => {
         setLoading(true);
 
         if (isCreate) {
-          await fakeAPI.post('/hr/devices-employee/', {
+          await api.hr.deviceEmployee.create({
             ...mapValue,
             employee: employeeId,
           });
@@ -294,20 +300,26 @@ export const Device = memo((props: DeviceProps) => {
           fetchDevices();
         }
         if (isUpdate) {
-          if (mapValue.device !== deviceUpdate?.device) {
-            await fakeAPI.patch(`/hr/devices/${deviceUpdate?.device}/`, {
-              status: 'Available',
-              employee: null,
+          if (!deviceUpdate) return;
+
+          const device = await api.hr.device.get(deviceUpdate.device);
+
+          if (mapValue.device !== deviceUpdate.device) {
+            await api.hr.device.update({
+              ...device,
+              employee: '',
+              status: DeviceStatus.AVAILABLE,
             });
 
-            await fakeAPI.post(`/hr/devices-history/`, {
-              device: deviceUpdate?.device,
+            await api.hr.deviceHistory.create({
+              device: deviceUpdate.device,
               employee: employeeId,
-              note: `Unassign device from employee ${deviceUpdate?.employee_name}`,
+              note: `Unassign device from employee ${deviceUpdate.employee_name}`,
             });
           }
 
-          await fakeAPI.put(`/hr/devices-employee/${deviceUpdate?.id}/`, {
+          await api.hr.deviceEmployee.update({
+            id: deviceUpdate.id,
             ...mapValue,
           });
 

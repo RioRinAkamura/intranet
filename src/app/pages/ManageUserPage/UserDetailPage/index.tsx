@@ -3,10 +3,10 @@ import { useHistory, useLocation, useParams } from 'react-router';
 import { Button } from 'antd';
 import PageTitle from 'app/components/PageTitle';
 import { DetailForm } from './components/DetailForm';
-import fakeAPI from 'utils/fakeAPI';
 import { CardLayout } from 'app/components/CardLayout';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { User } from '@hdwebsoft/boilerplate-api-sdk/libs/api/user/models';
+import { api } from 'utils/api';
 
 interface LocationState {
   edit: boolean;
@@ -32,14 +32,14 @@ export const UserManageDetailPage = props => {
   React.useEffect(() => {
     (async () => {
       try {
-        const response: any = await fakeAPI.get(`/users/${id}`);
+        const response = await api.user.getUserById(id);
         setData(response);
         setBreadCrumb(`Users / ${response.first_name}`);
       } catch (e) {
         console.log(e);
       }
     })();
-  }, [id, setBreadCrumb]);
+  }, [id, setBreadCrumb, isEdit]);
 
   React.useEffect(() => {
     if (history.location.pathname.includes('create')) {

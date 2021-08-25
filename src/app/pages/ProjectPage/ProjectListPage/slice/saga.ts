@@ -1,11 +1,7 @@
-import fakeAPI from 'utils/fakeAPI';
 import { api } from 'utils/api';
 import { call, put, takeLatest } from 'redux-saga/effects';
-// import { api } from 'utils/api';
 import { projectsActions as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
-import qs from 'query-string';
-// import { PayloadAction } from '@reduxjs/toolkit';
 
 function* fetchProjectIdentity() {
   try {
@@ -25,32 +21,20 @@ function* fetchProjects(action) {
   try {
     const { params } = action.payload;
     const queryParams = {
-      search: params.search,
-      ordering: params.ordering,
       name: params.name,
       priority: params.priority,
       status: params.status,
-      page: params.page,
-      limit: params.limit,
-      employee_id: params.employee,
     };
-    // const response = yield call(
-    //   [api, api.hr.employee.list],
-    //   params.search,
-    //   {
-    //     ...queryParams,
-    //   },
-    //   params.ordering,
-    //   params.page,
-    //   params.limit,
-    // );
-
-    const response = yield call(fakeAPI.get, '/hr/projects', {
-      params: { ...queryParams },
-      paramsSerializer: params => {
-        return qs.stringify(params);
+    const response = yield call(
+      [api, api.hr.project.list],
+      params.search,
+      {
+        ...queryParams,
       },
-    });
+      params.ordering,
+      params.page,
+      params.limit,
+    );
 
     yield put(actions.fetchProjectsSuccess(response));
   } catch (err) {
@@ -61,7 +45,7 @@ function* fetchProjects(action) {
 function* deleteProject(action: PayloadAction<string>) {
   try {
     const idDelete = action.payload;
-    yield call(fakeAPI.delete, `/hr/projects/${idDelete}/`);
+    yield call([api, api.hr.project.delete], idDelete);
     yield put(actions.deleteProjectSuccess());
   } catch (err) {
     yield put(actions.deleteProjectFailure());

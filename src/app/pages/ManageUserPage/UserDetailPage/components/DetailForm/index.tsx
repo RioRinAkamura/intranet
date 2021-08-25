@@ -3,13 +3,13 @@ import styled from 'styled-components/macro';
 import { Col, Form, Input, Row, InputProps } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { User } from '@hdwebsoft/boilerplate-api-sdk/libs/api/user/models';
-import fakeAPI from 'utils/fakeAPI';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router';
 import { AvatarPath } from 'app/pages/EmployeePage/EmployeeDetailPage/components/AvatarPath';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import Button from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
+import { api } from 'utils/api';
 
 interface FormProps {
   isView: boolean;
@@ -63,9 +63,8 @@ export const DetailForm = memo((props: FormProps) => {
   const handleSubmitForm = async (value: User) => {
     try {
       if (!isEdit) {
-        const newUser = omit(value, ['id', 'password2']);
-
-        const response = await fakeAPI.post('/users/', newUser);
+        const newUser: any = omit(value, ['id', 'password2']);
+        const response = await api.user.createUser(newUser);
 
         notify({
           type: ToastMessageType.Info,
@@ -78,7 +77,7 @@ export const DetailForm = memo((props: FormProps) => {
 
         history.push(`${PrivatePath.USERS}/${userResponse.id}`);
       } else {
-        let updateUser = isEditPass
+        let updateUser: any = isEditPass
           ? omit(value, ['password2'])
           : omit(value, ['password', 'password2']);
 
@@ -93,10 +92,7 @@ export const DetailForm = memo((props: FormProps) => {
         } else {
           setCurrentUserForm({ ...currentUserForm, phone: value.phone });
         }
-        const response = await fakeAPI.patch(
-          `users/${updateUser.id}/`,
-          updateUser,
-        );
+        const response = await api.user.updateUser(updateUser);
 
         const userResponse: any = { ...response };
 
