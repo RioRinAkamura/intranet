@@ -17,6 +17,8 @@ export const useGetUserDetail = (
     setLoading(true);
     (async () => {
       try {
+        if (!id) return;
+
         const response = await api.hr.employee.get(id);
         setUser(response);
       } catch (error) {

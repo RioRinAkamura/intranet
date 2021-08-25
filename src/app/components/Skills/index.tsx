@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState } from 'react';
 import styled from 'styled-components/macro';
 import { Button, Rate } from 'antd';
 import { PlusOutlined, UnorderedListOutlined } from '@ant-design/icons';
@@ -8,6 +8,9 @@ import { SkillsModal } from './components/SkillsModal';
 import { DeleteOutlined } from '@ant-design/icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { api } from 'utils/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectEmployeeSkills } from 'app/pages/EmployeePage/EmployeeDetailPage/slice/selectors';
+import { useUserDetailsSlice } from 'app/pages/EmployeePage/EmployeeDetailPage/slice';
 
 interface Skill {
   id: string;
@@ -17,7 +20,8 @@ interface Skill {
 }
 
 interface SkillsProps {
-  employeeId: string;
+  employeeId?: string;
+  isEdit?: boolean;
 }
 
 const reorder = (list, startIndex, endIndex) => {
@@ -28,24 +32,17 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
+export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
   const [visibility, setVisibility] = useState(false);
   const [data, setData] = useState<any>();
   const [skills, setSkills] = useState<any>([]);
   const { t } = useTranslation();
 
-  const getSkills = React.useCallback(async () => {
-    try {
-      const response = await api.hr.employee.getSkills(employeeId);
-      setData(response);
-    } catch (e) {
-      console.log(e);
-    }
-  }, [employeeId]);
+  const employeeSkills = useSelector(selectEmployeeSkills);
 
-  useEffect(() => {
-    getSkills();
-  }, [getSkills]);
+  const dispatch = useDispatch();
+
+  const { actions } = useUserDetailsSlice();
 
   const handleCancel = () => {
     setVisibility(false);
@@ -56,6 +53,8 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
   };
 
   const handleOk = async (items: Skill[]) => {
+    if (!employeeId) return;
+
     setVisibility(false);
     if (data.length === 0) {
       try {
@@ -69,7 +68,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
         });
 
         Promise.all(arrPromise).then(values => {
-          setData(values);
+          dispatch(actions.fetchEmployeeSkills(employeeId));
         });
       } catch (e) {
         console.log(e);
@@ -99,12 +98,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
 
         const arrPromise = [...deleteArr, ...createArr];
         Promise.all(arrPromise).then(async () => {
-          try {
-            const response = await api.hr.employee.getSkills(employeeId);
-            setData(response);
-          } catch (e) {
-            console.log(e);
-          }
+          dispatch(actions.fetchEmployeeSkills(employeeId));
         });
       } catch (e) {
         console.log(e);
@@ -115,10 +109,11 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
 
   const handleDeleteSkill = async skill => {
     try {
-      const newSkillList = [...data].filter(item => item.id !== skill.id);
-      setData(newSkillList);
+      if (!employeeId) return;
 
       await api.hr.employee.deleteSkill(employeeId, skill.id);
+
+      dispatch(actions.fetchEmployeeSkills(employeeId));
     } catch (e) {
       console.log(e, 'error');
     }
@@ -126,6 +121,8 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
 
   const handleSkillRateChange = async (value, skill) => {
     try {
+      if (!employeeId) return;
+
       const skillIndex = data.findIndex(item => item.id === skill.id);
       if (skillIndex !== -1) {
         const newSkillList = [...data];
@@ -144,6 +141,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
           skill_id: skill.skill.id,
           employee_id: employeeId,
         });
+        dispatch(actions.fetchEmployeeSkills(employeeId));
       }
     } catch (e) {
       console.log(e);
@@ -165,11 +163,17 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
     setSkills(newList);
   };
 
+  React.useEffect(() => {
+    setData(employeeSkills.list);
+  }, [employeeSkills]);
+
   return (
     <>
       <FlexWrapper>
         <span>{t(UserDetailMessages.formSkillLabel())}</span>
-        <IconBtn onClick={handleToggleModal} icon={<PlusOutlined />} />
+        {isEdit && (
+          <IconBtn onClick={handleToggleModal} icon={<PlusOutlined />} />
+        )}
       </FlexWrapper>
       <SkillsModal
         isVisibility={visibility}
@@ -210,9 +214,12 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId }) => {
                                 />
                               </FlexWrapper>
                               <FlexWrapper>
-                                <DeleteOutlined
-                                  onClick={() => handleDeleteSkill(skill)}
-                                />
+                                {isEdit && (
+                                  <DeleteOutlined
+                                    onClick={() => handleDeleteSkill(skill)}
+                                  />
+                                )}
+
                                 <DragHandler {...provided.dragHandleProps} />
                               </FlexWrapper>
                             </FlexWrapper>

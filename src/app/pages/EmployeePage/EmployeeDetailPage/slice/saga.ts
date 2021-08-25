@@ -1,3 +1,4 @@
+import { PayloadAction } from '@reduxjs/toolkit';
 import { put, takeLatest } from 'redux-saga/effects';
 import { api } from 'utils/api';
 import { Actions as actions } from '.';
@@ -17,6 +18,24 @@ export function* fetchIdentity() {
   }
 }
 
+export function* fetchEmployeeSkills(action: PayloadAction<string>) {
+  try {
+    const response = yield api.hr.employee.getSkills(action.payload);
+    yield put(
+      actions.fetchEmployeeSkillsSuccess({
+        list: response,
+        error: false,
+        loading: false,
+      }),
+    );
+  } catch (error) {
+    yield put(actions.fetchEmployeeSkillsFailure());
+  }
+}
+
 export function* userDetailsSaga() {
-  yield* [takeLatest(actions.fetchIdentity.type, fetchIdentity)];
+  yield* [
+    takeLatest(actions.fetchIdentity.type, fetchIdentity),
+    takeLatest(actions.fetchEmployeeSkills.type, fetchEmployeeSkills),
+  ];
 }

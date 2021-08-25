@@ -1,7 +1,9 @@
 import React from 'react';
 import { api } from 'utils/api';
 
-export const useGetSkills = (): {
+export const useGetSkills = (
+  isCall: boolean = true,
+): {
   loading: boolean;
   error?: Error;
   data: any;
@@ -11,6 +13,8 @@ export const useGetSkills = (): {
   const [data, setData] = React.useState<any>();
 
   React.useEffect(() => {
+    if (!isCall) return;
+
     setLoading(true);
     (async () => {
       try {
@@ -22,7 +26,7 @@ export const useGetSkills = (): {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [isCall]);
   return {
     loading,
     error,

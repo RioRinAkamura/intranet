@@ -6,3 +6,8 @@ import { initialState } from '.';
 const selectSlice = (state: RootState) => state.employeeDetails || initialState;
 
 export const selectUserDetails = createSelector([selectSlice], state => state);
+
+export const selectEmployeeSkills = createSelector(
+  [selectSlice],
+  state => state.employeeSkills,
+);

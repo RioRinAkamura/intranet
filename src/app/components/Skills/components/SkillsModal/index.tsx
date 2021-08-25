@@ -21,7 +21,7 @@ interface Skill {
   employeeSkillId: string;
 }
 export const SkillsModal = memo((props: skillModalProps) => {
-  const { data } = useGetSkills();
+  const { data } = useGetSkills(props.isVisibility);
   const [pickedSkill, setPickedSkill] = useState<any>([]);
   const [customSkill, setCustomSkill] = useState<string>('');
 
