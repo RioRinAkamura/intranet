@@ -299,11 +299,6 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.bank.branch.empty,
       'Please enter bank branch',
     ),
-  formBankAddButton: () =>
-    _t(
-      translations.UserDetailPage.modal.form.bank.button.add,
-      'Add bank account',
-    ),
   formSocialNetworkTitle: () =>
     _t(translations.UserDetailPage.modal.form.social.title, 'Social accounts'),
   formSocialsSkypeLabel: () =>
@@ -362,18 +357,7 @@ export const UserDetailMessages = {
     _t(translations.UserDetailPage.modal.form.button.cancel, 'Cancel'),
   formBackButton: () =>
     _t(translations.UserDetailPage.modal.form.button.back, 'Back'),
-  formAddBankButton: () =>
-    _t(
-      translations.UserDetailPage.modal.form.button.addBank,
-      'Add bank account',
-    ),
-  formEditBankButton: () =>
-    _t(
-      translations.UserDetailPage.modal.form.button.editBank,
-      'Edit bank account',
-    ),
-  formSubmitAddBankButton: () =>
-    _t(translations.UserDetailPage.modal.form.button.submitAddBank, 'Submit'),
+
   updateSuccessMessage: () =>
     _t(
       translations.UserDetailPage.modal.message.sucess,

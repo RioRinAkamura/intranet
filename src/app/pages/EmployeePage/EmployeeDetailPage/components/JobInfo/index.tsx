@@ -26,7 +26,7 @@ import { api } from 'utils/api';
 const { Option } = Select;
 
 interface JobInfoProps {
-  employeeId: string;
+  employeeId?: string;
   isView?: boolean;
   isEdit?: boolean;
   form: FormInstance;
@@ -167,7 +167,7 @@ export const JobInfo = (props: JobInfoProps) => {
         </Col>
         {isShowSkill && (
           <Col md={24} xs={24}>
-            <Skills employeeId={employeeId} />
+            <Skills employeeId={employeeId} isEdit={isEdit} />
           </Col>
         )}
       </Row>

@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Col, Form, Row, Tabs } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { config } from 'config';
 import PageTitle from 'app/components/PageTitle';
@@ -22,7 +22,6 @@ import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
 import { useUpdateUserDetail } from './useUpdateUserDetail';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
-import { AddBankModal } from './components/AddBankModal/Loadable';
 import { Notes } from './components/Notes/Loadable';
 import { Device } from './components/Devices/Loadable';
 import { DetailForm } from './components/DetailForm/Loadable';
@@ -34,6 +33,8 @@ import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { ChangeLogs } from './components/ChangeLogs';
 import { PrivatePath } from 'utils/url.const';
 import { Route, Switch } from 'react-router-dom';
+import { useUserDetailsSlice } from './slice';
+import { omit } from 'lodash';
 
 interface Props {}
 
@@ -73,7 +74,11 @@ export function EmployeeDetailPage(props: Props) {
 
   const [searchForm] = Form.useForm();
 
+  const dispatch = useDispatch();
+
   const { actions } = useNotesSlice();
+  const userDetailsSlice = useUserDetailsSlice();
+
   const employeeNoteState = useSelector(selectEmployeeNotes);
   const { setSearchText, resetSearch } = useHandleDataTable(
     employeeNoteState,
@@ -168,6 +173,12 @@ export function EmployeeDetailPage(props: Props) {
     }
   }, [history, location]);
 
+  React.useEffect(() => {
+    if (!id) return;
+
+    dispatch(userDetailsSlice.actions.fetchEmployeeSkills(id));
+  }, [dispatch, id, userDetailsSlice.actions]);
+
   const handleSubmit = () => {
     form
       .validateFields()
@@ -185,6 +196,17 @@ export function EmployeeDetailPage(props: Props) {
           }
         }
         if (isCreate) {
+          values = {
+            bank_accounts: [
+              {
+                bank_name: values.bank_name,
+                number: values.number,
+                branch: values.number,
+              },
+            ],
+
+            ...omit(values, ['bank_name', 'number', 'branch']),
+          };
           create(values);
         }
       })
@@ -201,7 +223,7 @@ export function EmployeeDetailPage(props: Props) {
       rightScreenItems={
         <>
           <ProfileInfo isView={isView} isEdit={isEdit} />
-          <BankAccounts isView={isView} isEdit={isEdit} form={form} />
+          <BankAccounts isView={isView} form={form} />
         </>
       }
     />
@@ -263,11 +285,7 @@ export function EmployeeDetailPage(props: Props) {
           data={data}
           isEdit={isEdit}
           isView={isView}
-          leftScreenItems={
-            <WrapperAddBank>
-              <AddBankModal isView={isView} form={form} />
-            </WrapperAddBank>
-          }
+          leftScreenItems={<></>}
           rightScreenItems={<ProfileInfo isView={isView} isEdit={isEdit} />}
         />
       )}
@@ -334,10 +352,6 @@ const WrapperButton = styled.div`
   margin-top: 3em;
   padding: 10px;
   height: 100%;
-`;
-
-const WrapperAddBank = styled.div`
-  margin-top: 2em;
 `;
 
 const StyledTabs = styled(Tabs)`

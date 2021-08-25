@@ -66,14 +66,12 @@ export const DetailForm = memo((props: FormProps) => {
       <WrapperSubItem gutter={[64, 32]}>
         <Col span={isView ? 12 : 8}>
           <WrapperItem>
-            {data && (
-              <JobInfo
-                form={form}
-                isEdit={isEdit}
-                isView={isView}
-                employeeId={data.id}
-              />
-            )}
+            <JobInfo
+              form={form}
+              isEdit={isEdit}
+              isView={isView}
+              employeeId={data?.id}
+            />
           </WrapperItem>
         </Col>
         <Col span={isView ? 12 : 16}>

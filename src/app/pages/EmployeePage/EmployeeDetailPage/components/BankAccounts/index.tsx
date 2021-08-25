@@ -6,9 +6,32 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Col, Divider, Form, FormInstance, Input, Row } from 'antd';
+import { Col, Divider, Form, FormInstance, Input, Row, Select } from 'antd';
 import { UserDetailMessages } from '../../messages';
 import { TitlePath } from '../TitlePath';
+
+const banks = [
+  {
+    id: 1,
+    name: 'Vietcombank',
+  },
+  {
+    id: 2,
+    name: 'Sacombank',
+  },
+  {
+    id: 3,
+    name: 'Techcombank',
+  },
+  {
+    id: 4,
+    name: 'ACB',
+  },
+  {
+    id: 5,
+    name: 'TPBank',
+  },
+];
 
 interface BankAccountsProps {
   isView?: boolean;
@@ -16,26 +39,24 @@ interface BankAccountsProps {
   form: FormInstance;
 }
 
+const { Option } = Select;
+
 export const BankAccounts = (props: BankAccountsProps) => {
-  const { isView } = props;
+  const { isView, isEdit } = props;
   const { t } = useTranslation();
 
   return (
     <>
-      <Form.List name="bank_accounts">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.length > 0 && (
-              <>
-                <DividerWrapper isView={isView}>
-                  <Divider />
-                </DividerWrapper>
-                <TitlePath>
-                  <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
-                </TitlePath>
-              </>
-            )}
-            {fields.map(({ key, name, fieldKey, ...restField }) => (
+      <DividerWrapper isView={isView}>
+        <Divider />
+      </DividerWrapper>
+      <TitlePath>
+        <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
+      </TitlePath>
+      {isView || isEdit ? (
+        <Form.List name="bank_accounts">
+          {fields =>
+            fields.map(({ key, name, fieldKey, ...restField }) => (
               <Row gutter={[32, 0]} key={key}>
                 <Col md={isView ? 24 : 8} xs={24}>
                   <Row gutter={[0, 12]} align="middle">
@@ -49,7 +70,28 @@ export const BankAccounts = (props: BankAccountsProps) => {
                         name={[name, 'bank_name']}
                         fieldKey={[fieldKey, 'bank_name']}
                       >
-                        <Input bordered={false} readOnly={true} size="large" />
+                        {isView ? (
+                          <Input
+                            bordered={false}
+                            readOnly={true}
+                            size="large"
+                          />
+                        ) : (
+                          <Select
+                            size="large"
+                            placeholder={t(
+                              UserDetailMessages.formBankNamePlaceholder(),
+                            )}
+                          >
+                            {banks.map(item => {
+                              return (
+                                <Option key={item.id} value={item.name}>
+                                  {item.name}
+                                </Option>
+                              );
+                            })}
+                          </Select>
+                        )}
                       </FormItem>
                     </Col>
                   </Row>
@@ -66,7 +108,18 @@ export const BankAccounts = (props: BankAccountsProps) => {
                         name={[name, 'number']}
                         fieldKey={[fieldKey, 'number']}
                       >
-                        <Input bordered={false} readOnly={true} size="large" />
+                        <Input
+                          bordered={!isView}
+                          readOnly={isView}
+                          size="large"
+                          placeholder={
+                            isView
+                              ? ''
+                              : t(
+                                  UserDetailMessages.formBankNumberPlaceholder(),
+                                )
+                          }
+                        />
                       </FormItem>
                     </Col>
                   </Row>
@@ -83,16 +136,89 @@ export const BankAccounts = (props: BankAccountsProps) => {
                         name={[name, 'branch']}
                         fieldKey={[fieldKey, 'branch']}
                       >
-                        <Input bordered={false} readOnly={true} size="large" />
+                        <Input
+                          bordered={!isView}
+                          readOnly={isView}
+                          size="large"
+                          placeholder={
+                            isView
+                              ? ''
+                              : t(
+                                  UserDetailMessages.formBankBranchPlaceholder(),
+                                )
+                          }
+                        />
                       </FormItem>
                     </Col>
                   </Row>
                 </Col>
               </Row>
-            ))}
-          </>
-        )}
-      </Form.List>
+            ))
+          }
+        </Form.List>
+      ) : (
+        <Row gutter={[32, 0]}>
+          <Col md={8} xs={24}>
+            <Row gutter={[0, 12]} align="middle">
+              <Col md={24} xs={24}>
+                {t(UserDetailMessages.formBankNameLabel())}
+              </Col>
+              <Col md={24} xs={24}>
+                <FormItem name="bank_name">
+                  <Select
+                    size="large"
+                    placeholder={t(
+                      UserDetailMessages.formBankNamePlaceholder(),
+                    )}
+                  >
+                    {banks.map(item => {
+                      return (
+                        <Option key={item.id} value={item.name}>
+                          {item.name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </FormItem>
+              </Col>
+            </Row>
+          </Col>
+          <Col md={8} xs={24}>
+            <Row gutter={[0, 12]} align="middle">
+              <Col md={24} xs={24}>
+                {t(UserDetailMessages.formBankNumberLabel())}
+              </Col>
+              <Col md={24} xs={24}>
+                <FormItem name="number">
+                  <Input
+                    size="large"
+                    placeholder={t(
+                      UserDetailMessages.formBankNumberPlaceholder(),
+                    )}
+                  />
+                </FormItem>
+              </Col>
+            </Row>
+          </Col>
+          <Col md={8} xs={24}>
+            <Row gutter={[0, 12]} align="middle">
+              <Col md={24} xs={24}>
+                {t(UserDetailMessages.formBankBranchLabel())}
+              </Col>
+              <Col md={isView ? 16 : 24} xs={24}>
+                <FormItem name="branch">
+                  <Input
+                    size="large"
+                    placeholder={t(
+                      UserDetailMessages.formBankBranchPlaceholder(),
+                    )}
+                  />
+                </FormItem>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      )}
     </>
   );
 };
@@ -108,10 +234,6 @@ const FormItem = styled(Form.Item)`
     width: 100%;
   }
   label {
-    font-weight: 500;
-  }
-  input {
-    padding: 0;
     font-weight: 500;
   }
 `;
