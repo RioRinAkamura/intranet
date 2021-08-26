@@ -10,7 +10,12 @@ import {
   CheckboxOptionType,
   TablePaginationConfig,
 } from 'antd';
-import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  MoreOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColumnProps } from 'antd/lib/table';
@@ -419,10 +424,14 @@ export const TaskManager = () => {
             <Row justify="end">
               <Button
                 shape="round"
-                style={{ marginBottom: 10 }}
+                style={{
+                  marginBottom: 10,
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
                 type="primary"
                 onClick={() => setIsCreate(true)}
-                // icon={<LaptopOutlined />}
+                icon={<PlusCircleOutlined />}
               >
                 Create Task
               </Button>

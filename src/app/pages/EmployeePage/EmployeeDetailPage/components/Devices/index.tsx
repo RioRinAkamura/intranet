@@ -14,6 +14,7 @@ import {
   MoreOutlined,
   EditOutlined,
   DeleteOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 import moment from 'moment';
 import { DialogModal } from 'app/components/DialogModal';
@@ -339,7 +340,7 @@ export const Device = memo((props: DeviceProps) => {
       <Header>
         <StyledButton
           type="primary"
-          icon={<FormOutlined />}
+          icon={<PlusCircleOutlined />}
           onClick={() => {
             setIsCreate(true);
             form.resetFields();

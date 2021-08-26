@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import { Col, Row } from 'antd';
-import { UserAddOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import Button from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
@@ -15,7 +15,7 @@ export const HeaderButtons = () => {
           <Button
             type="primary"
             size="middle"
-            icon={<UserAddOutlined />}
+            icon={<PlusCircleOutlined />}
             onClick={() => {
               history.push(PrivatePath.USERS_CREATE);
             }}

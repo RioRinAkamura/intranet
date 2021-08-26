@@ -12,7 +12,7 @@ import {
   EditOutlined,
   EyeOutlined,
   MoreOutlined,
-  UserAddOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 
 import { RootState } from 'types';
@@ -199,7 +199,7 @@ const TableListModel: React.FC<Props> = ({
             style={{ marginBottom: 10 }}
             type="primary"
             onClick={() => history.push('/leave_applications/create')}
-            icon={<UserAddOutlined />}
+            icon={<PlusCircleOutlined />}
           >
             Create leave application
           </Button>

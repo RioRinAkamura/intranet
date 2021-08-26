@@ -12,7 +12,7 @@ import {
   EditOutlined,
   EyeOutlined,
   MoreOutlined,
-  ProjectOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 import { UsersMessages } from 'app/pages/EmployeePage/EmployeeListPage/messages';
 import { useHistory } from 'react-router-dom';
@@ -171,7 +171,7 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
       <Header>
         <StyledButton
           type="primary"
-          icon={<ProjectOutlined />}
+          icon={<PlusCircleOutlined />}
           onClick={() => setOpen(true)}
           size="middle"
         >
