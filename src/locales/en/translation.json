@@ -292,14 +292,14 @@
             "empty": "Please enter bank name"
           },
           "number": {
-            "label": "Bank number",
-            "placeholder": "Enter bank number",
-            "empty": "Please enter bank number"
+            "label": "Account number",
+            "placeholder": "Enter account number",
+            "empty": "Please enter account number"
           },
           "branch": {
-            "label": "Bank branch",
-            "placeholder": "Enter bank branch",
-            "empty": "Please enter bank branch"
+            "label": "Branch",
+            "placeholder": "Enter branch",
+            "empty": "Please enter branch"
           },
           "button": {
             "add": "Add bank account"

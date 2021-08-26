@@ -253,5 +253,5 @@ const FormItem = styled(Form.Item)`
 `;
 
 const DividerWrapper = styled.div`
-  margin: ${(props: FormItemProps) => (props.isView ? '35px 0 53px 0' : '0px')};
+  margin: ${(props: FormItemProps) => (props.isView ? '15px 0 20px 0' : '0px')};
 `;
