@@ -307,9 +307,23 @@ export const ProjectListPage: React.FC = () => {
 
   const columns: ColumnsType<any> = [
     {
+      title: t(ProjectsMessages.listCode()),
+      dataIndex: 'code',
+      width: 110,
+      ...getColumnSorterProps('code', 3),
+      render: (text, record: Project) =>
+        text ? (
+          <StyledLink to={`${PrivatePath.PROJECTS}/${record.id}`} title={text}>
+            {text}
+          </StyledLink>
+        ) : (
+          ''
+        ),
+    },
+    {
       title: t(ProjectsMessages.listNameTitle()),
       dataIndex: 'name',
-      width: 110,
+      width: 130,
       fixed: 'left',
       ...getColumnSorterProps('name', 1),
       ...getColumnSearchInputProps(['name']),
@@ -377,20 +391,6 @@ export const ProjectListPage: React.FC = () => {
           { label: 'Release', value: 3 },
         ],
       ),
-    },
-    {
-      title: t(ProjectsMessages.listCode()),
-      dataIndex: 'code',
-      width: 130,
-      ...getColumnSorterProps('code', 3),
-      render: (text, record: Project) =>
-        text ? (
-          <StyledLink to={`${PrivatePath.PROJECTS}/${record.id}`} title={text}>
-            {text}
-          </StyledLink>
-        ) : (
-          ''
-        ),
     },
     {
       title: t(ProjectsMessages.listTotalWeeklyHours()),

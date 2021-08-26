@@ -19,11 +19,11 @@ import {
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import {
-  FormOutlined,
   MoreOutlined,
   EditOutlined,
   DeleteOutlined,
   EyeOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
@@ -342,7 +342,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
       <Header>
         <StyledButton
           type="primary"
-          icon={<FormOutlined />}
+          icon={<PlusCircleOutlined />}
           onClick={() => {
             setIsCreate(true);
             form.resetFields();

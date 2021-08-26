@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
-import { ProjectOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import { ProjectsMessages } from '../../messages';
 import Button from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
@@ -25,7 +25,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         <Button
           type="primary"
           onClick={() => history.push(PrivatePath.PROJECTS_CREATE)}
-          icon={<ProjectOutlined />}
+          icon={<PlusCircleOutlined />}
           size="middle"
         >
           {t(ProjectsMessages.createProjectButton())}

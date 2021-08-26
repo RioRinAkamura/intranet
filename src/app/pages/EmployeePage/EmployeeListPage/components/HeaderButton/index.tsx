@@ -13,7 +13,7 @@ import { UsersMessages } from '../../messages';
 import {
   ExportOutlined,
   ImportOutlined,
-  UserAddOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import Papa from 'papaparse';
@@ -220,7 +220,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
         <Button
           type="primary"
           onClick={() => history.push(PrivatePath.EMPLOYEES_CREATE)}
-          icon={<UserAddOutlined />}
+          icon={<PlusCircleOutlined />}
           size="middle"
         >
           {t(UsersMessages.createUserButton())}

@@ -19,6 +19,8 @@ import {
   Tooltip,
   Popover,
 } from 'antd';
+import { PlusCircleOutlined } from '@ant-design/icons';
+
 import PageTitle from 'app/components/PageTitle';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -289,6 +291,7 @@ export const DeviceListPage = () => {
                 type="primary"
                 size="middle"
                 onClick={() => history.push(PrivatePath.DEVICES_CREATE)}
+                icon={<PlusCircleOutlined />}
               >
                 Create device
               </Button>
