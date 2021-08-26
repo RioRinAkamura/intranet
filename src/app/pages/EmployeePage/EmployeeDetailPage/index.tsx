@@ -21,7 +21,6 @@ import { BankAccounts } from './components/BankAccounts/Loadable';
 import { UserDetailMessages } from './messages';
 import { useGetUserDetail } from './useGetUserDetail';
 import { useUpdateUserDetail } from './useUpdateUserDetail';
-import { IdCardInfo } from './components/IdCardInfo/Loadable';
 import { Notes } from './components/Notes/Loadable';
 import { Device } from './components/Devices/Loadable';
 import { DetailForm } from './components/DetailForm/Loadable';
@@ -219,11 +218,11 @@ export function EmployeeDetailPage(props: Props) {
       data={data}
       isEdit={isEdit}
       isView={isView}
-      leftScreenItems={<IdCardInfo isView={isView} isEdit={isEdit} />}
+      leftScreenItems={<></>}
       rightScreenItems={
         <>
           <ProfileInfo isView={isView} isEdit={isEdit} />
-          <BankAccounts isView={isView} form={form} />
+          <BankAccounts isView={isView} form={form} isEdit={isEdit} />
         </>
       }
     />
