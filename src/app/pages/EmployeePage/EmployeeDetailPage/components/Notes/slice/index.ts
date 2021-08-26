@@ -102,17 +102,29 @@ const slice = createSlice({
     deleteEmployeeNoteSuccess(state) {
       state.isFilter = false;
       state.loading = false;
-      state.isSuccess = true;
+      state.deleteIsSuccess = true;
     },
-    deleteEmployeeNoteFailure(
-      state,
-      action: PayloadAction<EmployeeNotePayloadAction>,
-    ) {
-      state.error = action.payload.error;
+    deleteEmployeeNoteFailure(state) {
+      state.deleteIsFailure = true;
+      state.loading = false;
+    },
+    deleteMultipleEmployeeNotes(state, action: PayloadAction<string[]>) {
+      state.loading = true;
+    },
+    deleteMultipleEmployeeNotesSuccess(state) {
+      state.isFilter = false;
+      state.loading = false;
+      state.deleteIsSuccess = true;
+      state.isDeleteMultiple = true;
+    },
+    deleteMultipleEmployeeNotesFailure(state) {
+      state.deleteIsFailure = true;
       state.loading = false;
     },
     resetState(state) {
       state.isSuccess = false;
+      state.deleteIsFailure = false;
+      state.deleteIsSuccess = false;
     },
     changeState(state, action: PayloadAction<QueryParams>) {
       state.params = { ...state.params, ...action.payload };

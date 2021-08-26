@@ -70,7 +70,18 @@ function* deleteEmployeeNote(action) {
     );
     yield put(actions.deleteEmployeeNoteSuccess());
   } catch (err) {
-    yield put(actions.deleteEmployeeNoteFailure);
+    yield put(actions.deleteEmployeeNoteFailure());
+  } finally {
+    yield put(actions.resetState());
+  }
+}
+
+function* deleteMultipleEmployeeNotes(action) {
+  try {
+    yield call([api, api.hr.employee.deleteMultipleNotes], action.payload);
+    yield put(actions.deleteMultipleEmployeeNotesSuccess());
+  } catch (err) {
+    yield put(actions.deleteMultipleEmployeeNotesFailure());
   } finally {
     yield put(actions.resetState());
   }
@@ -82,5 +93,9 @@ export function* employeeNoteSaga() {
     takeLatest(actions.createEmployeeNote.type, createEmployeeNote),
     takeLatest(actions.updateEmployeeNote.type, updateEmployeeNote),
     takeLatest(actions.deleteEmployeeNote.type, deleteEmployeeNote),
+    takeLatest(
+      actions.deleteMultipleEmployeeNotes.type,
+      deleteMultipleEmployeeNotes,
+    ),
   ];
 }

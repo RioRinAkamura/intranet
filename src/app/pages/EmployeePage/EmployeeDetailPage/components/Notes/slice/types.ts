@@ -3,7 +3,7 @@ import { Key } from 'react';
 /* --- STATE --- */
 export interface EmployeeNote {
   id: string;
-  type: string;
+  category: string;
   summary: string;
   date: string;
   content: string;
@@ -32,6 +32,9 @@ export interface EmployeeNoteState {
   filterColumns?: FilterColumns;
   selectedRowKeys?: Key[];
   selectedRows?: EmployeeNote[];
+  deleteIsSuccess?: boolean;
+  deleteIsFailure?: boolean;
+  isDeleteMultiple?: boolean;
 }
 
 export interface FilterColumns {

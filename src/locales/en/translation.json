@@ -80,6 +80,7 @@
     }
   },
   "NotesPage": {
+    "createNoteBtn": "Create note",
     "list": {
       "type": "Type",
       "summary": "Summary",
@@ -95,6 +96,21 @@
       "createTitle": "Create note",
       "editTitle": "Edit note",
       "form": {
+        "category": {
+          "label": "Category",
+          "placeholder": "Enter category",
+          "selectPlaceholder": "Select category"
+        },
+        "summary": {
+          "label": "Summary",
+          "placeholder": "Enter summary"
+        },
+        "date": {
+          "label": "Date"
+        },
+        "content": {
+          "label": "Content"
+        },
         "editButton": "Edit",
         "cancelButton": "Cancel",
         "submitButton": "Save"
