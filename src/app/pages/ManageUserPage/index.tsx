@@ -332,6 +332,10 @@ const ManageUserPage: React.FC = () => {
       });
       await Promise.all(arrPromise);
       dispatch(actions.deleteUserSuccess());
+      setIsMultiDeleteVisible(false);
+      dispatch(
+        actions.setSelectedRows({ selectedRowKeys: [], selectedRows: [] }),
+      );
     } catch (e) {
       console.log(e);
     } finally {

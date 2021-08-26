@@ -15,6 +15,9 @@ import {
   Input,
   DatePicker,
   FormInstance,
+  Row,
+  Col,
+  Select,
 } from 'antd';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
@@ -24,6 +27,9 @@ import {
   EditOutlined,
   DeleteOutlined,
   EyeOutlined,
+  PlusCircleOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
 } from '@ant-design/icons';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,6 +41,7 @@ import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import { useTableConfig } from 'utils/tableConfig';
 import Button, { IconButton } from 'app/components/Button';
+import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 
 import { EmployeeNote } from './slice/types';
 import { useNotesSlice } from './slice';
@@ -46,13 +53,30 @@ import {
 } from './slice/selectors';
 import { EmployeeNoteMessages } from './messages';
 import { Wrapper } from 'styles/StyledCommon';
+import { DeleteModal } from 'app/components/DeleteModal';
 
 const DATE_FORMAT = config.DATE_FORMAT;
+
+const categories = [
+  {
+    id: '0',
+    name: 'Category 1',
+  },
+  {
+    id: '1',
+    name: 'Category 2',
+  },
+  {
+    id: '2',
+    name: 'Category 3',
+  },
+];
 
 interface NotesProps {
   employeeId: string;
 }
 interface FormProps {
+  t: TFunction;
   form: FormInstance;
   note?: EmployeeNote;
   isView?: boolean;
@@ -67,7 +91,28 @@ interface ActionsProps {
   setIsDelete: (isUpdate: boolean) => void;
 }
 
-const WrapperForm: React.FC<FormProps> = ({ form, note, isView }) => {
+const { Option } = Select;
+
+const WrapperForm: React.FC<FormProps> = ({ form, note, isView, t }) => {
+  const [isCreateCategory, setIsCreateCategory] = React.useState<boolean>(
+    false,
+  );
+  const [categoryList, setCategoryList] = React.useState<any[]>([]);
+  const [category, setCategory] = React.useState<string>();
+
+  const onCreateCategory = () => {
+    const id = `${categoryList.length}`;
+    setCategoryList([
+      ...categoryList,
+      {
+        id,
+        name: form.getFieldValue('category'),
+      },
+    ]);
+    setCategory(id);
+    setIsCreateCategory(false);
+  };
+
   useEffect(() => {
     if (note) {
       form.setFieldsValue({
@@ -77,18 +122,69 @@ const WrapperForm: React.FC<FormProps> = ({ form, note, isView }) => {
     }
   }, [form, note, isView]);
 
+  useEffect(() => {
+    setCategoryList(categories);
+  }, []);
+
   return (
     <Form layout="vertical" form={form}>
-      <Form.Item name="type" label="Type">
-        <Input size="large" placeholder="Type" disabled={isView} />
+      <Form.Item
+        name="category"
+        label={t(EmployeeNoteMessages.modalCategoryLabel())}
+      >
+        <StyledWrapperCategory>
+          {isCreateCategory ? (
+            <>
+              <Input
+                size="large"
+                placeholder={t(EmployeeNoteMessages.modalCategoryPlaceholder())}
+              />
+              <StyledCheckCircleOutlined onClick={onCreateCategory} />
+              <StyledCloseCircleOutlined
+                onClick={() => setIsCreateCategory(false)}
+              />
+            </>
+          ) : (
+            <>
+              <Select
+                size="large"
+                disabled={isView}
+                value={category}
+                onChange={(value: string) => setCategory(value)}
+                placeholder={t(
+                  EmployeeNoteMessages.modalCategorySelectPlaceholder(),
+                )}
+              >
+                {categoryList.map(category => (
+                  <Option key={category.id} value={category.id}>
+                    {category.name}
+                  </Option>
+                ))}
+              </Select>
+              <StyledPlusCircleOutlined
+                onClick={() => setIsCreateCategory(true)}
+              />
+            </>
+          )}
+        </StyledWrapperCategory>
       </Form.Item>
-      <Form.Item name="summary" label="Summary">
-        <Input size="large" placeholder="Summary" disabled={isView} />
+      <Form.Item
+        name="summary"
+        label={t(EmployeeNoteMessages.modalSummaryLabel())}
+      >
+        <Input
+          size="large"
+          placeholder={t(EmployeeNoteMessages.modalSummaryPlaceholder())}
+          disabled={isView}
+        />
       </Form.Item>
-      <Form.Item name="date" label="Date">
+      <Form.Item name="date" label={t(EmployeeNoteMessages.modalDateLabel())}>
         <StyledDatePicker size="large" disabled={isView} />
       </Form.Item>
-      <Form.Item name="content" label="Content">
+      <Form.Item
+        name="content"
+        label={t(EmployeeNoteMessages.modalContentLabel())}
+      >
         <RichEditor
           data={note?.content}
           width="100%"
@@ -165,6 +261,11 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
   const [isView, setIsView] = useState<boolean>(false);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [isModalMultiDeleteVisible, setIsModalMultiDeleteVisible] = useState(
+    false,
+  );
+
+  const { notify } = useNotify();
 
   const [note, setNote] = useState<EmployeeNote>();
 
@@ -237,6 +338,14 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
     );
   };
 
+  const handleMultiDelete = () => {
+    dispatch(
+      actions.deleteMultipleEmployeeNotes(
+        (employeeNoteState.selectedRowKeys as string[]) || [],
+      ),
+    );
+  };
+
   const handleCancel = () => {
     setIsView(false);
     setIsCreate(false);
@@ -260,7 +369,6 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
     if (isSuccess) {
       setIsCreate(false);
       setIsUpdate(false);
-      setIsDelete(false);
     }
   }, [form, isSuccess]);
 
@@ -274,12 +382,35 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
     }
   }, [actions, dispatch, employeeId, isFilter, params]);
 
+  useEffect(() => {
+    if (employeeNoteState.deleteIsSuccess) {
+      notify({
+        type: ToastMessageType.Info,
+        message: 'Delete Successfully',
+        duration: 2,
+      });
+      setIsModalMultiDeleteVisible(false);
+      setIsDelete(false);
+      if (employeeNoteState.isDeleteMultiple) {
+        dispatch(
+          actions.selectedRows({ selectedRowKeys: [], selectedRows: [] }),
+        );
+      }
+    } else if (employeeNoteState.deleteIsFailure) {
+      notify({
+        type: ToastMessageType.Error,
+        message: 'Delete Failed',
+        duration: 2,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [employeeNoteState.deleteIsFailure, employeeNoteState.deleteIsSuccess]);
   const columns: ColumnProps<EmployeeNote>[] = [
     {
       title: t(EmployeeNoteMessages.listType()),
-      dataIndex: 'type',
-      ...getColumnSorterProps('type', 0),
-      ...getColumnSearchInputProps(['type']),
+      dataIndex: 'category',
+      ...getColumnSorterProps('category', 0),
+      ...getColumnSearchInputProps(['category']),
     },
     {
       title: t(EmployeeNoteMessages.listSummary()),
@@ -339,51 +470,73 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
 
   return (
     <Wrapper>
-      <Header>
-        <StyledButton
-          type="primary"
-          icon={<FormOutlined />}
-          onClick={() => {
-            setIsCreate(true);
-            form.resetFields();
-          }}
-          size="middle"
-        >
-          Create notes
-        </StyledButton>
-      </Header>
-
-      <Table
-        bordered
-        dataSource={employeeNoteState.notes}
-        columns={columns}
-        rowKey="id"
-        loading={employeeNoteState.loading}
-        onChange={handleTableChange}
-        scroll={{ x: 1100 }}
-        rowSelection={{
-          selectedRowKeys: employeeNoteState.selectedRowKeys,
-          onChange: handleSelectedRows,
-        }}
-        pagination={{
-          ...employeeNoteState.pagination,
-          onChange: (page: number, pageSize?: number) => {
-            setPagination({ current: page, pageSize });
-          },
-          showTotal: (total, range) => (
-            <div>
-              Showing{' '}
-              <span>
-                {range[0]}-{range[1]}
-              </span>{' '}
-              of {total} items
-            </div>
-          ),
-          pageSizeOptions: ['10', '20', '50', '100'],
-          showSizeChanger: true,
-        }}
-      />
-
+      <Row align="middle" justify="center">
+        <Col span={8}>
+          <Row justify="start">
+            {employeeNoteState.selectedRowKeys &&
+              employeeNoteState.selectedRowKeys.length > 0 && (
+                <Button
+                  danger
+                  disabled={
+                    !employeeNoteState?.selectedRowKeys?.length ||
+                    employeeNoteState?.selectedRowKeys?.length === 0
+                  }
+                  icon={<DeleteOutlined />}
+                  onClick={() => {
+                    setIsModalMultiDeleteVisible(true);
+                  }}
+                />
+              )}
+          </Row>
+        </Col>
+        <Col span={16}>
+          <Row justify="end">
+            <StyledButton
+              type="primary"
+              icon={<FormOutlined />}
+              onClick={() => {
+                setIsCreate(true);
+                form.resetFields();
+              }}
+              size="middle"
+            >
+              {t(EmployeeNoteMessages.createNoteBtn())}
+            </StyledButton>
+          </Row>
+        </Col>
+        <Col span={24}>
+          <Table
+            bordered
+            dataSource={employeeNoteState.notes}
+            columns={columns}
+            rowKey="id"
+            loading={employeeNoteState.loading}
+            onChange={handleTableChange}
+            scroll={{ x: 1100 }}
+            rowSelection={{
+              selectedRowKeys: employeeNoteState.selectedRowKeys,
+              onChange: handleSelectedRows,
+            }}
+            pagination={{
+              ...employeeNoteState.pagination,
+              onChange: (page: number, pageSize?: number) => {
+                setPagination({ current: page, pageSize });
+              },
+              showTotal: (total, range) => (
+                <div>
+                  Showing{' '}
+                  <span>
+                    {range[0]}-{range[1]}
+                  </span>{' '}
+                  of {total} items
+                </div>
+              ),
+              pageSizeOptions: ['10', '20', '50', '100'],
+              showSizeChanger: true,
+            }}
+          />
+        </Col>
+      </Row>
       <DialogModal
         isOpen={isCreate || isUpdate || isView}
         cancelText={t(EmployeeNoteMessages.modalCancelButton())}
@@ -403,6 +556,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
         handleSubmit={handleSubmit}
       >
         <WrapperForm
+          t={t}
           form={form}
           note={!isCreate ? note : undefined}
           isView={!isCreate ? isView : false}
@@ -411,23 +565,24 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
 
       <DeleteConfirmModal
         visible={isDelete}
-        title={`Remove ${note?.type}`}
+        title={`Remove ${note?.category}`}
         description={descriptionDelete}
         handleCancel={() => setIsDelete(false)}
         handleOk={handleNoteDelete}
         answer={note?.id}
       />
+      <DeleteModal
+        open={isModalMultiDeleteVisible}
+        handleDelete={handleMultiDelete}
+        handleCancel={() => setIsModalMultiDeleteVisible(false)}
+        content="Are you sure you want to delete this information?"
+      />
     </Wrapper>
   );
 });
 
-const Header = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding-bottom: 20px;
-`;
-
 const StyledButton = styled(Button)`
+  margin-bottom: 10px;
   svg {
     vertical-align: baseline;
   }
@@ -435,4 +590,29 @@ const StyledButton = styled(Button)`
 
 const StyledDatePicker = styled(DatePicker)`
   width: 100%;
+`;
+
+const StyledWrapperCategory = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const StyledPlusCircleOutlined = styled(PlusCircleOutlined)`
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  color: blue;
+`;
+
+const StyledCheckCircleOutlined = styled(CheckCircleOutlined)`
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 0 0.5rem;
+  color: green;
+`;
+
+const StyledCloseCircleOutlined = styled(CloseCircleOutlined)`
+  cursor: pointer;
+  font-size: 1rem;
+  color: red;
 `;

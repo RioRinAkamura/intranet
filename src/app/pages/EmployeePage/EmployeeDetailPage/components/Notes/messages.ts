@@ -7,6 +7,8 @@ import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
 export const EmployeeNoteMessages = {
+  //Header
+  createNoteBtn: () => _t(translations.NotesPage.createNoteBtn, 'Create note'),
   //List
   listType: () => _t(translations.NotesPage.list.type, 'Type'),
   listSummary: () => _t(translations.NotesPage.list.summary, 'Summary'),
@@ -23,6 +25,26 @@ export const EmployeeNoteMessages = {
   modalCreateTitle: () =>
     _t(translations.NotesPage.modal.createTitle, 'Create note'),
   modalEditTitle: () => _t(translations.NotesPage.modal.editTitle, 'Edit note'),
+  modalCategoryLabel: () =>
+    _t(translations.NotesPage.modal.form.category.label, 'Category'),
+  modalCategoryPlaceholder: () =>
+    _t(
+      translations.NotesPage.modal.form.category.placeholder,
+      'Enter category',
+    ),
+  modalCategorySelectPlaceholder: () =>
+    _t(
+      translations.NotesPage.modal.form.category.selectPlaceholder,
+      'Select category',
+    ),
+  modalSummaryLabel: () =>
+    _t(translations.NotesPage.modal.form.summary.label, 'Summary'),
+  modalSummaryPlaceholder: () =>
+    _t(translations.NotesPage.modal.form.summary.placeholder, 'Enter summary'),
+  modalDateLabel: () =>
+    _t(translations.NotesPage.modal.form.date.label, 'Date'),
+  modalContentLabel: () =>
+    _t(translations.NotesPage.modal.form.content.label, 'Content'),
   modalEditButton: () =>
     _t(translations.NotesPage.modal.form.editButton, 'Edit'),
   modalCancelButton: () =>
