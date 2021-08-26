@@ -10,7 +10,6 @@ import {
   Select,
 } from 'antd';
 import {
-  FormOutlined,
   MoreOutlined,
   EditOutlined,
   DeleteOutlined,
