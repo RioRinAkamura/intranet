@@ -3,7 +3,7 @@ import { api } from 'utils/api';
 import { categoryManageAction as actions } from '.';
 
 function fetchCategory() {
-  return api.hr.deviceCategory.list();
+  return api.hr.device.category.list();
 }
 
 function* fetchList(action) {

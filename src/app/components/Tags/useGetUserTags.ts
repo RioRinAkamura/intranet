@@ -21,7 +21,7 @@ export const useGetUserTags = (
     setLoading(true);
     (async () => {
       try {
-        const response = await api.hr.employee.listTags();
+        const response = await api.hr.tag.list();
         setTags(response);
       } catch (error) {
         setError(error);

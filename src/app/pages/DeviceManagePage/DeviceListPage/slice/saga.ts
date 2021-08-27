@@ -59,7 +59,7 @@ function* deleteDeviceAction(action: PayloadAction<Delete>) {
 function* deleteMultiDevice(action: PayloadAction<Delete>) {
   try {
     const ids = action.payload.ids;
-    if (ids) yield api.hr.device.deleteMultiple(ids);
+    if (ids) yield api.hr.device.bulkDelete(ids);
     yield put(actions.deleteMultiSuccess());
   } catch (err) {
     yield put(actions.deleteMultiFailure());

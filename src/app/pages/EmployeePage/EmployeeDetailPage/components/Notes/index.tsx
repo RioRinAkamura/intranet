@@ -6,42 +6,22 @@
 import React, { memo, useEffect, useState, Key } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
-import {
-  Table,
-  Popover,
-  Tooltip,
-  Form,
-  Input,
-  DatePicker,
-  FormInstance,
-  Row,
-  Col,
-  Select,
-} from 'antd';
+import { Table, Tooltip, Form as FormAntd, Row, Col } from 'antd';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
-import {
-  MoreOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  EyeOutlined,
-  PlusCircleOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  FormOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { config } from 'config';
 import { DialogModal } from 'app/components/DialogModal';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
-import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import { useTableConfig } from 'utils/tableConfig';
-import Button, { IconButton } from 'app/components/Button';
+import Button from 'app/components/Button';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
+import { Wrapper } from 'styles/StyledCommon';
+import { DeleteModal } from 'app/components/DeleteModal';
 
 import { EmployeeNote } from './slice/types';
 import { useNotesSlice } from './slice';
@@ -52,207 +32,14 @@ import {
   selectEmployeeNoteIsSuccess,
 } from './slice/selectors';
 import { EmployeeNoteMessages } from './messages';
-import { Wrapper } from 'styles/StyledCommon';
-import { DeleteModal } from 'app/components/DeleteModal';
+import { Actions } from './components/Actions';
+import { Form } from './components/Form';
 
 const DATE_FORMAT = config.DATE_FORMAT;
-
-const categories = [
-  {
-    id: '0',
-    name: 'Category 1',
-  },
-  {
-    id: '1',
-    name: 'Category 2',
-  },
-  {
-    id: '2',
-    name: 'Category 3',
-  },
-];
 
 interface NotesProps {
   employeeId: string;
 }
-interface FormProps {
-  t: TFunction;
-  form: FormInstance;
-  note?: EmployeeNote;
-  isView?: boolean;
-}
-
-interface ActionsProps {
-  t: TFunction;
-  note: EmployeeNote;
-  setNote: (note: EmployeeNote) => void;
-  setIsView: (isView: boolean) => void;
-  setIsUpdate: (isUpdate: boolean) => void;
-  setIsDelete: (isUpdate: boolean) => void;
-}
-
-const { Option } = Select;
-
-const WrapperForm: React.FC<FormProps> = ({ form, note, isView, t }) => {
-  const [isCreateCategory, setIsCreateCategory] = React.useState<boolean>(
-    false,
-  );
-  const [categoryList, setCategoryList] = React.useState<any[]>([]);
-  const [category, setCategory] = React.useState<string>();
-
-  const onCreateCategory = () => {
-    const id = `${categoryList.length}`;
-    setCategoryList([
-      ...categoryList,
-      {
-        id,
-        name: form.getFieldValue('category'),
-      },
-    ]);
-    setCategory(id);
-    setIsCreateCategory(false);
-  };
-
-  useEffect(() => {
-    if (note) {
-      form.setFieldsValue({
-        ...note,
-        date: moment(note.date),
-      });
-    }
-  }, [form, note, isView]);
-
-  useEffect(() => {
-    setCategoryList(categories);
-  }, []);
-
-  return (
-    <Form layout="vertical" form={form}>
-      <Form.Item
-        name="category"
-        label={t(EmployeeNoteMessages.modalCategoryLabel())}
-      >
-        <StyledWrapperCategory>
-          {isCreateCategory ? (
-            <>
-              <Input
-                size="large"
-                placeholder={t(EmployeeNoteMessages.modalCategoryPlaceholder())}
-              />
-              <StyledCheckCircleOutlined onClick={onCreateCategory} />
-              <StyledCloseCircleOutlined
-                onClick={() => setIsCreateCategory(false)}
-              />
-            </>
-          ) : (
-            <>
-              <Select
-                size="large"
-                disabled={isView}
-                value={category}
-                onChange={(value: string) => setCategory(value)}
-                placeholder={t(
-                  EmployeeNoteMessages.modalCategorySelectPlaceholder(),
-                )}
-              >
-                {categoryList.map(category => (
-                  <Option key={category.id} value={category.id}>
-                    {category.name}
-                  </Option>
-                ))}
-              </Select>
-              <StyledPlusCircleOutlined
-                onClick={() => setIsCreateCategory(true)}
-              />
-            </>
-          )}
-        </StyledWrapperCategory>
-      </Form.Item>
-      <Form.Item
-        name="summary"
-        label={t(EmployeeNoteMessages.modalSummaryLabel())}
-      >
-        <Input
-          size="large"
-          placeholder={t(EmployeeNoteMessages.modalSummaryPlaceholder())}
-          disabled={isView}
-        />
-      </Form.Item>
-      <Form.Item name="date" label={t(EmployeeNoteMessages.modalDateLabel())}>
-        <StyledDatePicker size="large" disabled={isView} />
-      </Form.Item>
-      <Form.Item
-        name="content"
-        label={t(EmployeeNoteMessages.modalContentLabel())}
-      >
-        <RichEditor
-          data={note?.content}
-          width="100%"
-          callback={value => {
-            form.setFieldsValue({ content: value });
-          }}
-          isView={isView}
-        />
-      </Form.Item>
-    </Form>
-  );
-};
-
-const Actions: React.FC<ActionsProps> = ({
-  t,
-  note,
-  setNote,
-  setIsView,
-  setIsUpdate,
-  setIsDelete,
-}) => {
-  return (
-    <Popover
-      placement="bottom"
-      content={() => (
-        <>
-          <Tooltip title={t(EmployeeNoteMessages.listViewTooltip())}>
-            <IconButton
-              type="primary"
-              shape="circle"
-              size="small"
-              icon={<EyeOutlined />}
-              onClick={() => {
-                setIsView(true);
-                setNote(note);
-              }}
-            />
-          </Tooltip>
-          <Tooltip title={t(EmployeeNoteMessages.listEditTooltip())}>
-            <IconButton
-              shape="circle"
-              size="small"
-              icon={<EditOutlined />}
-              onClick={() => {
-                setIsUpdate(true);
-                setNote(note);
-              }}
-            />
-          </Tooltip>
-          <Tooltip title={t(EmployeeNoteMessages.listDeleteTooltip())}>
-            <IconButton
-              danger
-              shape="circle"
-              size="small"
-              icon={<DeleteOutlined />}
-              onClick={() => {
-                setIsDelete(true);
-                setNote(note);
-              }}
-            />
-          </Tooltip>
-        </>
-      )}
-    >
-      <IconButton shape="circle" size="small" icon={<MoreOutlined />} />
-    </Popover>
-  );
-};
 
 export const Notes = memo(({ employeeId }: NotesProps) => {
   const { t } = useTranslation();
@@ -269,7 +56,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
 
   const [note, setNote] = useState<EmployeeNote>();
 
-  const [form] = Form.useForm();
+  const [form] = FormAntd.useForm();
 
   const { actions } = useNotesSlice();
 
@@ -309,6 +96,8 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
   };
 
   const handleNoteCreate = () => {
+    console.log(form.getFieldsValue());
+
     dispatch(
       actions.createEmployeeNote({
         ...form.getFieldsValue(),
@@ -378,7 +167,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
 
   useEffect(() => {
     if (!isFilter) {
-      dispatch(actions.fetchEmployeeNotes({ employee_id: employeeId, params }));
+      dispatch(actions.fetchEmployeeNotes({ employeeId, params }));
     }
   }, [actions, dispatch, employeeId, isFilter, params]);
 
@@ -555,7 +344,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
         handleCancel={handleCancel}
         handleSubmit={handleSubmit}
       >
-        <WrapperForm
+        <Form
           t={t}
           form={form}
           note={!isCreate ? note : undefined}
@@ -586,33 +375,4 @@ const StyledButton = styled(Button)`
   svg {
     vertical-align: baseline;
   }
-`;
-
-const StyledDatePicker = styled(DatePicker)`
-  width: 100%;
-`;
-
-const StyledWrapperCategory = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const StyledPlusCircleOutlined = styled(PlusCircleOutlined)`
-  cursor: pointer;
-  font-size: 1rem;
-  margin-left: 0.5rem;
-  color: blue;
-`;
-
-const StyledCheckCircleOutlined = styled(CheckCircleOutlined)`
-  cursor: pointer;
-  font-size: 1rem;
-  margin: 0 0.5rem;
-  color: green;
-`;
-
-const StyledCloseCircleOutlined = styled(CloseCircleOutlined)`
-  cursor: pointer;
-  font-size: 1rem;
-  color: red;
 `;

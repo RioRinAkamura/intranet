@@ -10,7 +10,7 @@ export interface EmployeeNote {
 }
 
 export interface EmployeeNotesFetchData {
-  employee_id: string;
+  employeeId: string;
   params: QueryParams;
 }
 export interface EmployeeNotePayloadAction {
@@ -48,7 +48,7 @@ export interface FilterColumns {
 export interface QueryParams {
   search?: string;
   ordering?: string;
-  type?: string;
+  category?: string;
   summary?: string;
   date?: string;
   content?: string;

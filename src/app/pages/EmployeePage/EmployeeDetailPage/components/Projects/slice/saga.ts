@@ -9,17 +9,15 @@ function* fetchEmployeeProject(action) {
   try {
     const { params } = action.payload;
     const id = action.payload.id;
-    const queryParams = {
-      search: params.search,
-      ordering: params.ordering,
-      project__name: params.project__name,
-      page: params.page,
-      limit: params.limit,
-    };
 
-    const response = yield call([api, api.hr.employee.getProjects], id, {
-      ...queryParams,
-    });
+    const response = yield call(
+      [api, api.hr.employee.project.list],
+      id,
+      params.search,
+      params.ordering,
+      params.page,
+      params.limit,
+    );
     yield put(actions.fetchEmployeeProjectSuccess(response));
   } catch (err) {
     yield put(actions.fetchEmployeeProjectFailure);

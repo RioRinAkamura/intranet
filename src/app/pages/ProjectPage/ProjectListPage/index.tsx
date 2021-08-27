@@ -50,9 +50,9 @@ import { CardLayout } from 'app/components/CardLayout';
 import Button, { IconButton } from 'app/components/Button';
 import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMemberModal';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
-import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
+import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();

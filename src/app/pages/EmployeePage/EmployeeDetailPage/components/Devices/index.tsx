@@ -133,7 +133,7 @@ export const Device = memo((props: DeviceProps) => {
   const fetchEmployeeDevices = useCallback(async () => {
     setLoading(true);
     try {
-      const response: any = await api.hr.deviceEmployee.list();
+      const response: any = await api.hr.employee.device.list(employeeId);
 
       const mapResponse: any = [...response.results].filter(
         device => device.employee === employeeId,
@@ -253,13 +253,13 @@ export const Device = memo((props: DeviceProps) => {
         status: DeviceStatus.AVAILABLE,
       });
 
-      await api.hr.deviceHistory.create({
+      await api.hr.device.history.create({
         device: deviceDelete.device,
         employee: employeeId,
         note: `Unassign device from employee ${deviceDelete.employee_name}`,
       });
 
-      await api.hr.deviceEmployee.delete(deviceDelete.id);
+      await api.hr.employee.device.delete(employeeId, deviceDelete.id);
       fetchEmployeeDevices();
       setIsDelete(false);
     } catch (e) {
@@ -291,7 +291,7 @@ export const Device = memo((props: DeviceProps) => {
         setLoading(true);
 
         if (isCreate) {
-          await api.hr.deviceEmployee.create({
+          await api.hr.employee.device.create(employeeId, {
             ...mapValue,
             employee: employeeId,
           });
@@ -311,14 +311,14 @@ export const Device = memo((props: DeviceProps) => {
               status: DeviceStatus.AVAILABLE,
             });
 
-            await api.hr.deviceHistory.create({
+            await api.hr.device.history.create({
               device: deviceUpdate.device,
               employee: employeeId,
               note: `Unassign device from employee ${deviceUpdate.employee_name}`,
             });
           }
 
-          await api.hr.deviceEmployee.update({
+          await api.hr.employee.device.update(employeeId, {
             id: deviceUpdate.id,
             ...mapValue,
           });

@@ -20,7 +20,7 @@ export function* fetchIdentity() {
 
 export function* fetchEmployeeSkills(action: PayloadAction<string>) {
   try {
-    const response = yield api.hr.employee.getSkills(action.payload);
+    const response = yield api.hr.employee.skill.list(action.payload);
     yield put(
       actions.fetchEmployeeSkillsSuccess({
         list: response,
