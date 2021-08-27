@@ -59,7 +59,7 @@ export const DetailForm = memo((props: FormProps) => {
           <>
             <BankAccounts isView={isView} isEdit={isEdit} form={form} />
             <Divider />
-            <IdCardInfo isView={isView} isEdit={isEdit} />
+            <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
           </>
         )}
       </Wrapper>

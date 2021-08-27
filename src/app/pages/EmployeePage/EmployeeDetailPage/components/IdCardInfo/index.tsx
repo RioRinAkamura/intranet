@@ -14,6 +14,7 @@ import {
   Input,
   InputProps,
   Row,
+  FormInstance,
 } from 'antd';
 import { UserDetailMessages } from '../../messages';
 import { TitlePath } from '../TitlePath';
@@ -23,6 +24,7 @@ const DATE_FORMAT = config.DATE_FORMAT;
 interface IdCardProps {
   isView: boolean;
   isEdit: boolean;
+  form: FormInstance;
 }
 const inputProps: InputProps = {
   bordered: false,

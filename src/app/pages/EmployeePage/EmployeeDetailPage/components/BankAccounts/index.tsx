@@ -43,7 +43,7 @@ interface BankAccountsProps {
 const { Option } = Select;
 
 export const BankAccounts = (props: BankAccountsProps) => {
-  const { isView, isEdit } = props;
+  const { isView, isEdit, form } = props;
   const { t } = useTranslation();
 
   return (
@@ -55,12 +55,12 @@ export const BankAccounts = (props: BankAccountsProps) => {
         <Form.List name="bank_accounts">
           {fields =>
             fields.map(({ key, name, fieldKey, ...restField }) => (
-              <Row gutter={[128, 0]} align="middle">
+              <Row gutter={[128, 0]} align="middle" key={key}>
                 <Col md={isView ? 12 : 24} xs={24}>
                   <TitlePath>
                     <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
                   </TitlePath>
-                  <Row gutter={[32, 0]} key={key}>
+                  <Row gutter={[32, 0]}>
                     <Col md={isView ? 24 : 8} xs={24}>
                       <Row gutter={[0, 12]} align="middle">
                         <Col md={isView ? 8 : 24} xs={24}>
@@ -163,7 +163,7 @@ export const BankAccounts = (props: BankAccountsProps) => {
                     xs={24}
                     style={isView ? { borderLeft: '1px solid #c5c4c5' } : {}}
                   >
-                    <IdCardInfo isView={isView} isEdit={isEdit} />
+                    <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
                   </Col>
                 )}
               </Row>
@@ -171,67 +171,72 @@ export const BankAccounts = (props: BankAccountsProps) => {
           }
         </Form.List>
       ) : (
-        <Row gutter={[32, 0]}>
-          <Col md={8} xs={24}>
-            <Row gutter={[0, 12]} align="middle">
-              <Col md={24} xs={24}>
-                {t(UserDetailMessages.formBankNameLabel())}
-              </Col>
-              <Col md={24} xs={24}>
-                <FormItem name="bank_name">
-                  <Select
-                    size="large"
-                    placeholder={t(
-                      UserDetailMessages.formBankNamePlaceholder(),
-                    )}
-                  >
-                    {banks.map(item => {
-                      return (
-                        <Option key={item.id} value={item.name}>
-                          {item.name}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </FormItem>
-              </Col>
-            </Row>
-          </Col>
-          <Col md={8} xs={24}>
-            <Row gutter={[0, 12]} align="middle">
-              <Col md={24} xs={24}>
-                {t(UserDetailMessages.formBankNumberLabel())}
-              </Col>
-              <Col md={24} xs={24}>
-                <FormItem name="number">
-                  <Input
-                    size="large"
-                    placeholder={t(
-                      UserDetailMessages.formBankNumberPlaceholder(),
-                    )}
-                  />
-                </FormItem>
-              </Col>
-            </Row>
-          </Col>
-          <Col md={8} xs={24}>
-            <Row gutter={[0, 12]} align="middle">
-              <Col md={24} xs={24}>
-                {t(UserDetailMessages.formBankBranchLabel())}
-              </Col>
-              <Col md={isView ? 16 : 24} xs={24}>
-                <FormItem name="branch">
-                  <Input
-                    size="large"
-                    placeholder={t(
-                      UserDetailMessages.formBankBranchPlaceholder(),
-                    )}
-                  />
-                </FormItem>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+        <>
+          <TitlePath>
+            <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
+          </TitlePath>
+          <Row gutter={[32, 0]}>
+            <Col md={8} xs={24}>
+              <Row gutter={[0, 12]} align="middle">
+                <Col md={24} xs={24}>
+                  {t(UserDetailMessages.formBankNameLabel())}
+                </Col>
+                <Col md={24} xs={24}>
+                  <FormItem name="bank_name">
+                    <Select
+                      size="large"
+                      placeholder={t(
+                        UserDetailMessages.formBankNamePlaceholder(),
+                      )}
+                    >
+                      {banks.map(item => {
+                        return (
+                          <Option key={item.id} value={item.name}>
+                            {item.name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </FormItem>
+                </Col>
+              </Row>
+            </Col>
+            <Col md={8} xs={24}>
+              <Row gutter={[0, 12]} align="middle">
+                <Col md={24} xs={24}>
+                  {t(UserDetailMessages.formBankNumberLabel())}
+                </Col>
+                <Col md={24} xs={24}>
+                  <FormItem name="number">
+                    <Input
+                      size="large"
+                      placeholder={t(
+                        UserDetailMessages.formBankNumberPlaceholder(),
+                      )}
+                    />
+                  </FormItem>
+                </Col>
+              </Row>
+            </Col>
+            <Col md={8} xs={24}>
+              <Row gutter={[0, 12]} align="middle">
+                <Col md={24} xs={24}>
+                  {t(UserDetailMessages.formBankBranchLabel())}
+                </Col>
+                <Col md={isView ? 16 : 24} xs={24}>
+                  <FormItem name="branch">
+                    <Input
+                      size="large"
+                      placeholder={t(
+                        UserDetailMessages.formBankBranchPlaceholder(),
+                      )}
+                    />
+                  </FormItem>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </>
       )}
     </>
   );
