@@ -313,10 +313,8 @@ export function EmployeeDetailPage(props: Props) {
                 block
                 type="primary"
                 onClick={() => {
-                  if (isEdit) {
-                    handleSubmit();
-                  } else if (isView) {
-                    setIsEdit(true);
+                  if (isView) {
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}/edit`);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   } else if (isCreate) {
                     handleSubmit();
