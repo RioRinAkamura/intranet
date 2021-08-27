@@ -14,7 +14,7 @@ import {
 import { TFunction } from 'i18next';
 import moment from 'moment';
 import styled from 'styled-components';
-import { NoteCategory } from '@hdwebsoft/boilerplate-api-sdk/libs/api/employee/note/models';
+import { NoteCategory } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 import { RichEditor } from 'app/components/RichEditor';
 import { api } from 'utils/api';
@@ -41,7 +41,7 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
   const onCreateCategory = async () => {
     const name = form.getFieldValue('category');
 
-    const category = await api.employee.note.category.create({ name });
+    const category = await api.hr.employee.note.category.create({ name });
 
     setCategoryList([...categoryList, category]);
     setCategory(category.id);
@@ -58,7 +58,7 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
   }, [form, note, isView]);
 
   const getCategories = async () => {
-    const categories = await api.employee.note.category.list();
+    const categories = await api.hr.employee.note.category.list();
     setCategoryList(categories.results);
   };
 

@@ -7,7 +7,7 @@ function* fetchProjectChangeLogs(action) {
   try {
     const { params, project_id } = action.payload;
     const response = yield call(
-      [api, api.project.getLogs],
+      [api, api.hr.project.getLogs],
       project_id,
       params.page,
       params.limit,

@@ -36,7 +36,7 @@ export const DeviceCategory = (props: CategoryProps) => {
 
   const handleConfirmDelete = async () => {
     try {
-      await api.hr.deviceCategory.delete(categoryId);
+      await api.hr.device.category.delete(categoryId);
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -58,7 +58,7 @@ export const DeviceCategory = (props: CategoryProps) => {
     if (e.keyCode === 13) {
       categoryForm.validateFields().then(async values => {
         try {
-          await api.hr.deviceCategory.create({
+          await api.hr.device.category.create({
             ...values,
             devices: [],
           });

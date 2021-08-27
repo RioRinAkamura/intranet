@@ -23,7 +23,7 @@ export const useLeaveApplicationDetail = (): {
   const { notify } = useNotify();
 
   const detail = React.useCallback(async (id: string) => {
-    return await api.hr.employeeLeave.get(id);
+    return await api.hr.leave.get(id);
   }, []);
 
   const fetchEmployees = React.useCallback(async () => {
@@ -41,7 +41,7 @@ export const useLeaveApplicationDetail = (): {
           return member;
         });
       }
-      const response = await api.hr.employeeLeave.update(data.id, data);
+      const response = await api.hr.leave.update(data.id, data);
       if (response) {
         notify({
           type: ToastMessageType.Info,
@@ -73,7 +73,7 @@ export const useLeaveApplicationDetail = (): {
           return member;
         });
       }
-      const response: any = await api.hr.employeeLeave.create(data);
+      const response: any = await api.hr.leave.create(data);
       if (response) {
         notify({
           type: ToastMessageType.Info,
@@ -97,7 +97,7 @@ export const useLeaveApplicationDetail = (): {
   const approve = async (id: string) => {
     setLoading(true);
     try {
-      const response: any = await api.hr.employeeLeave.approve(id);
+      const response: any = await api.hr.leave.approve(id);
       if (response) {
         notify({
           type: ToastMessageType.Info,
@@ -121,7 +121,7 @@ export const useLeaveApplicationDetail = (): {
   const reject = async (id: string) => {
     setLoading(true);
     try {
-      const response: any = await api.hr.employeeLeave.approve(id);
+      const response: any = await api.hr.leave.approve(id);
       if (response) {
         notify({
           type: ToastMessageType.Info,

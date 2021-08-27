@@ -58,7 +58,7 @@ const WrapperForm: React.FC<FormProps> = ({
 }) => {
   const [deviceItem, setDeviceItem] = useState<Devices>();
   const fetchDevice = async id => {
-    const response: any = await api.device.get(id);
+    const response: any = await api.hr.device.get(id);
     setDeviceItem(response);
   };
   useEffect(() => {
@@ -133,7 +133,7 @@ export const Device = memo((props: DeviceProps) => {
   const fetchEmployeeDevices = useCallback(async () => {
     setLoading(true);
     try {
-      const response: any = await api.employee.device.list(employeeId);
+      const response: any = await api.hr.employee.device.list(employeeId);
 
       const mapResponse: any = [...response.results].filter(
         device => device.employee === employeeId,
@@ -149,7 +149,7 @@ export const Device = memo((props: DeviceProps) => {
 
   const fetchDevices = async () => {
     try {
-      const response: any = await api.device.list();
+      const response: any = await api.hr.device.list();
       setDeviceItems(response.results);
       const mapDevice = [...response.results].filter(
         (device: any) => device.status === 'Available',
@@ -245,21 +245,21 @@ export const Device = memo((props: DeviceProps) => {
     try {
       if (!deviceDelete) return;
 
-      const device = await api.device.get(deviceDelete.device);
+      const device = await api.hr.device.get(deviceDelete.device);
 
-      await api.device.update({
+      await api.hr.device.update({
         ...device,
         employee: '',
         status: DeviceStatus.AVAILABLE,
       });
 
-      await api.hr.deviceHistory.create({
+      await api.hr.device.history.create({
         device: deviceDelete.device,
         employee: employeeId,
         note: `Unassign device from employee ${deviceDelete.employee_name}`,
       });
 
-      await api.employee.device.delete(employeeId, deviceDelete.id);
+      await api.hr.employee.device.delete(employeeId, deviceDelete.id);
       fetchEmployeeDevices();
       setIsDelete(false);
     } catch (e) {
@@ -291,7 +291,7 @@ export const Device = memo((props: DeviceProps) => {
         setLoading(true);
 
         if (isCreate) {
-          await api.employee.device.create(employeeId, {
+          await api.hr.employee.device.create(employeeId, {
             ...mapValue,
             employee: employeeId,
           });
@@ -302,23 +302,23 @@ export const Device = memo((props: DeviceProps) => {
         if (isUpdate) {
           if (!deviceUpdate) return;
 
-          const device = await api.device.get(deviceUpdate.device);
+          const device = await api.hr.device.get(deviceUpdate.device);
 
           if (mapValue.device !== deviceUpdate.device) {
-            await api.device.update({
+            await api.hr.device.update({
               ...device,
               employee: '',
               status: DeviceStatus.AVAILABLE,
             });
 
-            await api.hr.deviceHistory.create({
+            await api.hr.device.history.create({
               device: deviceUpdate.device,
               employee: employeeId,
               note: `Unassign device from employee ${deviceUpdate.employee_name}`,
             });
           }
 
-          await api.employee.device.update(employeeId, {
+          await api.hr.employee.device.update(employeeId, {
             id: deviceUpdate.id,
             ...mapValue,
           });

@@ -18,7 +18,7 @@ interface DeviceHistoryProps {
 export const DeviceHistory = ({ device_id }: DeviceHistoryProps) => {
   const [histories, setHistories] = useState<DeviceHistoryType[]>([]);
   const fetchListHistory = useCallback(async () => {
-    const histories: any = await api.hr.deviceHistory.list('', {
+    const histories: any = await api.hr.device.history.list('', {
       device: device_id,
     });
 

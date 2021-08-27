@@ -38,7 +38,7 @@ export const useProjectDetail = (): {
 
   const fetchId = React.useCallback(async (id: string) => {
     try {
-      const response: any = await api.project.get(id);
+      const response: any = await api.hr.project.get(id);
       return response;
     } catch (error) {
       setError(error);
@@ -56,7 +56,7 @@ export const useProjectDetail = (): {
           return member;
         });
       }
-      const response = await api.project.update(data);
+      const response = await api.hr.project.update(data);
       if (response) {
         notify({
           type: ToastMessageType.Info,
@@ -88,7 +88,7 @@ export const useProjectDetail = (): {
           return member;
         });
       }
-      const response: any = await api.project.create(data);
+      const response: any = await api.hr.project.create(data);
       if (response) {
         notify({
           type: ToastMessageType.Info,

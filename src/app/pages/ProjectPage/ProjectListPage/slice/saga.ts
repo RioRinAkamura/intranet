@@ -5,7 +5,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 function* fetchProjectIdentity() {
   try {
-    const response = yield api.project.identity();
+    const response = yield api.hr.project.identity();
     yield put(
       actions.fetchIdentitySuccess({
         identity: response,
@@ -26,7 +26,7 @@ function* fetchProjects(action) {
       status: params.status,
     };
     const response = yield call(
-      [api, api.project.list],
+      [api, api.hr.project.list],
       params.search,
       {
         ...queryParams,
@@ -45,7 +45,7 @@ function* fetchProjects(action) {
 function* deleteProject(action: PayloadAction<string>) {
   try {
     const idDelete = action.payload;
-    yield call([api, api.project.delete], idDelete);
+    yield call([api, api.hr.project.delete], idDelete);
     yield put(actions.deleteProjectSuccess());
   } catch (err) {
     yield put(actions.deleteProjectFailure());

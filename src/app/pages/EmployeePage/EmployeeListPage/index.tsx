@@ -418,7 +418,7 @@ export const EmployeeListPage: React.FC = () => {
 
   const handleMultiDelete = async () => {
     try {
-      await api.hr.employee.deleteMultiple(
+      await api.hr.employee.bulkDelete(
         (getUserListState?.selectedRowKeys as string[]) || [],
       );
       dispatch(actions.selectedRows({ selectedRowKeys: [], selectedRows: [] }));

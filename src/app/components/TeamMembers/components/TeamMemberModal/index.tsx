@@ -149,7 +149,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const handleConfirmDelete = async () => {
     setIsModalVisible(false);
     try {
-      await api.project.deleteMember(projId, mid);
+      await api.hr.project.deleteMember(projId, mid);
       const newMemberList =
         dataSource &&
         [...dataSource].filter(
@@ -316,13 +316,13 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
     try {
       setLoadingMember(true);
       if (projId) {
-        const response = await api.project.createMember(projId, {
+        const response = await api.hr.project.createMember(projId, {
           ...values.members,
           project: projId,
         });
         if (response) {
           memberForm.resetFields();
-          const employee = await api.project.getMemberDetail(
+          const employee = await api.hr.project.getMemberDetail(
             projId,
             values.members.employee,
           );

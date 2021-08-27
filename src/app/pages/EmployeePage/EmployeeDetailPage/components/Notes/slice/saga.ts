@@ -1,5 +1,5 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
-import { EmployeeNoteQueryParams } from '@hdwebsoft/boilerplate-api-sdk/libs/api/employee/note/models';
+import { EmployeeNoteQueryParams } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 import { api } from 'utils/api';
 
@@ -16,7 +16,7 @@ export function* fetchEmployeeNotes(action) {
     };
 
     const response = yield call(
-      [api, api.employee.note.list],
+      [api, api.hr.employee.note.list],
       employeeId,
       params.search,
       { ...queryParams },
@@ -34,7 +34,7 @@ export function* fetchEmployeeNotes(action) {
 function* createEmployeeNote(action) {
   try {
     yield call(
-      [api, api.employee.note.create],
+      [api, api.hr.employee.note.create],
       action.payload.employee,
       action.payload,
     );
@@ -51,7 +51,7 @@ function* createEmployeeNote(action) {
 function* updateEmployeeNote(action) {
   try {
     yield call(
-      [api, api.employee.note.update],
+      [api, api.hr.employee.note.update],
       action.payload.employee_id,
       action.payload,
     );
@@ -66,7 +66,7 @@ function* updateEmployeeNote(action) {
 function* deleteEmployeeNote(action) {
   try {
     yield call(
-      [api, api.employee.note.delete],
+      [api, api.hr.employee.note.delete],
       action.payload.employee_id,
       action.payload.note_id,
     );
@@ -82,7 +82,7 @@ function* deleteMultipleEmployeeNotes(action) {
   const { employeeId, data } = action.payload;
 
   try {
-    yield call([api, api.employee.note.deleteMultiple], employeeId, data);
+    yield call([api, api.hr.employee.note.bulkDelete], employeeId, data);
     yield put(actions.deleteMultipleEmployeeNotesSuccess());
   } catch (err) {
     yield put(actions.deleteMultipleEmployeeNotesFailure());

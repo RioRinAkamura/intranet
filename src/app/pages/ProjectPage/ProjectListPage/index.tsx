@@ -52,7 +52,7 @@ import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMembe
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
-import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/project/models';
+import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();

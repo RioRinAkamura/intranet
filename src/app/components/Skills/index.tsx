@@ -64,7 +64,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
             skill_id: item.id,
             employee_id: employeeId,
           };
-          return api.hr.employee.postSkill(employeeId, mapItem);
+          return api.hr.employee.skill.create(employeeId, mapItem);
         });
 
         Promise.all(arrPromise).then(values => {
@@ -86,14 +86,14 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
 
       try {
         const deleteArr = await deleteItems.map(i =>
-          api.hr.employee.deleteSkill(employeeId, i),
+          api.hr.employee.skill.delete(employeeId, i),
         );
         const createArr = await newItems.map(i => {
           const mapItem = {
             skill_id: i.id,
             employee_id: employeeId,
           };
-          return api.hr.employee.postSkill(employeeId, mapItem);
+          return api.hr.employee.skill.create(employeeId, mapItem);
         });
 
         const arrPromise = [...deleteArr, ...createArr];
@@ -111,7 +111,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
     try {
       if (!employeeId) return;
 
-      await api.hr.employee.deleteSkill(employeeId, skill.id);
+      await api.hr.employee.skill.delete(employeeId, skill.id);
 
       dispatch(actions.fetchEmployeeSkills(employeeId));
     } catch (e) {
@@ -135,7 +135,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
 
         setData(newSkillList);
 
-        await api.hr.employee.putSkill(employeeId, {
+        await api.hr.employee.skill.update(employeeId, {
           ...skill,
           level: value,
           skill_id: skill.skill.id,
