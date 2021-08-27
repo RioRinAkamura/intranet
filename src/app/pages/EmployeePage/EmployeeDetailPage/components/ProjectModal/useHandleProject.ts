@@ -13,7 +13,7 @@ export const useHandleProject = (): {
 
   const fetchProjects = useCallback(async (search: string) => {
     try {
-      const response: any = await api.hr.project.list(search);
+      const response: any = await api.project.list(search);
       return response.results;
     } catch (error) {
       console.log(error);
@@ -28,7 +28,7 @@ export const useHandleProject = (): {
       const member = cloneDeep(data);
       member.employee = id;
       member.allocation = parseFloat(member.allocation).toFixed(1);
-      const response = await api.hr.project.createMember(data.project, member);
+      const response = await api.project.createMember(data.project, member);
       return response;
     } catch (error) {
       console.log(error);
@@ -43,11 +43,7 @@ export const useHandleProject = (): {
       const member = cloneDeep(data);
       member.employee = id;
       member.allocation = parseFloat(member.allocation).toFixed(1);
-      const response = await api.hr.project.updateMember(
-        data.project,
-        id,
-        member,
-      );
+      const response = await api.project.updateMember(data.project, id, member);
       return response;
     } catch (error) {
       console.log(error);
@@ -59,7 +55,7 @@ export const useHandleProject = (): {
   const deleteProject = async (id: string, mid: string) => {
     setLoadingProject(true);
     try {
-      await api.hr.project.deleteMember(id, mid);
+      await api.project.deleteMember(id, mid);
       return true;
     } catch (error) {
       console.log(error);

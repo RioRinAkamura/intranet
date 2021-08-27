@@ -6,7 +6,7 @@ import { Delete } from './types';
 
 function* fetchDeviceIdentity() {
   try {
-    const response = yield api.hr.device.identity();
+    const response = yield api.device.identity();
     yield put(
       actions.fetchIdentitySuccess({
         identity: response,
@@ -28,7 +28,7 @@ function* fetchListDevice(action) {
     };
 
     const response = yield call(
-      [api, api.hr.device.list],
+      [api, api.device.list],
       params.search,
       {
         ...queryParams,
@@ -47,7 +47,7 @@ function* fetchListDevice(action) {
 function* deleteDeviceAction(action: PayloadAction<Delete>) {
   try {
     const id = action.payload.IdDelete;
-    if (id) yield call([api, api.hr.device.delete], id);
+    if (id) yield call([api, api.device.delete], id);
     yield put(actions.deleteSuccess());
   } catch (err) {
     yield put(actions.deleteFailure());
@@ -59,7 +59,7 @@ function* deleteDeviceAction(action: PayloadAction<Delete>) {
 function* deleteMultiDevice(action: PayloadAction<Delete>) {
   try {
     const ids = action.payload.ids;
-    if (ids) yield api.hr.device.deleteMultiple(ids);
+    if (ids) yield api.device.deleteMultiple(ids);
     yield put(actions.deleteMultiSuccess());
   } catch (err) {
     yield put(actions.deleteMultiFailure());

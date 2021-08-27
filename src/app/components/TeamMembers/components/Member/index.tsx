@@ -24,11 +24,13 @@ export const Member = memo((props: MemberProps) => {
   return (
     <MemberWrapper>
       <AvatarWrapper>
-        <Avatar
-          size={30}
-          src={info.avatar}
-          name={info.first_name + ' ' + info.last_name}
-        />
+        {info && (
+          <Avatar
+            size={30}
+            src={info.avatar}
+            name={info.first_name + ' ' + info.last_name}
+          />
+        )}
       </AvatarWrapper>
       <MemberTooltip member={props.member} />
     </MemberWrapper>

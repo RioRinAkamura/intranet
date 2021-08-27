@@ -17,14 +17,14 @@ export const useDeviceDetail = (): {
   const { notify } = useNotify();
 
   const detail = React.useCallback(async (id: string) => {
-    return await api.hr.device.get(id);
+    return await api.device.get(id);
   }, []);
 
   const create = async value => {
     setLoading(true);
 
     try {
-      const response: any = await api.hr.device.create(value);
+      const response: any = await api.device.create(value);
 
       if (response) {
         notify({
@@ -50,7 +50,7 @@ export const useDeviceDetail = (): {
   const update = async values => {
     setLoading(true);
     try {
-      const response: any = await api.hr.device.update(values);
+      const response: any = await api.device.update(values);
       if (response) {
         notify({
           type: ToastMessageType.Info,

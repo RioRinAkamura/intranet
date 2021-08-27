@@ -130,7 +130,7 @@ const slice = createSlice({
       state.params = { ...state.params, ...action.payload };
       state.filterColumns = {
         ...state.filterColumns,
-        type: action.payload.type,
+        category: action.payload.category,
         summary: action.payload.summary,
         date: action.payload.date,
         content: action.payload.content,

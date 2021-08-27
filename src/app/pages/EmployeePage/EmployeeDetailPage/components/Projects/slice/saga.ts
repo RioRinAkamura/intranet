@@ -9,17 +9,15 @@ function* fetchEmployeeProject(action) {
   try {
     const { params } = action.payload;
     const id = action.payload.id;
-    const queryParams = {
-      search: params.search,
-      ordering: params.ordering,
-      project__name: params.project__name,
-      page: params.page,
-      limit: params.limit,
-    };
 
-    const response = yield call([api, api.hr.employee.getProjects], id, {
-      ...queryParams,
-    });
+    const response = yield call(
+      [api, api.employee.project.list],
+      id,
+      params.search,
+      params.ordering,
+      params.page,
+      params.limit,
+    );
     yield put(actions.fetchEmployeeProjectSuccess(response));
   } catch (err) {
     yield put(actions.fetchEmployeeProjectFailure);
@@ -30,7 +28,7 @@ function* addProject(action: PayloadAction<AddProject>) {
   try {
     const member = cloneDeep(action.payload);
     member.allocation = parseFloat(member.allocation).toFixed(1);
-    yield api.hr.project.createMember(member.project, member as any);
+    yield api.project.createMember(member.project, member as any);
     yield put(actions.addProjectSuccess());
   } catch (err) {
     yield put(actions.addProjectFailure());
@@ -44,7 +42,7 @@ function* editProject(action: PayloadAction<AddProject>) {
     const member = cloneDeep(action.payload);
     member.allocation = parseFloat(member.allocation).toFixed(1);
 
-    yield api.hr.project.updateMember(
+    yield api.project.updateMember(
       member.project,
       member.employee,
       member as any,
@@ -60,7 +58,7 @@ function* editProject(action: PayloadAction<AddProject>) {
 function* deleteProject(action: PayloadAction<string>) {
   try {
     const idDelete = action.payload;
-    yield call([api, api.hr.project.delete], idDelete);
+    yield call([api, api.project.delete], idDelete);
     yield put(actions.deleteProjectSuccess());
   } catch (err) {
     yield put(actions.deleteProjectFailure());

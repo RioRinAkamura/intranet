@@ -100,7 +100,7 @@ export const TaskManager = () => {
   };
   const fetchListProject = async () => {
     try {
-      const projects: any = await api.hr.project.list();
+      const projects: any = await api.project.list();
       const mapProjectsOption: any = [...projects.results].map(project => {
         return {
           label: project.name,

@@ -1,22 +1,23 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
+import { EmployeeNoteQueryParams } from '@hdwebsoft/boilerplate-api-sdk/libs/api/employee/note/models';
+
 import { api } from 'utils/api';
 
 import { Actions as actions } from '.';
-import { QueryParams } from './types';
 
 export function* fetchEmployeeNotes(action) {
   try {
-    const employee_id = action.payload.employee_id;
-    const { params } = action.payload;
-    const queryParams: QueryParams = {
-      type: params.type,
-      content: params.content,
+    const { employeeId, params } = action.payload;
+
+    const queryParams: EmployeeNoteQueryParams = {
+      category: params.category,
+      date: params.content,
       summary: params.summary,
     };
 
     const response = yield call(
-      [api, api.hr.employee.getNotes],
-      employee_id,
+      [api, api.employee.note.list],
+      employeeId,
       params.search,
       { ...queryParams },
       params.ordering,
@@ -33,12 +34,14 @@ export function* fetchEmployeeNotes(action) {
 function* createEmployeeNote(action) {
   try {
     yield call(
-      [api, api.hr.employee.postNote],
+      [api, api.employee.note.create],
       action.payload.employee,
       action.payload,
     );
     yield put(actions.createEmployeeNoteSuccess());
   } catch (err) {
+    console.log(err);
+
     yield put(actions.createEmployeeNoteFailure);
   } finally {
     yield put(actions.resetState());
@@ -48,9 +51,8 @@ function* createEmployeeNote(action) {
 function* updateEmployeeNote(action) {
   try {
     yield call(
-      [api, api.hr.employee.putNote],
+      [api, api.employee.note.update],
       action.payload.employee_id,
-      action.payload.note_id,
       action.payload,
     );
     yield put(actions.updateEmployeeNoteSuccess());
@@ -64,7 +66,7 @@ function* updateEmployeeNote(action) {
 function* deleteEmployeeNote(action) {
   try {
     yield call(
-      [api, api.hr.employee.deleteNote],
+      [api, api.employee.note.delete],
       action.payload.employee_id,
       action.payload.note_id,
     );
@@ -77,8 +79,10 @@ function* deleteEmployeeNote(action) {
 }
 
 function* deleteMultipleEmployeeNotes(action) {
+  const { employeeId, data } = action.payload;
+
   try {
-    yield call([api, api.hr.employee.deleteMultipleNotes], action.payload);
+    yield call([api, api.employee.note.deleteMultiple], employeeId, data);
     yield put(actions.deleteMultipleEmployeeNotesSuccess());
   } catch (err) {
     yield put(actions.deleteMultipleEmployeeNotesFailure());
