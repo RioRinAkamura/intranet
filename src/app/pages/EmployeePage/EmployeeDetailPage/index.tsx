@@ -34,6 +34,7 @@ import { PrivatePath } from 'utils/url.const';
 import { Route, Switch } from 'react-router-dom';
 import { useUserDetailsSlice } from './slice';
 import { omit } from 'lodash';
+import { EmployeeEditPage } from '../EmployeeEdit/Loadable';
 
 interface Props {}
 
@@ -275,6 +276,9 @@ export function EmployeeDetailPage(props: Props) {
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}>
               <ChangeLogs employeeId={id} />
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_EDIT}>
+              <EmployeeEditPage />
             </Route>
           </Switch>
         </>
