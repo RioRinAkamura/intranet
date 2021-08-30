@@ -74,57 +74,61 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
     fetchEmployeeProject();
   }, [fetchEmployeeProject]);
 
-  const moreButton = (text: string, record) => (
-    <>
-      <Tooltip title={t(UsersMessages.listViewTooltip())}>
-        <IconButton
-          type="primary"
-          shape="circle"
-          size="small"
-          icon={<EyeOutlined />}
-          onClick={() => {
-            history.push(`${PrivatePath.PROJECTS}/${text}`);
-          }}
-        />
-      </Tooltip>
-      <Tooltip title={t(UsersMessages.listEditTooltip())}>
-        <IconButton
-          shape="circle"
-          icon={<EditOutlined />}
-          size="small"
-          onClick={() => {
-            setOpen(true);
-            setSelectedProject(record);
-          }}
-        />
-      </Tooltip>
-      <Tooltip title={t(UsersMessages.listDeleteTooltip())}>
-        <IconButton
-          danger
-          shape="circle"
-          size="small"
-          icon={<DeleteOutlined />}
-          onClick={() => {
-            // showDeleteModal();
-            // setIdUserDelete(text);
-            // setDeleteEmployee(record);
-          }}
-        />
-      </Tooltip>
-    </>
-  );
+  const moreButton = (value: any, record) => {
+    return (
+      <>
+        <Tooltip title={t(UsersMessages.listViewTooltip())}>
+          <IconButton
+            type="primary"
+            shape="circle"
+            size="small"
+            icon={<EyeOutlined />}
+            onClick={() => {
+              history.push(`${PrivatePath.PROJECTS}/${value.id}`);
+            }}
+          />
+        </Tooltip>
+        <Tooltip title={t(UsersMessages.listEditTooltip())}>
+          <IconButton
+            shape="circle"
+            icon={<EditOutlined />}
+            size="small"
+            onClick={() => {
+              setOpen(true);
+              setSelectedProject(record);
+            }}
+          />
+        </Tooltip>
+        <Tooltip title={t(UsersMessages.listDeleteTooltip())}>
+          <IconButton
+            danger
+            shape="circle"
+            size="small"
+            icon={<DeleteOutlined />}
+            onClick={() => {
+              // showDeleteModal();
+              // setIdUserDelete(text);
+              // setDeleteEmployee(record);
+            }}
+          />
+        </Tooltip>
+      </>
+    );
+  };
 
   const columns: any = [
     {
       title: 'Project Name',
-      dataIndex: ['project_name'],
-      ...getColumnSorterProps('project_name', 1),
-      ...getColumnSearchInputProps(['project_name']),
-      render: (text, record) => (
-        <StyledLink to={`${PrivatePath.PROJECTS}/${record.project_id}`}>
-          {text}
-        </StyledLink>
-      ),
+      dataIndex: 'project',
+      ...getColumnSorterProps('name', 1),
+      ...getColumnSearchInputProps(['name']),
+      render: (value, record) => {
+        return (
+          <StyledLink to={`${PrivatePath.PROJECTS}/${value.id}`}>
+            {value.name}
+          </StyledLink>
+        );
+      },
     },
     {
       title: 'Allocation',
@@ -138,12 +142,12 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
     },
     {
       title: 'Actions',
-      dataIndex: 'project_id',
-      render: (text, record, index: number) => {
+      dataIndex: 'project',
+      render: (value, record, index: number) => {
         return (
           <>
             <Popover
-              content={() => moreButton(text, record)}
+              content={() => moreButton(value, record)}
               placement="bottom"
             >
               <IconButton shape="circle" size="small" icon={<MoreOutlined />} />
