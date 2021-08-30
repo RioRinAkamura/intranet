@@ -14,12 +14,14 @@ import {
 import { TFunction } from 'i18next';
 import moment from 'moment';
 import styled from 'styled-components';
-import { NoteCategory } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import {
+  EmployeeNote,
+  NoteCategory,
+} from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 import { RichEditor } from 'app/components/RichEditor';
 import { api } from 'utils/api';
 
-import { EmployeeNote } from '../slice/types';
 import { EmployeeNoteMessages } from '../messages';
 
 interface FormProps {
@@ -36,15 +38,14 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
     false,
   );
   const [categoryList, setCategoryList] = React.useState<NoteCategory[]>([]);
-  const [category, setCategory] = React.useState<string>();
 
   const onCreateCategory = async () => {
-    const name = form.getFieldValue('category');
+    const name = form.getFieldValue('category_name');
 
     const category = await api.hr.employee.note.category.create({ name });
 
     setCategoryList([...categoryList, category]);
-    setCategory(category.id);
+    form.setFieldsValue({ category_id: category.id });
     setIsCreateCategory(false);
   };
 
@@ -52,6 +53,7 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
     if (note) {
       form.setFieldsValue({
         ...note,
+        category_id: note.category.id,
         date: moment(note.date),
       });
     }
@@ -68,28 +70,25 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
 
   return (
     <FormAntd layout="vertical" form={form}>
-      <FormAntd.Item
-        name="category"
-        label={t(EmployeeNoteMessages.modalCategoryLabel())}
-      >
-        <StyledWrapperCategory>
-          {isCreateCategory ? (
-            <>
-              <Input
-                size="large"
-                placeholder={t(EmployeeNoteMessages.modalCategoryPlaceholder())}
-              />
-              <StyledCheckCircleOutlined onClick={onCreateCategory} />
-              <StyledCloseCircleOutlined
-                onClick={() => setIsCreateCategory(false)}
-              />
-            </>
-          ) : (
+      <StyledWrapperCategory>
+        {isCreateCategory ? (
+          <FormAntd.Item
+            name="category_name"
+            label={t(EmployeeNoteMessages.modalCategoryLabel())}
+          >
+            <Input
+              size="large"
+              placeholder={t(EmployeeNoteMessages.modalCategoryPlaceholder())}
+            />
+          </FormAntd.Item>
+        ) : (
+          <FormAntd.Item
+            name="category_id"
+            label={t(EmployeeNoteMessages.modalCategoryLabel())}
+          >
             <Select
               size="large"
               disabled={isView}
-              value={category}
-              onChange={(value: string) => setCategory(value)}
               placeholder={t(
                 EmployeeNoteMessages.modalCategorySelectPlaceholder(),
               )}
@@ -100,10 +99,20 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
                 </Option>
               ))}
             </Select>
-          )}
+          </FormAntd.Item>
+        )}
+
+        {isCreateCategory ? (
+          <>
+            <StyledCheckCircleOutlined onClick={onCreateCategory} />
+            <StyledCloseCircleOutlined
+              onClick={() => setIsCreateCategory(false)}
+            />
+          </>
+        ) : (
           <StyledPlusCircleOutlined onClick={() => setIsCreateCategory(true)} />
-        </StyledWrapperCategory>
-      </FormAntd.Item>
+        )}
+      </StyledWrapperCategory>
       <FormAntd.Item
         name="summary"
         label={t(EmployeeNoteMessages.modalSummaryLabel())}
@@ -144,6 +153,9 @@ const StyledDatePicker = styled(DatePicker)`
 const StyledWrapperCategory = styled.div`
   display: flex;
   align-items: center;
+  .ant-row.ant-form-item {
+    width: 100%;
+  }
 `;
 
 const StyledPlusCircleOutlined = styled(PlusCircleOutlined)`

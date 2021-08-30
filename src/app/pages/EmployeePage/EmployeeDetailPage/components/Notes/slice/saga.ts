@@ -68,7 +68,7 @@ function* deleteEmployeeNote(action) {
     yield call(
       [api, api.hr.employee.note.delete],
       action.payload.employee_id,
-      action.payload.note_id,
+      action.payload.id,
     );
     yield put(actions.deleteEmployeeNoteSuccess());
   } catch (err) {
@@ -79,10 +79,8 @@ function* deleteEmployeeNote(action) {
 }
 
 function* deleteMultipleEmployeeNotes(action) {
-  const { employeeId, data } = action.payload;
-
   try {
-    yield call([api, api.hr.employee.note.bulkDelete], employeeId, data);
+    yield call([api, api.hr.employee.note.bulkDelete], action.payload);
     yield put(actions.deleteMultipleEmployeeNotesSuccess());
   } catch (err) {
     yield put(actions.deleteMultipleEmployeeNotesFailure());
