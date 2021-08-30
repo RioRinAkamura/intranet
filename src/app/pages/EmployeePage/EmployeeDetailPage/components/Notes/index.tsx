@@ -12,6 +12,7 @@ import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
+import { EmployeeNote } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 import { config } from 'config';
 import { DialogModal } from 'app/components/DialogModal';
@@ -23,7 +24,6 @@ import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { Wrapper } from 'styles/StyledCommon';
 import { DeleteModal } from 'app/components/DeleteModal';
 
-import { EmployeeNote } from './slice/types';
 import { useNotesSlice } from './slice';
 import {
   selectEmployeeNotes,
@@ -96,8 +96,6 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
   };
 
   const handleNoteCreate = () => {
-    console.log(form.getFieldsValue());
-
     dispatch(
       actions.createEmployeeNote({
         ...form.getFieldsValue(),
@@ -113,7 +111,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
         ...form.getFieldsValue(),
         date: moment(form.getFieldValue('date')).format(DATE_FORMAT),
         employee_id: employeeId,
-        note_id: note?.id,
+        id: note?.id,
       }),
     );
   };
@@ -122,7 +120,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
     dispatch(
       actions.deleteEmployeeNote({
         employee_id: employeeId,
-        note_id: note?.id,
+        id: note?.id,
       }),
     );
   };
@@ -200,6 +198,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
       dataIndex: 'category',
       ...getColumnSorterProps('category', 0),
       ...getColumnSearchInputProps(['category']),
+      render: text => text.name,
     },
     {
       title: t(EmployeeNoteMessages.listSummary()),
@@ -354,7 +353,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
 
       <DeleteConfirmModal
         visible={isDelete}
-        title={`Remove ${note?.category}`}
+        title={`Remove ${note?.id}`}
         description={descriptionDelete}
         handleCancel={() => setIsDelete(false)}
         handleOk={handleNoteDelete}

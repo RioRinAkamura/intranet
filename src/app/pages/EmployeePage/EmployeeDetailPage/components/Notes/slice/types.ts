@@ -1,20 +1,12 @@
 import { Key } from 'react';
-
-/* --- STATE --- */
-export interface EmployeeNote {
-  id: string;
-  category: string;
-  summary: string;
-  date: string;
-  content: string;
-}
+import { EmployeeNote } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 export interface EmployeeNotesFetchData {
   employeeId: string;
   params: QueryParams;
 }
 export interface EmployeeNotePayloadAction {
-  note_id?: string;
+  id?: string;
   employee_id?: string;
   results?: EmployeeNote[];
   count?: number;
