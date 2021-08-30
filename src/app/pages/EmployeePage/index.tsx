@@ -17,17 +17,14 @@ export const EmployeePage: React.FC = () => {
         component={EmployeeListPage}
       />
       <PrivateRoute
-        exact
         path={PrivatePath.EMPLOYEES_CREATE}
         component={EmployeeDetailPage}
       />
       <PrivateRoute
-        exact
         path={PrivatePath.EMPLOYEES_ID}
         component={EmployeeDetailPage}
       />
       <PrivateRoute
-        exact
         path={PrivatePath.EMPLOYEES_EDIT}
         component={EmployeeEditPage}
       />
