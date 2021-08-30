@@ -1,10 +1,10 @@
 import React from 'react';
 import { TFunction } from 'i18next';
 import { Popover, Tooltip } from 'antd';
+import { EmployeeNote } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 import { IconButton } from 'app/components/Button';
 
-import { EmployeeNote } from '../slice/types';
 import {
   DeleteOutlined,
   EditOutlined,

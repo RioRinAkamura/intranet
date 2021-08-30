@@ -6,7 +6,6 @@ import { PrivateRoute } from 'app/components/Auth/Route';
 
 import { EmployeeListPage } from './EmployeeListPage/Loadable';
 import { EmployeeDetailPage } from './EmployeeDetailPage/Loadable';
-import { EmployeeEditPage } from './EmployeeEdit/Loadable';
 
 export const EmployeePage: React.FC = () => {
   return (
@@ -23,10 +22,6 @@ export const EmployeePage: React.FC = () => {
       <PrivateRoute
         path={PrivatePath.EMPLOYEES_ID}
         component={EmployeeDetailPage}
-      />
-      <PrivateRoute
-        path={PrivatePath.EMPLOYEES_EDIT}
-        component={EmployeeEditPage}
       />
     </Switch>
   );
