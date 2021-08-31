@@ -79,8 +79,10 @@ function* deleteEmployeeNote(action) {
 }
 
 function* deleteMultipleEmployeeNotes(action) {
+  const { employee_id, noteIds } = action.payload;
+
   try {
-    yield call([api, api.hr.employee.note.bulkDelete], action.payload);
+    yield call([api, api.hr.employee.note.bulkDelete], employee_id, noteIds);
     yield put(actions.deleteMultipleEmployeeNotesSuccess());
   } catch (err) {
     yield put(actions.deleteMultipleEmployeeNotesFailure());
