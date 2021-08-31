@@ -53,10 +53,17 @@ export const ProjectModal = memo((props: Props) => {
   const editFailed = useSelector(selectEmployeeProjectEditFailed);
 
   const handleProject = async values => {
+    const _values = {
+      ...values,
+      project_id: values.project,
+      allocation: values.allocation,
+      project_role: values.project_role,
+      employee: id,
+    };
     if (selectedProject) {
-      dispatch(actions.editProject({ ...values, employee: id }));
+      dispatch(actions.editProject(_values));
     } else {
-      dispatch(actions.addProject({ ...values, employee: id }));
+      dispatch(actions.addProject(_values));
     }
   };
 
@@ -154,7 +161,7 @@ export const ProjectModal = memo((props: Props) => {
           setProjects(response);
         }
         memberForm.setFieldsValue({
-          project: selectedProject.project_id,
+          project: selectedProject.project.id,
           project_role: selectedProject.project_role,
           allocation: selectedProject.allocation,
         });

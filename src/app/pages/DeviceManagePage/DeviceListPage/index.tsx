@@ -185,8 +185,9 @@ export const DeviceListPage = () => {
     },
     {
       title: 'Category',
-      dataIndex: 'category_name',
+      dataIndex: 'category',
       width: 100,
+      render: data => (data ? data.name : ''),
     },
     {
       title: 'Since',

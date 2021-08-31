@@ -193,6 +193,8 @@ export function EmployeeDetailPage(props: Props) {
           if (response) {
             setData(response);
             setIsEdit(false);
+            history.push(`${PrivatePath.EMPLOYEES}/${id}`);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }
         }
         if (isCreate) {
@@ -301,11 +303,13 @@ export function EmployeeDetailPage(props: Props) {
                 onClick={() => {
                   if (isEdit) {
                     setIsEdit(false);
+                    history.push(PrivatePath.EMPLOYEES);
                   } else if (isView) {
                     history.push(PrivatePath.EMPLOYEES);
                   } else if (isCreate) {
                     history.push(PrivatePath.EMPLOYEES);
                   }
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
               >
                 {t(UserDetailMessages.formBackButton())}
@@ -318,9 +322,10 @@ export function EmployeeDetailPage(props: Props) {
                 type="primary"
                 onClick={() => {
                   if (isView) {
+                    setIsEdit(true);
                     history.push(`${PrivatePath.EMPLOYEES}/${id}/edit`);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                  } else if (isCreate) {
+                  } else {
                     handleSubmit();
                   }
                 }}

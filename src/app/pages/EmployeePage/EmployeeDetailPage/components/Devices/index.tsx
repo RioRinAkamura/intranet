@@ -16,6 +16,7 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import moment from 'moment';
+
 import { DialogModal } from 'app/components/DialogModal';
 import { EMPLOYEE_DEVICE_STATUS, FORM_RULES } from 'constants/deviceManager';
 import { ColumnProps } from 'antd/lib/table';
@@ -27,7 +28,7 @@ import { DeviceStatus } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models'
 
 const { Option } = Select;
 interface DeviceResponse {
-  device: string;
+  device: any;
   started_using_at: string;
   stopped_using_at: string;
   status: string;
@@ -65,6 +66,7 @@ const WrapperForm: React.FC<FormProps> = ({
     if (deviceUpdate) {
       form.setFieldsValue({
         ...deviceUpdate,
+        device: deviceUpdate.device.id,
         started_using_at: moment(deviceUpdate.started_using_at),
         stopped_using_at: moment(deviceUpdate.stopped_using_at),
       });
@@ -73,14 +75,15 @@ const WrapperForm: React.FC<FormProps> = ({
 
   useEffect(() => {
     if (deviceUpdate) {
-      fetchDevice(deviceUpdate.device);
+      fetchDevice(deviceUpdate.device.id);
     }
   }, [deviceUpdate]);
+
   return (
     <Form layout="vertical" form={form}>
       <Form.Item rules={FORM_RULES.DEVICE} name="device" label="Device">
         {/* <Input size="large" placeholder="Type" disabled={isView} /> */}
-        <Select placeholder="device" disabled={isView} size="large">
+        <Select placeholder="Device" disabled={isView} size="large">
           {deviceUpdate && deviceItem && (
             <Option value={deviceItem?.id}>{deviceItem?.code}</Option>
           )}
@@ -122,7 +125,6 @@ export const Device = memo((props: DeviceProps) => {
   const [employeeDevices, setEmployeeDevices] = useState([]);
   const [devices, setDevices] = useState<Devices[]>([]);
   const [loading, setLoading] = useState(false);
-  const [deviceItems, setDeviceItems] = useState<Devices[]>([]);
   const [isView, setIsView] = useState<boolean>(false);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [isDelete, setIsDelete] = useState<boolean>(false);
@@ -134,12 +136,7 @@ export const Device = memo((props: DeviceProps) => {
     setLoading(true);
     try {
       const response: any = await api.hr.employee.device.list(employeeId);
-
-      const mapResponse: any = [...response.results].filter(
-        device => device.employee === employeeId,
-      );
-
-      setEmployeeDevices(mapResponse);
+      setEmployeeDevices(response.results);
     } catch (e) {
       console.log(e);
     } finally {
@@ -150,7 +147,6 @@ export const Device = memo((props: DeviceProps) => {
   const fetchDevices = async () => {
     try {
       const response: any = await api.hr.device.list();
-      setDeviceItems(response.results);
       const mapDevice = [...response.results].filter(
         (device: any) => device.status === 'Available',
       );
@@ -198,9 +194,8 @@ export const Device = memo((props: DeviceProps) => {
       title: 'Device',
       dataIndex: 'device',
       width: 130,
-      render: text => {
-        const device: any = deviceItems.find(device => device.id === text);
-        return device ? device.code : '';
+      render: value => {
+        return value ? value.code : '';
       },
     },
     {
@@ -242,24 +237,9 @@ export const Device = memo((props: DeviceProps) => {
   ];
 
   const handleConfirmDelete = async () => {
+    if (!deviceDelete) return;
     try {
-      if (!deviceDelete) return;
-
-      const device = await api.hr.device.get(deviceDelete.device);
-
-      await api.hr.device.update({
-        ...device,
-        employee: '',
-        status: DeviceStatus.AVAILABLE,
-      });
-
-      await api.hr.device.history.create({
-        device: deviceDelete.device,
-        employee: employeeId,
-        note: `Unassign device from employee ${deviceDelete.employee_name}`,
-      });
-
-      await api.hr.employee.device.delete(employeeId, deviceDelete.id);
+      await api.hr.employee.device.delete(employeeId, deviceDelete.device.id);
       fetchEmployeeDevices();
       setIsDelete(false);
     } catch (e) {
@@ -287,12 +267,14 @@ export const Device = memo((props: DeviceProps) => {
           ? moment(values.stopped_using_at).format('YYYY-MM-DD')
           : undefined,
       };
+
       try {
         setLoading(true);
 
         if (isCreate) {
           await api.hr.employee.device.create(employeeId, {
             ...mapValue,
+            device_id: mapValue.device,
             employee: employeeId,
           });
           setIsCreate(false);
