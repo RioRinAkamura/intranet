@@ -11,6 +11,7 @@ export interface EmployeeNotePayloadAction {
   results?: EmployeeNote[];
   count?: number;
   error?: Error;
+  noteIds?: string[];
 }
 
 export interface EmployeeNoteState {

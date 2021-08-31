@@ -108,7 +108,10 @@ const slice = createSlice({
       state.deleteIsFailure = true;
       state.loading = false;
     },
-    deleteMultipleEmployeeNotes(state, action: PayloadAction<string[]>) {
+    deleteMultipleEmployeeNotes(
+      state,
+      action: PayloadAction<EmployeeNotePayloadAction>,
+    ) {
       state.loading = true;
     },
     deleteMultipleEmployeeNotesSuccess(state) {

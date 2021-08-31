@@ -127,9 +127,10 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
 
   const handleMultiDelete = () => {
     dispatch(
-      actions.deleteMultipleEmployeeNotes(
-        (employeeNoteState.selectedRowKeys as string[]) || [],
-      ),
+      actions.deleteMultipleEmployeeNotes({
+        employee_id: employeeId,
+        noteIds: (employeeNoteState.selectedRowKeys as string[]) || [],
+      }),
     );
   };
 
