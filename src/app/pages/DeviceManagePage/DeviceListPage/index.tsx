@@ -103,10 +103,7 @@ export const DeviceListPage = () => {
           icon={<EditOutlined />}
           size="small"
           onClick={() => {
-            history.push({
-              pathname: `${PrivatePath.DEVICES}/${text}`,
-              state: { edit: true },
-            });
+            history.push(`${PrivatePath.DEVICES}/${text}/edit`);
           }}
         />
       </Tooltip>

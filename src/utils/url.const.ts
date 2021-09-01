@@ -19,6 +19,7 @@ export enum PrivatePath {
   DEVICES_CREATE = '/devices/create',
   DEVICES_ID = '/devices/:id',
   DEVICES_ID_HISTORY = '/devices/:id/history',
+  DEVICES_EDIT = '/devices/:id/edit',
 
   USERS = '/users',
   USERS_CREATE = '/users/create',
