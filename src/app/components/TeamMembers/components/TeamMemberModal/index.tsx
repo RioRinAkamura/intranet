@@ -35,7 +35,7 @@ import { api } from 'utils/api';
 interface MemberType {
   allocation: number;
   project_role: string;
-  employee: {
+  member: {
     id: string;
     avatar?: string;
     first_name: string;
@@ -93,10 +93,10 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
     return members.map(member => ({
       allocation: member.allocation,
       project_role: member.project_role,
-      name: member.employee.first_name + ' ' + member.employee.last_name,
-      ...member.employee,
-      employee: {
-        ...member.employee,
+      name: member.member?.first_name + ' ' + member.member?.last_name,
+      ...member.member,
+      member: {
+        ...member.member,
       },
     }));
   };
@@ -153,7 +153,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
       const newMemberList =
         dataSource &&
         [...dataSource].filter(
-          (member: MemberType) => member.employee.id !== mid,
+          (member: MemberType) => member.member?.id !== mid,
         );
       setDatasource(newMemberList);
     } catch (e) {
@@ -324,7 +324,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
           memberForm.resetFields();
           const employee = await api.hr.project.getMemberDetail(
             projId,
-            values.members.employee,
+            values.members.member,
           );
           const newMember: any = {
             ...employee,
@@ -335,11 +335,11 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
             {
               ...newMember,
               name:
-                newMember.employee.first_name +
+                newMember.member.first_name +
                 ' ' +
-                newMember.employee.last_name,
-              employee: newMember.employee,
-              ...newMember.employee,
+                newMember.member.last_name,
+              employee: newMember.member,
+              ...newMember.member,
             },
           ];
           setDatasource(newDs);
@@ -440,7 +440,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
             onFinish={handleAddMember}
           >
             <FormSearchItem
-              name={['members', 'employee']}
+              name={['members', 'member']}
               label={t(ProjectDetailMessages.memberFormEmployeeLabel())}
               rules={[
                 {
