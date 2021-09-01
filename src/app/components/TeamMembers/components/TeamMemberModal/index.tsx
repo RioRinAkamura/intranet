@@ -335,9 +335,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
             {
               ...newMember,
               name:
-                newMember.member.first_name +
-                ' ' +
-                newMember.member.last_name,
+                newMember.member.first_name + ' ' + newMember.member.last_name,
               employee: newMember.member,
               ...newMember.member,
             },
