@@ -277,7 +277,7 @@ export const DeviceDetailPage = props => {
                 <Col span={12}>
                   <FormItem
                     rules={FORM_RULES.CATEGORY}
-                    name="category"
+                    name="category_id"
                     label="Category"
                   >
                     <Select
