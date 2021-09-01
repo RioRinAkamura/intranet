@@ -20,11 +20,7 @@ import {
 import { useHistory, useLocation, useParams } from 'react-router';
 import { useDeviceDetail } from './useDeviceDetail';
 import { SelectValue } from 'antd/lib/select';
-import {
-  inputViewProps,
-  datePickerViewProps,
-  textareaViewProps,
-} from 'utils/types';
+import { inputViewProps, datePickerViewProps } from 'utils/types';
 import { DeviceHistoryTab } from '../DeviceHistory/Loadable';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { useDeviceManagePage } from '../DeviceListPage/slice';
@@ -32,6 +28,7 @@ import { selectState } from '../DeviceListPage/slice/selectors';
 import { PrivatePath } from 'utils/url.const';
 import { CardForm } from 'app/components/CardForm';
 import { Route, Switch } from 'react-router-dom';
+import { RichEditor } from 'app/components/RichEditor/Loadable';
 
 const { Option } = Select;
 
@@ -77,6 +74,7 @@ export const DeviceDetailPage = props => {
     if (data) {
       form.setFieldsValue({
         ...data,
+        category_id: data.category?.id,
         since: data.since && moment(data.since),
       });
     }
@@ -165,7 +163,7 @@ export const DeviceDetailPage = props => {
 
       <StyledWrapperDiv>
         <StyledTitle>Category</StyledTitle>
-        <StyledData>{data?.category_name || 'N/A'}</StyledData>
+        <StyledData>{data?.category?.name || 'N/A'}</StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>
@@ -180,7 +178,13 @@ export const DeviceDetailPage = props => {
 
       <StyledWrapperDiv>
         <StyledTitle>Description</StyledTitle>
-        <StyledData>{data?.description || 'N/A'}</StyledData>
+        <StyledData>
+          <RichEditor
+            width="100%"
+            data={data?.description || 'N/A'}
+            isView={isView}
+          />
+        </StyledData>
       </StyledWrapperDiv>
     </CardForm>
   );
@@ -330,10 +334,13 @@ export const DeviceDetailPage = props => {
                 </Col>
               </Row>
               <FormItem name="description" label="Description">
-                <Input.TextArea
-                  {...(isView ? textareaViewProps : {})}
-                  placeholder="Descriptions"
-                  size="large"
+                <RichEditor
+                  width="100%"
+                  data={form.getFieldValue('description')}
+                  placeholder={isView ? '' : 'Descriptions'}
+                  callback={e => {
+                    form.setFieldsValue({ description: e });
+                  }}
                 />
               </FormItem>
             </Form>
