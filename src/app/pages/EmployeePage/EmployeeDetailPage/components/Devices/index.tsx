@@ -240,6 +240,7 @@ export const Device = memo((props: DeviceProps) => {
     try {
       await api.hr.employee.device.delete(employeeId, deviceDelete.device.id);
       fetchEmployeeDevices();
+      fetchDevices();
       setIsDelete(false);
     } catch (e) {
       console.log(e);
