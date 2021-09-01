@@ -24,7 +24,6 @@ import { DeleteModal } from 'app/components/DeleteModal';
 import Button, { IconButton } from 'app/components/Button';
 import { Wrapper } from 'styles/StyledCommon';
 import { api } from 'utils/api';
-import { DeviceStatus } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 const { Option } = Select;
 interface DeviceResponse {
@@ -67,8 +66,8 @@ const WrapperForm: React.FC<FormProps> = ({
       form.setFieldsValue({
         ...deviceUpdate,
         device: deviceUpdate.device.id,
-        started_using_at: moment(deviceUpdate.started_using_at),
-        stopped_using_at: moment(deviceUpdate.stopped_using_at),
+        started_using_at: moment(deviceUpdate.started_using_at || undefined),
+        stopped_using_at: moment(deviceUpdate.stopped_using_at || undefined),
       });
     }
   }, [form, deviceUpdate, isView]);
@@ -284,26 +283,13 @@ export const Device = memo((props: DeviceProps) => {
         if (isUpdate) {
           if (!deviceUpdate) return;
 
-          const device = await api.hr.device.get(deviceUpdate.device);
-
-          if (mapValue.device !== deviceUpdate.device) {
-            await api.hr.device.update({
-              ...device,
-              employee: '',
-              status: DeviceStatus.AVAILABLE,
-            });
-
-            await api.hr.device.history.create({
-              device: deviceUpdate.device,
-              employee: employeeId,
-              note: `Unassign device from employee ${deviceUpdate.employee_name}`,
-            });
-          }
-
-          await api.hr.employee.device.update(employeeId, {
-            id: deviceUpdate.id,
+          const _values = {
             ...mapValue,
-          });
+            id: deviceUpdate.device.id,
+            device_id: mapValue.device,
+          };
+
+          await api.hr.employee.device.update(employeeId, _values);
 
           setIsUpdate(false);
           fetchEmployeeDevices();
