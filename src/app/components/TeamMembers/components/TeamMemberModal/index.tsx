@@ -10,6 +10,7 @@ import {
   Form,
   Select,
   Spin,
+  message,
 } from 'antd';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { ColumnsType } from 'antd/lib/table/interface';
@@ -31,17 +32,8 @@ import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/m
 import { IconButton } from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
 import { api } from 'utils/api';
+import { Member } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/project/models';
 
-interface MemberType {
-  allocation: number;
-  project_role: string;
-  member: {
-    id: string;
-    avatar?: string;
-    first_name: string;
-    last_name: string;
-  };
-}
 interface TeamMemberProps {
   visibility: boolean;
   handleOk: () => void;
@@ -50,7 +42,7 @@ interface TeamMemberProps {
 }
 
 interface ProjectType {
-  members: Array<MemberType>;
+  members: Array<Member>;
   name?: string;
   overview?: string;
   status?: string;
@@ -72,7 +64,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [dataSource, setDatasource] = useState<MemberType[] | undefined>([]);
+  const [dataSource, setDatasource] = useState<Member[]>([]);
   const [memberEmail, setMemberEmail] = useState('');
   const [mid, setMid] = useState('');
   const [memberForm] = Form.useForm();
@@ -84,11 +76,11 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const [modalWidth, setModalWidth] = useState(1000);
   const [activeKey, setActiveKey] = useState('1');
   const [textCopy, setTextCopy] = useState(false);
-  const [members, setMembers] = useState<MemberType[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const { fetchUser, fetchId } = useProjectDetail();
   const { visibility, handleOk, handleCancel, projId } = props;
 
-  let computeDs = (members: Array<MemberType> = []) => {
+  let computeDs = (members: Array<Member> = []) => {
     if (!members) return;
     return members.map(member => ({
       allocation: member.allocation,
@@ -103,7 +95,9 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
 
   useEffect(() => {
     const newMembersArray = computeDs(members);
-    setDatasource(newMembersArray);
+    if (newMembersArray && newMembersArray.length > 0) {
+      setDatasource(newMembersArray);
+    }
   }, [members]);
 
   useEffect(() => {
@@ -152,9 +146,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
       await api.hr.project.deleteMember(projId, mid);
       const newMemberList =
         dataSource &&
-        [...dataSource].filter(
-          (member: MemberType) => member.member?.id !== mid,
-        );
+        [...dataSource].filter((member: Member) => member.member?.id !== mid);
       setDatasource(newMemberList);
     } catch (e) {
       console.log(e);
@@ -268,15 +260,16 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
 
   // add members
   const handleSearch = async value => {
-    if (value) {
+    try {
       setSearchLoad(true);
       const response = await fetchUser(value);
       if (response) {
         setEmployees(response);
-        setSearchLoad(false);
       }
-    } else {
-      setEmployees([]);
+    } catch (error) {
+      message.error(error.message);
+    } finally {
+      setSearchLoad(false);
     }
   };
   const handleChange = value => {
@@ -321,10 +314,11 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
           project: projId,
         });
         if (response) {
+          message.success('Add member successfully');
           memberForm.resetFields();
           const employee = await api.hr.project.getMemberDetail(
             projId,
-            values.members.member,
+            response.member.id,
           );
           const newMember: any = {
             ...employee,
@@ -345,7 +339,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
         }
       }
     } catch (e) {
-      console.log(e);
+      message.error(e.message);
     } finally {
       setLoadingMember(false);
     }
@@ -438,7 +432,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
             onFinish={handleAddMember}
           >
             <FormSearchItem
-              name={['members', 'member']}
+              name={['members', 'member_id']}
               label={t(ProjectDetailMessages.memberFormEmployeeLabel())}
               rules={[
                 {
@@ -460,6 +454,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
                   ProjectDetailMessages.memberFormEmployeePlaceholder(),
                 )}
                 onSearch={handleSearch}
+                onFocus={() => handleSearch(value)}
                 onChange={handleChange}
                 notFoundContent={searchLoad ? <Spin size="default" /> : null}
               >
