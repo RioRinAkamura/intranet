@@ -196,9 +196,9 @@ export const DeviceListPage = () => {
     },
     {
       title: 'Employee',
-      dataIndex: 'employee_name',
+      dataIndex: 'consignee',
       width: 150,
-      render: data => (data ? data : ''),
+      render: data => (data ? `${data.first_name} ${data.last_name}` : ''),
     },
     {
       title: 'Health Status',

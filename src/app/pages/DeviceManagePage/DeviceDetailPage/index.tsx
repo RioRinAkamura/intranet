@@ -70,8 +70,11 @@ export const DeviceDetailPage = props => {
   const { actions } = useDeviceManagePage();
   const deviceState = useSelector(selectState);
 
+  const [description, setDes] = useState<string>('');
+
   useEffect(() => {
     if (data) {
+      setDes(data.description);
       form.setFieldsValue({
         ...data,
         category_id: data.category?.id,
@@ -343,7 +346,7 @@ export const DeviceDetailPage = props => {
               <FormItem name="description" label="Description">
                 <RichEditor
                   width="100%"
-                  data={form.getFieldValue('description')}
+                  data={description}
                   placeholder={isView ? '' : 'Descriptions'}
                   callback={e => {
                     form.setFieldsValue({ description: e });
