@@ -103,10 +103,7 @@ export const DeviceListPage = () => {
           icon={<EditOutlined />}
           size="small"
           onClick={() => {
-            history.push({
-              pathname: `${PrivatePath.DEVICES}/${text}`,
-              state: { edit: true },
-            });
+            history.push(`${PrivatePath.DEVICES}/${text}/edit`);
           }}
         />
       </Tooltip>
@@ -199,9 +196,9 @@ export const DeviceListPage = () => {
     },
     {
       title: 'Employee',
-      dataIndex: 'employee_name',
+      dataIndex: 'consignee',
       width: 150,
-      render: data => (data ? data : ''),
+      render: data => (data ? `${data.first_name} ${data.last_name}` : ''),
     },
     {
       title: 'Health Status',

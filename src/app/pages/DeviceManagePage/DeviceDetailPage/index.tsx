@@ -70,8 +70,11 @@ export const DeviceDetailPage = props => {
   const { actions } = useDeviceManagePage();
   const deviceState = useSelector(selectState);
 
+  const [description, setDes] = useState<string>('');
+
   useEffect(() => {
     if (data) {
+      setDes(data.description);
       form.setFieldsValue({
         ...data,
         category_id: data.category?.id,
@@ -140,7 +143,12 @@ export const DeviceDetailPage = props => {
   };
 
   const onCancel = () => {
-    isEdit ? setIsEdit(false) : history.push(PrivatePath.DEVICES);
+    if (isEdit) {
+      setIsEdit(false);
+      history.push(`${PrivatePath.DEVICES}/${id}`);
+    } else {
+      history.push(PrivatePath.DEVICES);
+    }
   };
 
   const onSubmit = () => {
@@ -148,6 +156,7 @@ export const DeviceDetailPage = props => {
       handleSubmit();
     } else if (isView) {
       setIsEdit(true);
+      history.push(`${PrivatePath.DEVICES}/${id}/edit`);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (isCreate) {
       handleSubmit();
@@ -197,14 +206,11 @@ export const DeviceDetailPage = props => {
   }, [history.location.pathname]);
 
   useEffect(() => {
-    if (location.state) {
-      const edit = location.state.edit;
-      if (edit) {
-        setIsEdit(true);
-        history.replace(location.pathname, {});
-      }
+    if (location.pathname.includes('edit')) {
+      setIsEdit(true);
+      history.replace(location.pathname, {});
     }
-  }, [history, location]);
+  }, [history, location.pathname]);
 
   useEffect(() => {
     dispatch(actions.fetchIdentity());
@@ -249,6 +255,10 @@ export const DeviceDetailPage = props => {
             <Route path={PrivatePath.DEVICES_ID_HISTORY}>
               <DeviceHistoryTab device_id={id} />
             </Route>
+            <Route
+              path={PrivatePath.DEVICES_EDIT}
+              component={() => deviceDetails()}
+            />
           </Switch>
         </>
       ) : (
@@ -336,7 +346,7 @@ export const DeviceDetailPage = props => {
               <FormItem name="description" label="Description">
                 <RichEditor
                   width="100%"
-                  data={form.getFieldValue('description')}
+                  data={description}
                   placeholder={isView ? '' : 'Descriptions'}
                   callback={e => {
                     form.setFieldsValue({ description: e });
