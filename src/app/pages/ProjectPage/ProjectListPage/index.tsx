@@ -334,7 +334,7 @@ export const ProjectListPage: React.FC = () => {
       ),
     },
     {
-      title: 'Member',
+      title: 'Members',
       width: 200,
       dataIndex: 'members',
       ...getColumnSorterProps('members', 2),

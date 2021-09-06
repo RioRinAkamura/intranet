@@ -3,23 +3,15 @@ import styled from 'styled-components/macro';
 import { Card, Tag } from 'antd';
 import { Avatar } from 'app/components/Avatar';
 import { antColours } from 'utils/types';
+import { Member } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 interface TooltipProps {
-  member: {
-    allocation: number;
-    project_role: string;
-    employee: {
-      id: string;
-      avatar?: string;
-      first_name: string;
-      last_name: string;
-    };
-  };
+  member: Member;
 }
 
 export const MemberTooltip = memo((props: TooltipProps) => {
   const { member } = props;
-  const info = { ...member.employee };
+  const info = { ...member.member };
   return (
     <TooltipWrapper className="member-tooltip">
       <Card>
@@ -41,12 +33,12 @@ export const MemberTooltip = memo((props: TooltipProps) => {
 });
 
 const TooltipWrapper = styled.div`
-  margin-top: 10px;
-  visibility: hidden;
-  opacity: 0;
+  display: none;
   transition: 0.4s ease;
   position: absolute;
   z-index: 1000;
+  top: -10px;
+  left: 120%;
 
   .ant-card-body {
     padding: 10px;
