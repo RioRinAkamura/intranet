@@ -2,8 +2,8 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import { api } from 'utils/api';
 import { employeeProjectActions as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { AddProject } from './types';
 import { cloneDeep } from 'lodash';
+import { EmployeeProject } from './types';
 
 function* fetchEmployeeProject(action) {
   try {
@@ -24,11 +24,10 @@ function* fetchEmployeeProject(action) {
   }
 }
 
-function* addProject(action: PayloadAction<AddProject>) {
+function* addProject(action: PayloadAction<EmployeeProject>) {
   try {
     const member = cloneDeep(action.payload);
-    member.allocation = parseFloat(member.allocation).toFixed(1);
-    yield api.hr.project.createMember(member.project, member as any);
+    yield api.hr.employee.project.create(member.employeeId, member.data);
     yield put(actions.addProjectSuccess());
   } catch (err) {
     yield put(actions.addProjectFailure());
@@ -37,16 +36,10 @@ function* addProject(action: PayloadAction<AddProject>) {
   }
 }
 
-function* editProject(action: PayloadAction<AddProject>) {
+function* editProject(action: PayloadAction<EmployeeProject>) {
   try {
     const member = cloneDeep(action.payload);
-    member.allocation = parseFloat(member.allocation).toFixed(1);
-
-    yield api.hr.project.updateMember(
-      member.project,
-      member.employee,
-      member as any,
-    );
+    yield api.hr.employee.project.update(member.employeeId, member.data);
     yield put(actions.editProjectSuccess());
   } catch (err) {
     yield put(actions.editProjectFailure());

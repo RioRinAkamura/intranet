@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useCallback } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import {
   Table,
@@ -24,16 +24,10 @@ import { DeleteModal } from 'app/components/DeleteModal';
 import Button, { IconButton } from 'app/components/Button';
 import { Wrapper } from 'styles/StyledCommon';
 import { api } from 'utils/api';
+import { EmployeeDevice } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { useHandleEmployeeDevices } from './useHandleEmployeeDevices';
 
 const { Option } = Select;
-interface DeviceResponse {
-  device: any;
-  started_using_at: string;
-  stopped_using_at: string;
-  status: string;
-  id: string;
-  employee_name: string;
-}
 
 interface Devices {
   code: string;
@@ -44,7 +38,7 @@ interface FormProps {
   form: FormInstance;
   devices?: any;
   isView?: boolean;
-  deviceUpdate?: DeviceResponse;
+  deviceUpdate?: EmployeeDevice;
 }
 
 interface DeviceProps {
@@ -98,7 +92,7 @@ const WrapperForm: React.FC<FormProps> = ({
         label="Status"
       >
         {/* <Input size="large" placeholder="Summary" disabled={isView} /> */}
-        <Select disabled={isView} placeholder="Status" size="large">
+        <Select placeholder="Status" size="large">
           {EMPLOYEE_DEVICE_STATUS.map(status => (
             <Option value={status.value}>{status.label}</Option>
           ))}
@@ -109,10 +103,10 @@ const WrapperForm: React.FC<FormProps> = ({
         name="started_using_at"
         label="Started Using Date"
       >
-        <StyledDatePicker size="large" disabled={isView} />
+        <StyledDatePicker size="large" />
       </Form.Item>
       <Form.Item name="stopped_using_at" label="Stopped Using At">
-        <StyledDatePicker size="large" disabled={isView} />
+        <StyledDatePicker size="large" />
       </Form.Item>
     </Form>
   );
@@ -121,46 +115,31 @@ const WrapperForm: React.FC<FormProps> = ({
 export const Device = memo((props: DeviceProps) => {
   const { employeeId } = props;
   const [form] = Form.useForm();
-  const [employeeDevices, setEmployeeDevices] = useState([]);
-  const [devices, setDevices] = useState<Devices[]>([]);
-  const [loading, setLoading] = useState(false);
   const [isView, setIsView] = useState<boolean>(false);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState<boolean>(false);
-  const [deviceUpdate, setDeviceUpdate] = useState<DeviceResponse>();
-  const [deviceDelete, setDeviceDelete] = useState<DeviceResponse>();
-
-  const fetchEmployeeDevices = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response: any = await api.hr.employee.device.list(employeeId);
-      setEmployeeDevices(response.results);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-    }
-  }, [employeeId]);
-
-  const fetchDevices = async () => {
-    try {
-      const response: any = await api.hr.device.list();
-      const mapDevice = [...response.results].filter(
-        (device: any) => device.status === 'Available',
-      );
-      setDevices(mapDevice);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const [deviceUpdate, setDeviceUpdate] = useState<EmployeeDevice>();
+  const [deviceDelete, setDeviceDelete] = useState<EmployeeDevice>();
+  const {
+    loading,
+    devices,
+    employeeDevices,
+    fetchDevices,
+    fetchEmployeeDevices,
+    addEmployeeDevice,
+    editEmployeeDevice,
+    deleteEmployeeDevice,
+  } = useHandleEmployeeDevices();
 
   useEffect(() => {
-    fetchEmployeeDevices();
-    fetchDevices();
-  }, [fetchEmployeeDevices]);
+    if (employeeId) {
+      fetchEmployeeDevices(employeeId);
+      fetchDevices();
+    }
+  }, [employeeId, fetchDevices, fetchEmployeeDevices]);
 
-  const moreButton = (text: string, record: DeviceResponse) => (
+  const moreButton = (text: string, record: EmployeeDevice) => (
     <>
       <Tooltip title="Edit">
         <IconButton
@@ -188,7 +167,7 @@ export const Device = memo((props: DeviceProps) => {
     </>
   );
 
-  const columns: ColumnProps<DeviceResponse>[] = [
+  const columns: ColumnProps<EmployeeDevice>[] = [
     {
       title: 'Device',
       dataIndex: 'device',
@@ -220,7 +199,7 @@ export const Device = memo((props: DeviceProps) => {
       dataIndex: 'id',
       width: 45,
       fixed: 'right',
-      render: (text: string, record: DeviceResponse, index: number) => {
+      render: (text: string, record: EmployeeDevice, index: number) => {
         return (
           <>
             <Popover
@@ -238,8 +217,8 @@ export const Device = memo((props: DeviceProps) => {
   const handleConfirmDelete = async () => {
     if (!deviceDelete) return;
     try {
-      await api.hr.employee.device.delete(employeeId, deviceDelete.device.id);
-      fetchEmployeeDevices();
+      deleteEmployeeDevice(employeeId, deviceDelete.device.id);
+      fetchEmployeeDevices(employeeId);
       fetchDevices();
       setIsDelete(false);
     } catch (e) {
@@ -268,41 +247,32 @@ export const Device = memo((props: DeviceProps) => {
           : undefined,
       };
 
-      try {
-        setLoading(true);
-
-        if (isCreate) {
-          await api.hr.employee.device.create(employeeId, {
-            ...mapValue,
-            device_id: mapValue.device,
-            employee: employeeId,
-          });
-          setIsCreate(false);
-          fetchEmployeeDevices();
-          fetchDevices();
-        }
-        if (isUpdate) {
-          if (!deviceUpdate) return;
-
-          const _values = {
-            ...mapValue,
-            id: deviceUpdate.device.id,
-            device_id: mapValue.device,
-          };
-
-          await api.hr.employee.device.update(employeeId, _values);
-
-          setIsUpdate(false);
-          fetchEmployeeDevices();
-          fetchDevices();
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setLoading(false);
+      if (isCreate) {
+        addEmployeeDevice(employeeId, {
+          ...mapValue,
+          device_id: mapValue.device,
+          employee: employeeId,
+        });
+        setIsCreate(false);
+        fetchEmployeeDevices(employeeId);
+        fetchDevices();
+      }
+      if (isUpdate) {
+        if (!deviceUpdate) return;
+        const _values = {
+          device_id: mapValue.device,
+          status: mapValue.status,
+          started_using_at: mapValue.started_using_at,
+          stopped_using_at: mapValue.stopped_using_at,
+        };
+        editEmployeeDevice(employeeId, _values);
+        setIsUpdate(false);
+        fetchEmployeeDevices(employeeId);
+        fetchDevices();
       }
     });
   };
+
   return (
     <Wrapper>
       <Header>
@@ -320,7 +290,7 @@ export const Device = memo((props: DeviceProps) => {
       </Header>
       <Table
         bordered
-        dataSource={employeeDevices}
+        dataSource={employeeDevices.results}
         columns={columns}
         rowKey="id"
         loading={loading}
@@ -339,7 +309,7 @@ export const Device = memo((props: DeviceProps) => {
           form={form}
           devices={devices}
           deviceUpdate={!isCreate ? deviceUpdate : undefined}
-          isView={!isCreate ? isView : false}
+          isView={!isCreate ? isView || isUpdate : false}
         />
       </DialogModal>
       <DeleteModal

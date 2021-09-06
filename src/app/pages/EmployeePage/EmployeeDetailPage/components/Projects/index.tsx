@@ -31,6 +31,8 @@ import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import Button, { IconButton } from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink, Wrapper } from 'styles/StyledCommon';
+import { projectStatus } from 'utils/variable';
+import moment from 'moment';
 
 interface ProjectsProps {
   employeeId: string;
@@ -139,6 +141,16 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
       title: 'Role',
       dataIndex: 'project_role',
       ...getColumnSorterProps('project_role', 3),
+    },
+    {
+      title: 'Start Date',
+      dataIndex: ['project', 'started'],
+      render: text => (text ? moment(text).format('DD-MM-YYYY') : ''),
+    },
+    {
+      title: 'Start Date',
+      dataIndex: ['project', 'status'],
+      render: value => projectStatus[value],
     },
     {
       title: 'Actions',

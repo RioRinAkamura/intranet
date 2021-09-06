@@ -32,3 +32,5 @@ export const calcBusinessDays = (dDate1, dDate2) => {
 
   return Number(iDateDiff + 1); // add 1 because dates are inclusive
 };
+
+export const projectStatus = ['Preparing', 'Going', 'Realsed', 'Archived'];
