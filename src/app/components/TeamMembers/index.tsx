@@ -3,18 +3,10 @@ import styled from 'styled-components/macro';
 import { Member } from './components/Member';
 import { useHistory } from 'react-router-dom';
 import { SettingOutlined } from '@ant-design/icons';
-interface MemberType {
-  allocation: number;
-  project_role: string;
-  employee: {
-    id: string;
-    avatar?: string;
-    first_name: string;
-    last_name: string;
-  };
-}
+import { Member as MemberModel } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+
 interface TeamMembersProps {
-  members?: Array<MemberType>;
+  members?: Array<MemberModel>;
   projId: string;
   callback: (members) => void;
 }
@@ -37,13 +29,6 @@ export const TeamMembers = memo((props: TeamMembersProps) => {
         justifyContent: 'space-between',
       }}
     >
-      {/* <TeamMemberModal
-        handleOk={handleOk}
-        handleCancel={handleCancel}
-        visibility={visible}
-        members={members}
-        projId={projId}
-      /> */}
       <MembersWrapper>
         {members &&
           members.map(member => {
@@ -51,10 +36,6 @@ export const TeamMembers = memo((props: TeamMembersProps) => {
           })}
       </MembersWrapper>
 
-      {/* <Button onClick={() => setVisible(true)} type="primary">
-        Manage
-      </Button> */}
-      {/* <SettingOutlined onClick={() => setVisible(true)} /> */}
       <SettingOutlined onClick={handlevisibleModal} />
     </div>
   );
