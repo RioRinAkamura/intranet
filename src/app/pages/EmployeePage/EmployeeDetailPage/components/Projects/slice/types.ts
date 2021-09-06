@@ -1,3 +1,4 @@
+import { EmployeeProjectParams } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { Key } from 'react';
 
 /* --- STATE --- */
@@ -40,9 +41,7 @@ interface Pagination {
   total?: number;
 }
 
-export interface AddProject {
-  employee: string;
-  project: string;
-  allocation: string;
-  project_role: string;
+export interface EmployeeProject {
+  employeeId: string;
+  data: EmployeeProjectParams;
 }

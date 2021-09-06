@@ -54,11 +54,12 @@ export const ProjectModal = memo((props: Props) => {
 
   const handleProject = async values => {
     const _values = {
-      ...values,
-      project_id: values.project,
-      allocation: values.allocation,
-      project_role: values.project_role,
-      employee: id,
+      employeeId: id,
+      data: {
+        project_id: values.project,
+        allocation: values.allocation,
+        project_role: values.project_role,
+      },
     };
     if (selectedProject) {
       dispatch(actions.editProject(_values));

@@ -5,7 +5,7 @@ import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { employeeProjectSaga } from './saga';
 import {
-  AddProject,
+  EmployeeProject,
   EmployeeProjectState,
   FilterColumns,
   QueryParams,
@@ -106,7 +106,7 @@ const slice = createSlice({
       state.params.limit = action.payload.pageSize;
       state.params.page = action.payload.current;
     },
-    addProject(state, action: PayloadAction<AddProject>) {
+    addProject(state, action: PayloadAction<EmployeeProject>) {
       state.isFilter = true;
       state.addSuccess = false;
       state.addFailed = false;
@@ -124,7 +124,7 @@ const slice = createSlice({
       state.addSuccess = false;
       state.addFailed = false;
     },
-    editProject(state, action: PayloadAction<AddProject>) {
+    editProject(state, action: PayloadAction<EmployeeProject>) {
       state.isFilter = true;
       state.editSuccess = false;
       state.editFailed = false;
