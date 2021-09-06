@@ -148,7 +148,7 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
       render: text => (text ? moment(text).format('DD-MM-YYYY') : ''),
     },
     {
-      title: 'Start Date',
+      title: 'Status',
       dataIndex: ['project', 'status'],
       render: value => projectStatus[value],
     },
