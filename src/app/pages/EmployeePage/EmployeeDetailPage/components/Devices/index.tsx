@@ -26,6 +26,7 @@ import { Wrapper } from 'styles/StyledCommon';
 import { api } from 'utils/api';
 import { EmployeeDevice } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { useHandleEmployeeDevices } from './useHandleEmployeeDevices';
+import { EmployeeDeviceStatus } from 'utils/types';
 
 const { Option } = Select;
 
@@ -141,17 +142,19 @@ export const Device = memo((props: DeviceProps) => {
 
   const moreButton = (text: string, record: EmployeeDevice) => (
     <>
-      <Tooltip title="Edit">
-        <IconButton
-          shape="circle"
-          icon={<EditOutlined />}
-          size="small"
-          onClick={() => {
-            setIsUpdate(true);
-            setDeviceUpdate(record);
-          }}
-        />
-      </Tooltip>
+      {record.status !== EmployeeDeviceStatus.Returned && (
+        <Tooltip title="Edit">
+          <IconButton
+            shape="circle"
+            icon={<EditOutlined />}
+            size="small"
+            onClick={() => {
+              setIsUpdate(true);
+              setDeviceUpdate(record);
+            }}
+          />
+        </Tooltip>
+      )}
       <Tooltip title="Delete">
         <IconButton
           danger

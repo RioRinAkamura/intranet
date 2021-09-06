@@ -18,6 +18,18 @@ export enum Type {
   'Etc' = 'Etc',
 }
 
+export enum EmployeeProjectStatus {
+  'Preparing' = 'Preparing',
+  'Going' = 'Going',
+  'Released' = 'Released',
+  'Archived' = 'Archived',
+}
+
+export enum EmployeeDeviceStatus {
+  'Assigned' = 'Assigned',
+  'Returned' = 'Returned',
+}
+
 export interface TagType {
   id: number;
   name: string;
