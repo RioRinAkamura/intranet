@@ -128,6 +128,20 @@ const slice = createSlice({
       state.deleteSuccess = false;
       state.deleteFailed = true;
     },
+    deleteMultiProject(state, action: PayloadAction<Array<string>>) {
+      state.isFilter = true;
+      state.deleteSuccess = false;
+      state.deleteFailed = false;
+    },
+    deleteMultiProjectSuccess(state) {
+      state.isFilter = false;
+      state.deleteSuccess = true;
+      state.deleteFailed = false;
+    },
+    deleteMultiProjectFailure(state) {
+      state.deleteSuccess = false;
+      state.deleteFailed = true;
+    },
     resetStateDeleteModal(state) {
       state.deleteSuccess = false;
       state.deleteFailed = false;

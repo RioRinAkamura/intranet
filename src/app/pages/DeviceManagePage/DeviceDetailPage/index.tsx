@@ -78,7 +78,7 @@ export const DeviceDetailPage = props => {
       form.setFieldsValue({
         ...data,
         category_id: data.category?.id,
-        since: data.since && moment(data.since),
+        since: data.since && moment().set({ year: data.since }),
       });
     }
   }, [data, form, isEdit]);

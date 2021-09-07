@@ -118,14 +118,18 @@ export const ProjectInfo = (props: Props) => {
         <StyledTitle>
           {t(ProjectDetailMessages.formProjectPriorityLabel())}
         </StyledTitle>
-        <StyledData>{data?.priority || 'N/A'}</StyledData>
+        <StyledData>
+          {(data?.priority && priority[data.priority].name) || 'N/A'}
+        </StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>
         <StyledTitle>
           {t(ProjectDetailMessages.formProjectStatusLabel())}
         </StyledTitle>
-        <StyledData>{data?.status || 'N/A'}</StyledData>
+        <StyledData>
+          {(data?.status && status[data.status].name) || 'N/A'}
+        </StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>

@@ -3,6 +3,7 @@ import { Modal, Button, Input, Form } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { messages } from './messages';
 import { RuleObject } from 'rc-field-form/lib/interface';
+import { DeleteType } from 'utils/types';
 
 const layout = {
   labelCol: { span: 8 },
@@ -16,10 +17,19 @@ interface Props {
   title?: string;
   description?: string | JSX.Element;
   answer?: string;
+  type?: DeleteType;
 }
 
 export const DeleteConfirmModal = (props: Props) => {
-  const { handleCancel, handleOk, title, description, answer, visible } = props;
+  const {
+    handleCancel,
+    handleOk,
+    title,
+    description,
+    answer,
+    visible,
+    type = 'EMAIL',
+  } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [disabledButton, setDisabledButton] = React.useState(true);
@@ -71,8 +81,14 @@ export const DeleteConfirmModal = (props: Props) => {
       ]}
       onCancel={handleCancel}
     >
-      <p>{description || defaultParam.descriptionDefault}</p>
-      <p>{t(messages.deleteModalTypeEmail())}</p>
+      {description || <p>{defaultParam.descriptionDefault}</p>}
+      {type === DeleteType.EMAIL && <p>{t(messages.deleteModalTypeEmail())}</p>}
+      {type === DeleteType.NAME && <p>{t(messages.deleteModalTypeName())}</p>}
+      {type === DeleteType.MULTIPLE && (
+        <p>
+          {t(messages.deleteModalTypeCustom())}: <b>{answer}</b>
+        </p>
+      )}
       <Form
         {...layout}
         form={form}

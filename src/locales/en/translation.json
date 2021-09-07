@@ -25,7 +25,9 @@
     "cancel": "Cancel",
     "success": "Delete successful",
     "failed": "Delete failed",
-    "typeEmail": "Type email address below to delete your employee"
+    "typeEmail": "Type email address below to delete your employee",
+    "typeName": "Type project name below to delete your employee",
+    "typeCustom": "Type the word at the end to delete your project"
   },
   "someThing": "default value",
   "tagsInput": {

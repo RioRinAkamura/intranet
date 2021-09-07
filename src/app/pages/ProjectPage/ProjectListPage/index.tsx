@@ -53,6 +53,7 @@ import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
 import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { DeleteType } from 'utils/types';
 
 export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -68,9 +69,10 @@ export const ProjectListPage: React.FC = () => {
   const [searchForm] = Form.useForm();
   const [idProjectDelete, setIdProjectDelete] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDeleteMulti, setIsDeleteMulti] = useState(false);
+  const [projectIds, setProjectIds] = useState<string[]>([]);
   const [deleteProject, setDeleteProject] = useState<any>();
   const [memberModal, setMemberModal] = useState(false);
-  // const [projectId, setProjectId] = useState<any>();
   const [projMemberId, setProjMemberId] = useState('');
   const deleteModalState = useSelector(
     (state: RootState) => state.employeespage,
@@ -155,7 +157,13 @@ export const ProjectListPage: React.FC = () => {
 
   const handleConfirmDelete = () => {
     setIsModalVisible(false);
-    dispatch(actions.deleteProject(idProjectDelete));
+    if (isDeleteMulti) {
+      if (projectIds.length > 0) {
+        dispatch(actions.deleteMultiProject(projectIds));
+      }
+    } else {
+      dispatch(actions.deleteProject(idProjectDelete));
+    }
   };
 
   const handleCancelDeleteModal = () => {
@@ -180,23 +188,28 @@ export const ProjectListPage: React.FC = () => {
 
   const descriptionDelete = (
     <p>
-      You're about to permanently delete your project{' '}
-      <Tooltip
-        title={<div>{textCopy ? 'Copied!' : 'Click to copy!'}</div>}
-        onVisibleChange={visible => visible === true && setTextCopy(false)}
-      >
-        <strong
-          id="deletedEmail"
-          style={{ cursor: 'pointer' }}
-          onClick={() => {
-            let copyText = document.getElementById('deletedEmail')?.innerText;
-            if (copyText) {
-              navigator.clipboard.writeText(copyText);
-              setTextCopy(true);
-            }
-          }}
-        >{`${deleteProject?.name}`}</strong>
-      </Tooltip>
+      You're about to permanently delete{' '}
+      {isDeleteMulti ? (
+        'multiple project'
+      ) : (
+        <Tooltip
+          title={<div>{textCopy ? 'Copied!' : 'Click to copy!'}</div>}
+          onVisibleChange={visible => visible === true && setTextCopy(false)}
+        >
+          your project{' '}
+          <strong
+            id="deletedEmail"
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              let copyText = document.getElementById('deletedEmail')?.innerText;
+              if (copyText) {
+                navigator.clipboard.writeText(copyText);
+                setTextCopy(true);
+              }
+            }}
+          >{`${deleteProject?.name}`}</strong>
+        </Tooltip>
+      )}
       . This will also delete any references to your project.
     </p>
   );
@@ -481,7 +494,11 @@ export const ProjectListPage: React.FC = () => {
                       }
                       icon={<DeleteOutlined />}
                       onClick={() => {
-                        console.log('Call Deleted');
+                        showDeleteModal();
+                        setIsDeleteMulti(true);
+                        setProjectIds(
+                          getProjectState.selectedRowKeys as string[],
+                        );
                       }}
                     />
                   )}
@@ -532,12 +549,17 @@ export const ProjectListPage: React.FC = () => {
         </CardLayout>
       )}
       <DeleteConfirmModal
+        type={isDeleteMulti ? DeleteType.MULTIPLE : DeleteType.NAME}
         visible={isModalVisible}
         handleOk={handleConfirmDelete}
         handleCancel={handleCancelDeleteModal}
-        title={`Remove ${deleteProject?.name}`}
+        title={
+          isDeleteMulti
+            ? 'Remove multiple project'
+            : `Remove ${deleteProject?.name}`
+        }
         description={descriptionDelete}
-        answer={`${deleteProject?.name}`}
+        answer={isDeleteMulti ? 'DELETE' : `${deleteProject?.name}`}
       />
     </>
   );
