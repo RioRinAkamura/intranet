@@ -65,7 +65,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dataSource, setDatasource] = useState<Member[]>([]);
-  const [memberEmail, setMemberEmail] = useState('');
+  const [memberId, setMemberId] = useState('');
   const [mid, setMid] = useState('');
   const [memberForm] = Form.useForm();
   const [allocation, setAllocation] = useState<SelectValue>();
@@ -136,7 +136,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   // table
   const showDeleteModal = record => {
     setIsModalVisible(true);
-    setMemberEmail(record.email);
+    setMemberId(record.id);
     setMid(record.id);
   };
 
@@ -266,7 +266,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
       if (response) {
         setEmployees(response);
       }
-    } catch (error) {
+    } catch (error: any) {
       message.error(error.message);
     } finally {
       setSearchLoad(false);
@@ -335,10 +335,10 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
             },
           ];
           setDatasource(newDs);
-          setActiveKey('1');
+          history.push(`${PrivatePath.PROJECTS}/${projId}/members`);
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       message.error(e.message);
     } finally {
       setLoadingMember(false);
@@ -353,16 +353,16 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
         onVisibleChange={visible => visible === true && setTextCopy(false)}
       >
         <strong
-          id="deletedEmail"
+          id="deletedId"
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            let copyText = document.getElementById('deletedEmail')?.innerText;
+            let copyText = document.getElementById('deletedId')?.innerText;
             if (copyText) {
               navigator.clipboard.writeText(copyText);
               setTextCopy(true);
             }
           }}
-        >{`${memberEmail}`}</strong>
+        >{`${memberId}`}</strong>
       </Tooltip>
       . This will also delete any references to your project.
     </p>
@@ -421,7 +421,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
             handleCancel={handleCancelDeleteModal}
             title={`Remove Team Member`}
             description={descriptionDelete}
-            answer={`${memberEmail}`}
+            answer={memberId}
           />
         </TabPane>
         <TabPane tab="Add Members" key="2">

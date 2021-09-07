@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { api } from 'utils/api';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, omit } from 'lodash';
 import { ProjectDetailMessages } from './messages';
 
 export const useProjectDetail = (): {
@@ -18,7 +18,7 @@ export const useProjectDetail = (): {
   const { t } = useTranslation();
   const history = useHistory();
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState(undefined);
+  const [error, setError] = React.useState<any>();
   const { notify } = useNotify();
 
   const fetchUser = React.useCallback(async (search: string) => {
@@ -48,14 +48,8 @@ export const useProjectDetail = (): {
   const update = async (values: any): Promise<any | undefined> => {
     setLoading(true);
     try {
-      const data = cloneDeep(values);
-      if (data.members && data.members.length > 0) {
-        data.members.map(member => {
-          member.employee = member.employee.id;
-          // member.allocation = parseFloat(member.allocation).toFixed(1);
-          return member;
-        });
-      }
+      const data: any = cloneDeep(omit(values, 'members'));
+
       const response = await api.hr.project.update(data);
       if (response) {
         notify({
@@ -65,7 +59,7 @@ export const useProjectDetail = (): {
         });
         return response;
       }
-    } catch (error) {
+    } catch (error: any) {
       setError(error);
       notify({
         type: ToastMessageType.Error,
@@ -97,7 +91,7 @@ export const useProjectDetail = (): {
         });
         history.push('/projects/' + response.id + '/members/add');
       }
-    } catch (error) {
+    } catch (error: any) {
       setError(error);
       notify({
         type: ToastMessageType.Error,

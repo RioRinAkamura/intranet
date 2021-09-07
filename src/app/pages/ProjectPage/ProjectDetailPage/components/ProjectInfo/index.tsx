@@ -89,8 +89,10 @@ export const ProjectInfo = (props: Props) => {
   }, [data]);
 
   useEffect(() => {
-    dispatch(actions.fetchIdentity());
-  }, [actions, dispatch]);
+    if (!isEdit && !isView) {
+      dispatch(actions.fetchIdentity());
+    }
+  }, [actions, dispatch, isEdit, isView]);
 
   useEffect(() => {
     if (projectState.identity && !isEdit) {

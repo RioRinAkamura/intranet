@@ -4,7 +4,6 @@ import {
   Table,
   Form,
   TablePaginationConfig,
-  CheckboxOptionType,
   Tooltip,
   Popover,
 } from 'antd';
@@ -28,8 +27,6 @@ import {
 import { useHistory, useParams } from 'react-router';
 import styled from 'styled-components/macro';
 import { useProjectsSlice } from './slice';
-import { useUserspageSlice } from 'app/pages/EmployeePage/EmployeeListPage/slice';
-import { selectUserspage } from 'app/pages/EmployeePage/EmployeeListPage/slice/selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import PageTitle from 'app/components/PageTitle';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
@@ -80,22 +77,13 @@ export const ProjectListPage: React.FC = () => {
   const deleteSuccess = deleteModalState?.deleteSuccess;
   const deleteFailed = deleteModalState?.deleteFailed;
   const [textCopy, setTextCopy] = useState(false);
-  const getUserListState = useSelector(selectUserspage);
 
   const { actions } = useProjectsSlice();
-  const { actions: userActions } = useUserspageSlice();
   const dispatch = useDispatch();
-  const [userOptions, setUserOptions] = useState<CheckboxOptionType[]>([]);
   const params = useSelector(selectProjectsParams);
   const isFilter = useSelector(selectProjectsIsFilter);
   const getProjectState = useSelector(selectProjects);
   const { id } = useParams<Record<string, string>>();
-
-  const fetchUsers = useCallback(() => {
-    dispatch(
-      userActions.fetchUsers({ params: { limit: 1000, page: undefined } }),
-    );
-  }, [userActions, dispatch]);
 
   const {
     setSelectedRows,
@@ -110,7 +98,6 @@ export const ProjectListPage: React.FC = () => {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchCheckboxProps,
-    getColumnSearchInputCheckboxProps,
     ConfirmModal,
   } = useTableConfig(getProjectState, ProjectsMessages, setFilterText);
 
@@ -123,23 +110,6 @@ export const ProjectListPage: React.FC = () => {
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
-
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
-
-  useEffect(() => {
-    const mapUsers: any =
-      getUserListState.employees &&
-      [...getUserListState.employees].map(user => {
-        return {
-          label: user.first_name + ' ' + user.last_name,
-          value: user.id,
-        };
-      });
-
-    setUserOptions(mapUsers);
-  }, [getUserListState.employees]);
 
   // handle project member
   useEffect(() => {
@@ -362,7 +332,6 @@ export const ProjectListPage: React.FC = () => {
           members={members}
         />
       ),
-      ...getColumnSearchInputCheckboxProps(['employee'], userOptions, 0),
     },
     {
       title: t(ProjectsMessages.listStartedTitle()),
