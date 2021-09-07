@@ -30,6 +30,12 @@ export enum EmployeeDeviceStatus {
   'Returned' = 'Returned',
 }
 
+export enum DeleteType {
+  'EMAIL' = 'EMAIL',
+  'NAME' = 'NAME',
+  'MULTIPLE' = 'MULTIPLE',
+}
+
 export interface TagType {
   id: number;
   name: string;

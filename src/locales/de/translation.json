@@ -25,7 +25,9 @@
     "cancel": "Cancel",
     "success": "Delete successful",
     "failed": "Delete failed",
-    "typeEmail": "Type email address below to delete your employee"
+    "typeEmail": "Type email address below to delete your employee",
+    "typeName": "Type project name below to delete your employee",
+    "typeCustom": "Type the word at the end to delete your project"
   },
   "someThing": "default value",
   "tagsInput": {
@@ -97,9 +99,25 @@
       "form": {
         "editButton": "Edit",
         "cancelButton": "Cancel",
-        "submitButton": "Save"
+        "submitButton": "Save",
+        "category": {
+          "label": "Category",
+          "placeholder": "Enter category",
+          "selectPlaceholder": "Select category"
+        },
+        "summary": {
+          "label": "Summary",
+          "placeholder": "Enter summary"
+        },
+        "date": {
+          "label": "Date"
+        },
+        "content": {
+          "label": "Content"
+        }
       }
-    }
+    },
+    "createNoteBtn": "Create note"
   },
   "UsersPage": {
     "list": {
@@ -246,6 +264,10 @@
           "insuranceNo": {
             "label": "Social insurance #",
             "placeholder": "Social insurance #"
+          },
+          "position": {
+            "label": "Position",
+            "placeholder": "Select position"
           }
         },
         "job": {
@@ -268,7 +290,8 @@
             },
             "etc": {
               "label": "Etc"
-            }
+            },
+            "placeholder": "Select type"
           },
           "jobTags": {
             "label": "Tags",
@@ -473,6 +496,11 @@
         "label": "Overview",
         "placeholder": "Enter project overview",
         "empty": "Please enter project overview"
+      },
+      "projectCode": {
+        "label": "Code",
+        "placeholder": "Enter code",
+        "empty": "Please enter code"
       }
     },
     "member": {
@@ -531,8 +559,8 @@
       "started": "Started",
       "priority": "Priority",
       "status": "Status",
-      "totalMembers": "",
-      "totalWeeklyHours": "",
+      "totalMembers": "Members",
+      "totalWeeklyHours": "Total weekly hours",
       "options": "Actions",
       "viewTooltip": "View",
       "EditTooltip": "Edit",
@@ -542,7 +570,8 @@
         "searchButton": "Search",
         "resetButton": "Reset",
         "filterButton": "Filter"
-      }
+      },
+      "code": "Code"
     },
     "search": {
       "title": "Search",
@@ -598,5 +627,13 @@
     "error403": "Forbitdden",
     "error404": "Not Found",
     "error500": "Internal Server Error"
+  },
+  "ChangeLogsPage": {
+    "table": {
+      "dateTimeColumn": "Date time",
+      "userColumn": "User",
+      "changesColumn": "Changes",
+      "typeColumn": "Type"
+    }
   }
 }

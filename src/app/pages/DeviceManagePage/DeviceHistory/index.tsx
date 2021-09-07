@@ -18,9 +18,7 @@ interface DeviceHistoryProps {
 export const DeviceHistory = ({ device_id }: DeviceHistoryProps) => {
   const [histories, setHistories] = useState<DeviceHistoryType[]>([]);
   const fetchListHistory = useCallback(async () => {
-    const histories: any = await api.hr.device.history.list('', {
-      device: device_id,
-    });
+    const histories: any = await api.hr.device.history.list(device_id);
 
     setHistories(histories.results);
   }, [device_id]);
@@ -32,15 +30,15 @@ export const DeviceHistory = ({ device_id }: DeviceHistoryProps) => {
   const columns: ColumnProps<DeviceHistoryType>[] = [
     {
       title: 'Employee',
-      dataIndex: 'employee_name',
+      dataIndex: 'consignee',
       width: 130,
-      render: text => text,
+      render: text => text.first_name + ' ' + text.last_name,
     },
     {
       title: 'Device',
-      dataIndex: 'device_code',
+      dataIndex: 'device',
       width: 130,
-      render: text => text,
+      render: text => text.code,
     },
     {
       title: 'Note',

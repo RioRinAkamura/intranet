@@ -122,9 +122,7 @@ export const HeaderButton = (props: HeaderButtonProps) => {
   }, [exportId, exported, setExported]);
 
   const handleImport = async () => {
-    console.log('1111');
     if (file) {
-      console.log('import');
       setLoading(true);
       const formData = new FormData();
       formData.append('upload_file', file);

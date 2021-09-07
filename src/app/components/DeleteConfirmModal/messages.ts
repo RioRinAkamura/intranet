@@ -31,4 +31,14 @@ export const messages = {
       translations.deleteConfirmModal.typeEmail,
       'Type email address below to delete your employee',
     ),
+  deleteModalTypeName: () =>
+    _t(
+      translations.deleteConfirmModal.typeName,
+      'Type project name below to delete your employee',
+    ),
+  deleteModalTypeCustom: () =>
+    _t(
+      translations.deleteConfirmModal.typeCustom,
+      'Type the word at the end to delete your project',
+    ),
 };

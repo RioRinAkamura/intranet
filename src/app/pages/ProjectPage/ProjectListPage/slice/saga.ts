@@ -54,10 +54,23 @@ function* deleteProject(action: PayloadAction<string>) {
   }
 }
 
+function* deleteMultiProject(action: PayloadAction<Array<string>>) {
+  try {
+    const ids = action.payload;
+    yield call([api, api.hr.project.bulkDelete], ids);
+    yield put(actions.deleteProjectSuccess());
+  } catch (err) {
+    yield put(actions.deleteProjectFailure());
+  } finally {
+    yield put(actions.resetStateDeleteModal());
+  }
+}
+
 export function* projectsSaga() {
   yield* [
     takeLatest(actions.fetchProjects.type, fetchProjects),
     takeLatest(actions.deleteProject.type, deleteProject),
+    takeLatest(actions.deleteMultiProject.type, deleteMultiProject),
     takeLatest(actions.fetchIdentity.type, fetchProjectIdentity),
   ];
 }
