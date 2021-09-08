@@ -357,10 +357,7 @@ export const DeviceDetailPage = props => {
                           placeholder="Category"
                           {...(isView ? selectProps : {})}
                           size="large"
-                          style={{
-                            width: '100%',
-                            cursor: 'pointer',
-                          }}
+                          onChange={a => console.log(a)}
                         >
                           {categoryList.map(category => {
                             return (
@@ -516,6 +513,9 @@ const StyledCloseCircleOutlined = styled(CloseCircleOutlined)`
 `;
 
 const StyledSelect = styled(Select)`
+  cursor: pointer;
+  width: 100%;
+
   .ant-select-selection-item .anticon.anticon-delete {
     display: none;
   }
