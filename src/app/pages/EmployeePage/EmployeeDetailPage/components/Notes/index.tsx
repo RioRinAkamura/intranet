@@ -34,6 +34,7 @@ import {
 import { EmployeeNoteMessages } from './messages';
 import { Actions } from './components/Actions';
 import { Form } from './components/Form';
+import { api } from 'utils/api';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
@@ -51,6 +52,10 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
   const [isModalMultiDeleteVisible, setIsModalMultiDeleteVisible] = useState(
     false,
   );
+  const [isDeleteCategory, setIsDeleteCategory] = React.useState<boolean>(
+    false,
+  );
+  const [categoryId, setCategoryId] = React.useState<string>('');
 
   const { notify } = useNotify();
 
@@ -150,6 +155,27 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
     }
     if (isCreate) {
       handleNoteCreate();
+    }
+  };
+
+  const onDeleteCategory = async () => {
+    try {
+      await api.hr.employee.note.category.delete(categoryId);
+      handleCancel();
+      setIsDeleteCategory(false);
+      dispatch(actions.fetchEmployeeNotes({ employeeId, params }));
+
+      notify({
+        type: ToastMessageType.Info,
+        message: 'Delete Successfully',
+        duration: 2,
+      });
+    } catch (error) {
+      notify({
+        type: ToastMessageType.Error,
+        message: 'Delete Failed',
+        duration: 2,
+      });
     }
   };
 
@@ -349,6 +375,8 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
           form={form}
           note={!isCreate ? note : undefined}
           isView={!isCreate ? isView : false}
+          setVisible={setIsDeleteCategory}
+          setCategoryId={setCategoryId}
         />
       </DialogModal>
 
@@ -360,11 +388,19 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
         handleOk={handleNoteDelete}
         answer={note?.id}
       />
+
       <DeleteModal
         open={isModalMultiDeleteVisible}
         handleDelete={handleMultiDelete}
         handleCancel={() => setIsModalMultiDeleteVisible(false)}
         content="Are you sure you want to delete this information?"
+      />
+
+      <DeleteModal
+        open={isDeleteCategory}
+        handleDelete={onDeleteCategory}
+        handleCancel={() => setIsDeleteCategory(false)}
+        content="All notes with this category will be deleted. Are you sure?"
       />
     </Wrapper>
   );

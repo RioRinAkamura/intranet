@@ -35,6 +35,7 @@ import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { api } from 'utils/api';
 import { DeviceCategory } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
+import { DeleteModal } from 'app/components/DeleteModal';
 
 const { Option } = Select;
 
@@ -76,6 +77,8 @@ export const DeviceDetailPage = props => {
 
   const { notify } = useNotify();
   const [description, setDes] = useState<string>('');
+  const [categoryId, setCategoryId] = useState<string>('');
+  const [visible, setVisible] = useState<boolean>(false);
   const [isCreateCategory, setIsCreateCategory] = React.useState<boolean>(
     false,
   );
@@ -187,14 +190,15 @@ export const DeviceDetailPage = props => {
     }
   };
 
-  const onDeleteCategory = async (id: string) => {
+  const handleDeleteCategory = (id: string) => {
+    setVisible(true);
+    setCategoryId(id);
+  };
+
+  const onDeleteCategory = async () => {
     try {
-      await api.hr.device.category.delete(id);
-      const newList = [...categoryList];
-      const index = categoryList.findIndex(item => item.id === id);
-      newList.splice(index, 1);
-      setCategoryList(newList);
-      form.resetFields(['category_id']);
+      await api.hr.device.category.delete(categoryId);
+      history.push(PrivatePath.DEVICES);
 
       notify({
         type: ToastMessageType.Info,
@@ -366,7 +370,9 @@ export const DeviceDetailPage = props => {
                                   {category.name}
                                 </div>
                                 <StyledDeleteOutlined
-                                  onClick={() => onDeleteCategory(category.id)}
+                                  onClick={() =>
+                                    handleDeleteCategory(category.id)
+                                  }
                                 />
                               </Option>
                             );
@@ -433,6 +439,13 @@ export const DeviceDetailPage = props => {
           </CardForm>
         </StyledWrapperForm>
       )}
+
+      <DeleteModal
+        open={visible}
+        handleDelete={onDeleteCategory}
+        handleCancel={() => setVisible(false)}
+        content="All devices with this category will be deleted. Are you sure?"
+      />
     </>
   );
 };

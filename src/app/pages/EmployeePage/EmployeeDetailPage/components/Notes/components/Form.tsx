@@ -31,16 +31,25 @@ interface FormProps {
   form: FormInstance;
   note?: EmployeeNote;
   isView?: boolean;
+  setVisible: (visible: boolean) => void;
+  setCategoryId: (id: string) => void;
 }
 
 const { Option } = Select;
 
-export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
+export const Form: React.FC<FormProps> = ({
+  form,
+  note,
+  isView,
+  t,
+  setVisible,
+  setCategoryId,
+}) => {
   const [isCreateCategory, setIsCreateCategory] = React.useState<boolean>(
     false,
   );
-  const [categoryList, setCategoryList] = React.useState<NoteCategory[]>([]);
   const { notify } = useNotify();
+  const [categoryList, setCategoryList] = React.useState<NoteCategory[]>([]);
 
   const onCreateCategory = async () => {
     const name = form.getFieldValue('category_name');
@@ -76,27 +85,9 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
     setCategoryList(categories.results);
   };
 
-  const onDeleteCategory = async (id: string) => {
-    try {
-      await api.hr.employee.note.category.delete(id);
-      const newList = [...categoryList];
-      const index = categoryList.findIndex(item => item.id === id);
-      newList.splice(index, 1);
-      setCategoryList(newList);
-      form.resetFields(['category_id']);
-
-      notify({
-        type: ToastMessageType.Info,
-        message: 'Delete Successfully',
-        duration: 2,
-      });
-    } catch (error) {
-      notify({
-        type: ToastMessageType.Error,
-        message: 'Delete Failed',
-        duration: 2,
-      });
-    }
+  const handleDeleteCategory = (id: string) => {
+    setVisible(true);
+    setCategoryId(id);
   };
 
   React.useEffect(() => {
@@ -133,7 +124,7 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
                 <Option key={category.id} value={category.id}>
                   <div style={{ float: 'left' }}>{category.name}</div>
                   <StyledDeleteOutlined
-                    onClick={() => onDeleteCategory(category.id)}
+                    onClick={() => handleDeleteCategory(category.id)}
                   />
                 </Option>
               ))}
@@ -141,16 +132,19 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
           </FormAntd.Item>
         )}
 
-        {isCreateCategory ? (
-          <>
-            <StyledCheckCircleOutlined onClick={onCreateCategory} />
-            <StyledCloseCircleOutlined
-              onClick={() => setIsCreateCategory(false)}
+        {!isView &&
+          (isCreateCategory ? (
+            <>
+              <StyledCheckCircleOutlined onClick={onCreateCategory} />
+              <StyledCloseCircleOutlined
+                onClick={() => setIsCreateCategory(false)}
+              />
+            </>
+          ) : (
+            <StyledPlusCircleOutlined
+              onClick={() => setIsCreateCategory(true)}
             />
-          </>
-        ) : (
-          <StyledPlusCircleOutlined onClick={() => setIsCreateCategory(true)} />
-        )}
+          ))}
       </StyledWrapperCategory>
       <FormAntd.Item
         name="summary"
