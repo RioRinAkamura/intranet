@@ -174,10 +174,10 @@ export function EmployeeDetailPage(props: Props) {
   }, [history, location]);
 
   React.useEffect(() => {
-    if (!id) return;
+    if (!id || getDefaultTab !== TabKeys.details) return;
 
     dispatch(userDetailsSlice.actions.fetchEmployeeSkills(id));
-  }, [dispatch, id, userDetailsSlice.actions]);
+  }, [dispatch, getDefaultTab, id, userDetailsSlice.actions]);
 
   const handleSubmit = () => {
     form
