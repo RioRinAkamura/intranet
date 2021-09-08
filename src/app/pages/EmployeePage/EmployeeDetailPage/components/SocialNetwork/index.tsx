@@ -313,7 +313,4 @@ const FormItem = styled(Form.Item)`
   label {
     font-weight: 500;
   }
-  input {
-    font-weight: ${(props: ScreenProps) => props.isView && 500};
-  }
 `;

@@ -44,17 +44,19 @@ export const IdCardInfo = memo((props: IdCardProps) => {
   const { t } = useTranslation();
 
   return (
-    <>
+    <IdCardInfoStyled>
       <TitlePath>
         <b> {t(UserDetailMessages.formIDCardTitle())}</b>
       </TitlePath>
       <Row gutter={[32, 0]}>
         <Col md={isView ? 24 : 8} xs={24}>
           <Row gutter={[0, 12]} align="middle">
-            <Col md={isView ? 12 : 24} xs={24}>
-              {t(UserDetailMessages.formIdNumberLabel())}
+            <Col md={isView ? 8 : 24} xs={24}>
+              <span className="label">
+                {t(UserDetailMessages.formIdNumberLabel())}
+              </span>
             </Col>
-            <Col md={isView ? 12 : 24} xs={24}>
+            <Col md={isView ? 16 : 24} xs={24}>
               <FormItem isView={isView} name="id_number">
                 <Input
                   {...(isView ? inputProps : {})}
@@ -71,10 +73,12 @@ export const IdCardInfo = memo((props: IdCardProps) => {
         </Col>
         <Col md={isView ? 24 : 8} xs={24}>
           <Row gutter={[0, 12]} align="middle">
-            <Col md={isView ? 12 : 24} xs={24}>
-              {t(UserDetailMessages.formIssuedDateLabel())}
+            <Col md={isView ? 8 : 24} xs={24}>
+              <span className="label">
+                {t(UserDetailMessages.formIssuedDateLabel())}
+              </span>
             </Col>
-            <Col md={isView ? 12 : 24} xs={24}>
+            <Col md={isView ? 16 : 24} xs={24}>
               <FormItem isView={isView} name="issued_date">
                 <DatePicker
                   {...(isView ? datePickerProps : {})}
@@ -92,10 +96,12 @@ export const IdCardInfo = memo((props: IdCardProps) => {
         </Col>
         <Col md={isView ? 24 : 8} xs={24}>
           <Row gutter={[0, 12]} align="middle">
-            <Col md={isView ? 12 : 24} xs={24}>
-              {t(UserDetailMessages.formIssuedPlaceLabel())}
+            <Col md={isView ? 8 : 24} xs={24}>
+              <span className="label">
+                {t(UserDetailMessages.formIssuedPlaceLabel())}
+              </span>
             </Col>
-            <Col md={isView ? 12 : 24} xs={24}>
+            <Col md={isView ? 16 : 24} xs={24}>
               <FormItem isView={isView} name="issued_place">
                 <Input
                   {...(isView ? inputProps : {})}
@@ -111,7 +117,7 @@ export const IdCardInfo = memo((props: IdCardProps) => {
           </Row>
         </Col>
       </Row>
-    </>
+    </IdCardInfoStyled>
   );
 });
 
@@ -122,14 +128,16 @@ interface ScreenProps {
 const FormItem = styled(Form.Item)`
   align-items: center;
   margin-bottom: ${(props: ScreenProps) => (props.isView ? '0px' : '12px')};
-  input {
-    text-align: ${(props: ScreenProps) => (props.isView ? 'right' : 'left')};
-    font-weight: ${(props: ScreenProps) => props.isView && 500};
-  }
   div {
     width: 100%;
   }
   label {
+    font-weight: 500;
+  }
+`;
+
+const IdCardInfoStyled = styled.div`
+  .label {
     font-weight: 500;
   }
 `;

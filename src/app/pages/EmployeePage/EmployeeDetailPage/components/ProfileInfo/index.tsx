@@ -63,7 +63,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
   };
 
   return (
-    <>
+    <ProfileInfoStyled>
       <TitlePath>
         <b>{t(UserDetailMessages.formProfileTitle())}</b>
       </TitlePath>
@@ -71,7 +71,9 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
         <Col md={12} xs={24}>
           <Row gutter={[0, 12]} align="middle">
             <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formFirstNameLabel())}
+              <span className="label">
+                {t(UserDetailMessages.formFirstNameLabel())}
+              </span>
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem
@@ -100,7 +102,9 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formDOBLabel())}
+              <span className="label">
+                {t(UserDetailMessages.formDOBLabel())}
+              </span>
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem
@@ -129,7 +133,9 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formEmailLabel())}
+              <span className="label">
+                {t(UserDetailMessages.formEmailLabel())}
+              </span>
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               {' '}
@@ -162,7 +168,9 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formStatusLabel())}
+              <span className="label">
+                {t(UserDetailMessages.formStatusLabel())}
+              </span>
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem isView={isView} name="status" initialValue="Single">
@@ -189,7 +197,9 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
         >
           <Row gutter={[0, 12]} align="middle">
             <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formLastNameLabel())}
+              <span className="label">
+                {t(UserDetailMessages.formLastNameLabel())}
+              </span>
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem
@@ -218,7 +228,9 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formGenderLabel())}
+              <span className="label">
+                {t(UserDetailMessages.formGenderLabel())}
+              </span>
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem
@@ -254,7 +266,9 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formPhoneNumberLabel())}
+              <span className="label">
+                {t(UserDetailMessages.formPhoneNumberLabel())}
+              </span>
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem
@@ -283,7 +297,9 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               </FormItem>
             </Col>
             <Col md={isView ? 8 : 24} xs={24}>
-              {t(UserDetailMessages.formInsuranceNoLabel())}
+              <span className="label">
+                {t(UserDetailMessages.formInsuranceNoLabel())}
+              </span>
             </Col>
             <Col md={isView ? 16 : 24} xs={24}>
               {' '}
@@ -302,13 +318,19 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
           </Row>
         </Col>
       </Row>
-    </>
+    </ProfileInfoStyled>
   );
 };
 
 interface ScreenProps {
   isView?: boolean;
 }
+
+const ProfileInfoStyled = styled.div`
+  .label {
+    font-weight: 500;
+  }
+`;
 
 const FormItem = styled(Form.Item)`
   align-items: center;
@@ -318,9 +340,6 @@ const FormItem = styled(Form.Item)`
   }
   label {
     font-weight: 500;
-  }
-  input {
-    font-weight: ${(props: ScreenProps) => props.isView && 500};
   }
   #gender {
     label {

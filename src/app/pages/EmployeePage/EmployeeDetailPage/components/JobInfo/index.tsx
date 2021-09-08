@@ -184,14 +184,11 @@ const FormItem = styled(Form.Item)`
   label {
     font-weight: 500;
   }
-
-  input {
-    font-weight: ${(props: ScreenProps) => props.isView && 500};
-  }
 `;
 
 const LabelWrapper = styled.div`
   margin: 7px 0;
+  font-weight: 500;
 `;
 
 const StyledSelect = styled(Select)`

@@ -47,7 +47,7 @@ export const BankAccounts = (props: BankAccountsProps) => {
   const { t } = useTranslation();
 
   return (
-    <>
+    <BankAccountsStyled>
       <DividerWrapper isView={isView}>
         <Divider />
       </DividerWrapper>
@@ -55,118 +55,133 @@ export const BankAccounts = (props: BankAccountsProps) => {
         <Form.List name="bank_accounts">
           {fields =>
             fields.map(({ key, name, fieldKey, ...restField }) => (
-              <Row gutter={[128, 0]} align="middle" key={key}>
-                <Col md={isView ? 12 : 24} xs={24}>
-                  <TitlePath>
-                    <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
-                  </TitlePath>
-                  <Row gutter={[32, 0]}>
-                    <Col md={isView ? 24 : 8} xs={24}>
-                      <Row gutter={[0, 12]} align="middle">
-                        <Col md={isView ? 8 : 24} xs={24}>
-                          {t(UserDetailMessages.formBankNameLabel())}
-                        </Col>
-                        <Col md={isView ? 16 : 24} xs={24}>
-                          <FormItem
-                            isView={isView}
-                            {...restField}
-                            name={[name, 'bank_name']}
-                            fieldKey={[fieldKey, 'bank_name']}
-                          >
-                            {isView ? (
+              <>
+                <Row gutter={[128, 0]} align="middle" key={key}>
+                  <Col md={24} xs={24}>
+                    <TitlePath>
+                      <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
+                    </TitlePath>
+                    <Row gutter={[32, 0]}>
+                      <Col md={isView ? 24 : 8} xs={24}>
+                        <Row gutter={[0, 12]} align="middle">
+                          <Col md={isView ? 8 : 24} xs={24}>
+                            <span className="label">
+                              {t(UserDetailMessages.formBankNameLabel())}
+                            </span>
+                          </Col>
+                          <Col md={isView ? 16 : 24} xs={24}>
+                            <FormItem
+                              isView={isView}
+                              {...restField}
+                              name={[name, 'bank_name']}
+                              fieldKey={[fieldKey, 'bank_name']}
+                            >
+                              {isView ? (
+                                <Input
+                                  bordered={false}
+                                  readOnly={true}
+                                  size="large"
+                                />
+                              ) : (
+                                <Select
+                                  size="large"
+                                  placeholder={t(
+                                    UserDetailMessages.formBankNamePlaceholder(),
+                                  )}
+                                >
+                                  {banks.map(item => {
+                                    return (
+                                      <Option key={item.id} value={item.name}>
+                                        {item.name}
+                                      </Option>
+                                    );
+                                  })}
+                                </Select>
+                              )}
+                            </FormItem>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col md={isView ? 24 : 8} xs={24}>
+                        <Row gutter={[0, 12]} align="middle">
+                          <Col md={isView ? 8 : 24} xs={24}>
+                            <span className="label">
+                              {t(UserDetailMessages.formBankNumberLabel())}
+                            </span>
+                          </Col>
+                          <Col md={isView ? 16 : 24} xs={24}>
+                            <FormItem
+                              isView={isView}
+                              {...restField}
+                              name={[name, 'number']}
+                              fieldKey={[fieldKey, 'number']}
+                            >
                               <Input
-                                bordered={false}
-                                readOnly={true}
+                                bordered={!isView}
+                                readOnly={isView}
                                 size="large"
+                                placeholder={
+                                  isView
+                                    ? ''
+                                    : t(
+                                        UserDetailMessages.formBankNumberPlaceholder(),
+                                      )
+                                }
                               />
-                            ) : (
-                              <Select
+                            </FormItem>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col md={isView ? 24 : 8} xs={24}>
+                        <Row gutter={[0, 12]} align="middle">
+                          <Col md={isView ? 8 : 24} xs={24}>
+                            <span className="label">
+                              {t(UserDetailMessages.formBankBranchLabel())}
+                            </span>
+                          </Col>
+                          <Col md={isView ? 16 : 24} xs={24}>
+                            <FormItem
+                              isView={isView}
+                              {...restField}
+                              name={[name, 'branch']}
+                              fieldKey={[fieldKey, 'branch']}
+                            >
+                              <Input
+                                bordered={!isView}
+                                readOnly={isView}
                                 size="large"
-                                placeholder={t(
-                                  UserDetailMessages.formBankNamePlaceholder(),
-                                )}
-                              >
-                                {banks.map(item => {
-                                  return (
-                                    <Option key={item.id} value={item.name}>
-                                      {item.name}
-                                    </Option>
-                                  );
-                                })}
-                              </Select>
-                            )}
-                          </FormItem>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col md={isView ? 24 : 8} xs={24}>
-                      <Row gutter={[0, 12]} align="middle">
-                        <Col md={isView ? 8 : 24} xs={24}>
-                          {t(UserDetailMessages.formBankNumberLabel())}
-                        </Col>
-                        <Col md={isView ? 16 : 24} xs={24}>
-                          <FormItem
-                            isView={isView}
-                            {...restField}
-                            name={[name, 'number']}
-                            fieldKey={[fieldKey, 'number']}
-                          >
-                            <Input
-                              bordered={!isView}
-                              readOnly={isView}
-                              size="large"
-                              placeholder={
-                                isView
-                                  ? ''
-                                  : t(
-                                      UserDetailMessages.formBankNumberPlaceholder(),
-                                    )
-                              }
-                            />
-                          </FormItem>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col md={isView ? 24 : 8} xs={24}>
-                      <Row gutter={[0, 12]} align="middle">
-                        <Col md={isView ? 8 : 24} xs={24}>
-                          {t(UserDetailMessages.formBankBranchLabel())}
-                        </Col>
-                        <Col md={isView ? 16 : 24} xs={24}>
-                          <FormItem
-                            isView={isView}
-                            {...restField}
-                            name={[name, 'branch']}
-                            fieldKey={[fieldKey, 'branch']}
-                          >
-                            <Input
-                              bordered={!isView}
-                              readOnly={isView}
-                              size="large"
-                              placeholder={
-                                isView
-                                  ? ''
-                                  : t(
-                                      UserDetailMessages.formBankBranchPlaceholder(),
-                                    )
-                              }
-                            />
-                          </FormItem>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </Col>
-                {isView && (
-                  <Col
-                    md={12}
-                    xs={24}
-                    style={isView ? { borderLeft: '1px solid #c5c4c5' } : {}}
-                  >
-                    <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
+                                placeholder={
+                                  isView
+                                    ? ''
+                                    : t(
+                                        UserDetailMessages.formBankBranchPlaceholder(),
+                                      )
+                                }
+                              />
+                            </FormItem>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
                   </Col>
+                </Row>
+                {isView && (
+                  <>
+                    <Divider />
+                    <Form form={form}>
+                      <Row gutter={[128, 0]} align="middle">
+                        <Col md={24} xs={24}>
+                          <IdCardInfo
+                            isView={isView}
+                            isEdit={isEdit}
+                            form={form}
+                          />
+                        </Col>
+                      </Row>
+                    </Form>
+                  </>
                 )}
-              </Row>
+              </>
             ))
           }
         </Form.List>
@@ -179,7 +194,9 @@ export const BankAccounts = (props: BankAccountsProps) => {
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
                 <Col md={24} xs={24}>
-                  {t(UserDetailMessages.formBankNameLabel())}
+                  <span className="label">
+                    {t(UserDetailMessages.formBankNameLabel())}
+                  </span>
                 </Col>
                 <Col md={24} xs={24}>
                   <FormItem name="bank_name">
@@ -204,7 +221,9 @@ export const BankAccounts = (props: BankAccountsProps) => {
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
                 <Col md={24} xs={24}>
-                  {t(UserDetailMessages.formBankNumberLabel())}
+                  <span className="label">
+                    {t(UserDetailMessages.formBankNumberLabel())}
+                  </span>
                 </Col>
                 <Col md={24} xs={24}>
                   <FormItem name="number">
@@ -221,7 +240,9 @@ export const BankAccounts = (props: BankAccountsProps) => {
             <Col md={8} xs={24}>
               <Row gutter={[0, 12]} align="middle">
                 <Col md={24} xs={24}>
-                  {t(UserDetailMessages.formBankBranchLabel())}
+                  <span className="label">
+                    {t(UserDetailMessages.formBankBranchLabel())}
+                  </span>
                 </Col>
                 <Col md={isView ? 16 : 24} xs={24}>
                   <FormItem name="branch">
@@ -238,13 +259,19 @@ export const BankAccounts = (props: BankAccountsProps) => {
           </Row>
         </>
       )}
-    </>
+    </BankAccountsStyled>
   );
 };
 
 interface FormItemProps {
   isView?: boolean;
 }
+
+const BankAccountsStyled = styled.div`
+  .label {
+    font-weight: 500;
+  }
+`;
 
 const FormItem = styled(Form.Item)`
   align-items: center;
