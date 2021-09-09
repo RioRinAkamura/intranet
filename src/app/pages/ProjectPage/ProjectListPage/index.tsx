@@ -52,6 +52,7 @@ import { StyledLink } from 'styles/StyledCommon';
 import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { DeleteType } from 'utils/types';
 import { useProjectDetail } from '../ProjectDetailPage/useProjectDetail';
+import { api } from 'utils/api';
 
 export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -101,6 +102,24 @@ export const ProjectListPage: React.FC = () => {
     getColumnSearchCheckboxProps,
     ConfirmModal,
   } = useTableConfig(getProjectState, ProjectsMessages, setFilterText);
+
+  const priorities = () => {
+    return api.hr.project.getPriorities().map(item => {
+      return {
+        ...item,
+        label: item.name,
+      };
+    });
+  };
+
+  const statuses = () => {
+    return api.hr.project.getStatuses().map(item => {
+      return {
+        ...item,
+        label: item.name,
+      };
+    });
+  };
 
   const fetchProjects = useCallback(() => {
     if (!isFilter) {
@@ -346,11 +365,7 @@ export const ProjectListPage: React.FC = () => {
       ...getColumnSorterProps('priority', 2),
       ...getColumnSearchCheckboxProps(
         ['priority'],
-        [
-          { label: 'Low', value: 1 },
-          { label: 'Medium', value: 2 },
-          { label: 'High', value: 3 },
-        ],
+        priorities(),
         undefined,
         undefined,
         async value => {
@@ -371,21 +386,7 @@ export const ProjectListPage: React.FC = () => {
       dataIndex: 'status',
       width: 130,
       ...getColumnSorterProps('status', 2),
-      ...getColumnSearchCheckboxProps(
-        ['status'],
-        [
-          { label: 'Preparing', value: 1 },
-          { label: 'Going', value: 2 },
-          { label: 'Released', value: 3 },
-          { label: 'Archived', value: 4 },
-        ],
-        0,
-        [
-          { label: 'Preparing', value: 1 },
-          { label: 'Going', value: 2 },
-          { label: 'Release', value: 3 },
-        ],
-      ),
+      ...getColumnSearchCheckboxProps(['status'], statuses()),
     },
     {
       title: t(ProjectsMessages.listTotalWeeklyHours()),
