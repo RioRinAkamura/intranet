@@ -18,6 +18,7 @@ import {
   Row,
   Select,
   SelectProps,
+  Spin,
   Tabs,
 } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
@@ -32,9 +33,6 @@ import { PrivatePath } from 'utils/url.const';
 import { CardForm } from 'app/components/CardForm';
 import { Route, Switch } from 'react-router-dom';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
-import { api } from 'utils/api';
-import { DeviceCategory } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
-import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { DeleteModal } from 'app/components/DeleteModal';
 
 const { Option } = Select;
@@ -65,8 +63,18 @@ export const DeviceDetailPage = props => {
   const { id } = useParams<Record<string, string>>();
   const [isCreate, setIsCreate] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [data, setData] = useState<any>();
-  const { detail, loading, create, update } = useDeviceDetail();
+  const {
+    detail,
+    categories,
+    loading,
+    loadingCat,
+    fetchDetail,
+    fetchCategories,
+    create,
+    createCategory,
+    update,
+    deleteCategory,
+  } = useDeviceDetail();
   const location = useLocation<LocationState>();
   const history = useHistory();
   const isView = isCreate || isEdit ? false : true;
@@ -75,45 +83,44 @@ export const DeviceDetailPage = props => {
   const { actions } = useDeviceManagePage();
   const deviceState = useSelector(selectState);
 
-  const { notify } = useNotify();
   const [description, setDes] = useState<string>('');
   const [categoryId, setCategoryId] = useState<string>('');
   const [visible, setVisible] = useState<boolean>(false);
   const [isCreateCategory, setIsCreateCategory] = React.useState<boolean>(
     false,
   );
-  const [categoryList, setCategoryList] = React.useState<DeviceCategory[]>([]);
 
   useEffect(() => {
-    if (data) {
-      setDes(data.description);
+    if (detail) {
+      setDes(detail.description);
       form.setFieldsValue({
-        ...data,
-        category_id: data.category?.id,
-        since: data.since && moment().set({ year: data.since }),
+        ...detail,
+        category_id: detail.category?.id,
+        since: detail.since && moment().set({ year: detail.since }),
       });
     }
-  }, [data, form, isEdit]);
+  }, [detail, form, isEdit]);
 
   useEffect(() => {
     if (id) {
+      fetchDetail(id);
+    }
+  }, [id, fetchDetail]);
+
+  useEffect(() => {
+    if (detail) {
       setIsCreate(false);
-      (async () => {
-        const response: any = await detail(id);
-        setData(response);
-        setBreadCrumb('Devices / ' + response.code);
-      })();
+      setBreadCrumb('Devices / ' + detail.code);
     } else {
       setIsCreate(true);
       setBreadCrumb('Devices / Create');
     }
-  }, [id, detail, setBreadCrumb]);
+  }, [detail, setBreadCrumb]);
 
   // form handler
   const handleSubmit = () => {
     form.validateFields().then(async values => {
       const mapValues = {
-        // ...omit(values, ['id']),
         ...values,
         since: Number(moment(values.since).format('yyyy')),
       };
@@ -121,20 +128,15 @@ export const DeviceDetailPage = props => {
       try {
         if (isCreate) {
           delete mapValues.id;
-          // const response = await fakeAPI.post('device-management/devices/', mapValues);
           await create(mapValues);
-
-          // post employee device
         }
 
         if (isEdit) {
           const data = await update(mapValues);
-          setData(data);
-          setIsEdit(false);
-
-          // update employee device
+          if (data) {
+            setIsEdit(false);
+          }
         }
-        // console.log(response, 'res');
       } catch (e) {
         console.log(e);
       }
@@ -173,20 +175,11 @@ export const DeviceDetailPage = props => {
 
   const onCreateCategory = async () => {
     const name = form.getFieldValue('category_name');
-
-    try {
-      const category = await api.hr.device.category.create({ name });
-
-      setCategoryList([...categoryList, category]);
+    const response = await createCategory(name);
+    if (response) {
       form.resetFields(['category_name']);
-      form.setFieldsValue({ category_id: category.id });
+      form.setFieldsValue({ category_id: response.id });
       setIsCreateCategory(false);
-    } catch (error) {
-      notify({
-        type: ToastMessageType.Error,
-        message: 'Create Failed',
-        duration: 2,
-      });
     }
   };
 
@@ -196,21 +189,11 @@ export const DeviceDetailPage = props => {
   };
 
   const onDeleteCategory = async () => {
-    try {
-      await api.hr.device.category.delete(categoryId);
-      history.push(PrivatePath.DEVICES);
-
-      notify({
-        type: ToastMessageType.Info,
-        message: 'Delete Successfully',
-        duration: 2,
-      });
-    } catch (error) {
-      notify({
-        type: ToastMessageType.Error,
-        message: 'Delete Failed',
-        duration: 2,
-      });
+    const isDeleted = await deleteCategory(categoryId);
+    if (isDeleted) {
+      setVisible(false);
+      form.resetFields(['category_name']);
+      form.setFieldsValue({ category_id: null });
     }
   };
 
@@ -218,39 +201,34 @@ export const DeviceDetailPage = props => {
     <CardForm isView={isView} onCancel={onCancel} onSubmit={onSubmit}>
       <StyledWrapperDiv>
         <StyledTitle>Device Code</StyledTitle>
-        <StyledData>{data?.code || 'N/A'}</StyledData>
+        <StyledData>{detail?.code || 'N/A'}</StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>
         <StyledTitle>Category</StyledTitle>
-        <StyledData>{data?.category?.name || 'N/A'}</StyledData>
+        <StyledData>{detail?.category?.name || 'N/A'}</StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>
         <StyledTitle>Since</StyledTitle>
-        <StyledData>{data?.since || 'N/A'}</StyledData>
+        <StyledData>{detail?.since || 'N/A'}</StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>
         <StyledTitle>Health Status</StyledTitle>
-        <StyledData>{data?.health_status || 'N/A'}</StyledData>
+        <StyledData>{detail?.health_status || 'N/A'}</StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>
         <StyledTitle>Description</StyledTitle>
-        <StyledData>{data?.description || 'N/A'}</StyledData>
+        <StyledData>{detail?.description || 'N/A'}</StyledData>
       </StyledWrapperDiv>
     </CardForm>
   );
 
-  const getDeviceCategories = async () => {
-    const categories = await api.hr.device.category.list();
-    setCategoryList(categories.results);
-  };
-
   useEffect(() => {
-    if (!isView) getDeviceCategories();
-  }, [isView]);
+    if (!isView) fetchCategories();
+  }, [fetchCategories, isView]);
 
   const getDefaultTab = React.useMemo(() => {
     if (history.location.pathname.includes('history')) {
@@ -361,32 +339,41 @@ export const DeviceDetailPage = props => {
                           placeholder="Category"
                           {...(isView ? selectProps : {})}
                           size="large"
-                          onChange={a => console.log(a)}
+                          loading={loadingCat}
                         >
-                          {categoryList.map(category => {
-                            return (
-                              <Option key={category.id} value={category.id}>
-                                <div style={{ float: 'left' }}>
-                                  {category.name}
-                                </div>
-                                <StyledDeleteOutlined
-                                  onClick={() =>
-                                    handleDeleteCategory(category.id)
-                                  }
-                                />
-                              </Option>
-                            );
-                          })}
+                          {categories &&
+                            categories.map(category => {
+                              return (
+                                <Option key={category.id} value={category.id}>
+                                  <div style={{ float: 'left' }}>
+                                    {category.name}
+                                  </div>
+                                  <StyledDeleteOutlined
+                                    onClick={() =>
+                                      handleDeleteCategory(category.id)
+                                    }
+                                  />
+                                </Option>
+                              );
+                            })}
                         </StyledSelect>
                       </FormItem>
                     )}
 
                     {isCreateCategory ? (
                       <>
-                        <StyledCheckCircleOutlined onClick={onCreateCategory} />
-                        <StyledCloseCircleOutlined
-                          onClick={() => setIsCreateCategory(false)}
-                        />
+                        {loadingCat ? (
+                          <Spin />
+                        ) : (
+                          <>
+                            <StyledCheckCircleOutlined
+                              onClick={onCreateCategory}
+                            />
+                            <StyledCloseCircleOutlined
+                              onClick={() => setIsCreateCategory(false)}
+                            />
+                          </>
+                        )}
                       </>
                     ) : (
                       <StyledPlusCircleOutlined
@@ -425,7 +412,11 @@ export const DeviceDetailPage = props => {
                   </FormItem>
                 </Col>
               </Row>
-              <FormItem name="description" label="Description">
+              <FormItem
+                rules={FORM_RULES.DESCRIPTION}
+                name="description"
+                label="Description"
+              >
                 <RichEditor
                   width="100%"
                   data={description}
@@ -444,6 +435,7 @@ export const DeviceDetailPage = props => {
         open={visible}
         handleDelete={onDeleteCategory}
         handleCancel={() => setVisible(false)}
+        loading={loadingCat}
         content="All devices with this category will be deleted. Are you sure?"
       />
     </>
