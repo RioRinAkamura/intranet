@@ -51,6 +51,7 @@ import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
 import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { DeleteType } from 'utils/types';
+import { useProjectDetail } from '../ProjectDetailPage/useProjectDetail';
 import { api } from 'utils/api';
 
 export const ProjectListPage: React.FC = () => {
@@ -85,7 +86,7 @@ export const ProjectListPage: React.FC = () => {
   const isFilter = useSelector(selectProjectsIsFilter);
   const getProjectState = useSelector(selectProjects);
   const { id } = useParams<Record<string, string>>();
-
+  const { update } = useProjectDetail();
   const {
     setSelectedRows,
     setSearchText,
@@ -362,7 +363,22 @@ export const ProjectListPage: React.FC = () => {
       title: t(ProjectsMessages.listPriorityTitle()),
       dataIndex: 'priority',
       ...getColumnSorterProps('priority', 2),
-      ...getColumnSearchCheckboxProps(['priority'], priorities()),
+      ...getColumnSearchCheckboxProps(
+        ['priority'],
+        priorities(),
+        undefined,
+        undefined,
+        async value => {
+          try {
+            const response = await update(value);
+            if (response) {
+              dispatch(actions.fetchProjects({ params: params }));
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      ),
       width: 140,
     },
     {

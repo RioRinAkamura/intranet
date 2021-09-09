@@ -15,6 +15,7 @@ import { ChangeLogs } from './components/ChangeLogs';
 import { PrivatePath } from 'utils/url.const';
 import { Route, Switch } from 'react-router-dom';
 import { CardForm } from 'app/components/CardForm';
+import { Employees } from './components/Employees';
 
 interface Props {}
 interface LocationState {
@@ -26,6 +27,7 @@ const DATE_FORMAT = config.DATE_FORMAT;
 enum TabKeys {
   'details' = 'details',
   'changeLogs' = 'changeLogs',
+  'employees' = 'employees',
 }
 
 export const ProjectDetailPage = (props: Props) => {
@@ -49,6 +51,8 @@ export const ProjectDetailPage = (props: Props) => {
   const getDefaultTab = React.useMemo(() => {
     if (history.location.pathname.includes('change-logs')) {
       return `${TabKeys.changeLogs}`;
+    } else if (history.location.pathname.includes('employees')) {
+      return `${TabKeys.employees}`;
     }
     return `${TabKeys.details}`;
   }, [history.location.pathname]);
@@ -56,6 +60,8 @@ export const ProjectDetailPage = (props: Props) => {
   const onChangeTab = (key: string) => {
     if (key === TabKeys.changeLogs) {
       history.push(`${PrivatePath.PROJECTS}/${id}/change-logs`);
+    } else if (key === TabKeys.employees) {
+      history.push(`${PrivatePath.PROJECTS}/${id}/employees`);
     } else {
       history.push(`${PrivatePath.PROJECTS}/${id}`);
     }
@@ -169,6 +175,7 @@ export const ProjectDetailPage = (props: Props) => {
           <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
             <TabPane tab="Details" key={TabKeys.details} />
             <TabPane tab="Change logs" key={TabKeys.changeLogs} />
+            <TabPane tab="Members" key={TabKeys.employees} />
           </StyledTabs>
 
           <Switch>
@@ -180,6 +187,10 @@ export const ProjectDetailPage = (props: Props) => {
             <Route
               path={PrivatePath.PROJECTS_ID_CHANGELOGS}
               component={() => <ChangeLogs project_id={id} />}
+            />
+            <Route
+              path={PrivatePath.PROJECTS_ID_EMPLOYEES}
+              component={() => <Employees />}
             />
           </Switch>
         </>
