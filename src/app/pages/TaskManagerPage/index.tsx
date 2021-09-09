@@ -177,7 +177,7 @@ export const TaskManager = () => {
     },
     {
       title: 'Followers',
-      dataIndex: 'follower',
+      dataIndex: 'followers',
       width: 130,
       render: (followers, record) => (
         <FlexWrapper>
