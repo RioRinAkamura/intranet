@@ -51,6 +51,7 @@ import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
 import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { DeleteType } from 'utils/types';
+import { useProjectDetail } from '../ProjectDetailPage/useProjectDetail';
 
 export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -84,7 +85,7 @@ export const ProjectListPage: React.FC = () => {
   const isFilter = useSelector(selectProjectsIsFilter);
   const getProjectState = useSelector(selectProjects);
   const { id } = useParams<Record<string, string>>();
-
+  const { update } = useProjectDetail();
   const {
     setSelectedRows,
     setSearchText,
@@ -350,6 +351,18 @@ export const ProjectListPage: React.FC = () => {
           { label: 'Medium', value: 2 },
           { label: 'High', value: 3 },
         ],
+        undefined,
+        undefined,
+        async value => {
+          try {
+            const response = await update(value);
+            if (response) {
+              dispatch(actions.fetchProjects({ params: params }));
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
       ),
       width: 140,
     },

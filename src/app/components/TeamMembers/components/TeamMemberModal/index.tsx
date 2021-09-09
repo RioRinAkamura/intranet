@@ -1,38 +1,15 @@
 import React, { memo, useState, useEffect } from 'react';
-import {
-  Modal,
-  Tabs,
-  Table,
-  Popover,
-  Button,
-  Tooltip,
-  Tag,
-  Form,
-  Select,
-  Spin,
-  message,
-} from 'antd';
-import { Avatar } from 'app/components/Avatar/Loadable';
-import { ColumnsType } from 'antd/lib/table/interface';
-import { antColours } from 'utils/types';
+import { Modal, Tabs, Button, Form, message } from 'antd';
 import styled from 'styled-components/macro';
-import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
-import {
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-  MoreOutlined,
-} from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
-import { SelectValue } from 'antd/lib/select';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
-import { IconButton } from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
 import { api } from 'utils/api';
 import { Member } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/project/models';
+import { MemberTable } from '../MemberTable';
+import { AddMember } from '../AddMember';
 
 interface TeamMemberProps {
   visibility: boolean;
@@ -49,10 +26,7 @@ interface ProjectType {
   total_member?: number;
 }
 
-type Employee = models.hr.Employee;
-
 const { TabPane } = Tabs;
-const { Option } = Select;
 
 const allocations: number[] = [2];
 for (let i = 4; i <= 40; i += 4) {
@@ -62,41 +36,19 @@ for (let i = 4; i <= 40; i += 4) {
 export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const history = useHistory();
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [dataSource, setDatasource] = useState<Member[]>([]);
-  const [memberId, setMemberId] = useState('');
-  const [mid, setMid] = useState('');
   const [memberForm] = Form.useForm();
-  const [allocation, setAllocation] = useState<SelectValue>();
-  const [employees, setEmployees] = useState<Employee[] | undefined>([]);
-  const [searchLoad, setSearchLoad] = useState(false);
-  const [value, setValue] = useState('');
   const [loadingMember, setLoadingMember] = useState(false);
   const [modalWidth, setModalWidth] = useState(1000);
   const [activeKey, setActiveKey] = useState('1');
-  const [textCopy, setTextCopy] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
-  const { fetchUser, fetchId } = useProjectDetail();
+  const { fetchId } = useProjectDetail();
   const { visibility, handleOk, handleCancel, projId } = props;
 
-  let computeDs = (members: Array<Member> = []) => {
-    if (!members) return;
-    return members.map(member => ({
-      allocation: member.allocation,
-      project_role: member.project_role,
-      name: member.member?.first_name + ' ' + member.member?.last_name,
-      ...member.member,
-      member: {
-        ...member.member,
-      },
-    }));
-  };
-
   useEffect(() => {
-    const newMembersArray = computeDs(members);
-    if (newMembersArray && newMembersArray.length > 0) {
-      setDatasource(newMembersArray);
+    if (members) {
+      setDatasource(members);
     }
   }, [members]);
 
@@ -133,177 +85,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
     }
   }, [projId, fetchId]);
 
-  // table
-  const showDeleteModal = record => {
-    setIsModalVisible(true);
-    setMemberId(record.id);
-    setMid(record.id);
-  };
-
-  const handleConfirmDelete = async () => {
-    setIsModalVisible(false);
-    try {
-      await api.hr.project.deleteMember(projId, mid);
-      const newMemberList =
-        dataSource &&
-        [...dataSource].filter((member: Member) => member.member?.id !== mid);
-      setDatasource(newMemberList);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const handleCancelDeleteModal = () => {
-    setIsModalVisible(false);
-  };
-
-  const moreButton = (text: string, record: any) => (
-    <>
-      <Tooltip title={'Detail'}>
-        <IconButton
-          type="primary"
-          shape="circle"
-          size="small"
-          icon={<EyeOutlined />}
-          onClick={() => {
-            history.push(`${PrivatePath.EMPLOYEES}/${text}`);
-          }}
-        />
-      </Tooltip>
-      <Tooltip title={'Edit'}>
-        <IconButton
-          shape="circle"
-          icon={<EditOutlined />}
-          size="small"
-          onClick={() => {
-            history.push({
-              pathname: `${PrivatePath.EMPLOYEES}/${text}`,
-              state: { edit: true },
-            });
-          }}
-        />
-      </Tooltip>
-      <Tooltip title={'Delete'}>
-        <IconButton
-          danger
-          shape="circle"
-          size="small"
-          icon={<DeleteOutlined />}
-          onClick={() => {
-            showDeleteModal(record);
-          }}
-        />
-      </Tooltip>
-    </>
-  );
-
-  const columns: ColumnsType<any> = [
-    {
-      title: 'Allocation',
-      dataIndex: 'allocation',
-      width: 100,
-      render: allocation => (
-        <Tag color={antColours[allocation]}>{allocation}</Tag>
-      ),
-    },
-    {
-      title: 'Project Role',
-      dataIndex: 'project_role',
-      width: 100,
-      render: text => {
-        switch (text) {
-          case 'PM':
-            return t(ProjectDetailMessages.memberPM());
-          case 'TL':
-            return t(ProjectDetailMessages.memberTL());
-          case 'QC':
-            return t(ProjectDetailMessages.memberQC());
-          case 'DEV':
-            return t(ProjectDetailMessages.memberDEV());
-          case 'OTHER':
-            return t(ProjectDetailMessages.memberOTHER());
-          default:
-            return text;
-        }
-      },
-    },
-
-    {
-      title: 'Employee',
-      dataIndex: 'name',
-      width: 150,
-      render: (text, record: any) => (
-        <div>
-          <Avatar src={record.avatar} name={text} size={30} />
-          <span style={{ marginLeft: '5px ' }}>{text}</span>
-        </div>
-      ),
-    },
-    {
-      title: 'Action',
-      dataIndex: 'id',
-      width: 100,
-      render: (text, record: any, index: number) => {
-        return (
-          <>
-            <Popover
-              content={() => moreButton(text, record)}
-              placement="bottom"
-            >
-              <IconButton shape="circle" size="small" icon={<MoreOutlined />} />
-            </Popover>
-          </>
-        );
-      },
-    },
-  ];
-
   // add members
-  const handleSearch = async value => {
-    try {
-      setSearchLoad(true);
-      const response = await fetchUser(value);
-      if (response) {
-        setEmployees(response);
-      }
-    } catch (error: any) {
-      message.error(error.message);
-    } finally {
-      setSearchLoad(false);
-    }
-  };
-  const handleChange = value => {
-    setValue(value);
-  };
-
-  const options = employees?.map(employee => (
-    <Option key={employee.id} value={employee.id}>
-      {employee.first_name} {employee.last_name}
-    </Option>
-  ));
-
-  const role = [
-    {
-      name: t(ProjectDetailMessages.memberPM()),
-      value: 'PM',
-    },
-    {
-      name: t(ProjectDetailMessages.memberTL()),
-      value: 'TL',
-    },
-    {
-      name: t(ProjectDetailMessages.memberQC()),
-      value: 'QC',
-    },
-    {
-      name: t(ProjectDetailMessages.memberDEV()),
-      value: 'DEV',
-    },
-    {
-      name: t(ProjectDetailMessages.memberOTHER()),
-      value: 'OTHER',
-    },
-  ];
 
   const handleAddMember = async values => {
     try {
@@ -344,29 +126,6 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
       setLoadingMember(false);
     }
   };
-
-  const descriptionDelete = (
-    <p>
-      You're about to permanently delete your team member{' '}
-      <Tooltip
-        title={<div>{textCopy ? 'Copied!' : 'Click to copy!'}</div>}
-        onVisibleChange={visible => visible === true && setTextCopy(false)}
-      >
-        <strong
-          id="deletedId"
-          style={{ cursor: 'pointer' }}
-          onClick={() => {
-            let copyText = document.getElementById('deletedId')?.innerText;
-            if (copyText) {
-              navigator.clipboard.writeText(copyText);
-              setTextCopy(true);
-            }
-          }}
-        >{`${memberId}`}</strong>
-      </Tooltip>
-      . This will also delete any references to your project.
-    </p>
-  );
 
   const handleChangeTab = key => {
     setActiveKey(key);
@@ -414,126 +173,14 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
         onChange={handleChangeTab}
       >
         <TabPane tab="Team Members" key="1">
-          <Table dataSource={dataSource} loading={loading} columns={columns} />
-          <DeleteConfirmModal
-            visible={isModalVisible}
-            handleOk={handleConfirmDelete}
-            handleCancel={handleCancelDeleteModal}
-            title={`Remove Team Member`}
-            description={descriptionDelete}
-            answer={memberId}
+          <MemberTable
+            projectId={projId}
+            dataSource={dataSource}
+            loading={loading}
           />
         </TabPane>
         <TabPane tab="Add Members" key="2">
-          <Form
-            form={memberForm}
-            labelCol={{ span: 24 }}
-            wrapperCol={{ span: 24 }}
-            onFinish={handleAddMember}
-          >
-            <FormSearchItem
-              name={['members', 'member_id']}
-              label={t(ProjectDetailMessages.memberFormEmployeeLabel())}
-              rules={[
-                {
-                  required: true,
-                  message: t(ProjectDetailMessages.memberFormEmployeeEmpty()),
-                },
-              ]}
-            >
-              <Select
-                showSearch
-                value={value}
-                defaultActiveFirstOption={false}
-                showArrow={false}
-                filterOption={false}
-                size="large"
-                loading={searchLoad}
-                // disabled={selectedMember ? true : false}
-                placeholder={t(
-                  ProjectDetailMessages.memberFormEmployeePlaceholder(),
-                )}
-                onSearch={handleSearch}
-                onFocus={() => handleSearch(value)}
-                onChange={handleChange}
-                notFoundContent={searchLoad ? <Spin size="default" /> : null}
-              >
-                {options}
-              </Select>
-            </FormSearchItem>
-            <FormSearchItem
-              name={['members', 'project_role']}
-              label={t(ProjectDetailMessages.memberFormProjectRoleLabel())}
-              rules={[
-                {
-                  required: true,
-                  message: t(
-                    ProjectDetailMessages.memberFormProjectRoleEmpty(),
-                  ),
-                },
-              ]}
-            >
-              <Select
-                size="large"
-                placeholder={t(
-                  ProjectDetailMessages.memberFormProjectRolePlaceholder(),
-                )}
-              >
-                {role &&
-                  role.map((item, index: number) => {
-                    return (
-                      <Option key={index} value={item.value}>
-                        {item.name}
-                      </Option>
-                    );
-                  })}
-              </Select>
-            </FormSearchItem>
-            <FormSearchItem
-              name={['members', 'allocation']}
-              label={t(ProjectDetailMessages.memberFormAllocationLabel())}
-              rules={[
-                {
-                  required: true,
-                  message: t(ProjectDetailMessages.memberFormAllocationEmpty()),
-                },
-              ]}
-            >
-              <Select
-                size="large"
-                placeholder={t(
-                  ProjectDetailMessages.memberFormAllocationPlaceholder(),
-                )}
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option?.value === Number(input)
-                }
-                onSearch={value => {
-                  setAllocation(value);
-                }}
-                onInputKeyDown={event => {
-                  if (event.key === 'Enter') {
-                    if (!allocations.includes(Number(allocation))) {
-                      allocations.push(Number(allocation));
-                      memberForm.setFieldsValue({
-                        members: { allocation: Number(allocation) },
-                      });
-                    }
-                  }
-                }}
-              >
-                {allocations &&
-                  allocations.map((item, index) => {
-                    return (
-                      <Option key={index} value={item}>
-                        {item}
-                      </Option>
-                    );
-                  })}
-              </Select>
-            </FormSearchItem>
-          </Form>
+          <AddMember projId={projId} form={memberForm} />
         </TabPane>
       </Tabs>
     </MembersModal>
@@ -557,5 +204,3 @@ const MembersModal = styled(Modal)`
     display: none;
   }
 `;
-
-const FormSearchItem = styled(Form.Item)``;

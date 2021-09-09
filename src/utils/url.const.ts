@@ -5,6 +5,7 @@ export enum PrivatePath {
   PROJECTS_ID_CHANGELOGS = '/projects/:id/change-logs',
   PROJECTS_ID_MEMBERS = '/projects/:id/members',
   PROJECTS_ID_MEMBERS_ADD = '/projects/:id/members/add',
+  PROJECTS_ID_EMPLOYEES = '/projects/:id/employees',
 
   EMPLOYEES = '/employees',
   EMPLOYEES_CREATE = '/employees/create',
