@@ -34,3 +34,10 @@ export const calcBusinessDays = (dDate1, dDate2) => {
 };
 
 export const projectStatus = ['Preparing', 'Going', 'Realsed', 'Archived'];
+
+export const defaultPaginationValue = {
+  count: 0,
+  next: '',
+  previous: '',
+  results: [],
+};

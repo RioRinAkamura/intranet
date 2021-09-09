@@ -85,4 +85,10 @@ export const FORM_RULES = {
       message: 'Please select status',
     },
   ],
+  DESCRIPTION: [
+    {
+      required: true,
+      message: 'Please enter description',
+    },
+  ],
 };

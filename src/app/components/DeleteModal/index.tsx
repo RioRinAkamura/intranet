@@ -7,6 +7,7 @@ interface Props {
   cancelText?: string;
   deleteText?: string;
   content: string;
+  loading?: boolean;
   handleDelete: () => void;
   handleCancel: () => void;
 }
@@ -17,6 +18,7 @@ export const DeleteModal = React.memo((props: Props) => {
     cancelText,
     deleteText,
     content,
+    loading,
     handleDelete,
     handleCancel,
   } = props;
@@ -36,6 +38,7 @@ export const DeleteModal = React.memo((props: Props) => {
           danger
           shape="round"
           onClick={handleDelete}
+          loading={loading}
         >
           {deleteText || 'Delete'}
         </Button>,
