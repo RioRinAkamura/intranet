@@ -3,13 +3,12 @@
  * BankAccounts
  *
  */
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { Col, Divider, Form, FormInstance, Input, Row, Select } from 'antd';
 import { UserDetailMessages } from '../../messages';
 import { TitlePath } from '../TitlePath';
-import { IdCardInfo } from '../IdCardInfo/Loadable';
 
 const banks = [
   {
@@ -43,7 +42,7 @@ interface BankAccountsProps {
 const { Option } = Select;
 
 export const BankAccounts = (props: BankAccountsProps) => {
-  const { isView, isEdit, form } = props;
+  const { isView, isEdit } = props;
   const { t } = useTranslation();
 
   return (
@@ -165,22 +164,6 @@ export const BankAccounts = (props: BankAccountsProps) => {
                     </Row>
                   </Col>
                 </Row>
-                {isView && (
-                  <>
-                    <Divider />
-                    <Form form={form}>
-                      <Row gutter={[128, 0]} align="middle">
-                        <Col md={24} xs={24}>
-                          <IdCardInfo
-                            isView={isView}
-                            isEdit={isEdit}
-                            form={form}
-                          />
-                        </Col>
-                      </Row>
-                    </Form>
-                  </>
-                )}
               </>
             ))
           }
