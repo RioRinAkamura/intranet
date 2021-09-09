@@ -24,19 +24,18 @@ export const DeviceHistory = (props: DeviceHistoryProps) => {
     {
       title: 'Employee',
       dataIndex: 'consignee',
-      width: 130,
+      width: 350,
       render: text => text.first_name + ' ' + text.last_name,
     },
     {
       title: 'Device',
       dataIndex: 'device',
-      width: 130,
+      width: 350,
       render: text => text.code,
     },
     {
       title: 'Note',
       dataIndex: 'note',
-      width: 130,
       render: text => text,
     },
   ];
