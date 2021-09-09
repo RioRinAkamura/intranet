@@ -27,7 +27,6 @@ export const AddMember = memo((props: Props) => {
   const [allocation, setAllocation] = useState<SelectValue>();
   const [employees, setEmployees] = useState<Employee[] | undefined>([]);
   const [searchLoad, setSearchLoad] = useState(false);
-  const [value, setValue] = useState('');
 
   // func
   const handleSearch = async value => {
@@ -42,9 +41,6 @@ export const AddMember = memo((props: Props) => {
     } finally {
       setSearchLoad(false);
     }
-  };
-  const handleChange = value => {
-    setValue(value);
   };
 
   const role = [
@@ -90,7 +86,6 @@ export const AddMember = memo((props: Props) => {
       >
         <Select
           showSearch
-          value={value}
           defaultActiveFirstOption={false}
           showArrow={false}
           filterOption={false}
@@ -99,8 +94,7 @@ export const AddMember = memo((props: Props) => {
           // disabled={selectedMember ? true : false}
           placeholder={t(ProjectDetailMessages.memberFormEmployeePlaceholder())}
           onSearch={handleSearch}
-          onFocus={() => handleSearch(value)}
-          onChange={handleChange}
+          onFocus={() => handleSearch(' ')}
           notFoundContent={searchLoad ? <Spin size="default" /> : null}
         >
           {options}
