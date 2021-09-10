@@ -129,7 +129,7 @@ export const Followers = (props: FollowersProps) => {
           filterOption={false}
           size="large"
           loading={searchLoad}
-          placeholder="Search employee"
+          placeholder="Select employee"
           onChange={(value: any) => setValue(value)}
           onSearch={handleSearch}
           notFoundContent={searchLoad ? <Spin size="default" /> : null}
