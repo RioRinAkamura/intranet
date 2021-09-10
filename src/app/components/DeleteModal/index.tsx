@@ -1,6 +1,5 @@
 import { Button, Modal } from 'antd';
 import React from 'react';
-import styled from 'styled-components';
 
 interface Props {
   open: boolean;
@@ -26,6 +25,7 @@ export const DeleteModal = React.memo((props: Props) => {
   return (
     <Modal
       visible={open}
+      title="Confirmation"
       onCancel={handleCancel}
       footer={[
         <Button key="cancel" size="large" shape="round" onClick={handleCancel}>
@@ -44,11 +44,7 @@ export const DeleteModal = React.memo((props: Props) => {
         </Button>,
       ]}
     >
-      <P>{content}</P>
+      {content}
     </Modal>
   );
 });
-
-const P = styled.p`
-  font-size: large;
-`;
