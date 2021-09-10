@@ -172,12 +172,27 @@ export const TaskManager = () => {
       });
     }
 
-    await api.hr.task.update({
-      ...record,
-      assignee_id: record.assignee.id,
-      project_id: record.project.id,
-      follower_ids: followerIds,
-    });
+    try {
+      await api.hr.task.update({
+        ...record,
+        assignee_id: record.assignee.id,
+        project_id: record.project.id,
+        follower_ids: followerIds,
+      });
+      notify({
+        type: ToastMessageType.Info,
+        duration: 2,
+        message: 'Update Task Successfully',
+      });
+
+      fetchListTask();
+    } catch (error) {
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: 'Update Task Failed',
+      });
+    }
   };
 
   const columns: ColumnProps<Task>[] = [
@@ -233,8 +248,8 @@ export const TaskManager = () => {
       ...getColumnSearchCheckboxProps(
         ['status'],
         status(),
-        0,
-        status(),
+        undefined,
+        undefined,
         record => {
           updateStatus(record);
         },
@@ -501,7 +516,7 @@ export const TaskManager = () => {
         open={isModalVisible}
         handleDelete={handleConfirmDelete}
         handleCancel={handleCancelDeleteModal}
-        content="Are you sure you want to delete this information?"
+        content="Are you sure you want to delete this task?"
       />
 
       <DialogModal

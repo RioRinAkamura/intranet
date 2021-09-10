@@ -386,7 +386,22 @@ export const ProjectListPage: React.FC = () => {
       dataIndex: 'status',
       width: 130,
       ...getColumnSorterProps('status', 2),
-      ...getColumnSearchCheckboxProps(['status'], statuses()),
+      ...getColumnSearchCheckboxProps(
+        ['status'],
+        statuses(),
+        undefined,
+        undefined,
+        async value => {
+          try {
+            const response = await update(value);
+            if (response) {
+              dispatch(actions.fetchProjects({ params: params }));
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      ),
     },
     {
       title: t(ProjectsMessages.listTotalWeeklyHours()),

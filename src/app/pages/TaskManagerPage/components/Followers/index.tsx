@@ -174,7 +174,7 @@ export const Followers = (props: FollowersProps) => {
         open={visible}
         handleDelete={() => updateFollower(employeeId)}
         handleCancel={() => setVisible(false)}
-        content="Are you sure you want to delete this information?"
+        content="Are you sure you want to delete this follower?"
       />
     </>
   );
