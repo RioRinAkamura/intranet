@@ -6,7 +6,7 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Col, Form, Row, Tabs } from 'antd';
+import { Col, Form, Row, Tabs, Divider } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,6 +18,8 @@ import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { BankAccounts } from './components/BankAccounts/Loadable';
+import { IdCardInfo } from './components/IdCardInfo/Loadable';
+
 import { UserDetailMessages } from './messages';
 import { Notes } from './components/Notes/Loadable';
 import { Device } from './components/Devices/Loadable';
@@ -154,6 +156,16 @@ export function EmployeeDetailPage(props: Props) {
         id: data.id,
         dob: data.dob && moment(data.dob, DATE_FORMAT),
         issued_date: data.issued_date && moment(data.issued_date, DATE_FORMAT),
+        bank_accounts:
+          data.bank_accounts && data.bank_accounts.length
+            ? data.bank_accounts
+            : [
+                {
+                  bank_name: '',
+                  number: '',
+                  branch: '',
+                },
+              ],
       });
       setBreadCrumb('Employees / ' + data.code);
     }
@@ -236,6 +248,18 @@ export function EmployeeDetailPage(props: Props) {
         <>
           <ProfileInfo isView={isView} isEdit={isEdit} />
           <BankAccounts isView={isView} form={form} isEdit={isEdit} />
+          {isView && (
+            <>
+              <Divider />
+              <Form form={form}>
+                <Row gutter={[128, 0]} align="middle">
+                  <Col md={24} xs={24}>
+                    <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
+                  </Col>
+                </Row>
+              </Form>
+            </>
+          )}
         </>
       }
     />

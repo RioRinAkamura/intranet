@@ -5,7 +5,7 @@
  */
 import React, { memo } from 'react';
 import styled from 'styled-components/macro';
-import { Col, Divider, Form, FormInstance, Input, Row } from 'antd';
+import { Col, Form, Divider, FormInstance, Input, Row } from 'antd';
 import { AvatarPath } from '../AvatarPath/Loadable';
 import { BankAccounts } from '../BankAccounts/Loadable';
 import { IdCardInfo } from '../IdCardInfo/Loadable';
@@ -53,15 +53,15 @@ export const DetailForm = memo((props: FormProps) => {
           </LeftScreen>
           <RightScreen isView={isView} md={19}>
             {rightScreenItems}
+            {!isView && (
+              <>
+                <BankAccounts isView={isView} isEdit={isEdit} form={form} />
+                <Divider />
+                <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
+              </>
+            )}
           </RightScreen>
         </Row>
-        {!isView && (
-          <>
-            <BankAccounts isView={isView} isEdit={isEdit} form={form} />
-            <Divider />
-            <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
-          </>
-        )}
       </Wrapper>
       <WrapperSubItem gutter={[64, 32]}>
         <Col span={isView ? 12 : 8}>
