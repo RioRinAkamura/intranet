@@ -9,12 +9,16 @@ import {
   DeviceCategory,
   UpdateDeviceParam,
 } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { SelectOption } from '@hdwebsoft/boilerplate-api-sdk/libs/type';
 
 export const useDeviceDetail = (): {
   detail?: Device;
   categories: DeviceCategory[];
   loading: boolean;
   loadingCat: boolean;
+  statuses: SelectOption[];
+  employeeStatuses: SelectOption[];
+  healthStatuses: SelectOption[];
   error?: Error;
   fetchDetail: (id: string) => Promise<void>;
   fetchCategories: () => Promise<void>;
@@ -22,12 +26,18 @@ export const useDeviceDetail = (): {
   createCategory: (name: string) => Promise<DeviceCategory | undefined>;
   update: (data: UpdateDeviceParam) => Promise<Device | undefined>;
   deleteCategory: (cat_id: string) => Promise<boolean>;
+  fetchStatuses: () => Promise<void>;
+  fetchEmployeeStatuses: () => Promise<void>;
+  fetchHealthStatuses: () => Promise<void>;
 } => {
   const history = useHistory();
   const [detail, setDetail] = useState<Device>();
   const [categories, setCategories] = useState<DeviceCategory[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingCat, setLoadingCat] = useState<boolean>(false);
+  const [statuses, setStatuses] = useState<SelectOption[]>([]);
+  const [employeeStatuses, setEmployeeStatuses] = useState<SelectOption[]>([]);
+  const [healthStatuses, setHealthStatuses] = useState<SelectOption[]>([]);
   const [error, setError] = useState<Error>();
   const { notify } = useNotify();
 
@@ -152,11 +162,47 @@ export const useDeviceDetail = (): {
     }
   };
 
+  const fetchStatuses = useCallback(async () => {
+    try {
+      const response = await api.hr.device.getStatuses();
+      if (response) {
+        setStatuses(response);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
+
+  const fetchEmployeeStatuses = useCallback(async () => {
+    try {
+      const response = await api.hr.device.getEmployeeStatuses();
+      if (response) {
+        setEmployeeStatuses(response);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
+
+  const fetchHealthStatuses = useCallback(async () => {
+    try {
+      const response = await api.hr.device.getHealthStatuses();
+      if (response) {
+        setHealthStatuses(response);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
+
   return {
     detail,
     categories,
     loading,
     loadingCat,
+    statuses,
+    employeeStatuses,
+    healthStatuses,
     error,
     fetchDetail,
     fetchCategories,
@@ -164,5 +210,8 @@ export const useDeviceDetail = (): {
     createCategory,
     update,
     deleteCategory,
+    fetchStatuses,
+    fetchEmployeeStatuses,
+    fetchHealthStatuses,
   };
 };

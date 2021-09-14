@@ -1,18 +1,3 @@
-export const STATUS = [
-  {
-    label: 'Open',
-    value: 'Open',
-  },
-  {
-    label: 'Going',
-    value: 'Going',
-  },
-  {
-    label: 'Done',
-    value: 'Done',
-  },
-];
-
 export const FORM_RULES = {
   PROJECT: [
     {

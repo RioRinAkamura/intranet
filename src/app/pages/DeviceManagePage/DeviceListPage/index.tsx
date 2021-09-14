@@ -37,6 +37,7 @@ import Button, { IconButton } from 'app/components/Button';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
+import { useDeviceDetail } from '../DeviceDetailPage/useDeviceDetail';
 
 export const DeviceListPage = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -66,6 +67,13 @@ export const DeviceListPage = () => {
     getColumnSearchSelectProps,
   } = useTableConfig(state, Messages, setFilterText);
 
+  const {
+    statuses,
+    healthStatuses,
+    fetchStatuses,
+    fetchHealthStatuses,
+  } = useDeviceDetail();
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteMulti, setIsDeleteMulti] = useState(false);
   const [selectedId, setSelectedId] = useState('');
@@ -78,7 +86,9 @@ export const DeviceListPage = () => {
 
   useEffect(() => {
     fetchListDevice();
-  }, [fetchListDevice]);
+    fetchStatuses();
+    fetchHealthStatuses();
+  }, [fetchHealthStatuses, fetchListDevice, fetchStatuses]);
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
@@ -207,10 +217,7 @@ export const DeviceListPage = () => {
       render: text => <Capitalize>{text}</Capitalize>,
       ...getColumnSearchSelectProps(
         'health_status',
-        [
-          { label: 'Good', value: 'good' },
-          { label: 'Bad', value: 'bad' },
-        ],
+        healthStatuses,
         'Please choose status',
       ),
     },
@@ -219,14 +226,7 @@ export const DeviceListPage = () => {
       dataIndex: 'status',
       width: 130,
       render: text => <Capitalize>{text}</Capitalize>,
-      ...getColumnSearchSelectProps(
-        'status',
-        [
-          { label: 'Available', value: 'available' },
-          { label: 'Unavailable', value: 'unavailable' },
-        ],
-        'Please choose status',
-      ),
+      ...getColumnSearchSelectProps('status', statuses, 'Please choose status'),
     },
     {
       title: 'Actions',

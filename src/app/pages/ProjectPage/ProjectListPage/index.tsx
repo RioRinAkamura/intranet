@@ -52,7 +52,6 @@ import { StyledLink } from 'styles/StyledCommon';
 import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { DeleteType } from 'utils/types';
 import { useProjectDetail } from '../ProjectDetailPage/useProjectDetail';
-import { api } from 'utils/api';
 
 export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -86,7 +85,13 @@ export const ProjectListPage: React.FC = () => {
   const isFilter = useSelector(selectProjectsIsFilter);
   const getProjectState = useSelector(selectProjects);
   const { id } = useParams<Record<string, string>>();
-  const { update } = useProjectDetail();
+  const {
+    update,
+    priorities,
+    statuses,
+    getPriorities,
+    getStatuses,
+  } = useProjectDetail();
   const {
     setSelectedRows,
     setSearchText,
@@ -103,24 +108,6 @@ export const ProjectListPage: React.FC = () => {
     ConfirmModal,
   } = useTableConfig(getProjectState, ProjectsMessages, setFilterText);
 
-  const priorities = () => {
-    return api.hr.project.getPriorities().map(item => {
-      return {
-        ...item,
-        label: item.name,
-      };
-    });
-  };
-
-  const statuses = () => {
-    return api.hr.project.getStatuses().map(item => {
-      return {
-        ...item,
-        label: item.name,
-      };
-    });
-  };
-
   const fetchProjects = useCallback(() => {
     if (!isFilter) {
       dispatch(actions.fetchProjects({ params: params }));
@@ -129,7 +116,9 @@ export const ProjectListPage: React.FC = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects]);
+    getPriorities();
+    getStatuses();
+  }, [fetchProjects, getPriorities, getStatuses]);
 
   // handle project member
   useEffect(() => {
@@ -365,7 +354,7 @@ export const ProjectListPage: React.FC = () => {
       ...getColumnSorterProps('priority', 2),
       ...getColumnSearchCheckboxProps(
         ['priority'],
-        priorities(),
+        priorities,
         undefined,
         undefined,
         async value => {
@@ -388,7 +377,7 @@ export const ProjectListPage: React.FC = () => {
       ...getColumnSorterProps('status', 2),
       ...getColumnSearchCheckboxProps(
         ['status'],
-        statuses(),
+        statuses,
         undefined,
         undefined,
         async value => {

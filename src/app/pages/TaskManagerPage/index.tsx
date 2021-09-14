@@ -7,7 +7,6 @@ import {
   Tooltip,
   Popover,
   Form,
-  CheckboxOptionType,
   TablePaginationConfig,
 } from 'antd';
 import {
@@ -36,12 +35,11 @@ import {
   Task,
   CreateTaskParam,
   UpdateTaskParam,
-  Project,
 } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { IconButton } from 'app/components/Button';
-import { Pagination } from '@hdwebsoft/boilerplate-api-sdk/libs/type';
 import { Followers } from './components/Followers';
+import { useHandleTasks } from './useHandleTasks';
 
 export const TaskManager = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -77,62 +75,25 @@ export const TaskManager = () => {
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [isFollowers, setIsFollowers] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState<boolean>(false);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [employees, setEmployees] = useState<any[]>([]);
-  const [employeesOption, setEmployeesOption] = useState<CheckboxOptionType[]>(
-    [],
-  );
-  const [projectOption, setProjectOption] = useState<CheckboxOptionType[]>([]);
   const [deleteId, setDeleteId] = useState<string>('');
   const [task, setTask] = useState<Task>();
 
-  const status = () => {
-    return api.hr.task.getStatus().map(value => {
-      return {
-        value,
-        label: value,
-      };
-    });
-  };
-
-  const fetchListEmployee = async () => {
-    try {
-      const employees: any = await api.hr.employee.list();
-      const mapEmployeeOption: any = [...employees.results].map(employee => {
-        return {
-          label: employee.first_name + ' ' + employee.last_name,
-          value: employee.id,
-        };
-      });
-
-      setEmployeesOption(mapEmployeeOption);
-      setEmployees(employees.results);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const fetchListProject = async () => {
-    try {
-      const projects: Pagination<Project> = await api.hr.project.list();
-      const mapProjectsOption: any = [...projects.results].map(project => {
-        return {
-          label: project.name,
-          value: project.id,
-        };
-      });
-
-      setProjectOption(mapProjectsOption);
-
-      setProjects(projects.results);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const {
+    projects,
+    employees,
+    projectOptions,
+    employeeOptions,
+    statuses,
+    getProjects,
+    getEmployees,
+    getStatuses,
+  } = useHandleTasks();
 
   useEffect(() => {
-    fetchListEmployee();
-    fetchListProject();
-  }, []);
+    getProjects();
+    getEmployees();
+    getStatuses();
+  }, [getEmployees, getProjects, getStatuses]);
 
   const [form] = Form.useForm();
 
@@ -207,7 +168,7 @@ export const TaskManager = () => {
       title: 'Project',
       dataIndex: 'project',
       width: 100,
-      ...getColumnSearchInputCheckboxProps(['project'], projectOption, 0),
+      ...getColumnSearchInputCheckboxProps(['project'], projectOptions, 0),
       render: value => value.name,
     },
     {
@@ -217,7 +178,7 @@ export const TaskManager = () => {
       render: text => `${text.first_name} ${text.last_name}`,
       ...getCustomColumnSearchInputCheckboxProps(
         ['assignee'],
-        employeesOption,
+        employeeOptions,
         0,
       ),
     },
@@ -247,7 +208,7 @@ export const TaskManager = () => {
       width: 130,
       ...getColumnSearchCheckboxProps(
         ['status'],
-        status(),
+        statuses,
         undefined,
         undefined,
         record => {
@@ -531,6 +492,7 @@ export const TaskManager = () => {
         <TaskForm
           employees={employees}
           projects={projects}
+          statuses={statuses}
           form={form}
           taskUpdate={isUpdate ? getTaskUpdate() : undefined}
           isView={!isCreate ? isView : false}

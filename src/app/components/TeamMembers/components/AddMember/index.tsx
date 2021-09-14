@@ -3,16 +3,11 @@ import { Form, FormInstance, message, Select, Spin } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const FormSearchItem = Form.Item;
 const { Option } = Select;
-
-const allocations: number[] = [2];
-for (let i = 4; i <= 40; i += 4) {
-  allocations.push(i);
-}
 
 interface Props {
   projId: string;
@@ -22,7 +17,13 @@ interface Props {
 export const AddMember = memo((props: Props) => {
   const { form } = props;
   const { t } = useTranslation();
-  const { fetchUser } = useProjectDetail();
+  const {
+    roles,
+    allocations,
+    fetchUser,
+    getRoles,
+    getAllocations,
+  } = useProjectDetail();
   // state
   const [allocation, setAllocation] = useState<SelectValue>();
   const [employees, setEmployees] = useState<Employee[] | undefined>([]);
@@ -43,28 +44,11 @@ export const AddMember = memo((props: Props) => {
     }
   };
 
-  const role = [
-    {
-      name: t(ProjectDetailMessages.memberPM()),
-      value: 'PM',
-    },
-    {
-      name: t(ProjectDetailMessages.memberTL()),
-      value: 'TL',
-    },
-    {
-      name: t(ProjectDetailMessages.memberQC()),
-      value: 'QC',
-    },
-    {
-      name: t(ProjectDetailMessages.memberDEV()),
-      value: 'DEV',
-    },
-    {
-      name: t(ProjectDetailMessages.memberOTHER()),
-      value: 'OTHER',
-    },
-  ];
+  // hooks
+  useEffect(() => {
+    getRoles();
+    getAllocations();
+  }, [getRoles, getAllocations]);
 
   const options = employees?.map(employee => (
     <Option key={employee.id} value={employee.id}>
@@ -116,11 +100,11 @@ export const AddMember = memo((props: Props) => {
             ProjectDetailMessages.memberFormProjectRolePlaceholder(),
           )}
         >
-          {role &&
-            role.map((item, index: number) => {
+          {roles &&
+            roles.map((item, index: number) => {
               return (
                 <Option key={index} value={item.value}>
-                  {item.name}
+                  {item.label}
                 </Option>
               );
             })}

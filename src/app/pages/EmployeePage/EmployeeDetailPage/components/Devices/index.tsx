@@ -18,22 +18,17 @@ import {
 import moment from 'moment';
 
 import { DialogModal } from 'app/components/DialogModal';
-import { EMPLOYEE_DEVICE_STATUS, FORM_RULES } from 'constants/deviceManager';
+import { FORM_RULES } from 'constants/deviceManager';
 import { ColumnProps } from 'antd/lib/table';
 import { DeleteModal } from 'app/components/DeleteModal';
 import Button, { IconButton } from 'app/components/Button';
 import { Wrapper } from 'styles/StyledCommon';
-import { api } from 'utils/api';
 import { EmployeeDevice } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { useHandleEmployeeDevices } from './useHandleEmployeeDevices';
 import { EmployeeDeviceStatus } from 'utils/types';
+import { useDeviceDetail } from 'app/pages/DeviceManagePage/DeviceDetailPage/useDeviceDetail';
 
 const { Option } = Select;
-
-interface Devices {
-  code: string;
-  id: string;
-}
 
 interface FormProps {
   form: FormInstance;
@@ -51,11 +46,12 @@ const WrapperForm: React.FC<FormProps> = ({
   isView,
   deviceUpdate,
 }) => {
-  const [deviceItem, setDeviceItem] = useState<Devices>();
-  const fetchDevice = async id => {
-    const response: any = await api.hr.device.get(id);
-    setDeviceItem(response);
-  };
+  const {
+    detail,
+    employeeStatuses,
+    fetchDetail,
+    fetchEmployeeStatuses,
+  } = useDeviceDetail();
   useEffect(() => {
     if (deviceUpdate) {
       form.setFieldsValue({
@@ -68,18 +64,22 @@ const WrapperForm: React.FC<FormProps> = ({
   }, [form, deviceUpdate, isView]);
 
   useEffect(() => {
+    fetchEmployeeStatuses();
+  }, [fetchEmployeeStatuses]);
+
+  useEffect(() => {
     if (deviceUpdate) {
-      fetchDevice(deviceUpdate.device.id);
+      fetchDetail(deviceUpdate.device.id);
     }
-  }, [deviceUpdate]);
+  }, [deviceUpdate, fetchDetail]);
 
   return (
     <Form layout="vertical" form={form}>
       <Form.Item rules={FORM_RULES.DEVICE} name="device" label="Device">
         {/* <Input size="large" placeholder="Type" disabled={isView} /> */}
         <Select placeholder="Device" disabled={isView} size="large">
-          {deviceUpdate && deviceItem && (
-            <Option value={deviceItem?.id}>{deviceItem?.code}</Option>
+          {deviceUpdate && detail && (
+            <Option value={detail?.id}>{detail?.code}</Option>
           )}
           {devices.map(device => (
             <Option value={device.id}>{device.code}</Option>
@@ -92,9 +92,8 @@ const WrapperForm: React.FC<FormProps> = ({
         name="status"
         label="Status"
       >
-        {/* <Input size="large" placeholder="Summary" disabled={isView} /> */}
         <Select placeholder="Status" size="large">
-          {EMPLOYEE_DEVICE_STATUS.map(status => (
+          {employeeStatuses.map(status => (
             <Option value={status.value}>{status.label}</Option>
           ))}
         </Select>

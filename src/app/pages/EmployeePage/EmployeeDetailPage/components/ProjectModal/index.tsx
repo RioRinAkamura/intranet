@@ -5,11 +5,9 @@
  */
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
 import { DialogModal } from 'app/components/DialogModal';
 import { Button, Form, Select, Spin } from 'antd';
 import { useHandleProject } from './useHandleProject';
-import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEmployeeProjectSlice } from '../Projects/slice';
 import {
@@ -19,7 +17,7 @@ import {
   selectEmployeeProjectEditSuccess,
 } from '../Projects/slice/selectors';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
-import _ from 'lodash';
+import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
 
 interface Props {
   id: string;
@@ -30,10 +28,7 @@ interface Props {
 }
 const { Option } = Select;
 
-const allocations: number[] = [2, ..._.range(4, 44, 4)];
-
 export const ProjectModal = memo((props: Props) => {
-  const { t } = useTranslation();
   const { id, open, setOpen, selectedProject, setSelectedProject } = props;
   const [memberForm] = Form.useForm();
   const { notify } = useNotify();
@@ -43,6 +38,7 @@ export const ProjectModal = memo((props: Props) => {
   const [projects, setProjects] = useState<any>([]);
   const [value, setValue] = useState('');
   const { loadingProject, fetchProjects } = useHandleProject();
+  const { roles, allocations, getRoles, getAllocations } = useProjectDetail();
 
   const { actions } = useEmployeeProjectSlice();
   const dispatch = useDispatch();
@@ -67,6 +63,11 @@ export const ProjectModal = memo((props: Props) => {
       dispatch(actions.addProject(_values));
     }
   };
+
+  useEffect(() => {
+    getRoles();
+    getAllocations();
+  }, [getRoles, getAllocations]);
 
   useEffect(() => {
     if (addSuccess) {
@@ -124,29 +125,6 @@ export const ProjectModal = memo((props: Props) => {
   const handleChange = value => {
     setValue(value);
   };
-
-  const role = [
-    {
-      name: t(ProjectDetailMessages.memberPM()),
-      value: 'PM',
-    },
-    {
-      name: t(ProjectDetailMessages.memberTL()),
-      value: 'TL',
-    },
-    {
-      name: t(ProjectDetailMessages.memberQC()),
-      value: 'QC',
-    },
-    {
-      name: t(ProjectDetailMessages.memberDEV()),
-      value: 'DEV',
-    },
-    {
-      name: t(ProjectDetailMessages.memberOTHER()),
-      value: 'OTHER',
-    },
-  ];
 
   const options = projects?.map(project => (
     <Option key={project.id} value={project.id}>
@@ -232,11 +210,11 @@ export const ProjectModal = memo((props: Props) => {
             ]}
           >
             <Select size="large" placeholder="Select role">
-              {role &&
-                role.map((item, index: number) => {
+              {roles &&
+                roles.map((item, index: number) => {
                   return (
                     <Option key={index} value={item.value}>
-                      {item.name}
+                      {item.label}
                     </Option>
                   );
                 })}

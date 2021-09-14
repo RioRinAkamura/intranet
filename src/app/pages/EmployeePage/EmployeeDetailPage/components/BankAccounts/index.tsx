@@ -10,29 +10,7 @@ import { Col, Divider, Form, FormInstance, Input, Row, Select } from 'antd';
 import { UserDetailMessages } from '../../messages';
 import { TitlePath } from '../TitlePath';
 import { IdCardInfo } from '../IdCardInfo/Loadable';
-
-const banks = [
-  {
-    id: 1,
-    name: 'Vietcombank',
-  },
-  {
-    id: 2,
-    name: 'Sacombank',
-  },
-  {
-    id: 3,
-    name: 'Techcombank',
-  },
-  {
-    id: 4,
-    name: 'ACB',
-  },
-  {
-    id: 5,
-    name: 'TPBank',
-  },
-];
+import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
 
 interface BankAccountsProps {
   isView: boolean;
@@ -45,6 +23,11 @@ const { Option } = Select;
 export const BankAccounts = (props: BankAccountsProps) => {
   const { isView, isEdit, form } = props;
   const { t } = useTranslation();
+  const { bankNames, getBankNames } = useHandleEmployeeDetail();
+
+  React.useEffect(() => {
+    getBankNames();
+  }, [getBankNames]);
 
   return (
     <>
@@ -86,10 +69,10 @@ export const BankAccounts = (props: BankAccountsProps) => {
                                   UserDetailMessages.formBankNamePlaceholder(),
                                 )}
                               >
-                                {banks.map(item => {
+                                {bankNames?.map(item => {
                                   return (
-                                    <Option key={item.id} value={item.name}>
-                                      {item.name}
+                                    <Option key={item.value} value={item.label}>
+                                      {item.label}
                                     </Option>
                                   );
                                 })}
@@ -189,10 +172,10 @@ export const BankAccounts = (props: BankAccountsProps) => {
                         UserDetailMessages.formBankNamePlaceholder(),
                       )}
                     >
-                      {banks.map(item => {
+                      {bankNames?.map(item => {
                         return (
-                          <Option key={item.id} value={item.name}>
-                            {item.name}
+                          <Option key={item.value} value={item.label}>
+                            {item.label}
                           </Option>
                         );
                       })}

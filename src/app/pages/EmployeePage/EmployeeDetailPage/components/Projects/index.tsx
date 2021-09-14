@@ -31,8 +31,9 @@ import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import Button, { IconButton } from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink, Wrapper } from 'styles/StyledCommon';
-import { projectStatus } from 'utils/variable';
 import moment from 'moment';
+import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
+import { getSelectValues } from 'utils/variable';
 
 interface ProjectsProps {
   employeeId: string;
@@ -64,6 +65,8 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
     setFilterText,
   );
 
+  const { statuses, roles, getStatuses, getRoles } = useProjectDetail();
+
   const fetchEmployeeProject = useCallback(() => {
     if (!isFilter) {
       dispatch(
@@ -74,7 +77,9 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
 
   useEffect(() => {
     fetchEmployeeProject();
-  }, [fetchEmployeeProject]);
+    getStatuses();
+    getRoles();
+  }, [fetchEmployeeProject, getStatuses, getRoles]);
 
   const moreButton = (value: any, record) => {
     return (
@@ -141,6 +146,7 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
       title: 'Role',
       dataIndex: 'project_role',
       ...getColumnSorterProps('project_role', 3),
+      render: value => getSelectValues(roles, value)?.label,
     },
     {
       title: 'Start Date',
@@ -150,7 +156,7 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
     {
       title: 'Status',
       dataIndex: ['project', 'status'],
-      render: value => projectStatus[value],
+      render: value => getSelectValues(statuses, value)?.label,
     },
     {
       title: 'Actions',

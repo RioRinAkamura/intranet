@@ -1,9 +1,10 @@
 import React from 'react';
-import { FORM_RULES, STATUS } from 'constants/task';
+import { FORM_RULES } from 'constants/task';
 
 import { Form, FormInstance, Select, Input } from 'antd';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { UpdateTaskParam } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { SelectOption } from '@hdwebsoft/boilerplate-api-sdk/libs/type';
 
 const { Option } = Select;
 
@@ -12,6 +13,7 @@ interface FormProps {
   isView?: boolean;
   employees: any[];
   projects: any[];
+  statuses: SelectOption[];
   taskUpdate?: UpdateTaskParam;
 }
 export const TaskForm: React.FC<FormProps> = ({
@@ -20,6 +22,7 @@ export const TaskForm: React.FC<FormProps> = ({
   employees,
   projects,
   taskUpdate,
+  statuses,
 }) => {
   React.useEffect(() => {
     if (taskUpdate) {
@@ -46,7 +49,7 @@ export const TaskForm: React.FC<FormProps> = ({
       </Form.Item>
       <Form.Item name="status" label="Status" initialValue={'Open'}>
         <Select disabled={isView} placeholder="Status" size="large">
-          {STATUS.map(i => (
+          {statuses.map(i => (
             <Option value={i.value}>{i.label}</Option>
           ))}
         </Select>
