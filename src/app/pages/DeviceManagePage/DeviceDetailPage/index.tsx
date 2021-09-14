@@ -7,7 +7,7 @@ import {
   CloseCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
-import { FORM_RULES, HEALTH_STATUS } from 'constants/deviceManager';
+import { FORM_RULES } from 'constants/deviceManager';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import {
@@ -68,12 +68,14 @@ export const DeviceDetailPage = props => {
     categories,
     loading,
     loadingCat,
+    healthStatuses,
     fetchDetail,
     fetchCategories,
     create,
     createCategory,
     update,
     deleteCategory,
+    fetchHealthStatuses,
   } = useDeviceDetail();
   const location = useLocation<LocationState>();
   const history = useHistory();
@@ -89,6 +91,10 @@ export const DeviceDetailPage = props => {
   const [isCreateCategory, setIsCreateCategory] = React.useState<boolean>(
     false,
   );
+
+  useEffect(() => {
+    fetchHealthStatuses();
+  }, [fetchHealthStatuses]);
 
   useEffect(() => {
     if (detail) {
@@ -405,7 +411,7 @@ export const DeviceDetailPage = props => {
                       size="large"
                       placeholder="Select Health Status"
                     >
-                      {HEALTH_STATUS.map(i => (
+                      {healthStatuses?.map(i => (
                         <Option value={i.value}>{i.label}</Option>
                       ))}
                     </Select>

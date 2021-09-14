@@ -13,10 +13,10 @@ import { useDispatch } from 'react-redux';
 import { config } from 'config';
 import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { ProfileInfo } from '../EmployeeDetailPage/components/ProfileInfo/Loadable';
-import { useGetUserDetail } from '../EmployeeDetailPage/useGetUserDetail';
 import { DetailForm } from '../EmployeeDetailPage/components/DetailForm/Loadable';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { useUserDetailsSlice } from '../EmployeeDetailPage/slice';
+import { useHandleEmployeeDetail } from '../EmployeeDetailPage/useHandleEmployeeDetail';
 
 interface Props {}
 
@@ -29,13 +29,19 @@ export function EmployeeEditPage(props: Props) {
   const [form] = Form.useForm();
   const { setBreadCrumb } = useBreadCrumbContext();
 
-  const { user } = useGetUserDetail(id);
+  const { user, getDetail } = useHandleEmployeeDetail();
 
   const [data, setData] = React.useState<Employee>();
 
   const dispatch = useDispatch();
 
   const userDetailsSlice = useUserDetailsSlice();
+
+  React.useEffect(() => {
+    if (id) {
+      getDetail(id);
+    }
+  }, [id, getDetail]);
 
   React.useEffect(() => {
     if (user) {

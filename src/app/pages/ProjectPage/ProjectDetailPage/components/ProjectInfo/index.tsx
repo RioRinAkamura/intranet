@@ -19,7 +19,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components/macro';
 import { datePickerViewProps, inputViewProps } from 'utils/types';
 import { ProjectDetailMessages } from '../../messages';
-import { api } from 'utils/api';
+import { useProjectDetail } from '../../useProjectDetail';
+import { getSelectValues } from 'utils/variable';
 
 interface Props {
   isView?: boolean;
@@ -45,25 +46,21 @@ export const ProjectInfo = (props: Props) => {
   const { t } = useTranslation();
   const [overview, setOverview] = useState('');
 
+  const {
+    priorities,
+    statuses,
+    getPriorities,
+    getStatuses,
+  } = useProjectDetail();
+
   const dispatch = useDispatch();
   const { actions } = useProjectsSlice();
   const projectState = useSelector(selectProjects);
 
-  const priorities = () => {
-    return api.hr.project.getPriorities();
-  };
-
-  const statuses = () => {
-    return api.hr.project.getStatuses();
-  };
-
-  const getPriorities = (value: string) => {
-    return priorities().find(item => item.value === value);
-  };
-
-  const getStatuses = (value: string) => {
-    return statuses().find(item => item.value === value);
-  };
+  useEffect(() => {
+    getPriorities();
+    getStatuses();
+  }, [getPriorities, getStatuses]);
 
   useEffect(() => {
     if (data) {
@@ -104,7 +101,9 @@ export const ProjectInfo = (props: Props) => {
           {t(ProjectDetailMessages.formProjectPriorityLabel())}
         </StyledTitle>
         <StyledData>
-          {(data?.priority && getPriorities(data.priority)?.name) || 'N/A'}
+          {(data?.priority &&
+            getSelectValues(priorities, data.priority)?.label) ||
+            'N/A'}
         </StyledData>
       </StyledWrapperDiv>
 
@@ -113,7 +112,8 @@ export const ProjectInfo = (props: Props) => {
           {t(ProjectDetailMessages.formProjectStatusLabel())}
         </StyledTitle>
         <StyledData>
-          {(data?.status && getStatuses(data.status)?.name) || 'N/A'}
+          {(data?.status && getSelectValues(statuses, data.status)?.label) ||
+            'N/A'}
         </StyledData>
       </StyledWrapperDiv>
 
@@ -217,10 +217,10 @@ export const ProjectInfo = (props: Props) => {
                     ProjectDetailMessages.formProjectPriorityPlaceholder(),
                   )}
                 >
-                  {priorities().map((item, index: number) => {
+                  {priorities.map((item, index: number) => {
                     return (
                       <Option key={index} value={item.value}>
-                        {item.name}
+                        {item.label}
                       </Option>
                     );
                   })}
@@ -239,10 +239,10 @@ export const ProjectInfo = (props: Props) => {
                     ProjectDetailMessages.formProjectStatusPlaceholder(),
                   )}
                 >
-                  {statuses().map((item, index: number) => {
+                  {statuses.map((item, index: number) => {
                     return (
                       <Option key={index} value={item.value}>
-                        {item.name}
+                        {item.label}
                       </Option>
                     );
                   })}

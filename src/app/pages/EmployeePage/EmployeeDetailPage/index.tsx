@@ -19,8 +19,6 @@ import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { BankAccounts } from './components/BankAccounts/Loadable';
 import { UserDetailMessages } from './messages';
-import { useGetUserDetail } from './useGetUserDetail';
-import { useUpdateUserDetail } from './useUpdateUserDetail';
 import { Notes } from './components/Notes/Loadable';
 import { Device } from './components/Devices/Loadable';
 import { DetailForm } from './components/DetailForm/Loadable';
@@ -35,6 +33,7 @@ import { Route, Switch } from 'react-router-dom';
 import { useUserDetailsSlice } from './slice';
 import { omit } from 'lodash';
 import { EmployeeEditPage } from '../EmployeeEdit/Loadable';
+import { useHandleEmployeeDetail } from './useHandleEmployeeDetail';
 
 interface Props {}
 
@@ -62,8 +61,13 @@ export function EmployeeDetailPage(props: Props) {
   const history = useHistory();
   const { setBreadCrumb } = useBreadCrumbContext();
 
-  const { user } = useGetUserDetail(id);
-  const { create, update, loading } = useUpdateUserDetail();
+  const {
+    user,
+    getDetail,
+    create,
+    update,
+    loading,
+  } = useHandleEmployeeDetail();
 
   const [data, setData] = React.useState<Employee>();
 
@@ -130,6 +134,12 @@ export function EmployeeDetailPage(props: Props) {
     }
     return `${TabKeys.details}`;
   }, [history.location.pathname]);
+
+  React.useEffect(() => {
+    if (id) {
+      getDetail(id);
+    }
+  }, [id, getDetail]);
 
   React.useEffect(() => {
     if (user) {

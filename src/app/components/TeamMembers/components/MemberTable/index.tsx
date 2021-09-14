@@ -13,13 +13,13 @@ import { ColumnsType } from 'antd/lib/table';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { IconButton } from 'app/components/Button';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
-import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
+import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
 import React, { memo, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { api } from 'utils/api';
 import { antColours, DeleteType } from 'utils/types';
 import { PrivatePath } from 'utils/url.const';
+import { getSelectValues } from 'utils/variable';
 
 interface Props {
   projectId: string;
@@ -29,7 +29,6 @@ interface Props {
 
 export const MemberTable = memo((props: Props) => {
   const { projectId, dataSource, loading } = props;
-  const { t } = useTranslation();
   const history = useHistory();
 
   //state
@@ -37,6 +36,13 @@ export const MemberTable = memo((props: Props) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [member, setMember] = useState<Employee>();
   const [textCopy, setTextCopy] = useState<boolean>(false);
+
+  // hooks
+  const { roles, getRoles } = useProjectDetail();
+
+  useEffect(() => {
+    getRoles();
+  }, [getRoles]);
 
   useEffect(() => {
     if (dataSource) {
@@ -123,22 +129,7 @@ export const MemberTable = memo((props: Props) => {
       title: 'Project Role',
       dataIndex: 'project_role',
       width: 100,
-      render: text => {
-        switch (text) {
-          case 'PM':
-            return t(ProjectDetailMessages.memberPM());
-          case 'TL':
-            return t(ProjectDetailMessages.memberTL());
-          case 'QC':
-            return t(ProjectDetailMessages.memberQC());
-          case 'DEV':
-            return t(ProjectDetailMessages.memberDEV());
-          case 'OTHER':
-            return t(ProjectDetailMessages.memberOTHER());
-          default:
-            return text;
-        }
-      },
+      render: text => getSelectValues(roles, text)?.label,
     },
 
     {
