@@ -1,3 +1,4 @@
+import { SelectOption } from '@hdwebsoft/boilerplate-api-sdk/libs/type';
 import moment from 'moment';
 
 export const calcBusinessDays = (dDate1, dDate2) => {
@@ -33,4 +34,13 @@ export const calcBusinessDays = (dDate1, dDate2) => {
   return Number(iDateDiff + 1); // add 1 because dates are inclusive
 };
 
-export const projectStatus = ['Preparing', 'Going', 'Realsed', 'Archived'];
+export const defaultPaginationValue = {
+  count: 0,
+  next: '',
+  previous: '',
+  results: [],
+};
+
+export const getSelectValues = (key: SelectOption[], data: string) => {
+  return key.find(item => item.value === data);
+};

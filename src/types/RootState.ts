@@ -7,7 +7,6 @@ import { EmployeeProjectState } from 'app/pages/EmployeePage/EmployeeDetailPage/
 import { EmployeeNoteState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/Notes/slice/types';
 import { UsersManagePageState } from 'app/pages/ManageUserPage/slice/types';
 import { DevicesManagerState } from 'app/pages/DeviceManagePage/DeviceListPage/slice/types';
-import { CategoryState } from 'app/pages/DeviceManagePage/DeviceCategory/slice/types';
 import { TableListState } from 'app/components/TableListModel/slice/types';
 import { TaskManagerState } from 'app/pages/TaskManagerPage/slice/types';
 import { EmployeeChangeLogsState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/ChangeLogs/slice/types';
@@ -33,7 +32,6 @@ export interface RootState {
   usersmanagepage?: UsersManagePageState;
   // leaveApplication?: LeaveApplicationState;
   DeviceManager?: DevicesManagerState;
-  CategoryManager?: CategoryState;
   table: TableListState;
   employeeLeave: TableListState;
   TaskManager: TaskManagerState;

@@ -7,6 +7,7 @@ import {
   DatePicker,
 } from 'antd';
 import {
+  DeleteOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
   PlusCircleOutlined,
@@ -19,6 +20,7 @@ import {
   NoteCategory,
 } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
+import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { RichEditor } from 'app/components/RichEditor';
 import { api } from 'utils/api';
 
@@ -29,24 +31,43 @@ interface FormProps {
   form: FormInstance;
   note?: EmployeeNote;
   isView?: boolean;
+  setVisible: (visible: boolean) => void;
+  setCategoryId: (id: string) => void;
 }
 
 const { Option } = Select;
 
-export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
+export const Form: React.FC<FormProps> = ({
+  form,
+  note,
+  isView,
+  t,
+  setVisible,
+  setCategoryId,
+}) => {
   const [isCreateCategory, setIsCreateCategory] = React.useState<boolean>(
     false,
   );
+  const { notify } = useNotify();
   const [categoryList, setCategoryList] = React.useState<NoteCategory[]>([]);
 
   const onCreateCategory = async () => {
     const name = form.getFieldValue('category_name');
 
-    const category = await api.hr.employee.note.category.create({ name });
+    try {
+      const category = await api.hr.employee.note.category.create({ name });
 
-    setCategoryList([...categoryList, category]);
-    form.setFieldsValue({ category_id: category.id });
-    setIsCreateCategory(false);
+      setCategoryList([...categoryList, category]);
+      form.resetFields(['category_name']);
+      form.setFieldsValue({ category_id: category.id });
+      setIsCreateCategory(false);
+    } catch (error) {
+      notify({
+        type: ToastMessageType.Error,
+        message: 'Create Failed',
+        duration: 2,
+      });
+    }
   };
 
   React.useEffect(() => {
@@ -64,9 +85,14 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
     setCategoryList(categories.results);
   };
 
+  const handleDeleteCategory = (id: string) => {
+    setVisible(true);
+    setCategoryId(id);
+  };
+
   React.useEffect(() => {
-    getCategories();
-  }, []);
+    if (!isView) getCategories();
+  }, [isView]);
 
   return (
     <FormAntd layout="vertical" form={form}>
@@ -79,6 +105,7 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
             <Input
               size="large"
               placeholder={t(EmployeeNoteMessages.modalCategoryPlaceholder())}
+              onPressEnter={onCreateCategory}
             />
           </FormAntd.Item>
         ) : (
@@ -86,7 +113,7 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
             name="category_id"
             label={t(EmployeeNoteMessages.modalCategoryLabel())}
           >
-            <Select
+            <StyledSelect
               size="large"
               disabled={isView}
               placeholder={t(
@@ -95,23 +122,29 @@ export const Form: React.FC<FormProps> = ({ form, note, isView, t }) => {
             >
               {categoryList.map(category => (
                 <Option key={category.id} value={category.id}>
-                  {category.name}
+                  <div style={{ float: 'left' }}>{category.name}</div>
+                  <StyledDeleteOutlined
+                    onClick={() => handleDeleteCategory(category.id)}
+                  />
                 </Option>
               ))}
-            </Select>
+            </StyledSelect>
           </FormAntd.Item>
         )}
 
-        {isCreateCategory ? (
-          <>
-            <StyledCheckCircleOutlined onClick={onCreateCategory} />
-            <StyledCloseCircleOutlined
-              onClick={() => setIsCreateCategory(false)}
+        {!isView &&
+          (isCreateCategory ? (
+            <>
+              <StyledCheckCircleOutlined onClick={onCreateCategory} />
+              <StyledCloseCircleOutlined
+                onClick={() => setIsCreateCategory(false)}
+              />
+            </>
+          ) : (
+            <StyledPlusCircleOutlined
+              onClick={() => setIsCreateCategory(true)}
             />
-          </>
-        ) : (
-          <StyledPlusCircleOutlined onClick={() => setIsCreateCategory(true)} />
-        )}
+          ))}
       </StyledWrapperCategory>
       <FormAntd.Item
         name="summary"
@@ -175,5 +208,17 @@ const StyledCheckCircleOutlined = styled(CheckCircleOutlined)`
 const StyledCloseCircleOutlined = styled(CloseCircleOutlined)`
   cursor: pointer;
   font-size: 1rem;
+  color: red;
+`;
+
+const StyledSelect = styled(Select)`
+  .ant-select-selection-item .anticon.anticon-delete {
+    display: none;
+  }
+`;
+
+const StyledDeleteOutlined = styled(DeleteOutlined)`
+  float: right;
+  margin-top: 5px;
   color: red;
 `;

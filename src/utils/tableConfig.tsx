@@ -454,7 +454,7 @@ export const useTableConfig = (
         (state.params.search && state.params.search.length > 0) ? (
         <Select
           onChange={handleValueChange}
-          defaultValue={defaultValue.length > 0 ? defaultValue : text}
+          value={defaultValue.length > 0 ? defaultValue : text}
           style={{ width: '100%' }}
         >
           {options.map(option => {
@@ -482,7 +482,7 @@ export const useTableConfig = (
       ) : (
         <Select
           onChange={handleValueChange}
-          defaultValue={defaultValue.length > 0 ? defaultValue : text}
+          value={defaultValue.length > 0 ? defaultValue : text}
           style={{ width: '100%' }}
         >
           {options.map(option => {

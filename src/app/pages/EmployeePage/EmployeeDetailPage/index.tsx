@@ -21,8 +21,6 @@ import { BankAccounts } from './components/BankAccounts/Loadable';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
 
 import { UserDetailMessages } from './messages';
-import { useGetUserDetail } from './useGetUserDetail';
-import { useUpdateUserDetail } from './useUpdateUserDetail';
 import { Notes } from './components/Notes/Loadable';
 import { Device } from './components/Devices/Loadable';
 import { DetailForm } from './components/DetailForm/Loadable';
@@ -37,6 +35,7 @@ import { Route, Switch } from 'react-router-dom';
 import { useUserDetailsSlice } from './slice';
 import { omit } from 'lodash';
 import { EmployeeEditPage } from '../EmployeeEdit/Loadable';
+import { useHandleEmployeeDetail } from './useHandleEmployeeDetail';
 
 interface Props {}
 
@@ -64,8 +63,13 @@ export function EmployeeDetailPage(props: Props) {
   const history = useHistory();
   const { setBreadCrumb } = useBreadCrumbContext();
 
-  const { user } = useGetUserDetail(id);
-  const { create, update, loading } = useUpdateUserDetail();
+  const {
+    user,
+    getDetail,
+    create,
+    update,
+    loading,
+  } = useHandleEmployeeDetail();
 
   const [data, setData] = React.useState<Employee>();
 
@@ -134,6 +138,12 @@ export function EmployeeDetailPage(props: Props) {
   }, [history.location.pathname]);
 
   React.useEffect(() => {
+    if (id) {
+      getDetail(id);
+    }
+  }, [id, getDetail]);
+
+  React.useEffect(() => {
     if (user) {
       setData(user);
     }
@@ -186,10 +196,10 @@ export function EmployeeDetailPage(props: Props) {
   }, [history, location]);
 
   React.useEffect(() => {
-    if (!id) return;
+    if (!id || getDefaultTab !== TabKeys.details) return;
 
     dispatch(userDetailsSlice.actions.fetchEmployeeSkills(id));
-  }, [dispatch, id, userDetailsSlice.actions]);
+  }, [dispatch, getDefaultTab, id, userDetailsSlice.actions]);
 
   const handleSubmit = () => {
     form

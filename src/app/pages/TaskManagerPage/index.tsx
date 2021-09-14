@@ -7,7 +7,6 @@ import {
   Tooltip,
   Popover,
   Form,
-  CheckboxOptionType,
   TablePaginationConfig,
 } from 'antd';
 import {
@@ -15,6 +14,7 @@ import {
   EditOutlined,
   MoreOutlined,
   PlusCircleOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,23 +29,23 @@ import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { DialogModal } from 'app/components/DialogModal';
 import { TaskForm } from './components/Form';
-import { useAuth } from 'app/components/Auth/Context';
 import { Avatar } from 'app/components/Avatar/Loadable';
-import { PopoverBtn } from './components/PopoverBtn';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
 import { api } from 'utils/api';
-import { CreateTaskParam } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import {
+  Task,
+  CreateTaskParam,
+  UpdateTaskParam,
+} from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { IconButton } from 'app/components/Button';
-
-type Task = models.hr.Task;
+import { Followers } from './components/Followers';
+import { useHandleTasks } from './useHandleTasks';
 
 export const TaskManager = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
   useEffect(() => {
     setBreadCrumb('Tasks');
   }, [setBreadCrumb]);
-  const { identity } = useAuth();
   const { notify } = useNotify();
   const { actions } = useTaskManagerPage();
   const dispatch = useDispatch();
@@ -73,53 +73,27 @@ export const TaskManager = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isView, setIsView] = useState<boolean>(false);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
+  const [isFollowers, setIsFollowers] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState<boolean>(false);
-  const [projects, setProjects] = useState<any[]>([]);
-  const [employees, setEmployees] = useState<any[]>([]);
-  const [employeesOption, setEmployeesOption] = useState<CheckboxOptionType[]>(
-    [],
-  );
-  const [projectOption, setProjectOption] = useState<CheckboxOptionType[]>([]);
   const [deleteId, setDeleteId] = useState<string>('');
+  const [task, setTask] = useState<Task>();
 
-  const fetchListEmployee = async () => {
-    try {
-      const employees: any = await api.hr.employee.list();
-      const mapEmployeeOption: any = [...employees.results].map(employee => {
-        return {
-          label: employee.first_name + ' ' + employee.last_name,
-          value: employee.id,
-        };
-      });
-
-      setEmployeesOption(mapEmployeeOption);
-      setEmployees(employees.results);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const fetchListProject = async () => {
-    try {
-      const projects: any = await api.hr.project.list();
-      const mapProjectsOption: any = [...projects.results].map(project => {
-        return {
-          label: project.name,
-          value: project.id,
-        };
-      });
-
-      setProjectOption(mapProjectsOption);
-
-      setProjects(projects.results);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const {
+    projects,
+    employees,
+    projectOptions,
+    employeeOptions,
+    statuses,
+    getProjects,
+    getEmployees,
+    getStatuses,
+  } = useHandleTasks();
 
   useEffect(() => {
-    fetchListEmployee();
-    fetchListProject();
-  }, []);
+    getProjects();
+    getEmployees();
+    getStatuses();
+  }, [getEmployees, getProjects, getStatuses]);
 
   const [form] = Form.useForm();
 
@@ -141,11 +115,44 @@ export const TaskManager = () => {
     setOrdering(sorter);
   };
 
-  const handleRemoveFollower = async follower => {
+  const openFollowers = (record: Task) => {
+    setTask(record);
+    setIsFollowers(true);
+  };
+
+  const closeFollowers = () => {
+    setIsFollowers(false);
+  };
+
+  const updateStatus = async (record: Task) => {
+    let followerIds: string[] = [];
+
+    if (record.followers) {
+      followerIds = record.followers.map(follower => {
+        return follower.id;
+      });
+    }
+
     try {
-      console.log('delete');
-    } catch (e) {
-      console.log(e);
+      await api.hr.task.update({
+        ...record,
+        assignee_id: record.assignee.id,
+        project_id: record.project.id,
+        follower_ids: followerIds,
+      });
+      notify({
+        type: ToastMessageType.Info,
+        duration: 2,
+        message: 'Update Task Successfully',
+      });
+
+      fetchListTask();
+    } catch (error) {
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: 'Update Task Failed',
+      });
     }
   };
 
@@ -159,50 +166,39 @@ export const TaskManager = () => {
     },
     {
       title: 'Project',
-      dataIndex: 'project_name',
+      dataIndex: 'project',
       width: 100,
-      ...getColumnSearchInputCheckboxProps(['project'], projectOption, 0),
-      render: text => text,
+      ...getColumnSearchInputCheckboxProps(['project'], projectOptions, 0),
+      render: value => value.name,
     },
     {
       title: 'Assignee',
-      dataIndex: 'assignee_name',
+      dataIndex: 'assignee',
       width: 130,
-      render: text => text,
+      render: text => `${text.first_name} ${text.last_name}`,
       ...getCustomColumnSearchInputCheckboxProps(
         ['assignee'],
-        employeesOption,
+        employeeOptions,
         0,
       ),
     },
     {
       title: 'Followers',
-      dataIndex: 'follower',
+      dataIndex: 'followers',
       width: 130,
       render: (followers, record) => (
         <FlexWrapper>
           <FollowersWrapper>
             {followers.map(follower => (
-              <div
-                style={{ margin: '0 5px', cursor: 'pointer' }}
-                onClick={() => handleRemoveFollower(follower)}
-              >
-                <Avatar
-                  size={30}
-                  src={follower.avatar}
-                  name={follower.first_name + ' ' + follower.last_name}
-                />
-              </div>
+              <Avatar
+                size={30}
+                src={follower.avatar}
+                name={follower.first_name + ' ' + follower.last_name}
+              />
             ))}
           </FollowersWrapper>
 
-          <PopoverBtn
-            followers={followers}
-            task={record}
-            callback={() => {
-              fetchListTask();
-            }}
-          />
+          <SettingOutlined onClick={() => openFollowers(record)} />
         </FlexWrapper>
       ),
     },
@@ -212,22 +208,13 @@ export const TaskManager = () => {
       width: 130,
       ...getColumnSearchCheckboxProps(
         ['status'],
-        [
-          { label: 'Open', value: 'Open' },
-          { label: 'Going', value: 'Going' },
-          { label: 'Done', value: 'Done' },
-        ],
-        0,
-        [
-          { label: 'Open', value: 'Open' },
-          { label: 'Going', value: 'Going' },
-          { label: 'Done', value: 'Done' },
-        ],
-        async value => {
-          await api.hr.task.update({ ...value });
+        statuses,
+        undefined,
+        undefined,
+        record => {
+          updateStatus(record);
         },
       ),
-      // render: text => text,
     },
 
     {
@@ -258,8 +245,8 @@ export const TaskManager = () => {
           icon={<EditOutlined />}
           size="small"
           onClick={() => {
+            setTask(record);
             setIsUpdate(true);
-            form.setFieldsValue({ ...record });
           }}
         />
       </Tooltip>
@@ -285,7 +272,6 @@ export const TaskManager = () => {
   const handleConfirmDelete = async () => {
     try {
       if (isDeleteMulti) {
-        console.log('multi');
         const ids = state.selectedRowKeys || [];
         const arrPromise = await ids.map((id: string) => {
           return api.hr.task.delete(id);
@@ -328,18 +314,30 @@ export const TaskManager = () => {
     setIsModalVisible(false);
   };
 
+  const getTaskUpdate = (): UpdateTaskParam | undefined => {
+    if (!task) return;
+
+    let followerIds: string[] = [];
+    if (task.followers) {
+      followerIds = task.followers.map(follower => {
+        return follower.id;
+      });
+    }
+
+    return {
+      ...task,
+      assignee_id: task.assignee.id,
+      project_id: task.project.id,
+      follower_ids: followerIds,
+    };
+  };
+
   const handleSubmitFormTask = () => {
     form.validateFields().then(async values => {
       try {
         if (isCreate) {
           const newTask: CreateTaskParam = { ...values };
-          const data: Task = await api.hr.task.create(newTask);
-
-          if (!data || !identity) return;
-
-          await api.hr.task.createFollower(data.id, {
-            follower: identity.id,
-          });
+          await api.hr.task.create(newTask);
 
           notify({
             type: ToastMessageType.Info,
@@ -350,7 +348,10 @@ export const TaskManager = () => {
 
         // update
         if (isUpdate) {
-          await api.hr.task.update({ ...values });
+          await api.hr.task.update({
+            ...values,
+            follower_ids: getTaskUpdate()?.follower_ids,
+          });
           notify({
             type: ToastMessageType.Info,
             duration: 2,
@@ -471,11 +472,12 @@ export const TaskManager = () => {
           </Col>
         </Row>
       </Wrapper>
+
       <DeleteModal
         open={isModalVisible}
         handleDelete={handleConfirmDelete}
         handleCancel={handleCancelDeleteModal}
-        content="Are you sure you want to delete this information?"
+        content="Are you sure you want to delete this task?"
       />
 
       <DialogModal
@@ -490,9 +492,36 @@ export const TaskManager = () => {
         <TaskForm
           employees={employees}
           projects={projects}
+          statuses={statuses}
           form={form}
+          taskUpdate={isUpdate ? getTaskUpdate() : undefined}
           isView={!isCreate ? isView : false}
         />
+      </DialogModal>
+
+      <DialogModal
+        isOpen={isFollowers}
+        title="Followers"
+        handleCancel={closeFollowers}
+        footer={
+          <Button
+            key="onCancel"
+            shape="round"
+            size="large"
+            onClick={closeFollowers}
+          >
+            Cancel
+          </Button>
+        }
+      >
+        {task && (
+          <Followers
+            task={task}
+            callback={() => {
+              fetchListTask();
+            }}
+          />
+        )}
       </DialogModal>
     </>
   );
@@ -523,7 +552,6 @@ const FlexWrapper = styled.div`
     cursor: pointer;
   }
 `;
-
 const FollowersWrapper = styled.div`
   display: flex;
   align-items: center;

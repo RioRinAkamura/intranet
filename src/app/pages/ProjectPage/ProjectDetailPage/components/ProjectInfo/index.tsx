@@ -19,6 +19,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components/macro';
 import { datePickerViewProps, inputViewProps } from 'utils/types';
 import { ProjectDetailMessages } from '../../messages';
+import { useProjectDetail } from '../../useProjectDetail';
+import { getSelectValues } from 'utils/variable';
 
 interface Props {
   isView?: boolean;
@@ -44,43 +46,21 @@ export const ProjectInfo = (props: Props) => {
   const { t } = useTranslation();
   const [overview, setOverview] = useState('');
 
+  const {
+    priorities,
+    statuses,
+    getPriorities,
+    getStatuses,
+  } = useProjectDetail();
+
   const dispatch = useDispatch();
   const { actions } = useProjectsSlice();
   const projectState = useSelector(selectProjects);
 
-  const priority = [
-    {
-      name: t(ProjectDetailMessages.formProjectPriorityLow()),
-      value: 1,
-    },
-    {
-      name: t(ProjectDetailMessages.formProjectPriorityMedium()),
-      value: 2,
-    },
-    {
-      name: t(ProjectDetailMessages.formProjectPriorityHigh()),
-      value: 3,
-    },
-  ];
-
-  const status = [
-    {
-      name: t(ProjectDetailMessages.formProjectStatusPreparing()),
-      value: 1,
-    },
-    {
-      name: t(ProjectDetailMessages.formProjectStatusGoing()),
-      value: 2,
-    },
-    {
-      name: t(ProjectDetailMessages.formProjectStatusReleased()),
-      value: 3,
-    },
-    {
-      name: t(ProjectDetailMessages.formProjectStatusArchived()),
-      value: 4,
-    },
-  ];
+  useEffect(() => {
+    getPriorities();
+    getStatuses();
+  }, [getPriorities, getStatuses]);
 
   useEffect(() => {
     if (data) {
@@ -121,7 +101,9 @@ export const ProjectInfo = (props: Props) => {
           {t(ProjectDetailMessages.formProjectPriorityLabel())}
         </StyledTitle>
         <StyledData>
-          {(data?.priority && priority[data.priority].name) || 'N/A'}
+          {(data?.priority &&
+            getSelectValues(priorities, data.priority)?.label) ||
+            'N/A'}
         </StyledData>
       </StyledWrapperDiv>
 
@@ -130,7 +112,8 @@ export const ProjectInfo = (props: Props) => {
           {t(ProjectDetailMessages.formProjectStatusLabel())}
         </StyledTitle>
         <StyledData>
-          {(data?.status && status[data.status].name) || 'N/A'}
+          {(data?.status && getSelectValues(statuses, data.status)?.label) ||
+            'N/A'}
         </StyledData>
       </StyledWrapperDiv>
 
@@ -234,14 +217,13 @@ export const ProjectInfo = (props: Props) => {
                     ProjectDetailMessages.formProjectPriorityPlaceholder(),
                   )}
                 >
-                  {priority &&
-                    priority.map((item, index: number) => {
-                      return (
-                        <Option key={index} value={item.value}>
-                          {item.name}
-                        </Option>
-                      );
-                    })}
+                  {priorities.map((item, index: number) => {
+                    return (
+                      <Option key={index} value={item.value}>
+                        {item.label}
+                      </Option>
+                    );
+                  })}
                 </Select>
               </FormItem>
             </Col>
@@ -257,14 +239,13 @@ export const ProjectInfo = (props: Props) => {
                     ProjectDetailMessages.formProjectStatusPlaceholder(),
                   )}
                 >
-                  {status &&
-                    status.map((item, index: number) => {
-                      return (
-                        <Option key={index} value={item.value}>
-                          {item.name}
-                        </Option>
-                      );
-                    })}
+                  {statuses.map((item, index: number) => {
+                    return (
+                      <Option key={index} value={item.value}>
+                        {item.label}
+                      </Option>
+                    );
+                  })}
                 </Select>
               </FormItem>
             </Col>

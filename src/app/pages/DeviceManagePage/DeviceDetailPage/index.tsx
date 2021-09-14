@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import PageTitle from 'app/components/PageTitle';
-import { SettingOutlined } from '@ant-design/icons';
-import { FORM_RULES, HEALTH_STATUS } from 'constants/deviceManager';
-import { DeviceCategory } from '../DeviceCategory';
+import {
+  DeleteOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons';
+import { FORM_RULES } from 'constants/deviceManager';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCategories } from '../DeviceCategory/slice/selectors';
 import moment from 'moment';
 import {
   Col,
@@ -15,6 +18,7 @@ import {
   Row,
   Select,
   SelectProps,
+  Spin,
   Tabs,
 } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router';
@@ -29,6 +33,7 @@ import { PrivatePath } from 'utils/url.const';
 import { CardForm } from 'app/components/CardForm';
 import { Route, Switch } from 'react-router-dom';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
+import { DeleteModal } from 'app/components/DeleteModal';
 
 const { Option } = Select;
 
@@ -54,14 +59,24 @@ const selectProps: SelectProps<SelectValue> = {
 const { TabPane } = Tabs;
 
 export const DeviceDetailPage = props => {
-  const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
-  const categories = useSelector(selectCategories);
   const { id } = useParams<Record<string, string>>();
   const [isCreate, setIsCreate] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [data, setData] = useState<any>();
-  const { detail, loading, create, update } = useDeviceDetail();
+  const {
+    detail,
+    categories,
+    loading,
+    loadingCat,
+    healthStatuses,
+    fetchDetail,
+    fetchCategories,
+    create,
+    createCategory,
+    update,
+    deleteCategory,
+    fetchHealthStatuses,
+  } = useDeviceDetail();
   const location = useLocation<LocationState>();
   const history = useHistory();
   const isView = isCreate || isEdit ? false : true;
@@ -71,37 +86,47 @@ export const DeviceDetailPage = props => {
   const deviceState = useSelector(selectState);
 
   const [description, setDes] = useState<string>('');
+  const [categoryId, setCategoryId] = useState<string>('');
+  const [visible, setVisible] = useState<boolean>(false);
+  const [isCreateCategory, setIsCreateCategory] = React.useState<boolean>(
+    false,
+  );
 
   useEffect(() => {
-    if (data) {
-      setDes(data.description);
+    fetchHealthStatuses();
+  }, [fetchHealthStatuses]);
+
+  useEffect(() => {
+    if (detail) {
+      setDes(detail.description);
       form.setFieldsValue({
-        ...data,
-        category_id: data.category?.id,
-        since: data.since && moment().set({ year: data.since }),
+        ...detail,
+        category_id: detail.category?.id,
+        since: detail.since && moment().set({ year: detail.since }),
       });
     }
-  }, [data, form, isEdit]);
+  }, [detail, form, isEdit]);
 
   useEffect(() => {
     if (id) {
+      fetchDetail(id);
+    }
+  }, [id, fetchDetail]);
+
+  useEffect(() => {
+    if (detail) {
       setIsCreate(false);
-      (async () => {
-        const response: any = await detail(id);
-        setData(response);
-        setBreadCrumb('Devices / ' + response.code);
-      })();
+      setBreadCrumb('Devices / ' + detail.code);
     } else {
       setIsCreate(true);
       setBreadCrumb('Devices / Create');
     }
-  }, [id, detail, setBreadCrumb]);
+  }, [detail, setBreadCrumb]);
 
   // form handler
   const handleSubmit = () => {
     form.validateFields().then(async values => {
       const mapValues = {
-        // ...omit(values, ['id']),
         ...values,
         since: Number(moment(values.since).format('yyyy')),
       };
@@ -109,20 +134,15 @@ export const DeviceDetailPage = props => {
       try {
         if (isCreate) {
           delete mapValues.id;
-          // const response = await fakeAPI.post('device-management/devices/', mapValues);
           await create(mapValues);
-
-          // post employee device
         }
 
         if (isEdit) {
           const data = await update(mapValues);
-          setData(data);
-          setIsEdit(false);
-
-          // update employee device
+          if (data) {
+            setIsEdit(false);
+          }
         }
-        // console.log(response, 'res');
       } catch (e) {
         console.log(e);
       }
@@ -136,10 +156,6 @@ export const DeviceDetailPage = props => {
     } else {
       history.push(`${PrivatePath.DEVICES}/${id}/history`);
     }
-  };
-
-  const handleCloseModal = () => {
-    setVisible(false);
   };
 
   const onCancel = () => {
@@ -163,40 +179,62 @@ export const DeviceDetailPage = props => {
     }
   };
 
+  const onCreateCategory = async () => {
+    const name = form.getFieldValue('category_name');
+    const response = await createCategory(name);
+    if (response) {
+      form.resetFields(['category_name']);
+      form.setFieldsValue({ category_id: response.id });
+      setIsCreateCategory(false);
+    }
+  };
+
+  const handleDeleteCategory = (id: string) => {
+    setVisible(true);
+    setCategoryId(id);
+  };
+
+  const onDeleteCategory = async () => {
+    const isDeleted = await deleteCategory(categoryId);
+    if (isDeleted) {
+      setVisible(false);
+      form.resetFields(['category_name']);
+      form.setFieldsValue({ category_id: null });
+    }
+  };
+
   const deviceDetails = () => (
     <CardForm isView={isView} onCancel={onCancel} onSubmit={onSubmit}>
       <StyledWrapperDiv>
         <StyledTitle>Device Code</StyledTitle>
-        <StyledData>{data?.code || 'N/A'}</StyledData>
+        <StyledData>{detail?.code || 'N/A'}</StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>
         <StyledTitle>Category</StyledTitle>
-        <StyledData>{data?.category?.name || 'N/A'}</StyledData>
+        <StyledData>{detail?.category?.name || 'N/A'}</StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>
         <StyledTitle>Since</StyledTitle>
-        <StyledData>{data?.since || 'N/A'}</StyledData>
+        <StyledData>{detail?.since || 'N/A'}</StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>
         <StyledTitle>Health Status</StyledTitle>
-        <StyledData>{data?.health_status || 'N/A'}</StyledData>
+        <StyledData>{detail?.health_status || 'N/A'}</StyledData>
       </StyledWrapperDiv>
 
       <StyledWrapperDiv>
         <StyledTitle>Description</StyledTitle>
-        <StyledData>
-          <RichEditor
-            width="100%"
-            data={data?.description || 'N/A'}
-            isView={isView}
-          />
-        </StyledData>
+        <StyledData>{detail?.description || 'N/A'}</StyledData>
       </StyledWrapperDiv>
     </CardForm>
   );
+
+  useEffect(() => {
+    if (!isView) fetchCategories();
+  }, [fetchCategories, isView]);
 
   const getDefaultTab = React.useMemo(() => {
     if (history.location.pathname.includes('history')) {
@@ -213,8 +251,10 @@ export const DeviceDetailPage = props => {
   }, [history, location.pathname]);
 
   useEffect(() => {
-    dispatch(actions.fetchIdentity());
-  }, [actions, dispatch]);
+    if (!isView && !isEdit) {
+      dispatch(actions.fetchIdentity());
+    }
+  }, [actions, dispatch, isEdit, isView]);
 
   useEffect(() => {
     if (deviceState.identity && !isEdit) {
@@ -224,15 +264,12 @@ export const DeviceDetailPage = props => {
 
   return (
     <>
-      <DeviceCategory visible={visible} onCancel={handleCloseModal} />
       <PageTitle
         title={
           isView ? 'Device Detail' : isEdit ? 'Edit Device' : 'Create Device'
         }
         className="no-responsive"
-      >
-        <SettingOutlined onClick={() => setVisible(true)} />
-      </PageTitle>
+      />
       {isView ? (
         <>
           <StyledTabs
@@ -289,29 +326,67 @@ export const DeviceDetailPage = props => {
                   </FormItem>
                 </Col>
                 <Col span={12}>
-                  <FormItem
-                    rules={FORM_RULES.CATEGORY}
-                    name="category_id"
-                    label="Category"
-                  >
-                    <Select
-                      placeholder="Category"
-                      {...(isView ? selectProps : {})}
-                      size="large"
-                      style={{
-                        width: '100%',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      {categories?.map(category => {
-                        return (
-                          <Option key={category.id} value={category.id}>
-                            {category.name}
-                          </Option>
-                        );
-                      })}
-                    </Select>
-                  </FormItem>
+                  <StyledWrapperCategory>
+                    {isCreateCategory ? (
+                      <FormItem name="category_name" label="Category">
+                        <Input
+                          size="large"
+                          placeholder="Enter category"
+                          onPressEnter={onCreateCategory}
+                        />
+                      </FormItem>
+                    ) : (
+                      <FormItem
+                        rules={FORM_RULES.CATEGORY}
+                        name="category_id"
+                        label="Category"
+                      >
+                        <StyledSelect
+                          placeholder="Category"
+                          {...(isView ? selectProps : {})}
+                          size="large"
+                          loading={loadingCat}
+                        >
+                          {categories &&
+                            categories.map(category => {
+                              return (
+                                <Option key={category.id} value={category.id}>
+                                  <div style={{ float: 'left' }}>
+                                    {category.name}
+                                  </div>
+                                  <StyledDeleteOutlined
+                                    onClick={() =>
+                                      handleDeleteCategory(category.id)
+                                    }
+                                  />
+                                </Option>
+                              );
+                            })}
+                        </StyledSelect>
+                      </FormItem>
+                    )}
+
+                    {isCreateCategory ? (
+                      <>
+                        {loadingCat ? (
+                          <Spin />
+                        ) : (
+                          <>
+                            <StyledCheckCircleOutlined
+                              onClick={onCreateCategory}
+                            />
+                            <StyledCloseCircleOutlined
+                              onClick={() => setIsCreateCategory(false)}
+                            />
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <StyledPlusCircleOutlined
+                        onClick={() => setIsCreateCategory(true)}
+                      />
+                    )}
+                  </StyledWrapperCategory>
                 </Col>
               </Row>
               <Row gutter={[32, 32]}>
@@ -336,14 +411,18 @@ export const DeviceDetailPage = props => {
                       size="large"
                       placeholder="Select Health Status"
                     >
-                      {HEALTH_STATUS.map(i => (
+                      {healthStatuses?.map(i => (
                         <Option value={i.value}>{i.label}</Option>
                       ))}
                     </Select>
                   </FormItem>
                 </Col>
               </Row>
-              <FormItem name="description" label="Description">
+              <FormItem
+                rules={FORM_RULES.DESCRIPTION}
+                name="description"
+                label="Description"
+              >
                 <RichEditor
                   width="100%"
                   data={description}
@@ -357,6 +436,14 @@ export const DeviceDetailPage = props => {
           </CardForm>
         </StyledWrapperForm>
       )}
+
+      <DeleteModal
+        open={visible}
+        handleDelete={onDeleteCategory}
+        handleCancel={() => setVisible(false)}
+        loading={loadingCat}
+        content="All devices with this category will be deleted. Are you sure?"
+      />
     </>
   );
 };
@@ -404,4 +491,49 @@ const StyledDatePicker = styled(DatePicker)`
 
 const StyledWrapperForm = styled.div`
   margin-top: 2rem;
+`;
+
+const StyledWrapperCategory = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  .ant-row.ant-form-item {
+    width: 100%;
+    margin-bottom: 0;
+  }
+`;
+
+const StyledPlusCircleOutlined = styled(PlusCircleOutlined)`
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  color: blue;
+`;
+
+const StyledCheckCircleOutlined = styled(CheckCircleOutlined)`
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 0 0.5rem;
+  color: green;
+`;
+
+const StyledCloseCircleOutlined = styled(CloseCircleOutlined)`
+  cursor: pointer;
+  font-size: 1rem;
+  color: red;
+`;
+
+const StyledSelect = styled(Select)`
+  cursor: pointer;
+  width: 100%;
+
+  .ant-select-selection-item .anticon.anticon-delete {
+    display: none;
+  }
+`;
+
+const StyledDeleteOutlined = styled(DeleteOutlined)`
+  float: right;
+  margin-top: 5px;
+  color: red;
 `;

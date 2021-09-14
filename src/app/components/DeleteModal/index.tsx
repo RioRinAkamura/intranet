@@ -1,12 +1,12 @@
 import { Button, Modal } from 'antd';
 import React from 'react';
-import styled from 'styled-components';
 
 interface Props {
   open: boolean;
   cancelText?: string;
   deleteText?: string;
   content: string;
+  loading?: boolean;
   handleDelete: () => void;
   handleCancel: () => void;
 }
@@ -17,6 +17,7 @@ export const DeleteModal = React.memo((props: Props) => {
     cancelText,
     deleteText,
     content,
+    loading,
     handleDelete,
     handleCancel,
   } = props;
@@ -24,6 +25,7 @@ export const DeleteModal = React.memo((props: Props) => {
   return (
     <Modal
       visible={open}
+      title="Confirmation"
       onCancel={handleCancel}
       footer={[
         <Button key="cancel" size="large" shape="round" onClick={handleCancel}>
@@ -36,16 +38,13 @@ export const DeleteModal = React.memo((props: Props) => {
           danger
           shape="round"
           onClick={handleDelete}
+          loading={loading}
         >
           {deleteText || 'Delete'}
         </Button>,
       ]}
     >
-      <P>{content}</P>
+      {content}
     </Modal>
   );
 });
-
-const P = styled.p`
-  font-size: large;
-`;

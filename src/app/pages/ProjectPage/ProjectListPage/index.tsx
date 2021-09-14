@@ -51,6 +51,7 @@ import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
 import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 import { DeleteType } from 'utils/types';
+import { useProjectDetail } from '../ProjectDetailPage/useProjectDetail';
 
 export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -84,7 +85,13 @@ export const ProjectListPage: React.FC = () => {
   const isFilter = useSelector(selectProjectsIsFilter);
   const getProjectState = useSelector(selectProjects);
   const { id } = useParams<Record<string, string>>();
-
+  const {
+    update,
+    priorities,
+    statuses,
+    getPriorities,
+    getStatuses,
+  } = useProjectDetail();
   const {
     setSelectedRows,
     setSearchText,
@@ -109,7 +116,9 @@ export const ProjectListPage: React.FC = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects]);
+    getPriorities();
+    getStatuses();
+  }, [fetchProjects, getPriorities, getStatuses]);
 
   // handle project member
   useEffect(() => {
@@ -345,11 +354,19 @@ export const ProjectListPage: React.FC = () => {
       ...getColumnSorterProps('priority', 2),
       ...getColumnSearchCheckboxProps(
         ['priority'],
-        [
-          { label: 'Low', value: 1 },
-          { label: 'Medium', value: 2 },
-          { label: 'High', value: 3 },
-        ],
+        priorities,
+        undefined,
+        undefined,
+        async value => {
+          try {
+            const response = await update(value);
+            if (response) {
+              dispatch(actions.fetchProjects({ params: params }));
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
       ),
       width: 140,
     },
@@ -360,18 +377,19 @@ export const ProjectListPage: React.FC = () => {
       ...getColumnSorterProps('status', 2),
       ...getColumnSearchCheckboxProps(
         ['status'],
-        [
-          { label: 'Preparing', value: 1 },
-          { label: 'Going', value: 2 },
-          { label: 'Released', value: 3 },
-          { label: 'Archived', value: 4 },
-        ],
-        0,
-        [
-          { label: 'Preparing', value: 1 },
-          { label: 'Going', value: 2 },
-          { label: 'Release', value: 3 },
-        ],
+        statuses,
+        undefined,
+        undefined,
+        async value => {
+          try {
+            const response = await update(value);
+            if (response) {
+              dispatch(actions.fetchProjects({ params: params }));
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
       ),
     },
     {

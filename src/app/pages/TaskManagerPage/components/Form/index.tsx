@@ -1,8 +1,10 @@
 import React from 'react';
-import { FORM_RULES, STATUS } from 'constants/task';
+import { FORM_RULES } from 'constants/task';
 
 import { Form, FormInstance, Select, Input } from 'antd';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
+import { UpdateTaskParam } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { SelectOption } from '@hdwebsoft/boilerplate-api-sdk/libs/type';
 
 const { Option } = Select;
 
@@ -11,13 +13,25 @@ interface FormProps {
   isView?: boolean;
   employees: any[];
   projects: any[];
+  statuses: SelectOption[];
+  taskUpdate?: UpdateTaskParam;
 }
 export const TaskForm: React.FC<FormProps> = ({
   form,
   isView,
   employees,
   projects,
+  taskUpdate,
+  statuses,
 }) => {
+  React.useEffect(() => {
+    if (taskUpdate) {
+      form.setFieldsValue({
+        ...taskUpdate,
+      });
+    }
+  }, [form, taskUpdate]);
+
   return (
     <Form layout="vertical" form={form}>
       <Form.Item name="id" hidden>
@@ -26,8 +40,7 @@ export const TaskForm: React.FC<FormProps> = ({
       <Form.Item name="title" rules={FORM_RULES.TITLE} label="Title">
         <Input size="large" />
       </Form.Item>
-      <Form.Item name="project" rules={FORM_RULES.PROJECT} label="Project">
-        {/* <Input size="large" placeholder="Type" disabled={isView} /> */}
+      <Form.Item name="project_id" rules={FORM_RULES.PROJECT} label="Project">
         <Select placeholder="Project" disabled={isView} size="large">
           {projects.map(project => {
             return <Option value={project.id}>{project.name}</Option>;
@@ -36,13 +49,13 @@ export const TaskForm: React.FC<FormProps> = ({
       </Form.Item>
       <Form.Item name="status" label="Status" initialValue={'Open'}>
         <Select disabled={isView} placeholder="Status" size="large">
-          {STATUS.map(i => (
+          {statuses.map(i => (
             <Option value={i.value}>{i.label}</Option>
           ))}
         </Select>
       </Form.Item>
-      <Form.Item name="assignee" label="Assignee">
-        <Select placeholder="assignee" disabled={isView} size="large">
+      <Form.Item name="assignee_id" label="Assignee">
+        <Select placeholder="Assignee" disabled={isView} size="large">
           {employees.map(employee => {
             return (
               <Option value={employee.id}>
@@ -54,7 +67,7 @@ export const TaskForm: React.FC<FormProps> = ({
       </Form.Item>
       <Form.Item name="description" label="Description">
         <RichEditor
-          data={''}
+          data={taskUpdate?.description}
           width="100%"
           callback={value => {
             form.setFieldsValue({ description: value });

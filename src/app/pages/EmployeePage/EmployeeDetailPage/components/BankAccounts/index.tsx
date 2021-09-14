@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Col, Divider, Form, FormInstance, Input, Row, Select } from 'antd';
 import { UserDetailMessages } from '../../messages';
 import { TitlePath } from '../TitlePath';
+import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
 
 const banks = [
   {
@@ -44,6 +45,11 @@ const { Option } = Select;
 export const BankAccounts = (props: BankAccountsProps) => {
   const { isView, isEdit } = props;
   const { t } = useTranslation();
+  const { bankNames, getBankNames } = useHandleEmployeeDetail();
+
+  React.useEffect(() => {
+    getBankNames();
+  }, [getBankNames]);
 
   return (
     <BankAccountsStyled>
@@ -189,10 +195,10 @@ export const BankAccounts = (props: BankAccountsProps) => {
                         UserDetailMessages.formBankNamePlaceholder(),
                       )}
                     >
-                      {banks.map(item => {
+                      {bankNames?.map(item => {
                         return (
-                          <Option key={item.id} value={item.name}>
-                            {item.name}
+                          <Option key={item.value} value={item.label}>
+                            {item.label}
                           </Option>
                         );
                       })}

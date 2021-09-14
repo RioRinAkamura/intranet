@@ -1,49 +1,41 @@
 import { Helmet } from 'react-helmet-async';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { ColumnProps } from 'antd/lib/table';
 import { Col, Row, Table } from 'antd';
-import { api } from 'utils/api';
-
-interface DeviceHistoryType {
-  user: string;
-  employee: string;
-  note: string;
-}
+import { useDeviceHistory } from './useDeviceHistory';
+import { DeviceHistory as DeviceHistoryType } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
 
 interface DeviceHistoryProps {
   device_id: string;
 }
 
-export const DeviceHistory = ({ device_id }: DeviceHistoryProps) => {
-  const [histories, setHistories] = useState<DeviceHistoryType[]>([]);
-  const fetchListHistory = useCallback(async () => {
-    const histories: any = await api.hr.device.history.list(device_id);
-
-    setHistories(histories.results);
-  }, [device_id]);
+export const DeviceHistory = (props: DeviceHistoryProps) => {
+  const { device_id } = props;
+  const { histories, loading, fetchHistories } = useDeviceHistory();
 
   useEffect(() => {
-    fetchListHistory();
-  }, [fetchListHistory]);
+    if (device_id) {
+      fetchHistories(device_id);
+    }
+  }, [device_id, fetchHistories]);
 
   const columns: ColumnProps<DeviceHistoryType>[] = [
     {
       title: 'Employee',
       dataIndex: 'consignee',
-      width: 130,
+      width: 350,
       render: text => text.first_name + ' ' + text.last_name,
     },
     {
       title: 'Device',
       dataIndex: 'device',
-      width: 130,
+      width: 350,
       render: text => text.code,
     },
     {
       title: 'Note',
       dataIndex: 'note',
-      width: 130,
       render: text => text,
     },
   ];
@@ -59,9 +51,10 @@ export const DeviceHistory = ({ device_id }: DeviceHistoryProps) => {
           <Col span={24}>
             <TableWrapper>
               <Table
+                loading={loading}
                 columns={columns}
                 rowKey="id"
-                dataSource={histories}
+                dataSource={histories.results}
                 scroll={{ x: 1100 }}
               />
             </TableWrapper>

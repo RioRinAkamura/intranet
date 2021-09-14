@@ -21,7 +21,7 @@ import { SelectValue } from 'antd/lib/select';
 import { TitlePath } from '../TitlePath';
 import { TagsInput } from 'app/components/Tags';
 import { Skills } from 'app/components/Skills';
-import { api } from 'utils/api';
+import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
 
 const { Option } = Select;
 
@@ -48,10 +48,17 @@ export const JobInfo = (props: JobInfoProps) => {
   const { isView, form, isEdit, employeeId } = props;
   const { t } = useTranslation();
   const isShowSkill = isEdit || isView ? true : false;
+  const {
+    positions,
+    types,
+    getPositions,
+    getTypes,
+  } = useHandleEmployeeDetail();
 
-  const getPositions = (): string[] => {
-    return api.hr.employee.getEmployeePositions();
-  };
+  React.useEffect(() => {
+    getPositions();
+    getTypes();
+  }, [getPositions, getTypes]);
 
   return (
     <>
@@ -81,8 +88,8 @@ export const JobInfo = (props: JobInfoProps) => {
                   !isView && t(UserDetailMessages.formPositionPlaceholder())
                 }
               >
-                {getPositions()?.map(value => {
-                  return <Option value={value}>{value}</Option>;
+                {positions?.map(value => {
+                  return <Option value={value.value}>{value.label}</Option>;
                 })}
               </StyledSelect>
             )}
@@ -125,18 +132,9 @@ export const JobInfo = (props: JobInfoProps) => {
                 size="large"
                 placeholder={t(UserDetailMessages.formTypePlaceholder())}
               >
-                <Option value="Full-time">
-                  {t(UserDetailMessages.formTypeFullTimeLabel())}
-                </Option>
-                <Option value="Part-time">
-                  {t(UserDetailMessages.formTypePartTimeLabel())}
-                </Option>
-                <Option value="Probation">
-                  {t(UserDetailMessages.formTypeProbationLabel())}
-                </Option>
-                <Option value="Etc">
-                  {t(UserDetailMessages.formTypeEtcLabel())}
-                </Option>
+                {types?.map(value => {
+                  return <Option value={value.value}>{value.label}</Option>;
+                })}
               </Select>
             )}
           </FormItem>

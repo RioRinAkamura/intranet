@@ -63,11 +63,10 @@ export const ChangeLogs = React.memo(({ project_id }: ChangeLogsProps) => {
     {
       title: `${t(ChangeLogsMessages.tableDateTimeColumn())}`,
       dataIndex: 'change_date',
-      width: '200px',
+      width: '250px',
       render: value => (
         <p>
-          {moment(value).format('HH:mm')} <br />
-          {moment(value).format(DATE_FORMAT)}
+          {moment(value).format('HH:mm')} {moment(value).format(DATE_FORMAT)}
         </p>
       ),
       ...getColumnSorterProps('change_date', 1),
