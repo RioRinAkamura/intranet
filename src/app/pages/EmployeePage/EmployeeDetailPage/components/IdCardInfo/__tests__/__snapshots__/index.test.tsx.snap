@@ -1,18 +1,206 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<IdCardInfo  /> should match snapshot 1`] = `
-.c0 {
+.c1 {
   color: #1890ff;
   margin-bottom: 24px;
+}
+
+.c2 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 0px;
+}
+
+.c2 div {
+  width: 100%;
+}
+
+.c2 label {
+  font-weight: 500;
+}
+
+.c0 .label {
+  font-weight: 500;
 }
 
 <div
   class="c0"
 >
-  <b>
-     
-    UserDetailPage.modal.form.profile.idCard.title
-    Id Card Information
-  </b>
+  <div
+    class="c1"
+  >
+    <b>
+       
+      UserDetailPage.modal.form.profile.idCard.title
+      ID card information
+    </b>
+  </div>
+  <div
+    class="ant-row"
+    style="margin-left: -16px; margin-right: -16px;"
+  >
+    <div
+      class="ant-col ant-col-xs-24 ant-col-md-24"
+      style="padding-left: 16px; padding-right: 16px;"
+    >
+      <div
+        class="ant-row ant-row-middle"
+        style="margin-top: -6px; margin-bottom: -6px;"
+      >
+        <div
+          class="ant-col ant-col-xs-24 ant-col-md-8"
+          style="padding-top: 6px; padding-bottom: 6px;"
+        >
+          <span
+            class="label"
+          >
+            UserDetailPage.modal.form.profile.idNumber.label
+            ID number
+          </span>
+        </div>
+        <div
+          class="ant-col ant-col-xs-24 ant-col-md-16"
+          style="padding-top: 6px; padding-bottom: 6px;"
+        >
+          <div
+            class="ant-row ant-form-item c2"
+          >
+            <div
+              class="ant-col ant-form-item-control"
+            >
+              <div
+                class="ant-form-item-control-input"
+              >
+                <div
+                  class="ant-form-item-control-input-content"
+                >
+                  <input
+                    class="ant-input ant-input-lg ant-input-borderless"
+                    id="id_number"
+                    placeholder=""
+                    readonly=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-col ant-col-xs-24 ant-col-md-24"
+      style="padding-left: 16px; padding-right: 16px;"
+    >
+      <div
+        class="ant-row ant-row-middle"
+        style="margin-top: -6px; margin-bottom: -6px;"
+      >
+        <div
+          class="ant-col ant-col-xs-24 ant-col-md-8"
+          style="padding-top: 6px; padding-bottom: 6px;"
+        >
+          <span
+            class="label"
+          >
+            UserDetailPage.modal.form.profile.issuedDate.label
+            Issued date
+          </span>
+        </div>
+        <div
+          class="ant-col ant-col-xs-24 ant-col-md-16"
+          style="padding-top: 6px; padding-bottom: 6px;"
+        >
+          <div
+            class="ant-row ant-form-item c2"
+          >
+            <div
+              class="ant-col ant-form-item-control"
+            >
+              <div
+                class="ant-form-item-control-input"
+              >
+                <div
+                  class="ant-form-item-control-input-content"
+                >
+                  <div
+                    class="ant-picker ant-picker-large ant-picker-borderless"
+                  >
+                    <div
+                      class="ant-picker-input"
+                    >
+                      <input
+                        autocomplete="off"
+                        id="issued_date"
+                        placeholder=""
+                        readonly=""
+                        size="12"
+                        title=""
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-col ant-col-xs-24 ant-col-md-24"
+      style="padding-left: 16px; padding-right: 16px;"
+    >
+      <div
+        class="ant-row ant-row-middle"
+        style="margin-top: -6px; margin-bottom: -6px;"
+      >
+        <div
+          class="ant-col ant-col-xs-24 ant-col-md-8"
+          style="padding-top: 6px; padding-bottom: 6px;"
+        >
+          <span
+            class="label"
+          >
+            UserDetailPage.modal.form.profile.issuedPlace.label
+            Issued place
+          </span>
+        </div>
+        <div
+          class="ant-col ant-col-xs-24 ant-col-md-16"
+          style="padding-top: 6px; padding-bottom: 6px;"
+        >
+          <div
+            class="ant-row ant-form-item c2"
+          >
+            <div
+              class="ant-col ant-form-item-control"
+            >
+              <div
+                class="ant-form-item-control-input"
+              >
+                <div
+                  class="ant-form-item-control-input-content"
+                >
+                  <input
+                    class="ant-input ant-input-lg ant-input-borderless"
+                    id="issued_place"
+                    placeholder=""
+                    readonly=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;

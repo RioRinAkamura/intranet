@@ -92,6 +92,7 @@ export const AvatarPath = memo((props: Props) => {
     if (isEdit || isView) {
       setImageURL(user?.avatar);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, isView, userDetails, isRefresh, isEdit, user?.avatar]);
 
   return (

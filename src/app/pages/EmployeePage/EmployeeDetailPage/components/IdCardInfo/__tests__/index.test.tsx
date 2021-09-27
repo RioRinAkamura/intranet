@@ -20,7 +20,7 @@ matchMedia();
 describe('<IdCardInfo  />', () => {
   it('should match snapshot', () => {
     const loadingIndicator = render(
-      <IdCardInfo isView={true} isEdit={false} />,
+      <IdCardInfo isView={true} isEdit={false} form={undefined} />,
     );
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });

@@ -1,8 +1,6 @@
+import { render } from '@testing-library/react';
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
-
 import { DialogModal } from '..';
-import { createRenderer } from 'react-test-renderer/shallow';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -15,12 +13,9 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
-const renderer = createRenderer();
-
 describe('<DialogModal  />', () => {
-  let utils;
-
   it('shoud render dialog modal', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { queryByText, getByRole } = render(
       <DialogModal okText="Submit" isOpen={true}>
         Test Modal
