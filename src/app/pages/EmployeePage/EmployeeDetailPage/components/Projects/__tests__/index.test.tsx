@@ -41,7 +41,7 @@ describe('<Projects  />', () => {
   it('should match snapshot', () => {
     const loadingIndicator = render(
       <Provider store={configureAppStore()}>
-        <Projects />
+        <Projects employeeId={'string'} />
       </Provider>,
     );
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();

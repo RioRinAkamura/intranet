@@ -1,11 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Projects  /> should match snapshot 1`] = `
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
 .c0 {
   background-color: white;
+  margin-top: 2rem;
   padding: 1rem;
-  box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
-  border-radius: 12px;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  margin-top: 0;
 }
 
 .c1 {
@@ -20,28 +39,28 @@ exports[`<Projects  /> should match snapshot 1`] = `
   padding-bottom: 20px;
 }
 
-.c2 svg {
+.c3 svg {
   vertical-align: baseline;
 }
 
 <div
-  class="c0"
+  class="CardLayout-sc-1udhcjh-0 c0"
 >
   <div
     class="c1"
   >
     <button
-      class="ant-btn ant-btn-primary ant-btn-lg c2"
+      class="ant-btn ant-btn-primary ant-btn-round c2 c3"
       type="button"
     >
       <span
-        aria-label="project"
-        class="anticon anticon-project"
+        aria-label="plus-circle"
+        class="anticon anticon-plus-circle"
         role="img"
       >
         <svg
           aria-hidden="true"
-          data-icon="project"
+          data-icon="plus-circle"
           fill="currentColor"
           focusable="false"
           height="1em"
@@ -49,12 +68,15 @@ exports[`<Projects  /> should match snapshot 1`] = `
           width="1em"
         >
           <path
-            d="M280 752h80c4.4 0 8-3.6 8-8V280c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v464c0 4.4 3.6 8 8 8zm192-280h80c4.4 0 8-3.6 8-8V280c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v184c0 4.4 3.6 8 8 8zm192 72h80c4.4 0 8-3.6 8-8V280c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v256c0 4.4 3.6 8 8 8zm216-432H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zm-40 728H184V184h656v656z"
+            d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"
+          />
+          <path
+            d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
           />
         </svg>
       </span>
       <span>
-        Add Project
+        Add project
       </span>
     </button>
   </div>
@@ -359,6 +381,16 @@ exports[`<Projects  /> should match snapshot 1`] = `
                     <th
                       class="ant-table-cell"
                     >
+                      Start Date
+                    </th>
+                    <th
+                      class="ant-table-cell"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="ant-table-cell"
+                    >
                       Actions
                     </th>
                   </tr>
@@ -416,13 +448,31 @@ exports[`<Projects  /> should match snapshot 1`] = `
                          
                       </div>
                     </td>
+                    <td
+                      style="padding: 0px; border: 0px; height: 0px;"
+                    >
+                      <div
+                        style="height: 0px; overflow: hidden;"
+                      >
+                         
+                      </div>
+                    </td>
+                    <td
+                      style="padding: 0px; border: 0px; height: 0px;"
+                    >
+                      <div
+                        style="height: 0px; overflow: hidden;"
+                      >
+                         
+                      </div>
+                    </td>
                   </tr>
                   <tr
                     class="ant-table-placeholder"
                   >
                     <td
                       class="ant-table-cell"
-                      colspan="5"
+                      colspan="7"
                     >
                       <div
                         class="ant-table-expanded-row-fixed"

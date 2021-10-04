@@ -16,7 +16,7 @@ jest.mock('react-i18next', () => ({
 
 describe('<ChangeLogs  />', () => {
   it('should match snapshot', () => {
-    const loadingIndicator = render(<ChangeLogs />);
+    const loadingIndicator = render(<ChangeLogs employeeId={'string'} />);
     expect(loadingIndicator.container.firstChild).toMatchSnapshot();
   });
 });

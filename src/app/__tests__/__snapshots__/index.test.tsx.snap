@@ -29,27 +29,25 @@ exports[`<App /> should render and match the snapshot 1`] = `
     }
   >
     <ToastContextProvider>
-      <Switch>
-        <PublicRoute
-          component={[Function]}
-          exact={true}
-          path="/login"
-          restricted={true}
-        />
-        <PublicRoute
-          component={[Function]}
-          exact={true}
-          path="/forgot-password"
-          restricted={true}
-        />
-        <PublicRoute
-          component={[Function]}
-          exact={true}
-          path="/reset-password"
-          restricted={true}
-        />
-        <AppLayout>
-          <Switch>
+      <BreadCrumbsContextProvider>
+        <Switch>
+          <PublicRoute
+            component={[Function]}
+            exact={true}
+            path="/login"
+            restricted={true}
+          />
+          <PublicRoute
+            component={[Function]}
+            path="/forgot-password"
+            restricted={true}
+          />
+          <PublicRoute
+            component={[Function]}
+            path="/reset-password"
+            restricted={true}
+          />
+          <AppLayout>
             <PrivateRoute
               component={[Function]}
               exact={true}
@@ -57,95 +55,42 @@ exports[`<App /> should render and match the snapshot 1`] = `
             />
             <PrivateRoute
               component={[Function]}
-              exact={true}
               path="/employees"
             />
             <PrivateRoute
               component={[Function]}
-              exact={true}
-              path="/employees/:id"
-            />
-            <PrivateRoute
-              component={[Function]}
-              exact={true}
-              path="/employees/:id/notes"
-            />
-            <PrivateRoute
-              component={[Function]}
-              exact={true}
-              path="/employees/:id/projects"
-            />
-            <PrivateRoute
-              component={[Function]}
-              exact={true}
-              path="/employees/create"
-            />
-            <PrivateRoute
-              component={[Function]}
-              exact={true}
               path="/projects"
             />
             <PrivateRoute
               component={[Function]}
-              exact={true}
               path="/leave_applications"
             />
             <PrivateRoute
               component={[Function]}
-              exact={true}
               path="/leave_applications/create"
             />
             <PrivateRoute
               component={[Function]}
-              exact={true}
               path="/leave_applications/:id"
             />
             <PrivateRoute
               component={[Function]}
-              exact={true}
-              path="/projects/create"
-            />
-            <PrivateRoute
-              component={[Function]}
-              exact={true}
-              path="/projects/:id"
-            />
-            <PrivateRoute
-              component={[Function]}
-              exact={true}
               path="/users"
             />
             <PrivateRoute
               component={[Function]}
-              exact={true}
-              path="/users/create"
-            />
-            <PrivateRoute
-              component={[Function]}
-              exact={true}
-              path="/users/:id"
-            />
-            <PrivateRoute
-              component={[Function]}
-              exact={true}
               path="/devices"
             />
             <PrivateRoute
               component={[Function]}
-              exact={true}
-              path="/devices/create"
+              path="/tasks"
             />
-            <PrivateRoute
-              component={[Function]}
-              exact={true}
-              path="/devices/:id"
-            />
-          </Switch>
-        </AppLayout>
-        <Route
-          component={[Function]}
-        />
-      </Switch>
+          </AppLayout>
+          <Route
+            component={[Function]}
+          />
+        </Switch>
+      </BreadCrumbsContextProvider>
     </ToastContextProvider>
   </AuthContextProvider>
   <Memo(GlobalStyleComponent) />
