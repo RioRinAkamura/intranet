@@ -10,7 +10,7 @@
     SSH_PKEY: $DEV_SSH_KEY
     PROJECT_ROOT: '~/data/intranet'
     ENV_FILE: '.env.development'
-    DOCKER_IMAGE: 'intranet-frontend:dev'
+    DOCKER_IMAGE: 'hdwhub/intranet-frontend:dev'
     STACK_NAME: 'intranet-dev'
 
 .env prod: &env_prod
@@ -25,7 +25,7 @@
     SSH_PKEY: $PROD_SSH_KEY
     PROJECT_ROOT: '/mnt/nfs/intranet'
     ENV_FILE: '.env.prodution'
-    DOCKER_IMAGE: 'intranet-frontend:latest'
+    DOCKER_IMAGE: 'hdwhub/intranet-frontend:latest'
     STACK_NAME: 'intranet'
 
 .setup ssh: &setup_ssh
