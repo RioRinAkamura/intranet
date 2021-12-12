@@ -1,83 +1,34 @@
-image: node:14
+.env dev: &env_dev
+  environment:
+    name: dev
+    url: https://intranet.dev2.hdwebsoft.co
 
-cache:
-  key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
-  paths:
-    - .npm/
-
-stages:
-  - install_dependencies
-  - analysis
-  - test
-  - build
-  - deploy
-  
-before_script:
-  # - echo '@hdwebsoft:registry https://gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/'>> .npmrc
-  # - echo '//gitlab.example.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/:_authToken=${SDK_DEPLOY_TOKEN}' >> .npmrc
-  - npm config set @hdwebsoft:registry https://gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/
-  - npm config set -- '//gitlab.com/api/v4/projects/${SDK_PROJECT_ID}/packages/npm/:_authToken' ${SDK_DEPLOY_TOKEN}
-
-  - npm ci --cache .npm --prefer-offline
-
-install_dependencies:
-  stage: install_dependencies
-  script:
-    - npm ci
-  only:
-    changes:
-      - package-lock.json
-
-checkts:
-  stage: analysis
-  allow_failure: true
-  script:
-    - npm run checkTs
-  #when: manual
-
-lint:
-  stage: analysis
-  allow_failure: true
-  script:
-    - npm run lint
-  #when: manual
-
-lint-css:
-  stage: analysis
-  allow_failure: true
-  script:
-    - npm run lint:css
-  #when: manual
-
-test:
-  stage: test
-  allow_failure: true
-  script:
-    - npm run test -u
-  #when: manual
-
-build:
-  stage: build
-  only:
-    - develop
-  script:
-    - npm install
-    - npm run build
-    - tar cvzf build.tar.gz build
-  artifacts:
-    paths:
-      - build.tar.gz
-
-deploy-dev:
-  stage: deploy
-  only:
-    - develop
+.var dev: &var_dev
   variables:
     SSH_HOST: $DEV_HOST
     SSH_USER: $DEV_SSH_USER
     SSH_PKEY: $DEV_SSH_KEY
-    PROJECT_ROOT: $PROJECT_ROOT
-    
+    PROJECT_ROOT: '~/data/intranet'
+    ENV_FILE: '.env.development'
+    DOCKER_IMAGE: 'intranet-frontend:dev'
+    STACK_NAME: 'intranet-dev'
+
+.env prod: &env_prod
+  environment:
+    name: dev
+    url: https://intranet.hdwebsoft.co
+
+.var prod: &var_prod
+  variables:
+    SSH_HOST: $PROD_HOST
+    SSH_USER: $PROD_SSH_USER
+    SSH_PKEY: $PROD_SSH_KEY
+    PROJECT_ROOT: '/mnt/nfs/intranet'
+    ENV_FILE: '.env.prodution'
+    DOCKER_IMAGE: 'intranet-frontend:latest'
+    STACK_NAME: 'intranet'
+
+.setup ssh: &setup_ssh
   before_script:
     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
     - eval $(ssh-agent -s)
@@ -87,13 +38,55 @@ deploy-dev:
     - ssh-keyscan -H "${SSH_HOST}" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
+.build docker: &build_docker_images
+  before_script:
+    - cp $(pwd)/${ENV_FILE}  $(pwd)/.env.production.local
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login $DOCKER_REGISTRY -u $DOCKER_REGISTRY_USER --password-stdin
+  script:
+    - docker build --pull -t $DOCKER_IMAGE .
+    - docker push $DOCKER_IMAGE
+
+.deploy: &deploy
+  <<: *setup_ssh
   script:
     - echo "deploying to ${PROJECT_ROOT}"
-    - scp build.tar.gz "${SSH_USER}@${SSH_HOST}:${PROJECT_ROOT}"
     - ssh "$SSH_USER@$SSH_HOST" "cd ${PROJECT_ROOT}
-      && rm -rf build
-      && tar xvzf build.tar.gz
-      && rm -f build.tar.gz"
-  needs:
-    - job: build
-      artifacts: true
+      && docker stack deploy -c stack.yml --with-registry-auth $STACK_NAME"
+
+build-dev:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  only:
+    - develop
+  <<: *env_dev
+  <<: *var_dev
+  <<: *build_docker_images
+
+deploy-dev:
+  stage: deploy
+  only:
+    - develop
+  <<: *env_dev
+  <<: *var_dev
+  <<: *deploy
+
+build-prod:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  only:
+    - master
+  <<: *env_prod
+  <<: *var_prod
+  <<: *build_docker_images
+
+deploy-prod:
+  stage: deploy
+  only:
+    - master
+  <<: *env_prod
+  <<: *var_prod
+  <<: *deploy
