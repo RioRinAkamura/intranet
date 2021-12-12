@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { api } from 'utils/api';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 
 type Tags = models.hr.Tags;
 

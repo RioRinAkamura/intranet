@@ -1,11 +1,11 @@
 import { useHistory } from 'react-router-dom';
 import { UserDetailMessages } from './messages';
-import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from 'utils/api';
-import { SelectOption } from '@hdwebsoft/boilerplate-api-sdk/libs/type';
+import { SelectOption } from '@hdwebsoft/intranet-api-sdk/libs/type';
 
 export const useHandleEmployeeDetail = (): {
   loading: boolean;

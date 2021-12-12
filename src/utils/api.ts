@@ -1,13 +1,12 @@
-import { Api, createApiClient } from '@hdwebsoft/boilerplate-api-sdk';
+import { Api, createApiClient } from '@hdwebsoft/intranet-api-sdk';
 import config from 'config';
 import { SessionStorage } from './SessionStorage';
 
 export const sessionStorage = new SessionStorage();
 const apiConfig = {
   baseUrl: config.API_URL,
-  authSessionKey: 'AUTH_SESSION_KEY',
+  authSessionKey: 'AUTH',
   session: sessionStorage,
-  socketUrl: 'http://template-ws.dev.goldfishcode.com',
   enableCache: false,
 };
 

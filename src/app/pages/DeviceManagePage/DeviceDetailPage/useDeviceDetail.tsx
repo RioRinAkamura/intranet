@@ -8,8 +8,8 @@ import {
   Device,
   DeviceCategory,
   UpdateDeviceParam,
-} from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
-import { SelectOption } from '@hdwebsoft/boilerplate-api-sdk/libs/type';
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { SelectOption } from '@hdwebsoft/intranet-api-sdk/libs/type';
 
 export const useDeviceDetail = (): {
   detail?: Device;

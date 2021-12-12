@@ -7,7 +7,7 @@ import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/usePro
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { PrivatePath } from 'utils/url.const';
 import { api } from 'utils/api';
-import { Member } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/project/models';
+import { Member } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/project/models';
 import { MemberTable } from '../MemberTable';
 import { AddMember } from '../AddMember';
 

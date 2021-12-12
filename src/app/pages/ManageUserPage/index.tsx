@@ -4,7 +4,7 @@ import { Col, Row, Table, Tooltip, Popover, Switch, Form } from 'antd';
 
 import styled from 'styled-components/macro';
 import { HeaderButtons } from './HeaderButtons/HeaderButtons';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import { ColumnProps } from 'antd/lib/table';
 import { useUsersManagePageSlice } from './slice';
 import { useDispatch, useSelector } from 'react-redux';

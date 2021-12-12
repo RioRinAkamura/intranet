@@ -8,7 +8,7 @@ import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { DialogModal } from 'app/components/DialogModal';
 import { Button, Form, FormInstance, Select, Spin } from 'antd';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import { useProjectDetail } from '../../useProjectDetail';
 import { useHandleMember } from './useHandleMember';
 import { ProjectDetailMessages } from '../../messages';

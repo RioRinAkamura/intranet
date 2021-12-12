@@ -6,7 +6,7 @@ import { useGetUserTags } from './useGetUserTags';
 import { SelectValue } from 'antd/lib/select';
 import { messages } from './messages';
 import { useTranslation } from 'react-i18next';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 
 const { Option } = Select;
 

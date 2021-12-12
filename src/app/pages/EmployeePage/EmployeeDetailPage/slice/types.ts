@@ -1,4 +1,4 @@
-import { EmployeeSkill } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { EmployeeSkill } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 /* --- STATE --- */
 export interface EmployeeDetailsState {

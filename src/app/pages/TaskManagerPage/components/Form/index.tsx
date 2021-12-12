@@ -3,8 +3,8 @@ import { FORM_RULES } from 'constants/task';
 
 import { Form, FormInstance, Select, Input } from 'antd';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
-import { UpdateTaskParam } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
-import { SelectOption } from '@hdwebsoft/boilerplate-api-sdk/libs/type';
+import { UpdateTaskParam } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { SelectOption } from '@hdwebsoft/intranet-api-sdk/libs/type';
 
 const { Option } = Select;
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResetConfirmParams } from '@hdwebsoft/boilerplate-api-sdk/libs/api/auth/models';
+import { ResetConfirmParams } from '@hdwebsoft/intranet-api-sdk/libs/api/auth/models';
 import { useHistory } from 'react-router';
 
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';

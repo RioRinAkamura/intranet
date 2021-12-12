@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import { ColumnProps } from 'antd/lib/table';
 import { Col, Row, Table } from 'antd';
 import { useDeviceHistory } from './useDeviceHistory';
-import { DeviceHistory as DeviceHistoryType } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { DeviceHistory as DeviceHistoryType } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 interface DeviceHistoryProps {
   device_id: string;

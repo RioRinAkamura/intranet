@@ -1,4 +1,4 @@
-import { EmployeeProjectParams } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { EmployeeProjectParams } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { Key } from 'react';
 
 /* --- STATE --- */

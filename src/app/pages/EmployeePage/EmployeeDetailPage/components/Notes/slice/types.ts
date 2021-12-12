@@ -1,5 +1,5 @@
 import { Key } from 'react';
-import { EmployeeNote } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { EmployeeNote } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 export interface EmployeeNotesFetchData {
   employeeId: string;

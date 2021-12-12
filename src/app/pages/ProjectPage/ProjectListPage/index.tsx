@@ -49,7 +49,7 @@ import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMembe
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
-import { Project } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { Project } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { DeleteType } from 'utils/types';
 import { useProjectDetail } from '../ProjectDetailPage/useProjectDetail';
 

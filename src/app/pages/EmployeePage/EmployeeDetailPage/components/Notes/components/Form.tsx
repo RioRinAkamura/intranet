@@ -18,7 +18,7 @@ import styled from 'styled-components';
 import {
   EmployeeNote,
   NoteCategory,
-} from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { RichEditor } from 'app/components/RichEditor';

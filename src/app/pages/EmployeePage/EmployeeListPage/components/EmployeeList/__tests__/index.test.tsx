@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 
 import { EmployeeList } from '..';
-import { MaritalStatus } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { MaritalStatus } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { matchMedia } from 'utils/matchMedia';
 
 jest.mock('react-i18next', () => ({

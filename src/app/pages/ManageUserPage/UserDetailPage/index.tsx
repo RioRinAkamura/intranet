@@ -5,7 +5,7 @@ import PageTitle from 'app/components/PageTitle';
 import { DetailForm } from './components/DetailForm';
 import { CardLayout } from 'app/components/CardLayout';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
-import { User } from '@hdwebsoft/boilerplate-api-sdk/libs/api/user/models';
+import { User } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
 import { api } from 'utils/api';
 
 interface LocationState {

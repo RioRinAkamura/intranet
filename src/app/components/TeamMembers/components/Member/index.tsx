@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import styled from 'styled-components/macro';
 import { MemberTooltip } from '../MemberTooltip';
-import { Member as MemberModel } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { Member as MemberModel } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 interface MemberProps {
   member: MemberModel;

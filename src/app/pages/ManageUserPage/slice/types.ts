@@ -1,4 +1,4 @@
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import { Key } from 'react';
 
 type User = models.user.User;

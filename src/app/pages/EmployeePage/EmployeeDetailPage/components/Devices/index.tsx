@@ -23,7 +23,7 @@ import { ColumnProps } from 'antd/lib/table';
 import { DeleteModal } from 'app/components/DeleteModal';
 import Button, { IconButton } from 'app/components/Button';
 import { Wrapper } from 'styles/StyledCommon';
-import { EmployeeDevice } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { EmployeeDevice } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { useHandleEmployeeDevices } from './useHandleEmployeeDevices';
 import { EmployeeDeviceStatus } from 'utils/types';
 import { useDeviceDetail } from 'app/pages/DeviceManagePage/DeviceDetailPage/useDeviceDetail';

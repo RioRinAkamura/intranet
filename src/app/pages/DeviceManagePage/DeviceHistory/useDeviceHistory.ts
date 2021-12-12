@@ -1,5 +1,5 @@
-import { DeviceHistory } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
-import { Pagination } from '@hdwebsoft/boilerplate-api-sdk/libs/type';
+import { DeviceHistory } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { Pagination } from '@hdwebsoft/intranet-api-sdk/libs/type';
 import { useCallback, useState } from 'react';
 import { api } from 'utils/api';
 import { defaultPaginationValue } from 'utils/variable';

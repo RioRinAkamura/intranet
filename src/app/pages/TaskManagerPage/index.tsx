@@ -35,7 +35,7 @@ import {
   Task,
   CreateTaskParam,
   UpdateTaskParam,
-} from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { IconButton } from 'app/components/Button';
 import { Followers } from './components/Followers';

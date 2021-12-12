@@ -12,7 +12,7 @@ import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { EmployeeNote } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { EmployeeNote } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 import { config } from 'config';
 import { DialogModal } from 'app/components/DialogModal';

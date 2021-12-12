@@ -1,4 +1,4 @@
-import { SocialLoginParams } from '@hdwebsoft/boilerplate-api-sdk/libs/api/auth/models';
+import { SocialLoginParams } from '@hdwebsoft/intranet-api-sdk/libs/api/auth/models';
 import { AuthContext } from 'app/components/Auth/Context';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import * as React from 'react';

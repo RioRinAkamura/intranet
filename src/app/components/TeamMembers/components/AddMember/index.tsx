@@ -1,4 +1,4 @@
-import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { Form, FormInstance, message, Select, Spin } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';

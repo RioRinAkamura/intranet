@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 import { Card, Tag } from 'antd';
 import { Avatar } from 'app/components/Avatar';
 import { antColours } from 'utils/types';
-import { Member } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { Member } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 interface TooltipProps {
   member: Member;

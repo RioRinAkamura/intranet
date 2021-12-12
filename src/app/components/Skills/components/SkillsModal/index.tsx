@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
 import { api } from 'utils/api';
 import { useGetSkills } from '../../useGetSkill';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import { DeleteModal } from 'app/components/DeleteModal';
 
 interface skillModalProps {

@@ -1,5 +1,5 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
-import { EmployeeNoteQueryParams } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { EmployeeNoteQueryParams } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 import { api } from 'utils/api';
 

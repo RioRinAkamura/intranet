@@ -1,7 +1,7 @@
 import {
   Employee,
   Member,
-} from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import { ProjectDetailMessages } from './messages';
 import {
   Pagination,
   SelectOption,
-} from '@hdwebsoft/boilerplate-api-sdk/libs/type';
+} from '@hdwebsoft/intranet-api-sdk/libs/type';
 
 export const useProjectDetail = (): {
   members: Member[];

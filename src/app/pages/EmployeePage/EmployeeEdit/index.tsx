@@ -11,7 +11,7 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 
 import { config } from 'config';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import { ProfileInfo } from '../EmployeeDetailPage/components/ProfileInfo/Loadable';
 import { DetailForm } from '../EmployeeDetailPage/components/DetailForm/Loadable';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';

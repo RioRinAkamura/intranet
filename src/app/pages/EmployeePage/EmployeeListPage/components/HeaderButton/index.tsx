@@ -15,7 +15,7 @@ import {
   ImportOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import Papa from 'papaparse';
 import Button from 'app/components/Button';
 import ImportState from '../ImportState';

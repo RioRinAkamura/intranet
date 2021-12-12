@@ -15,7 +15,7 @@ import { config } from 'config';
 import PageTitle from 'app/components/PageTitle';
 import Button from 'app/components/Button';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { BankAccounts } from './components/BankAccounts/Loadable';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';

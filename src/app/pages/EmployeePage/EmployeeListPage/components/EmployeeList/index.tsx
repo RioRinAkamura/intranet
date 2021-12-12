@@ -16,7 +16,7 @@ import {
   PhoneFilled,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import { IconButton } from 'app/components/Button';
 import { CardLayout } from 'app/components/CardLayout';
 

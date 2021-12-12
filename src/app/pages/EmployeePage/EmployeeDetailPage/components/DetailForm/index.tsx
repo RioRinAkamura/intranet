@@ -11,7 +11,7 @@ import { BankAccounts } from '../BankAccounts/Loadable';
 import { IdCardInfo } from '../IdCardInfo/Loadable';
 import { JobInfo } from '../JobInfo/Loadable';
 import { SocialNetwork } from '../SocialNetwork/Loadable';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import { CardLayout } from 'app/components/CardLayout';
 
 type Employee = models.hr.Employee;

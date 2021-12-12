@@ -7,7 +7,7 @@ import {
 import {
   Employee,
   Member,
-} from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { Popover, Table, Tag, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Avatar } from 'app/components/Avatar/Loadable';

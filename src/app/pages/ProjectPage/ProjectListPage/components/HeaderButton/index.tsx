@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
-import { Employee } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { ProjectsMessages } from '../../messages';
 import Button from 'app/components/Button';

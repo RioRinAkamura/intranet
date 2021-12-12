@@ -1,4 +1,4 @@
-import { SelectOption } from '@hdwebsoft/boilerplate-api-sdk/libs/type';
+import { SelectOption } from '@hdwebsoft/intranet-api-sdk/libs/type';
 import moment from 'moment';
 
 export const calcBusinessDays = (dDate1, dDate2) => {

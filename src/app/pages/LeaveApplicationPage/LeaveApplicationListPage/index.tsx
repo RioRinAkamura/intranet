@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Messages } from './messages';
 import { Helmet } from 'react-helmet-async';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 import { ColumnProps } from 'antd/lib/table';

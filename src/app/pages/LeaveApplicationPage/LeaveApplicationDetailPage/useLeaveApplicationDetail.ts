@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router';
 import { api } from 'utils/api';
 import { cloneDeep } from 'lodash';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 
 type Employee = models.hr.Employee;
 

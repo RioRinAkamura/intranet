@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 import { Member } from './components/Member';
 import { useHistory } from 'react-router-dom';
 import { SettingOutlined } from '@ant-design/icons';
-import { Member as MemberModel } from '@hdwebsoft/boilerplate-api-sdk/libs/api/hr/models';
+import { Member as MemberModel } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 interface TeamMembersProps {
   members?: Array<MemberModel>;

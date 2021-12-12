@@ -34,7 +34,7 @@ yarn test
 
 ## Dev server
 
-- http://app.boilerplate.dev.hdwebsoft.co/
+- http://intranet.dev2.hdwebsoft.co
 
 ---
 

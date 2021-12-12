@@ -2,7 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { Col, Form, Input, Row, InputProps } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { User } from '@hdwebsoft/boilerplate-api-sdk/libs/api/user/models';
+import { User } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router';
 import { AvatarPath } from 'app/pages/EmployeePage/EmployeeDetailPage/components/AvatarPath';

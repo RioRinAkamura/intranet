@@ -19,7 +19,7 @@ import {
 import { SyncOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { CameraOutlined } from '@ant-design/icons';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { api } from 'utils/api';

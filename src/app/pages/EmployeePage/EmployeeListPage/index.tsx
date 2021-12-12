@@ -16,7 +16,7 @@ import { UsersMessages } from './messages';
 import { Helmet } from 'react-helmet-async';
 import { HeaderButton } from './components/HeaderButton/Loadable';
 import { EmployeeList } from './components/EmployeeList/Loadable';
-import { models } from '@hdwebsoft/boilerplate-api-sdk';
+import { models } from '@hdwebsoft/intranet-api-sdk';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { useHandleDataTable } from './useHandleDataTable';
 import {

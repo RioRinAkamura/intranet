@@ -8,7 +8,7 @@ import {
 } from './types';
 import { usersManagePageSaga } from './saga';
 import { Key } from 'react';
-import { User } from '@hdwebsoft/boilerplate-api-sdk/libs/api/user/models';
+import { User } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
 
 export const initialState: UsersManagePageState = {
   users: [],
