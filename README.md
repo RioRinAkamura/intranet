@@ -9,8 +9,8 @@ A simple tool for HD to manage resources
 This project uses a SDK package to communicate with our API. The configuration of NPM repo can be found in .npmrc. It does not work for you, please run these command to configure authentication for NPM repo
 
 ```shell
-npm config set @hdwebsoft:registry https://gitlab.com/api/v4/projects/25975384/packages/npm/
-npm config set -- //gitlab.com/api/v4/projects/25975384/packages/npm/:_authToken=ZiveEc1yo29oMESFoiN3
+npm config set @hdwebsoft:registry=https://gitlab.com/api/v4/projects/31966285/packages/npm/
+npm config set -- //gitlab.com/api/v4/projects/31966285/packages/npm/:_authToken=TC5t7sz3rpyZLxieCE5u
 ```
 
 Start and check our example app, if you want
