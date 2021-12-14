@@ -31,6 +31,7 @@ import { PrivateRoute } from 'app/components/Auth/Route';
 import { Switch as SwitchRoute } from 'react-router-dom';
 import { PrivatePath } from 'utils/url.const';
 import { UserManageDetailPage } from './UserDetailPage/Loadable';
+import { phoneFormat } from 'utils/phoneFormat';
 
 type User = models.user.User;
 
@@ -265,7 +266,7 @@ const ManageUserPage: React.FC = () => {
       dataIndex: 'phone',
       width: 130,
       align: 'left',
-      render: (text, record: User) => text,
+      render: (text, record: User) => phoneFormat(text),
     },
     {
       title: 'Enable',
