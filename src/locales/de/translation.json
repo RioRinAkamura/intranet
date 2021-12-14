@@ -347,7 +347,7 @@
           }
         },
         "button": {
-          "edit": "Edit",
+          "save": "Save",
           "submit": "Save",
           "cancel": "Cancel",
           "back": "Back",
