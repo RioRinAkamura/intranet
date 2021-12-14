@@ -3,11 +3,11 @@
  * SearchUsers
  *
  */
-import React, { memo } from 'react';
-import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
-import { Col, Form, FormInstance, Input, Row } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import { Col, Form, FormInstance, Input, Row } from 'antd';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components/macro';
 import { MessageTranslate } from 'utils/types';
 interface Props {
   onSearch: () => void;

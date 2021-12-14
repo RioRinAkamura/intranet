@@ -1,28 +1,22 @@
-import * as React from 'react';
-import { has } from 'lodash';
+import { SearchOutlined } from '@ant-design/icons';
 import {
   Button,
   Checkbox,
   CheckboxOptionType,
-  Col,
-  Input,
-  Row,
-  Space,
-  Select,
-  Modal,
-  DatePicker,
+  Col, DatePicker, Input, Modal, Row, Select, Space
 } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { useTranslation } from 'react-i18next';
-import Highlighter from 'react-highlight-words';
 import { TagsInput } from 'app/components/Tags';
-import { TableStateProps } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
-import { MessageTranslate, TagType } from './types';
-import styled from 'styled-components/macro';
 import { FilterColumns } from 'app/pages/EmployeePage/EmployeeListPage/slice/types';
+import { TableStateProps } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
-import moment from 'moment';
 import config from 'config';
+import { has } from 'lodash';
+import moment from 'moment';
+import * as React from 'react';
+import Highlighter from 'react-highlight-words';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components/macro';
+import { MessageTranslate, TagType } from './types';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
@@ -143,6 +137,7 @@ export const useTableConfig = (
     return ordering;
   };
 
+  const searchInput = React.useRef<Input>(null);
   const getColumnSearchInputProps = (
     dataIndex: string[],
     filterIndex?: number,
@@ -168,6 +163,7 @@ export const useTableConfig = (
             />
           ) : (
             <Input
+              ref={searchInput}
               placeholder={`${t(
                 messageTrans.filterInputPlaceholder(),
               )} ${dataIndex}`}
@@ -221,6 +217,15 @@ export const useTableConfig = (
             .toLowerCase()
             .includes(value.toLowerCase())
         : '',
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(
+          () =>
+            searchInput && searchInput.current && searchInput.current.select(),
+          100,
+        );
+      }
+    },
     render: (text, record) => {
       let dataText = '';
       dataIndex.map(data => {
