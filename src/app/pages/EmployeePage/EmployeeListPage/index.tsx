@@ -48,6 +48,7 @@ import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { PrivatePath } from 'utils/url.const';
 import { StyledLink } from 'styles/StyledCommon';
 import { api } from 'utils/api';
+import { phoneFormat } from 'utils/phoneFormat';
 
 type Employee = models.hr.Employee;
 
@@ -334,6 +335,7 @@ export const EmployeeListPage: React.FC = () => {
       width: 85,
       ...getColumnSorterProps('phone', 4),
       ...getColumnSearchInputProps(['phone']),
+      render: (text, record: Employee) => phoneFormat(text),
     },
     {
       title: 'Position',
