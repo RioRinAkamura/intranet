@@ -47,20 +47,8 @@ import {
   selectUserspageIsFilter,
   selectUserspageParams,
 } from './slice/selectors';
-import PageTitle from 'app/components/PageTitle';
-import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
-import { RootState } from 'types';
-import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
-import { useTableConfig } from 'utils/tableConfig';
-import { TagComponent } from 'app/components/Tags/components/Tag';
-import { TotalSearchForm } from 'app/components/TotalSearchForm';
-import { CardLayout } from 'app/components/CardLayout';
-import Button, { IconButton } from 'app/components/Button';
-import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
-import { PrivatePath } from 'utils/url.const';
-import { StyledLink } from 'styles/StyledCommon';
-import { api } from 'utils/api';
 import { phoneFormat } from 'utils/phoneFormat';
+import { useHandleDataTable } from './useHandleDataTable';
 
 type Employee = models.hr.Employee;
 

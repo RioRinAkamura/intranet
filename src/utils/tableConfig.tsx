@@ -3,7 +3,13 @@ import {
   Button,
   Checkbox,
   CheckboxOptionType,
-  Col, DatePicker, Input, Modal, Row, Select, Space
+  Col,
+  DatePicker,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Space,
 } from 'antd';
 import { TagsInput } from 'app/components/Tags';
 import { FilterColumns } from 'app/pages/EmployeePage/EmployeeListPage/slice/types';
@@ -137,7 +143,7 @@ export const useTableConfig = (
     return ordering;
   };
 
-  const searchInput = React.useRef<Input>(null);
+  let searchInput: Input;
   const getColumnSearchInputProps = (
     dataIndex: string[],
     filterIndex?: number,
@@ -163,7 +169,11 @@ export const useTableConfig = (
             />
           ) : (
             <Input
-              ref={searchInput}
+              ref={node => {
+                if (node !== null) {
+                  searchInput = node;
+                }
+              }}
               placeholder={`${t(
                 messageTrans.filterInputPlaceholder(),
               )} ${dataIndex}`}
@@ -219,11 +229,9 @@ export const useTableConfig = (
         : '',
     onFilterDropdownVisibleChange: visible => {
       if (visible) {
-        setTimeout(
-          () =>
-            searchInput && searchInput.current && searchInput.current.select(),
-          100,
-        );
+        setTimeout(() => {
+          searchInput.select();
+        }, 100);
       }
     },
     render: (text, record) => {
