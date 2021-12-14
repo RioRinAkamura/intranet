@@ -365,7 +365,7 @@ export function EmployeeDetailPage(props: Props) {
                 }}
               >
                 {isView
-                  ? t(UserDetailMessages.formEditButton())
+                  ? t(UserDetailMessages.formSaveButton())
                   : t(UserDetailMessages.formSubmitButton())}
               </Button>
             </Col>
