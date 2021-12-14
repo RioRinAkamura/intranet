@@ -349,8 +349,8 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.social.gitlab.placeholder,
       'Input Gitlab ID',
     ),
-  formEditButton: () =>
-    _t(translations.UserDetailPage.modal.form.button.edit, 'Edit'),
+  formSaveButton: () =>
+    _t(translations.UserDetailPage.modal.form.button.save, 'Save'),
   formSubmitButton: () =>
     _t(translations.UserDetailPage.modal.form.button.submit, 'Save'),
   formCancelButton: () =>
