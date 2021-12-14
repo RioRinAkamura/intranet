@@ -1609,10 +1609,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hdwebsoft/intranet-api-sdk@0.1.0":
-  version "0.1.0"
-  resolved "https://gitlab.com/api/v4/projects/31966285/packages/npm/@hdwebsoft/intranet-api-sdk/-/@hdwebsoft/intranet-api-sdk-0.1.0.tgz#12e0af082e343d4d572d27634b6c506784858c0a"
-  integrity sha1-EuCvCC40PU1XLSdjS2xQZ4SFjAo=
+"@hdwebsoft/intranet-api-sdk@0.1.1":
+  version "0.1.1"
+  resolved "https://gitlab.com/api/v4/projects/31966285/packages/npm/@hdwebsoft/intranet-api-sdk/-/@hdwebsoft/intranet-api-sdk-0.1.1.tgz#dd92dd088fe601a5062697332f54fb3c8bb7defd"
+  integrity sha1-3ZLdCI/mAaUGJpczL1T7PIu33v0=
   dependencies:
     axios "^0.21.1"
     axios-cache-adapter "^2.7.3"
