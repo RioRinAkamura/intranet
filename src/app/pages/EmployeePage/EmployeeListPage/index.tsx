@@ -1,35 +1,47 @@
 import {
-  Col,
-  Row,
-  Table,
-  Form,
-  TablePaginationConfig,
-  Tooltip,
-  Popover,
-} from 'antd';
-import { Avatar } from 'app/components/Avatar/Loadable';
-import React, { Key, useCallback, useEffect, useState } from 'react';
-import { isMobileOnly } from 'react-device-detect';
-import { useTranslation } from 'react-i18next';
-import { FilterValue, SorterResult } from 'antd/lib/table/interface';
-import { UsersMessages } from './messages';
-import { Helmet } from 'react-helmet-async';
-import { HeaderButton } from './components/HeaderButton/Loadable';
-import { EmployeeList } from './components/EmployeeList/Loadable';
-import { models } from '@hdwebsoft/intranet-api-sdk';
-import { DeleteModal } from 'app/components/DeleteModal';
-import { useHandleDataTable } from './useHandleDataTable';
-import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
+import { models } from '@hdwebsoft/intranet-api-sdk';
+import {
+  Col,
+  Form,
+  Popover,
+  Row,
+  Table,
+  TablePaginationConfig,
+  Tooltip,
+} from 'antd';
+import { ColumnProps } from 'antd/lib/table';
+import { FilterValue, SorterResult } from 'antd/lib/table/interface';
+import { Avatar } from 'app/components/Avatar/Loadable';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import Button, { IconButton } from 'app/components/Button';
+import { CardLayout } from 'app/components/CardLayout';
+import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import { DeleteModal } from 'app/components/DeleteModal';
+import PageTitle from 'app/components/PageTitle';
+import { TagComponent } from 'app/components/Tags/components/Tag';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import { TotalSearchForm } from 'app/components/TotalSearchForm';
+import React, { Key, useCallback, useEffect, useState } from 'react';
+import { isMobileOnly } from 'react-device-detect';
+import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
-import { ColumnProps } from 'antd/lib/table';
+import { StyledLink } from 'styles/StyledCommon';
+import { RootState } from 'types';
+import { api } from 'utils/api';
+import { useTableConfig } from 'utils/tableConfig';
+import { PrivatePath } from 'utils/url.const';
+import { EmployeeList } from './components/EmployeeList/Loadable';
+import { HeaderButton } from './components/HeaderButton/Loadable';
+import { UsersMessages } from './messages';
 import { useUserspageSlice } from './slice';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   selectUserspage,
   selectUserspageIsFilter,
@@ -347,7 +359,7 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: 'Tags',
       dataIndex: 'tags',
-      width: 90,
+      width: 60,
       ...getColumnSearchTagProps('tags'),
       render: (text, record: Employee, index: number) => {
         return (
@@ -389,17 +401,17 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: 'Type',
       dataIndex: 'type',
-      width: 50,
+      width: 52,
     },
     {
       title: 'Status',
       dataIndex: 'status',
-      width: 50,
+      width: 54,
     },
     {
       title: t(UsersMessages.listOptionsTitle()),
       dataIndex: 'id',
-      width: 50,
+      width: 54,
       fixed: 'right',
       align: 'center',
       render: (text, record: Employee, index: number) => {

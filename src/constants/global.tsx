@@ -34,7 +34,7 @@ const SIDE_BAR_MENU_ITEMS: Menu[] = [
   },
   {
     title: 'Users',
-    to: '/Users',
+    to: '/users',
     icon: <UserOutlined />,
   },
   // {
