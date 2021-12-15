@@ -1,7 +1,8 @@
 export const config = {
   API_URL: process.env.REACT_APP_API_URL || 'http://localhost:8000/v1',
+  ROOT_PATH: '/',
   LOGIN_PATH: process.env.LOGIN_PATH || '/login',
-  DASHBOARD_PATH: process.env.DASHBOARD_PATH || '/',
+  DASHBOARD_PATH: process.env.DASHBOARD_PATH || '/dashboard',
   USERS_PATH: process.env.USERS_PATH || '/employees',
   CREATE_USER_PATH: process.env.CREATE_USER_PATH || '/create-user',
   GOOGLE_CLIENT_ID:

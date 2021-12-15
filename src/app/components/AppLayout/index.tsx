@@ -1,6 +1,7 @@
 import { Layout } from 'antd';
 import * as React from 'react';
 import { RouteProps } from 'react-router';
+import { useAuthState } from '../Auth/useAuthState';
 import HeaderAdmin from '../HeaderAdmin';
 
 import Sidebar from '../Sidebar';
@@ -15,11 +16,11 @@ const AppLayout: React.FC<AdminRouteProps> = ({
   children,
 }: AdminRouteProps) => {
   const [collapsed, setCollapsed] = React.useState(true);
-
+  const { authenticated } = useAuthState();
   const onCollapse = (collapsed: boolean): void => {
     setCollapsed(!collapsed);
   };
-
+  if (!authenticated) return <>{children}</>;
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sidebar collapsed={collapsed} onCollapse={onCollapse} />

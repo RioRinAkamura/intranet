@@ -69,10 +69,15 @@ export function App() {
                 {/* Home */}
                 <PrivateRoute
                   exact
+                  path={config.ROOT_PATH}
+                  component={HomePage}
+                />
+                {/* Dashboard */}
+                <PrivateRoute
+                  exact
                   path={config.DASHBOARD_PATH}
                   component={HomePage}
                 />
-
                 {/* Employee */}
                 <PrivateRoute
                   path={config.USERS_PATH}
