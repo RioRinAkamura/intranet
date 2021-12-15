@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, Dropdown, Menu } from 'antd';
 import styled from 'styled-components';
-import { BellOutlined } from '@ant-design/icons';
+import { BellOutlined, UserOutlined } from '@ant-design/icons';
 import { ToastMessageType, useNotify } from '../ToastNotification';
 import { useHistory } from 'react-router';
 import { useLogout } from '../Auth/useLogout';
@@ -11,6 +11,7 @@ import {
   ChangePasswordPayload,
 } from '../ChangePasswordModal/useChangePassword';
 import { useAuth } from '../Auth/Context';
+import Avatar from 'antd/lib/avatar/avatar';
 
 export function Badges() {
   const { identity } = useAuth();
@@ -103,7 +104,11 @@ export function Badges() {
             href="/"
           >
             <UserInfo>
-              <img src={identity ? identity.avatar : ''} alt="" />
+              {identity ? (
+                <img src={identity.avatar} alt="" />
+              ) : (
+                <Avatar icon={<UserOutlined />} />
+              )}
             </UserInfo>
           </a>
         </Dropdown>
@@ -132,9 +137,12 @@ const Item = styled.button`
 `;
 
 const UserInfo = styled.div`
+  width: 2rem;
+  height: 2rem;
   img {
     border-radius: 50%;
     width: 2rem;
     height: 2rem;
+    object-fit: cover;
   }
 `;

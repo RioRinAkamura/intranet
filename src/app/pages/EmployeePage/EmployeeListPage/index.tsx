@@ -325,6 +325,7 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: t(UsersMessages.listEmailTitle()),
       dataIndex: 'email',
+      ellipsis: false,
       width: 120,
       ...getColumnSorterProps('email', 3),
       ...getColumnSearchInputProps(['email']),

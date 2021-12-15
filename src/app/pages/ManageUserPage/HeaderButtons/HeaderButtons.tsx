@@ -1,28 +1,28 @@
-import React from 'react';
+import { Col, Row, Select } from 'antd';
+import React, { useState } from 'react';
 import styled from 'styled-components/macro';
-import { Col, Row } from 'antd';
-import { PlusCircleOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
-import Button from 'app/components/Button';
-import { PrivatePath } from 'utils/url.const';
+
+const Option = Select;
+const userOptions = ['All', 'Active', 'InActive'];
 
 export const HeaderButtons = () => {
-  const history = useHistory();
+  const [option, setOption] = useState(userOptions[1]);
+
+  const handleUserOptionChange = value => {
+    setOption(userOptions[value]);
+  };
   return (
     <>
       <Row justify="end">
-        <OptionButton>
-          <Button
-            type="primary"
-            size="middle"
-            icon={<PlusCircleOutlined />}
-            onClick={() => {
-              history.push(PrivatePath.USERS_CREATE);
-            }}
-          >
-            Create User
-          </Button>
-        </OptionButton>
+        <Select
+          defaultValue={option}
+          style={{ width: 120, marginBottom: 12 }}
+          onChange={handleUserOptionChange}
+        >
+          {userOptions.map(option => (
+            <Option key={option}>{option}</Option>
+          ))}
+        </Select>
       </Row>
     </>
   );

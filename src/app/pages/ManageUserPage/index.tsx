@@ -256,6 +256,9 @@ const ManageUserPage: React.FC = () => {
     {
       title: 'Email',
       dataIndex: 'email',
+      wordWrap: 'break-word',
+      textWrap: 'word-break',
+      hyphens: 'auto',
       width: 130,
       align: 'left',
       render: (text, record: User) => text,
