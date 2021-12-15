@@ -55,7 +55,21 @@ export const TaskForm: React.FC<FormProps> = ({
         </Select>
       </Form.Item>
       <Form.Item name="assignee_id" label="Assignee">
-        <Select placeholder="Assignee" disabled={isView} size="large">
+        <Select
+          showSearch
+          placeholder="Assignee"
+          disabled={isView}
+          size="large"
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }
+          filterSort={(optionA, optionB) =>
+            optionA.children
+              .toLowerCase()
+              .localeCompare(optionB.children.toLowerCase())
+          }
+        >
           {employees.map(employee => {
             return (
               <Option value={employee.id}>
