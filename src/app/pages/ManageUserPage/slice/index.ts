@@ -77,11 +77,21 @@ const slice = createSlice({
       state.params.limit = action.payload.pageSize;
       state.params.page = action.payload.current;
     },
-    updateUserSuccess(state, action: PayloadAction<User>) {
-      console.log(action, 'action');
-    },
     updateUser(state, action) {
-      console.log('update user');
+      state.loading = true;
+    },
+    updateUserSuccess(state, action: PayloadAction<User>) {
+      state.loading = false;
+      if (state.users) {
+        const foundIndex = state.users.findIndex(user => {
+          return user.id === action.payload.id;
+        });
+        state.users[foundIndex] = action.payload;
+      }
+    },
+    updateUserFailure(state, action) {
+      state.loading = false;
+      state.errorMessage = action.payload;
     },
     deleteUser(state, action: PayloadAction<string>) {
       state.deleteSuccess = false;

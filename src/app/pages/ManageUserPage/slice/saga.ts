@@ -3,6 +3,7 @@ import { api } from 'utils/api';
 import { UserManageAction as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { mapErrorCode } from 'utils/errorMessages';
+import { User } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
 
 function fetchUsersAction(options) {
   return api.user.list(
@@ -41,10 +42,14 @@ function* fetchUsers(action) {
 function* updateUser(action) {
   const { user } = action.payload;
   try {
-    const response = yield call(updateUserAction, user);
+    const response: User = yield call(updateUserAction, user);
     yield put(actions.updateUserSuccess(response));
-  } catch (e) {
-    console.log(e);
+  } catch (err) {
+    console.log(err);
+    const errorMess = mapErrorCode(err);
+    yield put(actions.updateUserFailure(errorMess));
+  } finally {
+    yield put(actions.resetStateDeleteModal());
   }
 }
 
