@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
-import { Col, Form, Input, Row, InputProps } from 'antd';
+import { Col, Form, Input, Row, InputProps, Select, SelectProps } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { User } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
 import { omit } from 'lodash';
@@ -10,7 +10,12 @@ import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import Button from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
 import { api } from 'utils/api';
+import { models } from '@hdwebsoft/intranet-api-sdk';
+import { SelectValue } from 'antd/lib/select';
 
+const { Option } = Select;
+type Role = models.user.Role;
+const role = models.user.Role;
 interface FormProps {
   isView: boolean;
   isEdit: boolean;
@@ -23,6 +28,14 @@ const inputProps: InputProps = {
   bordered: false,
   readOnly: true,
 };
+
+const selectProps: SelectProps<SelectValue> = {
+  autoClearSearchValue: false,
+  bordered: false,
+  dropdownStyle: { display: 'none' },
+  removeIcon: null,
+};
+
 interface UserForm {
   first_name?: string;
   last_name?: string;
@@ -31,6 +44,7 @@ interface UserForm {
   display_name?: string;
   email?: string;
   phone?: string;
+  role?: Role;
 }
 
 export const DetailForm = memo((props: FormProps) => {
@@ -46,6 +60,8 @@ export const DetailForm = memo((props: FormProps) => {
       userForm.setFieldsValue({
         ...user,
         id: user.id,
+        // Need to update if user has many role
+        role: user.role[0]?.role,
       });
       setCurrentUserForm({ ...user });
     }
@@ -58,7 +74,6 @@ export const DetailForm = memo((props: FormProps) => {
       setEditPass(false);
     }
   }, [isCreate]);
-
   // submit form
   const handleSubmitForm = async (value: User) => {
     try {
@@ -92,8 +107,13 @@ export const DetailForm = memo((props: FormProps) => {
         } else {
           setCurrentUserForm({ ...currentUserForm, phone: value.phone });
         }
-        const response = await api.user.updateUser(updateUser);
+        if (currentUserForm && currentUserForm.role === value.role) {
+          updateUser = omit(updateUser, ['role']);
+        } else {
+          setCurrentUserForm({ ...currentUserForm, role: value.role });
+        }
 
+        const response = await api.user.updateUser(updateUser);
         const userResponse: any = { ...response };
 
         history.push(`${PrivatePath.USERS}/${userResponse.id}`);
@@ -229,6 +249,44 @@ export const DetailForm = memo((props: FormProps) => {
                     />
                   </FormItem>
                 </Col>
+                <Col md={isView ? 8 : 24} xs={24}>
+                  Role
+                </Col>
+                <Col md={isView ? 16 : 24} xs={24}>
+                  <FormItem
+                    isView={isView}
+                    name="role"
+                    rules={
+                      isView
+                        ? []
+                        : [
+                            {
+                              required: true,
+                              message: 'Please select user role',
+                            },
+                          ]
+                    }
+                  >
+                    {isView ? (
+                      <Input {...(isView ? inputProps : {})} size="large" />
+                    ) : (
+                      <StyledSelect
+                        {...(isView ? selectProps : {})}
+                        isView={isView}
+                        size="large"
+                        placeholder={!isView && 'Admin'}
+                      >
+                        {Object.entries(role).map(([value, label]) => {
+                          return (
+                            <Option key={value} value={label}>
+                              {label}
+                            </Option>
+                          );
+                        })}
+                      </StyledSelect>
+                    )}
+                  </FormItem>
+                </Col>
 
                 {!isView && (
                   <>
@@ -356,6 +414,9 @@ export const DetailForm = memo((props: FormProps) => {
                 </Col>
                 {!isView && (
                   <>
+                    <Col md={isView ? 8 : 24} xs={0}>
+                      <EmptySpace />
+                    </Col>
                     <Col md={isView ? 8 : 24} xs={24}>
                       Confirm Password
                     </Col>
@@ -468,4 +529,14 @@ const FormItem = styled(Form.Item)`
       margin-right: 10em;
     }
   }
+`;
+
+const StyledSelect = styled(Select)`
+  .ant-select-selection-item {
+    font-weight: ${({ isView }: ScreenProps) => (isView ? 500 : 400)};
+  }
+`;
+
+export const EmptySpace = styled.div`
+  margin-bottom: 85.5px;
 `;
