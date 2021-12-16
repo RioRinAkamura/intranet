@@ -2,7 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { Col, Form, Input, Row, InputProps, Select, SelectProps } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { User } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
+import { User, Role } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router';
 import { AvatarPath } from 'app/pages/EmployeePage/EmployeeDetailPage/components/AvatarPath';
@@ -10,12 +10,16 @@ import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import Button from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
 import { api } from 'utils/api';
-import { models } from '@hdwebsoft/intranet-api-sdk';
 import { SelectValue } from 'antd/lib/select';
 
 const { Option } = Select;
-type Role = models.user.Role;
-const role = models.user.Role;
+
+const selectProps: SelectProps<SelectValue> = {
+  autoClearSearchValue: false,
+  bordered: false,
+  dropdownStyle: { display: 'none' },
+  removeIcon: null,
+};
 interface FormProps {
   isView: boolean;
   isEdit: boolean;
@@ -60,7 +64,6 @@ export const DetailForm = memo((props: FormProps) => {
       userForm.setFieldsValue({
         ...user,
         id: user.id,
-        // Need to update if user has many role
         role: user.role[0]?.role,
       });
       setCurrentUserForm({ ...user });
@@ -112,6 +115,8 @@ export const DetailForm = memo((props: FormProps) => {
         } else {
           setCurrentUserForm({ ...currentUserForm, role: value.role });
         }
+
+        const response = await api.user.updateUser(updateUser);
 
         const response = await api.user.updateUser(updateUser);
         const userResponse: any = { ...response };
@@ -276,7 +281,7 @@ export const DetailForm = memo((props: FormProps) => {
                         size="large"
                         placeholder={!isView && 'Admin'}
                       >
-                        {Object.entries(role).map(([value, label]) => {
+                        {Object.entries(Role).map(([value, label]) => {
                           return (
                             <Option key={value} value={label}>
                               {label}
@@ -287,7 +292,6 @@ export const DetailForm = memo((props: FormProps) => {
                     )}
                   </FormItem>
                 </Col>
-
                 {!isView && (
                   <>
                     <Col md={isView ? 8 : 24} xs={24}>
