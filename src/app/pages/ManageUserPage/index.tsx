@@ -256,6 +256,9 @@ const ManageUserPage: React.FC = () => {
     {
       title: 'Email',
       dataIndex: 'email',
+      wordWrap: 'break-word',
+      textWrap: 'word-break',
+      hyphens: 'auto',
       width: 130,
       align: 'left',
       render: (text, record: User) => text,
@@ -270,10 +273,10 @@ const ManageUserPage: React.FC = () => {
     },
     {
       title: 'Enable',
-      dataIndex: 'enable_2fa',
+      dataIndex: 'is_active',
       width: 130,
       align: 'center',
-      render: (status, record: User) => (
+      render: (status: boolean, record: User) => (
         <Switch
           checked={status}
           onChange={checked => handleEnableUser(record, checked)}
@@ -317,13 +320,13 @@ const ManageUserPage: React.FC = () => {
   };
 
   // enable
-  const handleEnableUser = (record: User, checked) => {
-    // const updatedUser = {
-    //   id: record.id,
-    //   enabled_2fa: checked,
-    // };
+  const handleEnableUser = (record: User, checked: boolean) => {
+    const updatedUser = {
+      id: record.id,
+      is_active: checked,
+    };
     // TODO handler event update user
-    // dispatch(actions.updateUser({ user: updatedUser }));
+    dispatch(actions.updateUser({ user: updatedUser }));
   };
 
   const handleRemoveMultiUser = async arrId => {

@@ -14,6 +14,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
   const { Sider } = Layout;
   const [isSidebar] = React.useState(isMobile);
 
+
   return (
     <Wrapper style={{ width: collapsed ? 80 : 200 }}>
       {isMobile ? (
@@ -21,7 +22,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           visible={collapsed}
           placement="left"
           onClose={() => onCollapse(collapsed)}
-          closable={false}
+          closable={true}
           bodyStyle={{ background: '#001529' }}
           width={250}
         >
@@ -35,7 +36,7 @@ const SideBar: React.FC<Props> = ({ collapsed, onCollapse }) => {
           collapsedWidth="80"
           breakpoint="lg"
           style={{ display: isSidebar ? 'none' : 'block' }}
-          onClick={() => onCollapse(collapsed)}
+          onCollapse={onCollapse}
         >
           <Logo />
           <MenuItems />

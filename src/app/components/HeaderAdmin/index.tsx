@@ -1,7 +1,7 @@
 import React from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Breadcrumb } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { BadgeList } from '../BadgeList';
 import { NavList } from '../NavList';
@@ -33,24 +33,40 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
               )}
             </IconToggle>
             <NavList>
-              <NavItem>
-                <Link to="/">Dashboard</Link>
-              </NavItem>
-              <NavItem>
-                <Link to="/employees">Employees</Link>
-              </NavItem>
-              <NavItem>
-                <Link to="/projects">Projects</Link>
-              </NavItem>
-              <NavItem>
-                <Link to="/devices">Devices</Link>
-              </NavItem>
-              <NavItem>
-                <Link to="/users">Users</Link>
-              </NavItem>
-              <NavItem>
-                <Link to="/tasks">Tasks</Link>
-              </NavItem>
+              <Active>
+                <NavItem>
+                  <NavLink exact to="/" activeClassName="active">
+                    Dashboard
+                  </NavLink>
+                </NavItem>
+              </Active>
+              <Active>
+                <NavItem>
+                  <NavLink to="/employees" activeClassName="active">
+                    Employees
+                  </NavLink>
+                </NavItem>
+              </Active>
+              <Active>
+                <NavItem>
+                  <NavLink to="/projects">Projects</NavLink>
+                </NavItem>
+              </Active>
+              <Active>
+                <NavItem>
+                  <NavLink to="/devices">Devices</NavLink>
+                </NavItem>
+              </Active>
+              <Active>
+                <NavItem>
+                  <NavLink to="/users">Users</NavLink>
+                </NavItem>
+              </Active>
+              <Active>
+                <NavItem>
+                  <NavLink to="/tasks">Tasks</NavLink>
+                </NavItem>
+              </Active>
             </NavList>
           </div>
           <LogoHeader>
@@ -135,6 +151,13 @@ const IconToggle = styled.div`
 
   .site-layout .site-layout-background {
     background: #fff;
+  }
+`;
+
+const Active = styled.li`
+  .active {
+    border-bottom: 1px solid #333;
+    color: #333;
   }
 `;
 
