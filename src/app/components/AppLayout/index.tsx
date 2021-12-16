@@ -3,6 +3,8 @@ import * as React from 'react';
 import { RouteProps } from 'react-router';
 import { useAuthState } from '../Auth/useAuthState';
 import HeaderAdmin from '../HeaderAdmin';
+import { LoadingIndicator } from '../LoadingIndicator';
+import { LoadingWrapper } from '../LoadingWrapper';
 
 import Sidebar from '../Sidebar';
 
@@ -16,11 +18,16 @@ const AppLayout: React.FC<AdminRouteProps> = ({
   children,
 }: AdminRouteProps) => {
   const [collapsed, setCollapsed] = React.useState(true);
-  const { authenticated } = useAuthState();
+  const { loading } = useAuthState();
   const onCollapse = (collapsed: boolean): void => {
     setCollapsed(!collapsed);
   };
-  if (!authenticated) return <>{children}</>;
+  if (loading)
+    return (
+      <LoadingWrapper>
+        <LoadingIndicator />
+      </LoadingWrapper>
+    );
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sidebar collapsed={collapsed} onCollapse={onCollapse} />
