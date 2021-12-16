@@ -33,13 +33,6 @@ const inputProps: InputProps = {
   readOnly: true,
 };
 
-const selectProps: SelectProps<SelectValue> = {
-  autoClearSearchValue: false,
-  bordered: false,
-  dropdownStyle: { display: 'none' },
-  removeIcon: null,
-};
-
 interface UserForm {
   first_name?: string;
   last_name?: string;
@@ -115,13 +108,8 @@ export const DetailForm = memo((props: FormProps) => {
         } else {
           setCurrentUserForm({ ...currentUserForm, role: value.role });
         }
-
-        const response = await api.user.updateUser(updateUser);
-
-        const response = await api.user.updateUser(updateUser);
-        const userResponse: any = { ...response };
-
-        history.push(`${PrivatePath.USERS}/${userResponse.id}`);
+        const user = await api.user.updateUser(updateUser);
+        history.push(`${PrivatePath.USERS}/${user.id}`);
 
         notify({
           type: ToastMessageType.Info,
