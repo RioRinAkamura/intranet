@@ -27,4 +27,8 @@ export enum PrivatePath {
   USERS_ID = '/users/:id',
 
   TASKS = '/tasks',
+
+  LEAVE_APPLICATION = '/leave_applications',
+  LEAVE_APPLICATION_CREATE = '/leave_applications/create',
+  LEAVE_APPLICATION_ID = '/leave_applications/:id',
 }

@@ -154,7 +154,7 @@ const IconToggle = styled.div`
   }
 `;
 
-const Active = styled.li`
+const Active = styled.div`
   .active {
     border-bottom: 1px solid #333;
     color: #333;

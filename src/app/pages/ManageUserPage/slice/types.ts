@@ -36,7 +36,8 @@ export interface QueryParams {
   phoneNumber?: string;
   limit?: number;
   page?: number;
-  [key: string]: string | number | undefined;
+  is_active?: boolean;
+  [key: string]: string | number | boolean | undefined;
 }
 
 export interface TablePagination {

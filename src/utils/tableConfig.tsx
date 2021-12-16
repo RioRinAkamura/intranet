@@ -498,9 +498,11 @@ export const useTableConfig = (
           value={defaultValue.length > 0 ? defaultValue : text}
           style={{ width: '100%' }}
         >
-          {options.map(option => {
-            return <Option value={`${option.value}`}>{option.label}</Option>;
-          })}
+          {options.map((option, i) => (
+            <Option key={i} value={`${option.value}`}>
+              {option.label}
+            </Option>
+          ))}
         </Select>
         // options.find(option => option.value === Number(dataText))?.label
       );

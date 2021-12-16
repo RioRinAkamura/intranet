@@ -1,19 +1,24 @@
-import React from 'react';
+import { BellOutlined } from '@ant-design/icons';
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { Badge, Dropdown, Menu } from 'antd';
-import styled from 'styled-components';
-import { BellOutlined, UserOutlined } from '@ant-design/icons';
-import { ToastMessageType, useNotify } from '../ToastNotification';
+import { Avatar } from 'app/components/Avatar/Loadable';
+import React, { memo } from 'react';
 import { useHistory } from 'react-router';
+import styled from 'styled-components';
+import { useAuth } from '../Auth/Context';
 import { useLogout } from '../Auth/useLogout';
 import { ChangePasswordModal } from '../ChangePasswordModal';
 import {
-  useChangePassword,
-  ChangePasswordPayload,
+  ChangePasswordPayload, useChangePassword
 } from '../ChangePasswordModal/useChangePassword';
-import { useAuth } from '../Auth/Context';
-import Avatar from 'antd/lib/avatar/avatar';
+import { ToastMessageType, useNotify } from '../ToastNotification';
 
-export function Badges() {
+interface Props {
+  user?: Employee;
+}
+
+export const Badges = memo((props: Props) => {
+  const { user } = props;
   const { identity } = useAuth();
   const { notify } = useNotify();
   const history = useHistory();
@@ -104,11 +109,15 @@ export function Badges() {
             href="/"
           >
             <UserInfo>
-              {identity ? (
-                <img src={identity.avatar} alt="" />
-              ) : (
-                <Avatar icon={<UserOutlined />} />
-              )}
+              <Avatar
+                size={30}
+                src={identity ? identity.avatar : undefined}
+                alt={identity ? identity.displayName : undefined}
+                name={
+                  identity?.displayName ??
+                  user?.first_name + ' ' + user?.last_name
+                }
+              />
             </UserInfo>
           </a>
         </Dropdown>
@@ -121,7 +130,7 @@ export function Badges() {
       />
     </Wrapper>
   );
-}
+});
 
 const Wrapper = styled.li`
   display: inline-block;
