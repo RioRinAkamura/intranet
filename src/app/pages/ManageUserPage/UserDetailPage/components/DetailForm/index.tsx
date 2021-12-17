@@ -246,20 +246,7 @@ export const DetailForm = memo((props: FormProps) => {
                   Role
                 </Col>
                 <Col md={isView ? 16 : 24} xs={24}>
-                  <FormItem
-                    isView={isView}
-                    name="role"
-                    rules={
-                      isView
-                        ? []
-                        : [
-                            {
-                              required: true,
-                              message: 'Please select user role',
-                            },
-                          ]
-                    }
-                  >
+                  <FormItem isView={isView} name="role">
                     {isView ? (
                       <Input {...(isView ? inputProps : {})} size="large" />
                     ) : (
@@ -267,15 +254,18 @@ export const DetailForm = memo((props: FormProps) => {
                         {...(isView ? selectProps : {})}
                         isView={isView}
                         size="large"
-                        placeholder={!isView && 'Admin'}
+                        placeholder={!isView && 'None'}
                       >
-                        {Object.entries(Role).map(([value, label]) => {
+                        {Object.entries(Role).map(([label, value]) => {
                           return (
-                            <Option key={value} value={label}>
-                              {label}
+                            <Option key={value} value={value}>
+                              {value}
                             </Option>
                           );
                         })}
+                        <Option key="None" value="">
+                          None
+                        </Option>
                       </StyledSelect>
                     )}
                   </FormItem>
