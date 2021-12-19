@@ -229,7 +229,7 @@
             "invalid": "Phone mumber is invalid"
           },
           "skills": {
-            "label": "SKills"
+            "label": "Skills"
           },
           "email": {
             "label": "Email",
