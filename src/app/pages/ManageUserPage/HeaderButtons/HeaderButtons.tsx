@@ -10,12 +10,13 @@ const userOptions = ['All', 'Active', 'InActive'];
 export const HeaderButtons = () => {
   const dispatch = useDispatch();
   const { actions } = useUsersManagePageSlice();
-  const [option, setOption] = useState(userOptions[1]);
+  const [option, setOption] = useState(userOptions[0]);
 
   const handleUserOptionChange = value => {
-    const isActive = value === 'Active' ? true : false;
+    const isActive =
+      value === 'Active' ? 'active' : value === 'InActive' ? 'inactive' : 'all';
     const userActive = {
-      is_active: isActive,
+      status: isActive,
       page: 1,
       limit: 20,
     };
@@ -27,7 +28,7 @@ export const HeaderButtons = () => {
       <Row justify="end">
         <Select
           defaultValue={option}
-          style={{ width: 120, marginBottom: 12 }}
+          style={{ width: 130, marginBottom: 12 }}
           onChange={handleUserOptionChange}
         >
           {userOptions.map(option => (

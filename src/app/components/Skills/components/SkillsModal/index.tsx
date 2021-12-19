@@ -77,21 +77,15 @@ export const SkillsModal = memo((props: skillModalProps) => {
     setSuggestSkill([...suggestSkills, skill]);
   };
 
-  const handleAddCustomSkill = async e => {
+  const handleAddCustomSkill = e => {
     // trigger event when enter
     if (e.keyCode === 13) {
-      //add custom skill to default arr
-      try {
-        const newSkill = {
-          name: customSkill,
-          type: models.hr.SkillType.ENGINEERING,
-        };
-        const response = await api.hr.skill.create(newSkill);
-        setPickedSkill([...pickedSkill, response]);
-        setCustomSkill('');
-      } catch (e) {
-        console.log(e);
-      }
+      const newSkill = {
+        name: customSkill,
+        type: models.hr.SkillType.ENGINEERING,
+      };
+      setPickedSkill([...pickedSkill, newSkill]);
+      setCustomSkill('');
     }
   };
 
@@ -169,13 +163,9 @@ export const SkillsModal = memo((props: skillModalProps) => {
 
         <FlexWrapper className="mt-10">
           {pickedSkill.map((skill: Skill, index: number) => (
-            <CustomTag
-              key={skill.id}
-              closable
-              onClose={() => handleRemoveSkill(skill)}
-            >
+            <Tag key={index} closable color="#2db7f5">
               {skill.name}{' '}
-            </CustomTag>
+            </Tag>
           ))}
         </FlexWrapper>
 
@@ -248,4 +238,7 @@ const ButtonIcon = styled(Button)`
 const CustomTag = styled(Tag)`
   display: flex;
   align-items: center;
+  background-color: 'red';
+  width: 22px;
+  height: 24px;
 `;

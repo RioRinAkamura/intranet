@@ -10,6 +10,7 @@ function fetchUsersAction(options) {
     options.params.search,
     {
       email: options.params.email,
+      status: options.params.status,
     },
     options.params.ordering,
     options.params.page,
@@ -23,6 +24,7 @@ function updateUserAction(data) {
 
 function* fetchUsers(action) {
   const { params } = action.payload;
+  console.log('params: ', params);
 
   try {
     const response = yield call(fetchUsersAction, {
@@ -30,6 +32,7 @@ function* fetchUsers(action) {
         page: params.page,
         limit: params.limit,
         search: params.search,
+        status: params.status,
       },
     });
     yield put(actions.fetchUsersSuccess(response));
