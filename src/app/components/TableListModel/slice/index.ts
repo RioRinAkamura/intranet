@@ -1,4 +1,4 @@
-import { PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { TableSaga } from './saga';
@@ -11,6 +11,7 @@ import {
   TablePagination,
 } from './types';
 import { RootStateKeyType } from 'utils/types/injector-typings';
+import { RootState } from 'types';
 
 export const initialState: TableListState = {
   model: 'table',
@@ -147,3 +148,6 @@ export const useTableSlice = (model: RootStateKeyType) => {
   useInjectSaga({ key: model, saga: TableSaga });
   return { actions: slice.actions };
 };
+
+const selectSlice = (state: RootState) => state.employeeLeave || initialState;
+export const selectState = createSelector([selectSlice], state => state);

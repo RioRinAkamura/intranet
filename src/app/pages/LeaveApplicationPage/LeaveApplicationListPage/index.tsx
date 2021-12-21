@@ -1,5 +1,5 @@
 import { Form } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Messages } from './messages';
 import { Helmet } from 'react-helmet-async';
@@ -7,7 +7,7 @@ import { models } from '@hdwebsoft/intranet-api-sdk';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
 import { ColumnProps } from 'antd/lib/table';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PageTitle from 'app/components/PageTitle';
 import { useTableConfig } from 'utils/tableConfig';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
@@ -15,28 +15,30 @@ import TableListModel from 'app/components/TableListModel/index';
 import { useHandleDataTable } from 'app/components/TableListModel/useHandleDataTable';
 import {
   initialState,
+  selectState,
   useTableSlice,
 } from 'app/components/TableListModel/slice';
 import { RootState } from 'types';
 import { CardLayout } from 'app/components/CardLayout';
 
 type EmployeeLeave = models.hr.EmployeeLeave;
-const model = 'employeeLeave';
+const model = 'DeviceManager';
 
-export const LeaveApplications: React.FC = () => {
+export const LeaveApplications = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [searchForm] = Form.useForm();
-
-  const tableSate = useSelector(
-    (state: RootState) => state[model] || initialState,
-  );
-
-  const { params, loading } = tableSate;
-
+  const dispatch = useDispatch();
+  const tableState = useSelector(selectState);
+  const { params, loading } = tableState;
   const { actions } = useTableSlice(model);
+  
+  React.useEffect(() => {
+    dispatch(actions.fetchList({ params: params }));
+  }, [dispatch, actions, params]);
+
   const { setFilterText, setSearchText, resetSearch } = useHandleDataTable(
-    tableSate,
+    tableState,
     actions,
   );
 
@@ -44,7 +46,7 @@ export const LeaveApplications: React.FC = () => {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchSelectProps,
-  } = useTableConfig(tableSate, Messages, setFilterText);
+  } = useTableConfig(tableState, Messages, setFilterText);
 
   const columns: ColumnProps<EmployeeLeave>[] = [
     {
