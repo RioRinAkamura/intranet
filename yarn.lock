@@ -1609,25 +1609,11 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hdwebsoft/intranet-api-sdk@0.1.3":
-  version "0.1.3"
-  resolved "https://gitlab.com/api/v4/projects/31966285/packages/npm/@hdwebsoft/intranet-api-sdk/-/@hdwebsoft/intranet-api-sdk-0.1.3.tgz#8b192296eaa0ab09fb12dd332a9cd4da0b0c27cf"
-  integrity sha1-ixkiluqgqwn7Et0zKpzU2gsMJ88=
-<<<<<<< HEAD
+"@hdwebsoft/intranet-api-sdk@0.1.5":
+  version "0.1.5"
+  resolved "https://gitlab.com/api/v4/projects/31966285/packages/npm/@hdwebsoft/intranet-api-sdk/-/@hdwebsoft/intranet-api-sdk-0.1.5.tgz#25b6e5eb33228818bbd48507d3273d81b38b18e9"
+  integrity sha1-Jbbl6zMiiBi71IUH0yc9gbOLGOk=
   dependencies:
-    axios "^0.21.1"
-    axios-cache-adapter "^2.7.3"
-    qs "^6.10.1"
-    socket.io-client "^2.4.0"
-
-"@hdwebsoft/intranet-api-sdk@0.1.4":
-  version "0.1.4"
-  resolved "https://gitlab.com/api/v4/projects/31966285/packages/npm/@hdwebsoft/intranet-api-sdk/-/@hdwebsoft/intranet-api-sdk-0.1.4.tgz#31a03a569c47bc0e878686d8c0a1cc843294dbc2"
-  integrity sha1-MaA6VpxHvA6HhobYwKHMhDKU28I=
-=======
->>>>>>> develop
-  dependencies:
-    "@hdwebsoft/intranet-api-sdk" "0.1.3"
     axios "^0.21.1"
     axios-cache-adapter "^2.7.3"
     qs "^6.10.1"

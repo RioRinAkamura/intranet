@@ -32,7 +32,7 @@ export const TeamMembers = memo((props: TeamMembersProps) => {
       <MembersWrapper>
         {members &&
           members.map(member => {
-            return <Member member={member} />;
+            return <Member key={member.id} member={member} />;
           })}
       </MembersWrapper>
 

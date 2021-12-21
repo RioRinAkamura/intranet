@@ -92,6 +92,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
               >
                 <Input
                   {...(isView ? inputProps : {})}
+                  tabIndex={1}
                   size="large"
                   placeholder={
                     isView
@@ -125,6 +126,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 <DatePicker
                   {...(isView ? datePickerProps : {})}
                   format={DATE_FORMAT}
+                  tabIndex={3}
                   size="large"
                   placeholder={
                     isView ? '' : t(UserDetailMessages.formDOBPlaceholder())
@@ -160,6 +162,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 <Input
                   {...(isView ? inputProps : {})}
                   disabled={isEdit}
+                  tabIndex={7}
                   size="large"
                   placeholder={
                     isView ? '' : t(UserDetailMessages.formEmailPlaceholder())
@@ -175,7 +178,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
             <Col md={isView ? 16 : 24} xs={24}>
               <FormItem isView={isView} name="status" initialValue="Single">
                 {isView ? (
-                  <Input {...inputProps} size="large" />
+                  <Input tabIndex={9} {...inputProps} size="large" />
                 ) : (
                   <Radio.Group defaultValue="Single">
                     <Radio value="Single">
@@ -219,6 +222,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 <Input
                   {...(isView ? inputProps : {})}
                   size="large"
+                  tabIndex={2}
                   placeholder={
                     isView
                       ? ''
@@ -252,13 +256,13 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                   <Input {...inputProps} size="large" />
                 ) : (
                   <Radio.Group size="large" defaultValue="Other">
-                    <Radio value="Male">
+                    <Radio tabIndex={4} value="Male">
                       {t(UserDetailMessages.formGenderMaleLabel())}
                     </Radio>
-                    <Radio value="Female">
+                    <Radio tabIndex={5} value="Female">
                       {t(UserDetailMessages.formGenderFemaleLabel())}
                     </Radio>
-                    <Radio value="Other">
+                    <Radio tabIndex={6} value="Other">
                       {t(UserDetailMessages.formGenderOtherLabel())}
                     </Radio>
                   </Radio.Group>
@@ -288,6 +292,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 <Input
                   {...(isView ? inputProps : {})}
                   size="large"
+                  tabIndex={8}
                   placeholder={
                     isView
                       ? ''
@@ -307,6 +312,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 <Input
                   {...(isView ? inputProps : {})}
                   size="large"
+                  tabIndex={10}
                   placeholder={
                     isView
                       ? ''
