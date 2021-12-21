@@ -79,7 +79,7 @@ export const SkillsModal = memo((props: skillModalProps) => {
 
   const handleAddCustomSkill = e => {
     // trigger event when enter
-    if (e.keyCode === 13) {
+    if (e.keyCode === 13 && customSkill.length > 0) {
       const newSkill = {
         name: customSkill,
         type: models.hr.SkillType.ENGINEERING,

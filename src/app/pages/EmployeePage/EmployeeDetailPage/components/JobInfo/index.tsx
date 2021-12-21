@@ -88,8 +88,12 @@ export const JobInfo = (props: JobInfoProps) => {
                   !isView && t(UserDetailMessages.formPositionPlaceholder())
                 }
               >
-                {positions?.map(value => {
-                  return <Option value={value.value}>{value.label}</Option>;
+                {positions?.map((value, index) => {
+                  return (
+                    <Option key={index} value={value.value}>
+                      {value.label}
+                    </Option>
+                  );
                 })}
               </StyledSelect>
             )}
@@ -132,8 +136,12 @@ export const JobInfo = (props: JobInfoProps) => {
                 size="large"
                 placeholder={t(UserDetailMessages.formTypePlaceholder())}
               >
-                {types?.map(value => {
-                  return <Option value={value.value}>{value.label}</Option>;
+                {types?.map((value, index) => {
+                  return (
+                    <Option key={index} value={value.value}>
+                      {value.label}
+                    </Option>
+                  );
                 })}
               </Select>
             )}
