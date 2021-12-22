@@ -45,8 +45,20 @@ const slice = createSlice({
     fetchIdentityFailure(state, action: PayloadAction<IdentityPayload>) {
       state.error = action.payload.error;
     },
-    fetchList(state, action: PayloadAction<DevicesManagerState>) {
+    fetchList(state, action) {
       state.loading = true;
+    },
+    fetchListSuccess(state, action: PayloadAction<any>) {
+      state.results = action.payload.results;
+      state.pagination!.total = Number(action.payload.count);
+      state.pagination!.current = Number(state.params.page);
+      state.pagination!.pageSize = Number(state.params.limit);
+      state.loading = false;
+      state.isFilter = true;
+    },
+    fetchListFailure(state, action: PayloadAction<DevicesManagerState>) {
+      state.error = action.payload.error;
+      state.loading = false;
     },
 
     resetSearch(state) {
@@ -65,14 +77,6 @@ const slice = createSlice({
     setPagination(state, action: PayloadAction<TablePagination>) {
       state.params.limit = action.payload.pageSize;
       state.params.page = action.payload.current;
-    },
-    fetchListSuccess(state, action) {
-      state.results = action.payload.results;
-      state.pagination!.total = Number(action.payload.count);
-      state.pagination!.current = Number(state.params.page);
-      state.pagination!.pageSize = Number(state.params.limit);
-      state.loading = false;
-      state.isFilter = true;
     },
 
     changeState(state, action) {
@@ -108,10 +112,7 @@ const slice = createSlice({
     notQuery(state) {
       state.isFilter = false;
     },
-    fetchListFailure(state, action) {
-      state.error = action.payload.error;
-      state.loading = false;
-    },
+
     delete(state, action: PayloadAction<Delete>) {
       state.isFilter = true;
       state.deleteSuccess = false;

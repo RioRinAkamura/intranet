@@ -91,15 +91,16 @@ export function App() {
 
                 {/* LeaveApplication */}
                 <PrivateRoute
-                  path={'/leave_applications'}
+                  path={PrivatePath.LEAVE_APPLICATION}
+                  exact
                   component={LeaveApplicationPage}
                 />
                 <PrivateRoute
-                  path={'/leave_applications/create'}
+                  path={PrivatePath.LEAVE_APPLICATION_CREATE}
                   component={LeaveApplicationDetailPage}
                 />
                 <PrivateRoute
-                  path={'/leave_applications/:id'}
+                  path={PrivatePath.LEAVE_APPLICATION_ID}
                   component={LeaveApplicationDetailPage}
                 />
 

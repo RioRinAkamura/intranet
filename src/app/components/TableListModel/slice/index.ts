@@ -149,5 +149,5 @@ export const useTableSlice = (model: RootStateKeyType) => {
   return { actions: slice.actions };
 };
 
-const selectSlice = (state: RootState) => state.employeeLeave || initialState;
+const selectSlice = (state: RootState) => state.leave || initialState;
 export const selectState = createSelector([selectSlice], state => state);
