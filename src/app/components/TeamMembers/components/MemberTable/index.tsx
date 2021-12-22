@@ -20,15 +20,25 @@ import { api } from 'utils/api';
 import { antColours, DeleteType } from 'utils/types';
 import { PrivatePath } from 'utils/url.const';
 import { getSelectValues } from 'utils/variable';
-
+import moment from 'moment';
 interface Props {
   projectId: string;
   dataSource: Member[];
   loading: boolean;
+  setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditMember?: React.Dispatch<React.SetStateAction<Member | undefined>>;
 }
 
 export const MemberTable = memo((props: Props) => {
-  const { projectId, dataSource, loading } = props;
+  const {
+    projectId,
+    dataSource,
+    loading,
+    setIsEdit,
+    setOpenModal,
+    setEditMember,
+  } = props;
   const history = useHistory();
 
   //state
@@ -55,6 +65,14 @@ export const MemberTable = memo((props: Props) => {
     setMember(record);
   };
 
+  const showEditModal = (record: Member) => {
+    if (setIsEdit && setOpenModal && setEditMember) {
+      setIsEdit(true);
+      setOpenModal(true);
+      setEditMember(record);
+    }
+  };
+
   const handleConfirmDelete = async () => {
     setIsModalVisible(false);
     try {
@@ -76,7 +94,7 @@ export const MemberTable = memo((props: Props) => {
     setIsModalVisible(false);
   };
 
-  const moreButton = (text: string, record: Member) => (
+  const moreButton = (record: Member) => (
     <>
       <Tooltip title={'Detail'}>
         <IconButton
@@ -85,7 +103,7 @@ export const MemberTable = memo((props: Props) => {
           size="small"
           icon={<EyeOutlined />}
           onClick={() => {
-            history.push(`${PrivatePath.EMPLOYEES}/${text}`);
+            history.push(`${PrivatePath.EMPLOYEES}/${record.id}`);
           }}
         />
       </Tooltip>
@@ -95,10 +113,7 @@ export const MemberTable = memo((props: Props) => {
           icon={<EditOutlined />}
           size="small"
           onClick={() => {
-            history.push({
-              pathname: `${PrivatePath.EMPLOYEES}/${text}`,
-              state: { edit: true },
-            });
+            showEditModal(record);
           }}
         />
       </Tooltip>
@@ -131,7 +146,6 @@ export const MemberTable = memo((props: Props) => {
       width: 100,
       render: text => getSelectValues(roles, text)?.label,
     },
-
     {
       title: 'Employee',
       dataIndex: 'member',
@@ -150,16 +164,19 @@ export const MemberTable = memo((props: Props) => {
       ),
     },
     {
-      title: 'Action',
-      dataIndex: 'id',
+      title: 'Joined',
+      dataIndex: 'joined_at',
       width: 100,
-      render: (text, record: any, index: number) => {
+      render: date => (date ? moment(date).format('MM-DD-YYYY') : ''),
+    },
+    {
+      title: 'Action',
+      dataIndex: '',
+      width: 100,
+      render: (record: Member, index: number) => {
         return (
           <>
-            <Popover
-              content={() => moreButton(text, record)}
-              placement="bottom"
-            >
+            <Popover content={() => moreButton(record)} placement="bottom">
               <IconButton shape="circle" size="small" icon={<MoreOutlined />} />
             </Popover>
           </>
