@@ -235,28 +235,30 @@ const ManageUserPage: React.FC = () => {
     {
       title: 'First Name',
       dataIndex: 'first_name',
-      width: 130,
+      width: 100,
       align: 'left',
       render: (text, record: User) => text,
     },
     {
       title: 'Last Name',
       dataIndex: 'last_name',
-      width: 130,
+      width: 100,
       align: 'left',
       render: (text, record: User) => text,
     },
     {
       title: 'Username',
+      ellipsis: true,
       dataIndex: 'username',
-      width: 130,
+      width: 220,
       align: 'left',
       render: (text, record: User) => text,
     },
     {
       title: 'Email',
+      ellipsis: true,
       dataIndex: 'email',
-      width: 130,
+      width: 220,
       align: 'left',
       render: (text, record: User) => text,
     },
@@ -271,7 +273,7 @@ const ManageUserPage: React.FC = () => {
     {
       title: 'Enable',
       dataIndex: 'is_active',
-      width: 130,
+      width: 80,
       align: 'center',
       render: (status: boolean, record: User) => (
         <Switch
@@ -284,7 +286,7 @@ const ManageUserPage: React.FC = () => {
       title: 'Actions',
       fixed: 'right',
       dataIndex: 'id',
-      width: 100,
+      width: 80,
       align: 'center',
       render: (id, record: User) => (
         <>
