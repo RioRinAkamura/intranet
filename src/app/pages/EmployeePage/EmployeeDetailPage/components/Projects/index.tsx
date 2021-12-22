@@ -154,6 +154,11 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
       render: text => (text ? moment(text).format('DD-MM-YYYY') : ''),
     },
     {
+      title: 'Joined',
+      dataIndex: 'joined_at',
+      render: text => (text ? moment(text).format('DD-MM-YYYY') : ''),
+    },
+    {
       title: 'Status',
       dataIndex: ['project', 'status'],
       render: value => getSelectValues(statuses, value)?.label,

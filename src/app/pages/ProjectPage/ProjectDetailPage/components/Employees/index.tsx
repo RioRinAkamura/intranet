@@ -7,18 +7,26 @@ import React, { memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { useProjectDetail } from '../../useProjectDetail';
+import { Member } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/project/models';
+import { config } from 'config';
+import moment from 'moment';
+import { api } from 'utils/api';
 
 interface LocationParams {
   id: string;
 }
+
+const DATE_FORMAT = config.DATE_FORMAT;
 
 export const Employees = memo(() => {
   const { id } = useParams<LocationParams>();
   const { members, loading, fetchMembers, addMember } = useProjectDetail();
 
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [editMember, setEditMember] = useState<Member>();
 
-  const [addForm] = Form.useForm();
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (id) {
@@ -27,18 +35,51 @@ export const Employees = memo(() => {
   }, [fetchMembers, id]);
 
   const handleAddMember = () => {
-    addForm.validateFields().then(async values => {
+    form.validateFields().then(async values => {
       try {
         const response = await addMember(id, values);
         if (response) {
           setOpenModal(false);
-          addForm.resetFields();
+          form.resetFields();
           fetchMembers(id);
         }
       } catch (e: any) {
         message.error(e.message);
       }
     });
+  };
+
+  const handleEditMember = () => {
+    form.validateFields().then(async values => {
+      try {
+        delete values.members.member_id;
+        values.members.joined_at = moment(values.members.joined_at).format(
+          DATE_FORMAT,
+        );
+        if (editMember) {
+          const response = await api.hr.project.updateMember(
+            id,
+            editMember.member.id,
+            values.members,
+          );
+          if (response) {
+            setOpenModal(false);
+            setIsEdit(false);
+            form.resetFields();
+            fetchMembers(id);
+          }
+        }
+      } catch (e: any) {
+        message.error(e.message);
+      }
+    });
+  };
+
+  const handleCancel = () => {
+    setOpenModal(false);
+    setIsEdit(false);
+    setEditMember(undefined);
+    form.resetFields();
   };
 
   return (
@@ -54,18 +95,27 @@ export const Employees = memo(() => {
           Add Member
         </Button>
       </HeaderButton>
-      <MemberTable projectId={id} dataSource={members} loading={loading} />
+      <MemberTable
+        setIsEdit={setIsEdit}
+        setOpenModal={setOpenModal}
+        projectId={id}
+        setEditMember={setEditMember}
+        dataSource={members}
+        loading={loading}
+      />
       <DialogModal
         isOpen={openModal}
         cancelText="Cancel"
-        okText="Add"
-        handleCancel={() => {
-          setOpenModal(false);
-          addForm.resetFields();
-        }}
-        handleSubmit={handleAddMember}
+        okText={isEdit ? 'Edit' : 'Add'}
+        handleCancel={handleCancel}
+        handleSubmit={isEdit ? handleEditMember : handleAddMember}
       >
-        <AddMember projId={id} form={addForm} />
+        <AddMember
+          member={editMember}
+          isEdit={isEdit}
+          projId={id}
+          form={form}
+        />
       </DialogModal>
     </Wrapper>
   );

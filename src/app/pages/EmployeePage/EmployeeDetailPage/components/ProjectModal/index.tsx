@@ -6,7 +6,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { DialogModal } from 'app/components/DialogModal';
-import { Button, Form, Select, Spin } from 'antd';
+import { Button, DatePicker, Form, Select, Spin } from 'antd';
 import { useHandleProject } from './useHandleProject';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEmployeeProjectSlice } from '../Projects/slice';
@@ -18,7 +18,9 @@ import {
 } from '../Projects/slice/selectors';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
-
+import { datePickerViewProps } from 'utils/types';
+import moment from 'moment';
+import { config } from 'config';
 interface Props {
   id: string;
   open: boolean;
@@ -27,6 +29,8 @@ interface Props {
   setSelectedProject: (member: any) => void;
 }
 const { Option } = Select;
+const UI_DATE_FORMAT = 'MM-DD-YYYY';
+const DATE_FORMAT = config.DATE_FORMAT;
 
 export const ProjectModal = memo((props: Props) => {
   const { id, open, setOpen, selectedProject, setSelectedProject } = props;
@@ -49,17 +53,20 @@ export const ProjectModal = memo((props: Props) => {
   const editFailed = useSelector(selectEmployeeProjectEditFailed);
 
   const handleProject = async values => {
+    const joinDate = moment(values.joined_at).format(DATE_FORMAT);
     const _values = {
       employeeId: id,
       data: {
         project_id: values.project,
         allocation: values.allocation,
         project_role: values.project_role,
+        joined_at: joinDate || undefined,
       },
     };
     if (selectedProject) {
       dispatch(actions.editProject(_values));
     } else {
+      delete _values.data.joined_at;
       dispatch(actions.addProject(_values));
     }
   };
@@ -143,6 +150,9 @@ export const ProjectModal = memo((props: Props) => {
           project: selectedProject.project.id,
           project_role: selectedProject.project_role,
           allocation: selectedProject.allocation,
+          joined_at: selectedProject.joined_at
+            ? moment(selectedProject.joined_at)
+            : '',
         });
         setIsAddProject(false);
       })();
@@ -158,6 +168,11 @@ export const ProjectModal = memo((props: Props) => {
     setIsAddProject(true);
     memberForm.resetFields();
   }
+
+  const disabledDate = (current: moment.Moment) => {
+    // Can not select days after today and today
+    return current > moment().endOf('day');
+  };
 
   return (
     <>
@@ -239,6 +254,30 @@ export const ProjectModal = memo((props: Props) => {
                 );
               })}
             </Select>
+          </FormSearchItem>
+          <FormSearchItem
+            hidden={isAddProject}
+            label="Joined"
+            name="joined_at"
+            rules={
+              isAddProject
+                ? [{}]
+                : [
+                    {
+                      required: true,
+                      message: 'Please select joined date',
+                    },
+                  ]
+            }
+          >
+            <DatePicker
+              {...(isAddProject ? datePickerViewProps : {})}
+              format={UI_DATE_FORMAT}
+              disabledDate={disabledDate}
+              style={{ width: '100%' }}
+              size="large"
+              placeholder="Select joined date"
+            />
           </FormSearchItem>
           <ModalButton>
             <Button

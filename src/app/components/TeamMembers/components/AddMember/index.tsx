@@ -1,21 +1,28 @@
-import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
-import { Form, FormInstance, message, Select, Spin } from 'antd';
+import {
+  Employee,
+  Member,
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { DatePicker, Form, FormInstance, message, Select, Spin } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
 import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { datePickerViewProps } from 'utils/types';
+import moment from 'moment';
 
 const FormSearchItem = Form.Item;
 const { Option } = Select;
-
+const DATE_FORMAT = 'MM-DD-YYYY';
 interface Props {
   projId: string;
   form: FormInstance;
+  isEdit?: boolean;
+  member?: Member;
 }
 
 export const AddMember = memo((props: Props) => {
-  const { form } = props;
+  const { form, isEdit, member } = props;
   const { t } = useTranslation();
   const {
     roles,
@@ -44,11 +51,28 @@ export const AddMember = memo((props: Props) => {
     }
   };
 
+  const disabledDate = (current: moment.Moment) => {
+    return current > moment().endOf('day');
+  };
+
   // hooks
   useEffect(() => {
     getRoles();
     getAllocations();
   }, [getRoles, getAllocations]);
+
+  useEffect(() => {
+    if (member) {
+      form.setFieldsValue({
+        members: {
+          member_id: member.member.first_name + ' ' + member.member.last_name,
+          allocation: member.allocation,
+          project_role: member.project_role,
+          joined_at: member.joined_at ? moment(member.joined_at) : '',
+        },
+      });
+    }
+  }, [member, form]);
 
   const options = employees?.map(employee => (
     <Option key={employee.id} value={employee.id}>
@@ -159,6 +183,27 @@ export const AddMember = memo((props: Props) => {
             })}
         </Select>
       </FormSearchItem>
+      {isEdit && (
+        <FormSearchItem
+          label="Joined"
+          name={['members', 'joined_at']}
+          rules={[
+            {
+              required: true,
+              message: 'Please select joined date',
+            },
+          ]}
+        >
+          <DatePicker
+            {...(!isEdit ? datePickerViewProps : {})}
+            format={DATE_FORMAT}
+            disabledDate={disabledDate}
+            style={{ width: '100%' }}
+            size="large"
+            placeholder="Select joined date"
+          />
+        </FormSearchItem>
+      )}
     </Form>
   );
 });
