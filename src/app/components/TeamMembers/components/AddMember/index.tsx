@@ -52,7 +52,14 @@ export const AddMember = memo((props: Props) => {
 
   const options = employees?.map(employee => (
     <Option key={employee.id} value={employee.id}>
-      {employee.first_name} {employee.last_name}
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <span>
+          {employee.first_name} {employee.last_name}
+        </span>
+        <span style={{ width: '60%' }}>
+          {employee.code} - {employee.email}
+        </span>
+      </div>
     </Option>
   ));
 
