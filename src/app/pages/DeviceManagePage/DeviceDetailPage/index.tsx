@@ -411,8 +411,10 @@ export const DeviceDetailPage = props => {
                       size="large"
                       placeholder="Select Health Status"
                     >
-                      {healthStatuses?.map((item, index) => (
-                        <Option key={index} value={item.value}>{item.label}</Option>
+                      {healthStatuses?.map(item => (
+                        <Option key={item.value} value={item.value}>
+                          {item.label}
+                        </Option>
                       ))}
                     </Select>
                   </FormItem>

@@ -82,8 +82,8 @@ export const ChangeLogs = React.memo(({ project_id }: ChangeLogsProps) => {
       render: values => {
         return values ? (
           <table>
-            {values.map(item => (
-              <tr>
+            {values.map((item, index) => (
+              <tr key={index}>
                 <StyledField>{item.field}</StyledField>
                 <td>
                   <StyledOldValue>{item.old}</StyledOldValue>

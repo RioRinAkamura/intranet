@@ -226,9 +226,9 @@ export const ProjectModal = memo((props: Props) => {
           >
             <Select size="large" placeholder="Select role">
               {roles &&
-                roles.map((item, index: number) => {
+                roles.map(item => {
                   return (
-                    <Option key={index} value={item.value}>
+                    <Option key={item.value} value={item.value}>
                       {item.label}
                     </Option>
                   );

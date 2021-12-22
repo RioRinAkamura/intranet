@@ -1,42 +1,43 @@
-import { Form } from 'antd';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Messages } from './messages';
-import { Helmet } from 'react-helmet-async';
 import { models } from '@hdwebsoft/intranet-api-sdk';
-import { useHistory } from 'react-router';
-import styled from 'styled-components/macro';
+import { Form } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
-import { useSelector } from 'react-redux';
+import { CardLayout } from 'app/components/CardLayout';
 import PageTitle from 'app/components/PageTitle';
-import { useTableConfig } from 'utils/tableConfig';
-import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import TableListModel from 'app/components/TableListModel/index';
 import { useHandleDataTable } from 'app/components/TableListModel/useHandleDataTable';
+import { TotalSearchForm } from 'app/components/TotalSearchForm';
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
+import styled from 'styled-components/macro';
+import { useTableConfig } from 'utils/tableConfig';
+import { Messages } from './messages';
+import { EmployeeLeavePageSlice } from './slice';
 import {
-  initialState,
-  useTableSlice,
-} from 'app/components/TableListModel/slice';
-import { RootState } from 'types';
-import { CardLayout } from 'app/components/CardLayout';
+  selectEmployeeLeaveParams,
+  selectEmployeeLeaveState
+} from './slice/selectors';
 
 type EmployeeLeave = models.hr.EmployeeLeave;
-const model = 'employeeLeave';
+const model = 'leave';
 
 export const LeaveApplications: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [searchForm] = Form.useForm();
+  const dispatch = useDispatch();
+  const tableState = useSelector(selectEmployeeLeaveState);
+  const params = useSelector(selectEmployeeLeaveParams);
+  const { actions } = EmployeeLeavePageSlice();
 
-  const tableSate = useSelector(
-    (state: RootState) => state[model] || initialState,
-  );
+  React.useEffect(() => {
+    dispatch(actions.fetchEmployeesLeave({ params: params }));
+  }, [dispatch, actions, params]);
 
-  const { params, loading } = tableSate;
-
-  const { actions } = useTableSlice(model);
   const { setFilterText, setSearchText, resetSearch } = useHandleDataTable(
-    tableSate,
+    tableState,
     actions,
   );
 
@@ -44,7 +45,7 @@ export const LeaveApplications: React.FC = () => {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchSelectProps,
-  } = useTableConfig(tableSate, Messages, setFilterText);
+  } = useTableConfig(tableState, Messages, setFilterText);
 
   const columns: ColumnProps<EmployeeLeave>[] = [
     {
@@ -126,7 +127,7 @@ export const LeaveApplications: React.FC = () => {
         <TotalSearchForm
           form={searchForm}
           value={params.search}
-          loading={loading || false}
+          loading={tableState.loading ? true : false}
           messageTrans={Messages}
           onSearch={totalSearch}
           onReset={resetTotalSearch}

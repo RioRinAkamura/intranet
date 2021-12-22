@@ -82,7 +82,9 @@ const WrapperForm: React.FC<FormProps> = ({
             <Option value={detail?.id}>{detail?.code}</Option>
           )}
           {devices.map(device => (
-            <Option value={device.id}>{device.code}</Option>
+            <Option key={device.id} value={device.id}>
+              {device.code}
+            </Option>
           ))}
         </Select>
       </Form.Item>
@@ -93,8 +95,10 @@ const WrapperForm: React.FC<FormProps> = ({
         label="Status"
       >
         <Select placeholder="Status" size="large">
-          {employeeStatuses.map(status => (
-            <Option value={status.value}>{status.label}</Option>
+          {employeeStatuses.map((status, index) => (
+            <Option key={index} value={status.value}>
+              {status.label}
+            </Option>
           ))}
         </Select>
       </Form.Item>

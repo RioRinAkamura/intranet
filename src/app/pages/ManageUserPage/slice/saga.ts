@@ -24,8 +24,6 @@ function updateUserAction(data) {
 
 function* fetchUsers(action) {
   const { params } = action.payload;
-  console.log('params: ', params);
-
   try {
     const response = yield call(fetchUsersAction, {
       params: {
