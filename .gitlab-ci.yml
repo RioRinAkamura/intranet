@@ -15,7 +15,7 @@
 
 .env prod: &env_prod
   environment:
-    name: dev
+    name: prod
     url: https://intranet.hdwebsoft.co
 
 .var prod: &var_prod
