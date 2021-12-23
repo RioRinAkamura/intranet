@@ -34,7 +34,7 @@ export const CardForm: React.FC<CardFormProps> = ({
           </Col>
           <Col>
             <Button loading={loading} block type="primary" onClick={onSubmit}>
-              {isView ? 'Save' : 'Submit'}
+              {isView ? 'Edit' : 'Submit'}
             </Button>
           </Col>
         </Row>

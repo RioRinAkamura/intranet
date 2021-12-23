@@ -67,7 +67,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
       <TitlePath>
         <b>{t(UserDetailMessages.formProfileTitle())}</b>
       </TitlePath>
-      <Row gutter={[128, 0]} align="middle">
+      <Row gutter={[128, 0]} align="top">
         <Col md={12} xs={24}>
           <Row gutter={[0, 12]} align="middle">
             <Col md={isView ? 8 : 24} xs={24}>
@@ -198,7 +198,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
           xs={24}
           style={isView ? { borderLeft: '1px solid #c5c4c5' } : {}}
         >
-          <Row gutter={[0, 12]} align="middle">
+          <Row gutter={[0, 13]} align="middle">
             <Col md={isView ? 8 : 24} xs={24}>
               <span className="label">
                 {t(UserDetailMessages.formLastNameLabel())}
@@ -317,6 +317,25 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                     isView
                       ? ''
                       : t(UserDetailMessages.formInsuranceNoPlaceholder())
+                  }
+                />
+              </FormItem>
+            </Col>
+            <Col md={isView ? 8 : 24} xs={24}>
+              <span className="label">
+                {t(UserDetailMessages.formNicknameLabel())}
+              </span>
+            </Col>
+            <Col md={isView ? 16 : 24} xs={24}>
+              <FormItem name="nickname" isView={isView}>
+                <Input
+                  {...(isView ? inputProps : {})}
+                  size="large"
+                  tabIndex={10}
+                  placeholder={
+                    isView
+                      ? ''
+                      : t(UserDetailMessages.formNicknamePlaceholder())
                   }
                 />
               </FormItem>

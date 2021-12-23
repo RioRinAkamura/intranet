@@ -216,6 +216,16 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.profile.insuranceNo.placeholder,
       'Social insurance #',
     ),
+  formNicknameLabel: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.nickname.label,
+      'Nickname',
+    ),
+  formNicknamePlaceholder: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.nickname.placeholder,
+      'Nickname',
+    ),
   formJobTitle: () =>
     _t(translations.UserDetailPage.modal.form.job.title, 'Job infomation'),
   formJobTitleLabel: () =>
@@ -349,8 +359,8 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.social.gitlab.placeholder,
       'Input Gitlab ID',
     ),
-  formSaveButton: () =>
-    _t(translations.UserDetailPage.modal.form.button.save, 'Save'),
+  formEditButton: () =>
+    _t(translations.UserDetailPage.modal.form.button.edit, 'Edit'),
   formSubmitButton: () =>
     _t(translations.UserDetailPage.modal.form.button.submit, 'Save'),
   formCancelButton: () =>

@@ -272,6 +272,10 @@
           "insuranceNo": {
             "label": "Social insurance #",
             "placeholder": "Social insurance #"
+          },
+          "nickname": {
+            "label": "Nickname",
+            "placeholder": "Nickname"
           }
         },
         "job": {
@@ -351,7 +355,7 @@
           }
         },
         "button": {
-          "save": "Save",
+          "edit": "Edit",
           "submit": "Save",
           "cancel": "Cancel",
           "back": "Back",
