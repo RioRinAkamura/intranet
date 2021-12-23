@@ -1,3 +1,7 @@
+stages:
+  - build
+  - deploy
+
 .env dev: &env_dev
   environment:
     name: dev
@@ -39,6 +43,9 @@
     - chmod 644 ~/.ssh/known_hosts
 
 .build docker: &build_docker_images
+  image: docker:latest
+  services:
+    - docker:dind
   before_script:
     - cp $(pwd)/${ENV_FILE}  $(pwd)/.env.production.local
     - echo "$DOCKER_REGISTRY_PASSWORD" | docker login $DOCKER_REGISTRY -u $DOCKER_REGISTRY_USER --password-stdin
@@ -55,9 +62,6 @@
 
 build-dev:
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind
   only:
     - develop
   <<: *env_dev
@@ -74,9 +78,6 @@ deploy-dev:
 
 build-prod:
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind
   only:
     - master
   <<: *env_prod
