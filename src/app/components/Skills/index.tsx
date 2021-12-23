@@ -104,7 +104,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
         console.log(e);
       }
     }
-    // setSkills(items);
+    setSkills(items);
   };
 
   const handleDeleteSkill = async skill => {
@@ -187,8 +187,8 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
           {(provided, snapshot) => {
             return (
               <SkillList ref={provided.innerRef}>
-                {data &&
-                  data.map((skill, index) => {
+                {skills &&
+                  skills.map((skill, index) => {
                     return (
                       <Draggable
                         key={skill.id}
@@ -203,7 +203,7 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
                             <FlexWrapper className="justify-content-between">
                               <FlexWrapper>
                                 <span className="skill-title">
-                                  {skill.skill.name}
+                                  {skill.name}
                                 </span>
 
                                 <Rate

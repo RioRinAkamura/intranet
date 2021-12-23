@@ -1,7 +1,6 @@
-import { Col, Row, Select } from 'antd';
+import { Row, Select } from 'antd';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components/macro';
 import { useUsersManagePageSlice } from '../slice';
 
 const Option = Select;
@@ -10,7 +9,7 @@ const userOptions = ['All', 'Active', 'InActive'];
 export const HeaderButtons = () => {
   const dispatch = useDispatch();
   const { actions } = useUsersManagePageSlice();
-  const [option, setOption] = useState(userOptions[0]);
+  const [option, setOption] = useState(userOptions[1]);
 
   const handleUserOptionChange = value => {
     const isActive =
@@ -39,13 +38,3 @@ export const HeaderButtons = () => {
     </>
   );
 };
-
-const OptionButton = styled(Col)`
-  margin-left: 1em;
-  margin-bottom: 1em;
-
-  button {
-    display: flex;
-    align-items: center;
-  }
-`;

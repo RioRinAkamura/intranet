@@ -23,6 +23,7 @@ export const initialState: UsersManagePageState = {
     total: 20,
   },
   params: {
+    status: 'active',
     limit: 20,
     page: 1,
   },
