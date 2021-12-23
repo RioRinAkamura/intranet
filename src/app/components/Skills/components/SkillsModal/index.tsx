@@ -86,6 +86,7 @@ export const SkillsModal = memo((props: skillModalProps) => {
       };
       setPickedSkill([...pickedSkill, newSkill]);
       setCustomSkill('');
+      
     }
   };
 
@@ -97,6 +98,8 @@ export const SkillsModal = memo((props: skillModalProps) => {
   //handle ok modal
   const handleOkModal = () => {
     onOk(pickedSkill);
+    console.log('pickedSkill', pickedSkill);
+
   };
 
   // more button
@@ -173,15 +176,15 @@ export const SkillsModal = memo((props: skillModalProps) => {
 
         <FlexWrapper>
           {suggestSkills &&
-            suggestSkills.map((skill, index: number) => {
+            suggestSkills.map(skill => {
               return (
                 <ButtonIcon
+                  key={skill.id}
                   style={{ margin: '5px 5px 5px 0' }}
                   onClick={e => {
                     handleAddSkill(skill);
                   }}
                   shape={'round'}
-                  key={skill.id}
                 >
                   {skill.name}
                   <Popover

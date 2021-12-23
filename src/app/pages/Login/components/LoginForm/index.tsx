@@ -117,21 +117,21 @@ export const LoginForm: React.FC = () => {
             >
               {t(LoginMessages.loginButton())}
             </Button>
-            <p>
+            {/* <p>
               {t(LoginMessages.dividerText())}
               <Button type="link">{t(LoginMessages.registerLinkText())}</Button>
-            </p>
+            </p> */}
           </Col>
         </Row>
-        <Divider orientation="center">{t(LoginMessages.dividerText())}</Divider>
-        <Row gutter={[8, 8]}>
+        {/* <Divider orientation="center">{t(LoginMessages.dividerText())}</Divider> */}
+        {/* <Row gutter={[8, 8]}>
           <Col span={24}>
             <GoogleLoginButton />
           </Col>
           <Col span={24}>
             <FacebookLoginButton />
           </Col>
-        </Row>
+        </Row> */}
       </Form>
     </Wrapper>
   );
