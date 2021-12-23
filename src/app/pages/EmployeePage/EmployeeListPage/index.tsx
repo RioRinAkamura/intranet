@@ -255,6 +255,7 @@ export const EmployeeListPage: React.FC = () => {
           onClick={() => {
             history.push({
               pathname: `${PrivatePath.EMPLOYEES}/${text}/edit`,
+              state: { edit: true },
             });
           }}
         />
