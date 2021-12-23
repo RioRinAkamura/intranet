@@ -1,8 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
+import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
 import { useLogin } from 'app/components/Auth/useLogin';
-import { FacebookLoginButton } from 'app/components/FacebookLoginButton';
-import { GoogleLoginButton } from 'app/components/GoogleLoginButton';
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
