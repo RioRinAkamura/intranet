@@ -1,8 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
+import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
 import { useLogin } from 'app/components/Auth/useLogin';
-import { FacebookLoginButton } from 'app/components/FacebookLoginButton';
-import { GoogleLoginButton } from 'app/components/GoogleLoginButton';
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
@@ -117,21 +115,21 @@ export const LoginForm: React.FC = () => {
             >
               {t(LoginMessages.loginButton())}
             </Button>
-            <p>
+            {/* <p>
               {t(LoginMessages.dividerText())}
               <Button type="link">{t(LoginMessages.registerLinkText())}</Button>
-            </p>
+            </p> */}
           </Col>
         </Row>
-        <Divider orientation="center">{t(LoginMessages.dividerText())}</Divider>
-        <Row gutter={[8, 8]}>
+        {/* <Divider orientation="center">{t(LoginMessages.dividerText())}</Divider> */}
+        {/* <Row gutter={[8, 8]}>
           <Col span={24}>
             <GoogleLoginButton />
           </Col>
           <Col span={24}>
             <FacebookLoginButton />
           </Col>
-        </Row>
+        </Row> */}
       </Form>
     </Wrapper>
   );
