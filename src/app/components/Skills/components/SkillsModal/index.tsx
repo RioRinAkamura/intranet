@@ -1,11 +1,11 @@
-import React, { memo, useState, useEffect } from 'react';
-import { Modal, Input, Button, Tag, Popover, Tooltip } from 'antd';
+import { DeleteOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { models } from '@hdwebsoft/intranet-api-sdk';
+import { Button, Input, Modal, Popover, Tag, Tooltip } from 'antd';
+import { DeleteModal } from 'app/components/DeleteModal';
+import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
 import { api } from 'utils/api';
 import { useGetSkills } from '../../useGetSkill';
-import { models } from '@hdwebsoft/intranet-api-sdk';
-import { DeleteModal } from 'app/components/DeleteModal';
 
 interface skillModalProps {
   isVisibility: boolean;
@@ -77,16 +77,21 @@ export const SkillsModal = memo((props: skillModalProps) => {
     setSuggestSkill([...suggestSkills, skill]);
   };
 
-  const handleAddCustomSkill = e => {
+  const handleAddCustomSkill = async e => {
     // trigger event when enter
     if (e.keyCode === 13 && customSkill.length > 0) {
       const newSkill = {
         name: customSkill,
         type: models.hr.SkillType.ENGINEERING,
       };
+      try {
+        const data = await api.hr.skill.create(newSkill);
+      } catch (error) {
+        console.log(error);
+      }
+
       setPickedSkill([...pickedSkill, newSkill]);
       setCustomSkill('');
-      
     }
   };
 
@@ -96,10 +101,8 @@ export const SkillsModal = memo((props: skillModalProps) => {
   };
 
   //handle ok modal
-  const handleOkModal = () => {
+  const handleOkModal = async () => {
     onOk(pickedSkill);
-    console.log('pickedSkill', pickedSkill);
-
   };
 
   // more button
