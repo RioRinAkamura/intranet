@@ -8,11 +8,10 @@ export const selectEmployeeLeaveState = createSelector(
   state => state,
 );
 
-
 export const selectEmployeeLeaveFilterColumns = createSelector(
   [selectSlice],
   state => state.filterColumns,
-)
+);
 
 export const selectEmployeeLeaveParams = createSelector(
   [selectSlice],
@@ -32,4 +31,3 @@ export const selectEmployeeLeaveDeleteFailed = createSelector(
   [selectSlice],
   state => state.deleteFailed,
 );
-

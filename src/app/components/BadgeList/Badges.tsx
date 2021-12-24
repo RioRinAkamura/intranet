@@ -9,7 +9,8 @@ import { useAuth } from '../Auth/Context';
 import { useLogout } from '../Auth/useLogout';
 import { ChangePasswordModal } from '../ChangePasswordModal';
 import {
-  ChangePasswordPayload, useChangePassword
+  ChangePasswordPayload,
+  useChangePassword,
 } from '../ChangePasswordModal/useChangePassword';
 import { ToastMessageType, useNotify } from '../ToastNotification';
 

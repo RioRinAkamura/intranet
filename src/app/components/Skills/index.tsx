@@ -34,7 +34,7 @@ const reorder = (list, startIndex, endIndex) => {
 
 export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
   const [visibility, setVisibility] = useState(false);
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<any>([]);
   const [skills, setSkills] = useState<any>([]);
   const { t } = useTranslation();
 
@@ -120,29 +120,23 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
   };
 
   const handleSkillRateChange = async (value, skill) => {
+    console.log('SKILL ID: ', skill.skill.id);
+    console.log('employeeId: ', employeeId);
+    
     try {
       if (!employeeId) return;
-
-      const skillIndex = data.findIndex(item => item.id === skill.id);
-      if (skillIndex !== -1) {
-        const newSkillList = [...data];
-        const newSkillItem = {
-          ...newSkillList[skillIndex],
-          level: value,
-        };
-
-        newSkillList[skillIndex] = newSkillItem;
-
-        setData(newSkillList);
-
-        await api.hr.employee.skill.update(employeeId, {
-          ...skill,
-          level: value,
-          skill_id: skill.skill.id,
-          employee_id: employeeId,
-        });
-        dispatch(actions.fetchEmployeeSkills(employeeId));
+      const skillUpdate = {
+        id: skill.id,
+        employee_id: employeeId,
+        level: value,
+        skill_id: skill.skill.id,
       }
+      console.log('skillUpdate', skillUpdate);
+      
+      await api.hr.employee.skill.update(employeeId, skillUpdate);
+
+      dispatch(actions.fetchEmployeeSkills(employeeId));
+      // }
     } catch (e) {
       console.log(e);
     }
@@ -187,8 +181,8 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
           {(provided, snapshot) => {
             return (
               <SkillList ref={provided.innerRef}>
-                {skills &&
-                  skills.map((skill, index) => {
+                {data &&
+                  data.map((skill, index) => {
                     return (
                       <Draggable
                         key={skill.id}
@@ -203,14 +197,14 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
                             <FlexWrapper className="justify-content-between">
                               <FlexWrapper>
                                 <span className="skill-title">
-                                  {skill.name}
+                                  {skill.skill.name}
                                 </span>
 
-                                <Rate
+                                <SkillRate
+                                  defaultValue={skill.level}
                                   onChange={value =>
                                     handleSkillRateChange(value, skill)
                                   }
-                                  defaultValue={skill.level}
                                 />
                               </FlexWrapper>
                               <FlexWrapper>
@@ -252,7 +246,7 @@ const SkillsWrapper = styled.div`
   margin-top: 15px;
 
   .skill-title {
-    width: 120px;
+    width: 80px;
     margin-right: 10px;
   }
 `;
@@ -269,4 +263,8 @@ const SkillList = styled.div`
 
 const DragHandler = styled(UnorderedListOutlined)`
   margin-left: 5px;
+`;
+
+const SkillRate = styled(Rate)`
+  font-size: 14px;
 `;
