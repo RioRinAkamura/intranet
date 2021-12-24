@@ -32,6 +32,7 @@ import { Switch as SwitchRoute } from 'react-router-dom';
 import { PrivatePath } from 'utils/url.const';
 import { UserManageDetailPage } from './UserDetailPage/Loadable';
 import { phoneFormat } from 'utils/phoneFormat';
+import { getQueryParam } from 'utils/query';
 
 type User = models.user.User;
 
@@ -40,7 +41,9 @@ interface TablePagination {
   pageSize?: number;
   total?: number;
 }
-
+interface ParamsProps {
+  search: string;
+}
 const ManageUserPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
   useEffect(() => {
@@ -57,7 +60,7 @@ const ManageUserPage: React.FC = () => {
   const [deleteUser, setDeleteUser] = useState<User>();
   const [textCopy, setTextCopy] = useState(false);
   const [searchForm] = Form.useForm();
-
+  const queryParam = getQueryParam<ParamsProps>();
   const deleteModalState = useSelector(
     (state: RootState) => state.usersmanagepage,
   );
@@ -122,7 +125,6 @@ const ManageUserPage: React.FC = () => {
     const values = searchForm.getFieldValue('search');
     setSearchText(values);
   };
-
   const resetTotalSearch = () => {
     searchForm.setFieldsValue({ search: undefined });
     resetSearch();
@@ -347,7 +349,17 @@ const ManageUserPage: React.FC = () => {
       fetchUsers();
     }
   };
-
+  // when reload check and update key
+  useEffect(() => {
+    // check key: "search" exists
+    if (JSON.stringify(queryParam).includes('search')) {
+      const { search } = queryParam;
+      if (search && search !== '') {
+        // set key search into input
+        setSearchText(search);
+      }
+    }
+  }, []);
   return (
     <>
       <PageTitle title="User List">
