@@ -17,11 +17,11 @@ import Button from 'app/components/Button';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { models } from '@hdwebsoft/intranet-api-sdk';
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
-import { BankAccounts } from './components/BankAccounts/Loadable';
 import { IdCardInfo } from './components/IdCardInfo/Loadable';
 
 import { UserDetailMessages } from './messages';
 import { Notes } from './components/Notes/Loadable';
+import { BankAccounts } from './components/BankAccounts/Loadable';
 import { Device } from './components/Devices/Loadable';
 import { DetailForm } from './components/DetailForm/Loadable';
 import { Projects } from './components/Projects/Loadable';
@@ -39,7 +39,7 @@ import { useHandleEmployeeDetail } from './useHandleEmployeeDetail';
 
 interface Props {}
 
-interface LocationState {
+export interface LocationState {
   edit: boolean;
 }
 
@@ -53,6 +53,9 @@ enum TabKeys {
   'projects' = 'projects',
   'devices' = 'devices',
   'changeLogs' = 'changeLogs',
+  'contract' = 'contract',
+  'bankAccounts' = 'bankAccounts',
+  'citizenInfo' = 'citizenInfo',
 }
 
 export function EmployeeDetailPage(props: Props) {
@@ -60,6 +63,7 @@ export function EmployeeDetailPage(props: Props) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const location = useLocation<LocationState>();
+  const { pathname } = location;
   const history = useHistory();
   const { setBreadCrumb } = useBreadCrumbContext();
 
@@ -115,6 +119,15 @@ export function EmployeeDetailPage(props: Props) {
     } else if (key === TabKeys.changeLogs) {
       setIsDetailTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/change-logs`);
+    } else if (key === TabKeys.contract) {
+      setIsDetailTab(false);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
+    } else if (key === TabKeys.bankAccounts) {
+      setIsDetailTab(false);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/bank-accounts`);
+    } else if (key === TabKeys.citizenInfo) {
+      setIsDetailTab(false);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/citizen-info`);
     } else {
       setIsDetailTab(true);
       history.push(`${PrivatePath.EMPLOYEES}/${id}`);
@@ -133,6 +146,15 @@ export function EmployeeDetailPage(props: Props) {
     }
     if (history.location.pathname.includes('change-logs')) {
       return `${TabKeys.changeLogs}`;
+    }
+    if (history.location.pathname.includes('contract')) {
+      return `${TabKeys.contract}`;
+    }
+    if (history.location.pathname.includes('bank-accounts')) {
+      return `${TabKeys.bankAccounts}`;
+    }
+    if (history.location.pathname.includes('citizen-info')) {
+      return `${TabKeys.citizenInfo}`;
     }
     return `${TabKeys.details}`;
   }, [history.location.pathname]);
@@ -237,33 +259,47 @@ export function EmployeeDetailPage(props: Props) {
       .catch(err => console.log(err));
   };
 
-  const employeeDetailForm = () => (
-    <DetailForm
-      form={form}
-      data={data}
-      isEdit={isEdit}
-      isView={isView}
-      leftScreenItems={<></>}
-      rightScreenItems={
-        <>
-          <ProfileInfo isView={isView} isEdit={isEdit} />
-          <BankAccounts isView={isView} form={form} isEdit={isEdit} />
-          {isView && (
-            <>
-              <Divider />
-              <Form form={form}>
-                <Row gutter={[128, 0]} align="middle">
-                  <Col md={24} xs={24}>
-                    <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
-                  </Col>
-                </Row>
-              </Form>
-            </>
-          )}
-        </>
-      }
-    />
-  );
+  const employeeDetailForm = () =>
+    // is page: "Bank Accounts"
+    pathname.includes('employees') && pathname.includes('bank-accounts') ? (
+      <DetailForm
+        form={form}
+        data={data}
+        isEdit={isEdit}
+        isView={isView}
+        leftScreenItems={<></>}
+        rightScreenItems={
+          <>
+            <BankAccounts isView={isView} form={form} isEdit={isEdit} />
+            {isView && (
+              <>
+                <Divider />
+                <Form form={form}>
+                  <Row gutter={[128, 0]} align="middle">
+                    <Col md={24} xs={24}>
+                      <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
+                    </Col>
+                  </Row>
+                </Form>
+              </>
+            )}
+          </>
+        }
+      />
+    ) : (
+      <DetailForm
+        form={form}
+        data={data}
+        isEdit={isEdit}
+        isView={isView}
+        leftScreenItems={<></>}
+        rightScreenItems={
+          <>
+            <ProfileInfo isView={isView} isEdit={isEdit} />
+          </>
+        }
+      />
+    );
 
   return (
     <>
@@ -295,6 +331,9 @@ export function EmployeeDetailPage(props: Props) {
             <TabPane tab="Notes" key={TabKeys.notes} />
             <TabPane tab="Devices" key={TabKeys.devices} />
             <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
+            <TabPane tab="Contract" key={TabKeys.contract} />
+            <TabPane tab="Bank Accounts" key={TabKeys.bankAccounts} />
+            <TabPane tab="Citizen Info" key={TabKeys.citizenInfo} />
           </StyledTabs>
 
           <Switch>
@@ -313,6 +352,13 @@ export function EmployeeDetailPage(props: Props) {
             <Route path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}>
               <ChangeLogs employeeId={id} />
             </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_CONTRACT}>
+              {employeeDetailForm()}
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_BANK_ACCOUNTS}>
+              {employeeDetailForm()}
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_CITIZEN_INFO}></Route>
             <Route path={PrivatePath.EMPLOYEES_EDIT}>
               <EmployeeEditPage />
             </Route>

@@ -10,6 +10,7 @@ import { Col, Divider, Form, FormInstance, Input, Row, Select } from 'antd';
 import { UserDetailMessages } from '../../messages';
 import { TitlePath } from '../TitlePath';
 import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
+import { useLocation } from 'react-router-dom';
 
 const banks = [
   {
@@ -46,16 +47,23 @@ export const BankAccounts = (props: BankAccountsProps) => {
   const { isView, isEdit } = props;
   const { t } = useTranslation();
   const { bankNames, getBankNames } = useHandleEmployeeDetail();
-
+  const location = useLocation();
+  const { pathname } = location;
   React.useEffect(() => {
     getBankNames();
   }, [getBankNames]);
 
   return (
     <BankAccountsStyled>
-      <DividerWrapper isView={isView}>
-        <Divider />
-      </DividerWrapper>
+      {/* is tab: Bank Accounts */}
+      {pathname.includes('employees') && pathname.includes('bank-accounts') ? (
+        ''
+      ) : (
+        <DividerWrapper isView={isView}>
+          <Divider />
+        </DividerWrapper>
+      )}
+
       {isView || isEdit ? (
         <Form.List name="bank_accounts">
           {fields =>
