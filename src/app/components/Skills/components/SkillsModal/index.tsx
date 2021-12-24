@@ -68,15 +68,6 @@ export const SkillsModal = memo((props: skillModalProps) => {
     setPickedSkill([...pickedSkill, skill]);
   };
 
-  const handleRemoveSkill = (skill: Skill) => {
-    //  remove skill from picked list
-    const newPickedList = [...pickedSkill].filter(item => item.id !== skill.id);
-    setPickedSkill(newPickedList);
-
-    //add skill to picked list
-    setSuggestSkill([...suggestSkills, skill]);
-  };
-
   const handleAddCustomSkill = async e => {
     // trigger event when enter
     if (e.keyCode === 13 && customSkill.length > 0) {
@@ -240,11 +231,4 @@ const ButtonIcon = styled(Button)`
   align-items: center;
   justify-content: center;
   /* margin: 0 5px 5px 0; */
-`;
-const CustomTag = styled(Tag)`
-  display: flex;
-  align-items: center;
-  background-color: 'red';
-  width: 22px;
-  height: 24px;
 `;

@@ -100,8 +100,18 @@ export const DetailForm = memo((props: FormProps) => {
           </RightScreen>
         </Row>
       </Wrapper>
-      <WrapperSubItem gutter={[64, 32]}>
-        <Col span={isView ? 24 : 16}>
+      <WrapperSubItem gutter={[32, 32]}>
+        <Col span={isView ? 12 : 8}>
+          <WrapperItem>
+            <JobInfo
+              form={form}
+              isEdit={isEdit}
+              isView={isView}
+              employeeId={data?.id}
+            />
+          </WrapperItem>
+        </Col>
+        <Col span={isView ? 12 : 16}>
           <WrapperItem>
             <SocialNetwork isView={isView} />
           </WrapperItem>

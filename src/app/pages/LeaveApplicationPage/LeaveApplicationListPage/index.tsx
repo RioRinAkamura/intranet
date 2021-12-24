@@ -17,7 +17,7 @@ import { Messages } from './messages';
 import { EmployeeLeavePageSlice } from './slice';
 import {
   selectEmployeeLeaveParams,
-  selectEmployeeLeaveState
+  selectEmployeeLeaveState,
 } from './slice/selectors';
 
 type EmployeeLeave = models.hr.EmployeeLeave;
