@@ -2,7 +2,15 @@ import {
   Employee,
   Member,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
-import { DatePicker, Form, FormInstance, message, Select, Spin } from 'antd';
+import {
+  DatePicker,
+  Form,
+  FormInstance,
+  message,
+  Select,
+  Spin,
+  Switch,
+} from 'antd';
 import { SelectValue } from 'antd/lib/select';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
@@ -35,6 +43,7 @@ export const AddMember = memo((props: Props) => {
   const [allocation, setAllocation] = useState<SelectValue>();
   const [employees, setEmployees] = useState<Employee[] | undefined>([]);
   const [searchLoad, setSearchLoad] = useState(false);
+  const [checked, setChecked] = useState(true);
 
   // func
   const handleSearch = async value => {
@@ -183,6 +192,15 @@ export const AddMember = memo((props: Props) => {
             })}
         </Select>
       </FormSearchItem>
+      {!isEdit && (
+        <FormSearchItem
+          label="Allocable"
+          name={['members', 'allocable']}
+          initialValue={checked}
+        >
+          <Switch checked={checked} onChange={setChecked} />
+        </FormSearchItem>
+      )}
       {isEdit && (
         <FormSearchItem
           label="Joined"

@@ -8,7 +8,7 @@ import {
   Employee,
   Member,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
-import { Popover, Table, Tag, Tooltip } from 'antd';
+import { Popover, Table, Tag, Tooltip, Switch } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { IconButton } from 'app/components/Button';
@@ -94,6 +94,29 @@ export const MemberTable = memo((props: Props) => {
     setIsModalVisible(false);
   };
 
+  const handleAllocable = async (checked: boolean, record) => {
+    try {
+      const updatedMember = {
+        ...record,
+        allocable: checked,
+      };
+      await api.hr.project.updateMember(
+        projectId,
+        record.member.id,
+        updatedMember,
+      );
+      const newMemberList = data.map(member => {
+        if (member.member.id === updatedMember.member.id) {
+          member = updatedMember;
+        }
+        return member;
+      });
+      setData(newMemberList);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const moreButton = (record: Member) => (
     <>
       <Tooltip title={'Detail'}>
@@ -168,6 +191,17 @@ export const MemberTable = memo((props: Props) => {
       dataIndex: 'joined_at',
       width: 100,
       render: date => (date ? moment(date).format('MM-DD-YYYY') : ''),
+    },
+    {
+      title: 'Allocable',
+      dataIndex: 'allocable',
+      width: 100,
+      render: (status: boolean, record) => (
+        <Switch
+          checked={status}
+          onChange={checked => handleAllocable(checked, record)}
+        />
+      ),
     },
     {
       title: 'Action',

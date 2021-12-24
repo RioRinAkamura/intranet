@@ -6,7 +6,7 @@
 import React, { memo, useState, useCallback, useEffect, Key } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Popover, Table, TablePaginationConfig, Tooltip } from 'antd';
+import { Popover, Table, TablePaginationConfig, Tooltip, Switch } from 'antd';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -34,6 +34,7 @@ import { StyledLink, Wrapper } from 'styles/StyledCommon';
 import moment from 'moment';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
 import { getSelectValues } from 'utils/variable';
+import { EmployeeProject } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 interface ProjectsProps {
   employeeId: string;
@@ -65,7 +66,14 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
     setFilterText,
   );
 
-  const { statuses, roles, getStatuses, getRoles } = useProjectDetail();
+  const {
+    statuses,
+    roles,
+    getStatuses,
+    getRoles,
+    priorities,
+    getPriorities,
+  } = useProjectDetail();
 
   const fetchEmployeeProject = useCallback(() => {
     if (!isFilter) {
@@ -79,7 +87,19 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
     fetchEmployeeProject();
     getStatuses();
     getRoles();
-  }, [fetchEmployeeProject, getStatuses, getRoles]);
+    getPriorities();
+  }, [fetchEmployeeProject, getStatuses, getRoles, getPriorities]);
+
+  const handleAllocable = (checked: boolean, record) => {
+    const updatedEmployee = {
+      employeeId: record.member.id,
+      data: {
+        project_id: record.project.id,
+        allocable: checked,
+      },
+    };
+    dispatch(actions.editProject(updatedEmployee));
+  };
 
   const moreButton = (value: any, record) => {
     return (
@@ -157,6 +177,23 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
       title: 'Joined',
       dataIndex: 'joined_at',
       render: text => (text ? moment(text).format('DD-MM-YYYY') : ''),
+    },
+    {
+      title: 'Allocable',
+      dataIndex: 'allocable',
+      render: (status: boolean, record: EmployeeProject) => {
+        return (
+          <Switch
+            checked={status}
+            onChange={checked => handleAllocable(checked, record)}
+          />
+        );
+      },
+    },
+    {
+      title: 'Priority',
+      dataIndex: ['project', 'priority'],
+      render: value => getSelectValues(priorities, value)?.label,
     },
     {
       title: 'Status',
