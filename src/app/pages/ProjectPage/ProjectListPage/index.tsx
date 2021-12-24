@@ -469,7 +469,7 @@ export const ProjectListPage: React.FC = () => {
       ) : (
         <CardLayout>
           <Row align="middle" justify="center">
-            <Col span={8}>
+            <Col span={2}>
               <Row justify="start">
                 {getProjectState.selectedRowKeys &&
                   getProjectState.selectedRowKeys.length > 0 && (
@@ -490,6 +490,11 @@ export const ProjectListPage: React.FC = () => {
                     />
                   )}
               </Row>
+            </Col>
+            <Col span={6}>
+              <span style={{ marginLeft: '6px' }}>
+                Total: {getProjectState.pagination?.total}
+              </span>
             </Col>
             <Col span={16}>
               <HeaderButton

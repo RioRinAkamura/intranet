@@ -264,7 +264,7 @@ export const DeviceListPage = () => {
       </PageTitle>
       <Wrapper>
         <Row align="middle" justify="center">
-          <Col span={8}>
+          <Col span={2}>
             <Row justify="start">
               {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
                 <Button
@@ -281,6 +281,9 @@ export const DeviceListPage = () => {
                 />
               )}
             </Row>
+          </Col>
+          <Col span={6}>
+            <span>Total: {state.pagination?.total}</span>
           </Col>
           <Col span={16}>
             <Row justify="end">

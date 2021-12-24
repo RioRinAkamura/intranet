@@ -402,7 +402,7 @@ export const TaskManager = () => {
       </Wrapper>
       <Wrapper>
         <Row align="middle" justify="center">
-          <Col span={8}>
+          <Col span={1}>
             <Row justify="start">
               {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
                 <Button
@@ -420,6 +420,11 @@ export const TaskManager = () => {
                 />
               )}
             </Row>
+          </Col>
+          <Col span={7}>
+            <span style={{ marginLeft: '6px' }}>
+              Total: {state.pagination?.total}
+            </span>
           </Col>
           <Col span={16}>
             <Row justify="end">

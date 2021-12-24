@@ -252,7 +252,7 @@ const ManageUserPage: React.FC = () => {
       title: 'Username',
       ellipsis: true,
       dataIndex: 'username',
-      width: 220,
+      width: 210,
       align: 'left',
       render: (text, record: User) => text,
     },
@@ -260,7 +260,7 @@ const ManageUserPage: React.FC = () => {
       title: 'Email',
       ellipsis: true,
       dataIndex: 'email',
-      width: 220,
+      width: 210,
       align: 'left',
       render: (text, record: User) => text,
     },
@@ -374,7 +374,7 @@ const ManageUserPage: React.FC = () => {
       </PageTitle>
       <Wrapper>
         <Row align="middle" justify="center">
-          <Col span={8}>
+          <Col span={2}>
             <Row justify="start">
               {userListState.selectedRowKeys &&
                 userListState.selectedRowKeys.length > 0 && (
@@ -392,6 +392,11 @@ const ManageUserPage: React.FC = () => {
                   />
                 )}
             </Row>
+          </Col>
+          <Col span={6}>
+            <span style={{ marginLeft: '12px' }}>
+              Total: {userListState.pagination?.total}
+            </span>
           </Col>
           <Col span={16}>
             <HeaderButtons />
