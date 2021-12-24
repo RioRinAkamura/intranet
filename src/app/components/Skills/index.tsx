@@ -120,9 +120,6 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
   };
 
   const handleSkillRateChange = async (value, skill) => {
-    console.log('SKILL ID: ', skill.skill.id);
-    console.log('employeeId: ', employeeId);
-    
     try {
       if (!employeeId) return;
       const skillUpdate = {
@@ -130,9 +127,8 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
         employee_id: employeeId,
         level: value,
         skill_id: skill.skill.id,
-      }
-      console.log('skillUpdate', skillUpdate);
-      
+      };
+
       await api.hr.employee.skill.update(employeeId, skillUpdate);
 
       dispatch(actions.fetchEmployeeSkills(employeeId));

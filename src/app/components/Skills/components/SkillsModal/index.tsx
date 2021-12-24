@@ -76,7 +76,7 @@ export const SkillsModal = memo((props: skillModalProps) => {
         type: models.hr.SkillType.ENGINEERING,
       };
       try {
-        const data = await api.hr.skill.create(newSkill);
+        await api.hr.skill.create(newSkill);
       } catch (error) {
         console.log(error);
       }
