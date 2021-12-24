@@ -6,7 +6,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { DialogModal } from 'app/components/DialogModal';
-import { Button, DatePicker, Form, Select, Spin } from 'antd';
+import { Button, DatePicker, Form, Select, Spin, Switch } from 'antd';
 import { useHandleProject } from './useHandleProject';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEmployeeProjectSlice } from '../Projects/slice';
@@ -41,6 +41,8 @@ export const ProjectModal = memo((props: Props) => {
   const [searchLoad, setSearchLoad] = useState(false);
   const [projects, setProjects] = useState<any>([]);
   const [value, setValue] = useState('');
+  const [checked, setChecked] = useState<boolean>(true);
+
   const { loadingProject, fetchProjects } = useHandleProject();
   const { roles, allocations, getRoles, getAllocations } = useProjectDetail();
 
@@ -54,6 +56,7 @@ export const ProjectModal = memo((props: Props) => {
 
   const handleProject = async values => {
     const joinDate = moment(values.joined_at).format(DATE_FORMAT);
+    const allocable = selectedProject ? selectedProject.allocable : checked;
     const _values = {
       employeeId: id,
       data: {
@@ -61,6 +64,7 @@ export const ProjectModal = memo((props: Props) => {
         allocation: values.allocation,
         project_role: values.project_role,
         joined_at: joinDate || undefined,
+        allocable,
       },
     };
     if (selectedProject) {
@@ -254,6 +258,13 @@ export const ProjectModal = memo((props: Props) => {
                 );
               })}
             </Select>
+          </FormSearchItem>
+          <FormSearchItem
+            hidden={!isAddProject}
+            label="Allocable"
+            name="allocable"
+          >
+            <Switch checked={checked} onChange={setChecked} />
           </FormSearchItem>
           <FormSearchItem
             hidden={isAddProject}

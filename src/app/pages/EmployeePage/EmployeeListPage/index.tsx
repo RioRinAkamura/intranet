@@ -13,6 +13,7 @@ import {
   Table,
   TablePaginationConfig,
   Tooltip,
+  Checkbox,
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
@@ -347,6 +348,13 @@ export const EmployeeListPage: React.FC = () => {
       ...getColumnSearchInputProps(['position']),
     },
     {
+      title: 'Allocable',
+      dataIndex: 'allocable',
+      width: 80,
+      ...getColumnSorterProps('allocable', 6),
+      render: (status: boolean) => <Checkbox checked={status} />,
+    },
+    {
       title: 'Tags',
       dataIndex: 'tags',
       width: 60,
@@ -366,7 +374,7 @@ export const EmployeeListPage: React.FC = () => {
       className: 'totalAllocated',
       dataIndex: 'total_active_project_allocated_hour_weekly',
       width: 90,
-      ...getColumnSorterProps('total_active_project_allocated_hour_weekly', 6),
+      ...getColumnSorterProps('total_active_project_allocated_hour_weekly', 7),
       ...getColumnSearchCheckboxFromToProps(
         ['total_active_project_allocated_hour_weekly'],
         [
