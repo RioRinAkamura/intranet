@@ -55,7 +55,6 @@ export const ProjectModal = memo((props: Props) => {
   const editFailed = useSelector(selectEmployeeProjectEditFailed);
 
   const handleProject = async values => {
-    const joinDate = moment(values.joined_at).format(DATE_FORMAT);
     const allocable = selectedProject ? selectedProject.allocable : checked;
     const _values = {
       employeeId: id,
@@ -63,10 +62,11 @@ export const ProjectModal = memo((props: Props) => {
         project_id: values.project,
         allocation: values.allocation,
         project_role: values.project_role,
-        joined_at: joinDate || undefined,
+        joined_at: values.joined_at.format(DATE_FORMAT),
         allocable,
       },
     };
+
     if (selectedProject) {
       dispatch(actions.editProject(_values));
     } else {
