@@ -234,7 +234,6 @@ export const EmployeeListPage: React.FC = () => {
   ) => {
     setSelectedRows(selectedRowKeys, selectedRows);
   };
-
   const moreButton = (text: string, record: Employee) => (
     <>
       <Tooltip title={t(UsersMessages.listViewTooltip())}>
@@ -352,6 +351,16 @@ export const EmployeeListPage: React.FC = () => {
       dataIndex: 'allocable',
       width: 80,
       ...getColumnSorterProps('allocable', 6),
+      ...getColumnSearchCheckboxFromToProps(
+        ['allocable'],
+        [
+          { label: 'Yes', value: true },
+          { label: 'No', value: false },
+        ],
+        '',
+        0,
+        1, // isAllocableFilter
+      ),
       render: (status: boolean) => <Checkbox checked={status} />,
     },
     {

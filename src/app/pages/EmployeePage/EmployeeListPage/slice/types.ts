@@ -22,6 +22,7 @@ export interface FilterColumns {
   first_name?: string;
   last_name?: string;
   code?: string;
+  allocable?: string;
   email?: string;
   phoneNumber?: string;
   tags?: string;
