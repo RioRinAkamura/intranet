@@ -3,7 +3,7 @@ import { api } from 'utils/api';
 import { employeeProjectActions as actions } from '.';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { cloneDeep } from 'lodash';
-import { EmployeeProject } from './types';
+import { DeleteEmployeeProjectParam, EmployeeProject } from './types';
 
 function* fetchEmployeeProject(action) {
   try {
@@ -48,10 +48,10 @@ function* editProject(action: PayloadAction<EmployeeProject>) {
   }
 }
 
-function* deleteProject(action: PayloadAction<string>) {
+function* deleteProject(action: PayloadAction<DeleteEmployeeProjectParam>) {
   try {
-    const idDelete = action.payload;
-    yield call([api, api.hr.project.delete], idDelete);
+    const { employeeId, projectId } = action.payload;
+    yield api.hr.employee.project.delete(employeeId, projectId);
     yield put(actions.deleteProjectSuccess());
   } catch (err) {
     yield put(actions.deleteProjectFailure());

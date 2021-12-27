@@ -34,8 +34,14 @@ import { StyledLink, Wrapper } from 'styles/StyledCommon';
 import moment from 'moment';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
 import { getSelectValues } from 'utils/variable';
-import { EmployeeProject } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
-
+import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import { RootState } from 'types';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import { DeleteType } from 'utils/types';
+import {
+  Project,
+  EmployeeProject,
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 interface ProjectsProps {
   employeeId: string;
 }
@@ -43,16 +49,25 @@ interface ProjectsProps {
 export const Projects = memo(({ employeeId }: ProjectsProps) => {
   const { t } = useTranslation();
   const history = useHistory();
+  const { notify } = useNotify();
   const [open, setOpen] = useState<boolean>(false);
   const [selectedProject, setSelectedProject] = useState<any>();
-
+  // Delete Modal State
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [deleteProject, setDeleteProject] = useState<Project>();
+  const [textCopy, setTextCopy] = useState(false);
   const { actions } = useEmployeeProjectSlice();
   const dispatch = useDispatch();
 
   const params = useSelector(selectEmployeeProjectParams);
   const isFilter = useSelector(selectEmployeeProjectIsFilter);
   const getEmployeeProjectState = useSelector(selectEmployeeProject);
-
+  // Delete Modal Selector
+  const deleteModalState = useSelector(
+    (state: RootState) => state.employeeProject,
+  );
+  const deleteSuccess = deleteModalState?.deleteSuccess;
+  const deleteFailed = deleteModalState?.deleteFailed;
   const {
     setSelectedRows,
     setOrdering,
@@ -101,6 +116,64 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
     dispatch(actions.editProject(updatedEmployee));
   };
 
+  const showDeleteModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setIsModalVisible(false);
+    if (deleteProject) {
+      const params = {
+        employeeId,
+        projectId: deleteProject.id,
+      };
+      dispatch(actions.deleteProject(params));
+    }
+  };
+
+  const handleCancelDeleteModal = () => {
+    setIsModalVisible(false);
+  };
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      notify({
+        type: ToastMessageType.Info,
+        message: 'Delete Success',
+        duration: 2,
+      });
+    } else if (deleteFailed) {
+      notify({
+        type: ToastMessageType.Error,
+        message: 'Delete Failed',
+        duration: 2,
+      });
+    }
+  }, [deleteFailed, deleteModalState, deleteSuccess, notify]);
+
+  const descriptionDelete = (
+    <p>
+      You're about to permanently delete{' '}
+      <Tooltip
+        title={<div>{textCopy ? 'Copied!' : 'Click to copy!'}</div>}
+        onVisibleChange={visible => visible === true && setTextCopy(false)}
+      >
+        your project{' '}
+        <strong
+          id="deletedEmail"
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            let copyText = document.getElementById('deletedEmail')?.innerText;
+            if (copyText) {
+              navigator.clipboard.writeText(copyText);
+              setTextCopy(true);
+            }
+          }}
+        >{`${deleteProject?.name}`}</strong>
+      </Tooltip>
+      . This will also delete any references to your project.
+    </p>
+  );
   const moreButton = (value: any, record) => {
     return (
       <>
@@ -133,9 +206,8 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
             size="small"
             icon={<DeleteOutlined />}
             onClick={() => {
-              // showDeleteModal();
-              // setIdUserDelete(text);
-              // setDeleteEmployee(record);
+              showDeleteModal();
+              setDeleteProject(record.project);
             }}
           />
         </Tooltip>
@@ -280,6 +352,15 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
         setOpen={setOpen}
         selectedProject={selectedProject}
         setSelectedProject={setSelectedProject}
+      />
+      <DeleteConfirmModal
+        type={DeleteType.NAME}
+        visible={isModalVisible}
+        handleOk={handleConfirmDelete}
+        handleCancel={handleCancelDeleteModal}
+        title={`Remove ${deleteProject?.name}`}
+        description={descriptionDelete}
+        answer={deleteProject?.name}
       />
     </Wrapper>
   );

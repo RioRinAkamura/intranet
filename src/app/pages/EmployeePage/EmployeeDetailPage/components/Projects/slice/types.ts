@@ -45,3 +45,7 @@ export interface EmployeeProject {
   employeeId: string;
   data: EmployeeProjectParams;
 }
+export interface DeleteEmployeeProjectParam {
+  employeeId: string;
+  projectId: string;
+}
