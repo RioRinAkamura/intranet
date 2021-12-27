@@ -696,6 +696,7 @@ export const useTableConfig = (
               <Button
                 type="primary"
                 onClick={() =>
+                  // is Hours per week else Allocable
                   type !== 1
                     ? handleFromToSearch(
                         dataIndex[filterIndex || 0],
