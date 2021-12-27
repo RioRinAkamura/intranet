@@ -18,6 +18,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { datePickerViewProps } from 'utils/types';
 import moment from 'moment';
+import { Avatar } from 'app/components/Avatar';
 
 const FormSearchItem = Form.Item;
 const { Option } = Select;
@@ -87,9 +88,17 @@ export const AddMember = memo((props: Props) => {
     <Option key={employee.id} value={employee.id}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <span>
+          <Avatar
+            src={employee.avatar}
+            name={employee.first_name + ' ' + employee.last_name}
+            size={30}
+          />
+        </span>
+
+        <span>
           {employee.first_name} {employee.last_name}
         </span>
-        <span style={{ width: '60%' }}>
+        <span style={{ width: '55%' }}>
           {employee.code} - {employee.email}
         </span>
       </div>
