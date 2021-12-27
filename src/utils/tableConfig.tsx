@@ -722,7 +722,8 @@ export const useTableConfig = (
                   handleFromToReset(
                     dataIndex[filterIndex || 0],
                     confirm,
-                    'isAllocable',
+                    // is Hours per week else Allocable
+                    type !== 1 ? '' : 'isAllocable',
                   )
                 }
                 size="small"
