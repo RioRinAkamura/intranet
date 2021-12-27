@@ -60,6 +60,7 @@ interface useTableProps {
     options: CheckboxOptionType[],
     range: string,
     filterIndex?: number,
+    type?: number,
   ) => {};
   getColumnSearchSelectProps: (
     dataIndex: string,
@@ -305,16 +306,31 @@ export const useTableConfig = (
     }
     confirm();
   };
-
-  const handleFromToReset = (dataIndex: string, confirm: () => void) => {
-    setSelectedKeys(prevState => ({
-      ...prevState,
-      [dataIndex]: undefined,
-      from: undefined,
-      exact: undefined,
-      to: undefined,
-    }));
-    setFilterText({ from: undefined, exact: undefined, to: undefined });
+  const handleAllocableFilter = (dataIndex: string, confirm: () => void) => {
+    setFilterText({ allocable: selectedKeys[dataIndex] });
+    confirm();
+  };
+  const handleFromToReset = (
+    dataIndex: string,
+    confirm: () => void,
+    type: string,
+  ) => {
+    if (type === 'isAllocable') {
+      setSelectedKeys(prevState => ({
+        ...prevState,
+        allocable: undefined,
+      }));
+      setFilterText({ allocable: undefined });
+    } else {
+      setSelectedKeys(prevState => ({
+        ...prevState,
+        [dataIndex]: undefined,
+        from: undefined,
+        exact: undefined,
+        to: undefined,
+      }));
+      setFilterText({ from: undefined, exact: undefined, to: undefined });
+    }
     confirm();
   };
 
@@ -656,6 +672,7 @@ export const useTableConfig = (
     options: CheckboxOptionType[],
     range: string,
     filterIndex?: number,
+    type?: number,
   ) => ({
     filterDropdown: ({ confirm }) => {
       return (
@@ -679,11 +696,17 @@ export const useTableConfig = (
               <Button
                 type="primary"
                 onClick={() =>
-                  handleFromToSearch(
-                    dataIndex[filterIndex || 0],
-                    range,
-                    confirm,
-                  )
+                  // is Hours per week else Allocable
+                  type !== 1
+                    ? handleFromToSearch(
+                        dataIndex[filterIndex || 0],
+                        range,
+                        confirm,
+                      )
+                    : handleAllocableFilter(
+                        dataIndex[filterIndex || 0],
+                        confirm,
+                      )
                 }
                 icon={<SearchOutlined />}
                 size="small"
@@ -696,7 +719,12 @@ export const useTableConfig = (
             <Col>
               <Button
                 onClick={() =>
-                  handleFromToReset(dataIndex[filterIndex || 0], confirm)
+                  handleFromToReset(
+                    dataIndex[filterIndex || 0],
+                    confirm,
+                    // is Hours per week else Allocable
+                    type !== 1 ? '' : 'isAllocable',
+                  )
                 }
                 size="small"
                 loading={state.loading}
