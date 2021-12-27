@@ -14,14 +14,13 @@ import {
 import { SelectValue } from 'antd/lib/select';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
+import moment from 'moment';
 import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { datePickerViewProps } from 'utils/types';
-import moment from 'moment';
-import { Avatar } from 'app/components/Avatar';
 
 const FormSearchItem = Form.Item;
 const { Option } = Select;
+
 const DATE_FORMAT = 'MM-DD-YYYY';
 interface Props {
   projId: string;
@@ -112,7 +111,7 @@ export const AddMember = memo((props: Props) => {
         label={t(ProjectDetailMessages.memberFormEmployeeLabel())}
         rules={[
           {
-            required: true,
+            required: isEdit ? false : true,
             message: t(ProjectDetailMessages.memberFormEmployeeEmpty()),
           },
         ]}
@@ -124,7 +123,6 @@ export const AddMember = memo((props: Props) => {
           filterOption={false}
           size="large"
           loading={searchLoad}
-          // disabled={selectedMember ? true : false}
           placeholder={t(ProjectDetailMessages.memberFormEmployeePlaceholder())}
           onSearch={handleSearch}
           onFocus={() => handleSearch(' ')}
@@ -138,7 +136,7 @@ export const AddMember = memo((props: Props) => {
         label={t(ProjectDetailMessages.memberFormProjectRoleLabel())}
         rules={[
           {
-            required: true,
+            required: isEdit ? false : true,
             message: t(ProjectDetailMessages.memberFormProjectRoleEmpty()),
           },
         ]}
@@ -164,7 +162,7 @@ export const AddMember = memo((props: Props) => {
         label={t(ProjectDetailMessages.memberFormAllocationLabel())}
         rules={[
           {
-            required: true,
+            required: isEdit ? false : true,
             message: t(ProjectDetailMessages.memberFormAllocationEmpty()),
           },
         ]}
@@ -201,6 +199,16 @@ export const AddMember = memo((props: Props) => {
             })}
         </Select>
       </FormSearchItem>
+      <FormSearchItem label="Joined" name={['members', 'joined_at']}>
+        <DatePicker
+          disabledDate={disabledDate}
+          format={DATE_FORMAT}
+          style={{ width: '100%' }}
+          size="large"
+          placeholder="Select joined date"
+        />
+      </FormSearchItem>
+
       {!isEdit && (
         <FormSearchItem
           label="Allocable"
@@ -208,18 +216,6 @@ export const AddMember = memo((props: Props) => {
           initialValue={checked}
         >
           <Switch checked={checked} onChange={setChecked} />
-        </FormSearchItem>
-      )}
-      {isEdit && (
-        <FormSearchItem label="Joined" name={['members', 'joined_at']}>
-          <DatePicker
-            {...(!isEdit ? datePickerViewProps : {})}
-            format={DATE_FORMAT}
-            disabledDate={disabledDate}
-            style={{ width: '100%' }}
-            size="large"
-            placeholder="Select joined date"
-          />
         </FormSearchItem>
       )}
     </Form>

@@ -37,6 +37,10 @@ export const Employees = memo(() => {
   const handleAddMember = () => {
     form.validateFields().then(async values => {
       try {
+        let joinedDate = values.members.joined_at;
+        values.members.joined_at = joinedDate
+          ? moment(joinedDate).format(DATE_FORMAT)
+          : undefined;
         const response = await addMember(id, values);
         if (response) {
           setOpenModal(false);
