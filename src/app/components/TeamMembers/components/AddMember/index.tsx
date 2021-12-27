@@ -12,6 +12,7 @@ import {
   Switch,
 } from 'antd';
 import { SelectValue } from 'antd/lib/select';
+import { Avatar } from 'app/components/Avatar';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
 import moment from 'moment';
