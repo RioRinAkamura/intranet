@@ -130,22 +130,25 @@ const ManageUserPage: React.FC = () => {
     resetSearch();
   };
 
-  const setSearchText = (text: string): void => {
-    if (urlParams.limit || urlParams.page) {
-      history.replace({
-        search: stringify({ search: text }),
-      });
-    } else if (text) {
-      history.replace({
-        search: stringify({ ...urlParams, search: text }),
-      });
-    } else {
-      history.replace({
-        search: stringify({ ...urlParams, search: undefined }),
-      });
-    }
-    dispatch(actions.setSearchText({ text }));
-  };
+  const setSearchText = useCallback(
+    (text: string): void => {
+      if (urlParams.limit || urlParams.page) {
+        history.replace({
+          search: stringify({ search: text }),
+        });
+      } else if (text) {
+        history.replace({
+          search: stringify({ ...urlParams, search: text }),
+        });
+      } else {
+        history.replace({
+          search: stringify({ ...urlParams, search: undefined }),
+        });
+      }
+      dispatch(actions.setSearchText({ text }));
+    },
+    [dispatch, actions, history, urlParams],
+  );
 
   const resetSearch = () => {
     history.replace({
@@ -359,7 +362,7 @@ const ManageUserPage: React.FC = () => {
         setSearchText(search);
       }
     }
-  }, []);
+  }, [queryParam, setSearchText]);
   return (
     <>
       <PageTitle title="User List">
