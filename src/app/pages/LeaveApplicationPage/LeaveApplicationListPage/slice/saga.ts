@@ -1,7 +1,6 @@
-import { UpdateEmployeeLeaveParams } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { EmployeesLeaveActions as actions } from '.';
 import { api } from 'utils/api';
+import { EmployeesLeaveActions as actions } from '.';
 
 function fetchEmployeesLeaveActions(options) {
   return api.hr.leave.list(
@@ -13,13 +12,6 @@ function fetchEmployeesLeaveActions(options) {
     options.params.page,
     options.params.limit,
   );
-}
-
-function updateEmployeesLeaveActions(
-  id: string,
-  data: UpdateEmployeeLeaveParams,
-) {
-  return api.hr.leave.update(id, data);
 }
 
 function* fetchEmployeesLeave(action) {

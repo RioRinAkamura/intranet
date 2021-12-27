@@ -202,16 +202,7 @@ export const AddMember = memo((props: Props) => {
         </FormSearchItem>
       )}
       {isEdit && (
-        <FormSearchItem
-          label="Joined"
-          name={['members', 'joined_at']}
-          rules={[
-            {
-              required: true,
-              message: 'Please select joined date',
-            },
-          ]}
-        >
+        <FormSearchItem label="Joined" name={['members', 'joined_at']}>
           <DatePicker
             {...(!isEdit ? datePickerViewProps : {})}
             format={DATE_FORMAT}

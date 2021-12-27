@@ -3,10 +3,7 @@ import styled from 'styled-components/macro';
 import { Select, Button, List, Spin } from 'antd';
 import { api } from 'utils/api';
 import { Pagination } from '@hdwebsoft/intranet-api-sdk/libs/type';
-import {
-  Task,
-  Employee,
-} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { Task, Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
