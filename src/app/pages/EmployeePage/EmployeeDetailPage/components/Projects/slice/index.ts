@@ -5,6 +5,7 @@ import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { employeeProjectSaga } from './saga';
 import {
+  DeleteEmployeeProjectParam,
   EmployeeProject,
   EmployeeProjectState,
   FilterColumns,
@@ -142,7 +143,7 @@ const slice = createSlice({
       state.editSuccess = false;
       state.editFailed = false;
     },
-    deleteProject(state, action: PayloadAction<string>) {
+    deleteProject(state, action: PayloadAction<DeleteEmployeeProjectParam>) {
       state.isFilter = true;
       state.deleteSuccess = false;
       state.deleteFailed = false;

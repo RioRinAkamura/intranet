@@ -14,8 +14,9 @@ function* fetchUsers(action) {
       phone: params.phone,
       email: params.email,
       tags: params.tags,
-      total_allocated_hour_from: params.from,
-      total_allocated_hour_to: params.to,
+      total_allocated_hour_greater: params.from,
+      total_allocated_hour_less: params.to,
+      total_allocated_hour_exact: params.exact,
     };
     const response = yield call(
       [api, api.hr.employee.list],

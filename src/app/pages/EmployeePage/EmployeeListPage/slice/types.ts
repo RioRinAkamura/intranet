@@ -27,6 +27,7 @@ export interface FilterColumns {
   tags?: string;
   from?: string;
   to?: string;
+  exact?: string;
   [key: string]: string | undefined;
 }
 
@@ -46,6 +47,7 @@ export interface QueryParams {
   tags?: string;
   from?: string;
   to?: string;
+  exact?: string;
   limit?: number;
   page?: number;
   [key: string]: string | number | undefined;
