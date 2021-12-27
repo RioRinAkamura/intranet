@@ -295,11 +295,13 @@ export const useTableConfig = (
     confirm: () => void,
   ) => {
     if (selectedKeys[dataIndex] === '1') {
-      setFilterText({ to: range, from: undefined });
+      setFilterText({ from: undefined, exact: undefined, to: range });
     } else if (selectedKeys[dataIndex] === '2') {
-      setFilterText({ from: range, to: range });
+      setFilterText({ from: undefined, exact: range, to: undefined });
+    } else if (selectedKeys[dataIndex] === '3') {
+      setFilterText({ from: range, exact: undefined, to: undefined });
     } else {
-      setFilterText({ from: range, to: undefined });
+      setFilterText({ from: undefined, exact: undefined, to: undefined });
     }
     confirm();
   };
@@ -309,9 +311,10 @@ export const useTableConfig = (
       ...prevState,
       [dataIndex]: undefined,
       from: undefined,
+      exact: undefined,
       to: undefined,
     }));
-    setFilterText({ from: undefined, to: undefined });
+    setFilterText({ from: undefined, exact: undefined, to: undefined });
     confirm();
   };
 
