@@ -6,7 +6,6 @@ import { PayloadAction } from '@reduxjs/toolkit';
 function* fetchUsers(action) {
   try {
     const { params } = action.payload;
-
     const queryParams = {
       first_name: params.first_name,
       last_name: params.last_name,

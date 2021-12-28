@@ -269,7 +269,7 @@ export const useTableConfig = (
 
   const handleSearchInput = e => {
     const newOptions = [...searchData].filter((item: any) => {
-      return item.label.includes(e.target.value);
+      return item.label.toLowerCase().includes(e.target.value.toLowerCase());
     });
     setSearchOptions(newOptions);
   };

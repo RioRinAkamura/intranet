@@ -24,6 +24,7 @@ function* fetchProjects(action) {
       name: params.name,
       priority: params.priority,
       status: params.status,
+      employee_id: params.members,
     };
     const response = yield call(
       [api, api.hr.project.list],
