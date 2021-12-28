@@ -35,6 +35,7 @@ import { EmployeeNoteMessages } from './messages';
 import { Actions } from './components/Actions';
 import { Form } from './components/Form';
 import { api } from 'utils/api';
+import { ActionIcon } from 'app/components/ActionIcon';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
@@ -244,7 +245,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
       ...getColumnSorterProps('content', 3),
     },
     {
-      title: t(EmployeeNoteMessages.listActions()),
+      title: <ActionIcon />,
       dataIndex: 'id',
       render: (id, record: EmployeeNote) => (
         <Actions

@@ -52,6 +52,7 @@ import { StyledLink } from 'styles/StyledCommon';
 import { Project } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { DeleteType } from 'utils/types';
 import { useProjectDetail } from '../ProjectDetailPage/useProjectDetail';
+import { ActionIcon } from 'app/components/ActionIcon';
 
 export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -403,9 +404,9 @@ export const ProjectListPage: React.FC = () => {
       render: text => <TextCenter>{text}</TextCenter>,
     },
     {
-      title: t(ProjectsMessages.listOptionsTitle()),
+      title: <ActionIcon />,
       dataIndex: 'id',
-      width: 100,
+      width: 60,
       fixed: 'right',
       render: (text, record: any, index: number) => {
         return (
