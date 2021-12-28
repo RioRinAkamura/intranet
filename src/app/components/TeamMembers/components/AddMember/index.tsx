@@ -200,7 +200,7 @@ export const AddMember = memo((props: Props) => {
             })}
         </Select>
       </FormSearchItem>
-      <FormSearchItem label="Joined" name={['members', 'joined_at']}>
+      <FormSearchItem label="Joined date" name={['members', 'joined_at']}>
         <DatePicker
           disabledDate={disabledDate}
           format={DATE_FORMAT}

@@ -10,6 +10,8 @@ import { api } from 'utils/api';
 import { Member } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/project/models';
 import { MemberTable } from '../MemberTable';
 import { AddMember } from '../AddMember';
+import config from 'config';
+import moment from 'moment';
 
 interface TeamMemberProps {
   visibility: boolean;
@@ -45,6 +47,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const [members, setMembers] = useState<Member[]>([]);
   const { fetchId } = useProjectDetail();
   const { visibility, handleOk, handleCancel, projId } = props;
+  const DATE_FORMAT = config.DATE_FORMAT;
 
   useEffect(() => {
     if (members) {
@@ -90,11 +93,15 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const handleAddMember = async values => {
     try {
       setLoadingMember(true);
+      let joinedDate = values.members.joined_at;
+      values.members.joined_at = joinedDate
+        ? moment(joinedDate).format(DATE_FORMAT)
+        : undefined;
       if (projId) {
-        const response = await api.hr.project.createMember(projId, {
-          ...values.members,
-          project: projId,
-        });
+        const response = await api.hr.project.createMember(
+          projId,
+          values.members,
+        );
         if (response) {
           message.success('Add member successfully');
           memberForm.resetFields();
