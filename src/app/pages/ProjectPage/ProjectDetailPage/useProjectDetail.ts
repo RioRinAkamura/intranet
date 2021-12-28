@@ -22,9 +22,11 @@ export const useProjectDetail = (): {
   allocations: number[];
   loading: boolean;
   error?: Error;
+  membersAll: SelectOption[];
   fetchUser: (search: string) => Promise<Employee[] | undefined>;
   fetchId: (id: string) => Promise<any | undefined>;
   fetchMembers: (id: string) => void;
+  getAllMembers: () => void;
   update: (data: any) => Promise<any | undefined>;
   create: (data: any) => void;
   addMember: (projectId: string, data: any) => Promise<any | undefined>;
@@ -42,6 +44,7 @@ export const useProjectDetail = (): {
   const [allocations, setAllocations] = React.useState<number[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<any>();
+  const [membersAll, setMembersAll] = React.useState<SelectOption[]>([]);
   const { notify } = useNotify();
 
   const fetchUser = React.useCallback(async (search: string) => {
@@ -125,7 +128,26 @@ export const useProjectDetail = (): {
       setLoading(false);
     }
   };
-
+  const getAllMembers = React.useCallback(async () => {
+    setLoading(true);
+    try {
+      const response: Pagination<any> = await api.hr.employee.list();
+      if (response && response.results && response.results.length > 0) {
+        const array: SelectOption[] = [];
+        response.results.forEach((values, index) => {
+          array.push({
+            label: `${values.first_name} ${values.last_name}`,
+            value: values.id,
+          });
+        });
+        setMembersAll([...array]);
+      }
+    } catch (error: any) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
   const fetchMembers = React.useCallback(async (id: string) => {
     setLoading(true);
     try {
@@ -218,12 +240,14 @@ export const useProjectDetail = (): {
     allocations,
     loading,
     error,
+    membersAll,
     fetchUser,
     fetchId,
     fetchMembers,
     update,
     create,
     addMember,
+    getAllMembers,
     getPriorities,
     getStatuses,
     getRoles,

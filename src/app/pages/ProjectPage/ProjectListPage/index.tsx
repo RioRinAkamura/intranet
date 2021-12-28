@@ -89,6 +89,8 @@ export const ProjectListPage: React.FC = () => {
     update,
     priorities,
     statuses,
+    getAllMembers,
+    membersAll,
     getPriorities,
     getStatuses,
   } = useProjectDetail();
@@ -106,6 +108,7 @@ export const ProjectListPage: React.FC = () => {
     getColumnSearchInputProps,
     getColumnSearchCheckboxProps,
     ConfirmModal,
+    getColumnSearchInputCheckboxProps,
   } = useTableConfig(getProjectState, ProjectsMessages, setFilterText);
 
   const fetchProjects = useCallback(() => {
@@ -118,8 +121,8 @@ export const ProjectListPage: React.FC = () => {
     fetchProjects();
     getPriorities();
     getStatuses();
-  }, [fetchProjects, getPriorities, getStatuses]);
-
+    getAllMembers();
+  }, [fetchProjects, getPriorities, getStatuses, getAllMembers]);
   // handle project member
   useEffect(() => {
     if (history.location.pathname.includes('members')) {
@@ -144,7 +147,6 @@ export const ProjectListPage: React.FC = () => {
       dispatch(actions.deleteProject(idProjectDelete));
     }
   };
-
   const handleCancelDeleteModal = () => {
     setIsModalVisible(false);
   };
@@ -330,6 +332,7 @@ export const ProjectListPage: React.FC = () => {
       width: 200,
       dataIndex: 'members',
       ...getColumnSorterProps('members', 2),
+      ...getColumnSearchInputCheckboxProps(['members'], membersAll, 0),
       render: (members, record: any) => (
         <TeamMembers
           callback={members => {
