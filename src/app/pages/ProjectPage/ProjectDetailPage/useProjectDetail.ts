@@ -135,7 +135,7 @@ export const useProjectDetail = (): {
       const response: Pagination<Employee> = await api.hr.employee.list();
       if (response && response.results && response.results.length > 0) {
         const array: SelectOption[] = [];
-        response.results.forEach((values, index) => {
+        response.results.forEach(values => {
           array.push({
             label: `${values.first_name} ${values.last_name}`,
             value: values.id,
