@@ -50,6 +50,7 @@ import {
 } from './slice/selectors';
 import { phoneFormat } from 'utils/phoneFormat';
 import { useHandleDataTable } from './useHandleDataTable';
+import { ActionIcon } from 'app/components/ActionIcon';
 
 type Employee = models.hr.Employee;
 
@@ -311,7 +312,7 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: 'Code',
       dataIndex: 'code',
-      width: 60,
+      width: 70,
       ...getColumnSorterProps('code', 2),
       ...getColumnSearchInputProps(['code']),
       render: (text, record: Employee) =>
@@ -342,7 +343,7 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: 'Position',
       dataIndex: 'position',
-      width: 85,
+      width: 70,
       ...getColumnSorterProps('position', 5),
       ...getColumnSearchInputProps(['position']),
     },
@@ -406,19 +407,9 @@ export const EmployeeListPage: React.FC = () => {
         ),
     },
     {
-      title: 'Type',
-      dataIndex: 'type',
-      width: 52,
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      width: 54,
-    },
-    {
-      title: t(UsersMessages.listOptionsTitle()),
+      title: <ActionIcon />,
       dataIndex: 'id',
-      width: 54,
+      width: 40,
       fixed: 'right',
       align: 'center',
       render: (text, record: Employee, index: number) => {

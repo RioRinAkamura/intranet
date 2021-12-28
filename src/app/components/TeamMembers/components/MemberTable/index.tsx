@@ -21,6 +21,7 @@ import { antColours, DeleteType } from 'utils/types';
 import { PrivatePath } from 'utils/url.const';
 import { getSelectValues } from 'utils/variable';
 import moment from 'moment';
+import { ActionIcon } from 'app/components/ActionIcon';
 interface Props {
   projectId: string;
   dataSource: Member[];
@@ -204,9 +205,9 @@ export const MemberTable = memo((props: Props) => {
       ),
     },
     {
-      title: 'Action',
+      title: <ActionIcon />,
       dataIndex: '',
-      width: 100,
+      width: 60,
       render: (record: Member, index: number) => {
         return (
           <>

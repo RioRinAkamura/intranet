@@ -1,43 +1,43 @@
-import { Helmet } from 'react-helmet-async';
-import React, { Key, useCallback, useEffect, useState } from 'react';
 import {
   DeleteOutlined,
   EditOutlined,
+  ExportOutlined,
   EyeOutlined,
   MoreOutlined,
-  ExportOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
-import styled from 'styled-components/macro';
-import { ColumnProps } from 'antd/lib/table';
-import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import {
   Col,
+  Form,
+  Popover,
   Row,
   Table,
-  Form,
   TablePaginationConfig,
   Tooltip,
-  Popover,
 } from 'antd';
-import { PlusCircleOutlined } from '@ant-design/icons';
-
+import { ColumnProps } from 'antd/lib/table';
+import { FilterValue, SorterResult } from 'antd/lib/table/interface';
+import { ActionIcon } from 'app/components/ActionIcon';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import Button, { IconButton } from 'app/components/Button';
+import { CardLayout } from 'app/components/CardLayout';
+import { DeleteModal } from 'app/components/DeleteModal';
 import PageTitle from 'app/components/PageTitle';
+import { TotalSearchForm } from 'app/components/TotalSearchForm';
+import React, { Key, useCallback, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { Device } from './slice/types';
-import { useDeviceManagePage } from './slice';
-import { selectState, selectIsFilter, selectParams } from './slice/selectors';
-import { DeleteModal } from 'app/components/DeleteModal';
-import { useHandleDataTable } from './useHandleDataTable';
-import { TotalSearchForm } from 'app/components/TotalSearchForm';
-import { useTableConfig } from 'utils/tableConfig';
-import { Messages } from './messages';
-import { CardLayout } from 'app/components/CardLayout';
-import Button, { IconButton } from 'app/components/Button';
-import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
-import { PrivatePath } from 'utils/url.const';
+import styled from 'styled-components/macro';
 import { StyledLink } from 'styles/StyledCommon';
+import { useTableConfig } from 'utils/tableConfig';
+import { PrivatePath } from 'utils/url.const';
 import { useDeviceDetail } from '../DeviceDetailPage/useDeviceDetail';
+import { Messages } from './messages';
+import { useDeviceManagePage } from './slice';
+import { selectIsFilter, selectParams, selectState } from './slice/selectors';
+import { Device } from './slice/types';
+import { useHandleDataTable } from './useHandleDataTable';
 
 export const DeviceListPage = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -181,7 +181,7 @@ export const DeviceListPage = () => {
     {
       title: 'Code',
       dataIndex: 'code',
-      width: 100,
+      width: 60,
       ...getColumnSorterProps('code', 0),
       ...getColumnSearchInputProps(['code'], 0, 'string'),
       render: (text, record) => (
@@ -193,27 +193,26 @@ export const DeviceListPage = () => {
     {
       title: 'Category',
       dataIndex: 'category',
-      width: 100,
+      width: 60,
       render: data => (data ? data.name : ''),
     },
     {
       title: 'Since',
       dataIndex: 'since',
+      width: 60,
       ...getColumnSorterProps('since', 3),
-
-      width: 100,
       render: text => <Capitalize>{text}</Capitalize>,
     },
     {
       title: 'Employee',
       dataIndex: 'consignee',
-      width: 150,
+      width: 80,
       render: data => (data ? `${data.first_name} ${data.last_name}` : ''),
     },
     {
       title: 'Health Status',
       dataIndex: 'health_status',
-      width: 100,
+      width: 80,
       render: text => <Capitalize>{text}</Capitalize>,
       ...getColumnSearchSelectProps(
         'health_status',
@@ -224,14 +223,14 @@ export const DeviceListPage = () => {
     {
       title: 'Status',
       dataIndex: 'status',
-      width: 130,
+      width: 80,
       render: text => <Capitalize>{text}</Capitalize>,
       ...getColumnSearchSelectProps('status', statuses, 'Please choose status'),
     },
     {
-      title: 'Actions',
+      title: <ActionIcon />,
       dataIndex: 'id',
-      width: 100,
+      width: 40,
       fixed: 'right',
       render: (text: string, record: Device, index: number) => {
         return (
@@ -331,7 +330,6 @@ export const DeviceListPage = () => {
                 }}
                 loading={state.loading}
                 onChange={handleTableChange}
-                scroll={{ x: 1200 }}
               />
             </TableWrapper>
           </Col>

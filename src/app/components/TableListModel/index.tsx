@@ -19,6 +19,7 @@ import { RootState } from 'types';
 import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { RootStateKeyType } from 'utils/types/injector-typings';
 import Button, { IconButton } from 'app/components/Button';
+import { ActionIcon } from '../ActionIcon';
 
 interface Props {
   columns: any;
@@ -154,7 +155,7 @@ const TableListModel: React.FC<Props> = ({
   );
 
   const actionButtons = {
-    title: 'Actions',
+    title: <ActionIcon />,
     dataIndex: 'id',
     width: 45,
     fixed: 'right',

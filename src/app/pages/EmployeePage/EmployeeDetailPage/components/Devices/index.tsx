@@ -27,6 +27,7 @@ import { EmployeeDevice } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { useHandleEmployeeDevices } from './useHandleEmployeeDevices';
 import { EmployeeDeviceStatus } from 'utils/types';
 import { useDeviceDetail } from 'app/pages/DeviceManagePage/DeviceDetailPage/useDeviceDetail';
+import { ActionIcon } from 'app/components/ActionIcon';
 
 const { Option } = Select;
 
@@ -201,7 +202,7 @@ export const Device = memo((props: DeviceProps) => {
       render: text => text,
     },
     {
-      title: 'Actions',
+      title: <ActionIcon />,
       dataIndex: 'id',
       width: 45,
       fixed: 'right',

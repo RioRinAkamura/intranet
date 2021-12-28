@@ -33,6 +33,7 @@ import { PrivatePath } from 'utils/url.const';
 import { UserManageDetailPage } from './UserDetailPage/Loadable';
 import { phoneFormat } from 'utils/phoneFormat';
 import { getQueryParam } from 'utils/query';
+import { ActionIcon } from 'app/components/ActionIcon';
 
 type User = models.user.User;
 
@@ -288,10 +289,10 @@ const ManageUserPage: React.FC = () => {
       ),
     },
     {
-      title: 'Actions',
+      title: <ActionIcon />,
       fixed: 'right',
       dataIndex: 'id',
-      width: 80,
+      width: 40,
       align: 'center',
       render: (id, record: User) => (
         <>
@@ -416,7 +417,6 @@ const ManageUserPage: React.FC = () => {
               dataSource={userListState.users}
               loading={userListState.loading}
               columns={columns}
-              scroll={{ x: 800 }}
               pagination={{
                 ...userListState.pagination,
                 onChange: (page: number, pageSize?: number) => {

@@ -40,6 +40,7 @@ import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { IconButton } from 'app/components/Button';
 import { Followers } from './components/Followers';
 import { useHandleTasks } from './useHandleTasks';
+import { ActionIcon } from 'app/components/ActionIcon';
 
 export const TaskManager = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -218,9 +219,9 @@ export const TaskManager = () => {
     },
 
     {
-      title: 'Actions',
+      title: <ActionIcon />,
       dataIndex: 'id',
-      width: 100,
+      width: 40,
       fixed: 'right',
       render: (text: string, record: Task, index: number) => {
         return (
@@ -454,7 +455,6 @@ export const TaskManager = () => {
               dataSource={state.results}
               loading={state.loading}
               columns={columns}
-              scroll={{ x: 1200 }}
               onChange={handleTableChange}
               pagination={{
                 ...state.pagination,

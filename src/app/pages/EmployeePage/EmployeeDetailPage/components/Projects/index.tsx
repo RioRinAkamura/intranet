@@ -42,6 +42,7 @@ import {
   Project,
   EmployeeProject,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { ActionIcon } from 'app/components/ActionIcon';
 interface ProjectsProps {
   employeeId: string;
 }
@@ -273,7 +274,7 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
       render: value => getSelectValues(statuses, value)?.label,
     },
     {
-      title: 'Actions',
+      title: <ActionIcon />,
       dataIndex: 'project',
       render: (value, record, index: number) => {
         return (
