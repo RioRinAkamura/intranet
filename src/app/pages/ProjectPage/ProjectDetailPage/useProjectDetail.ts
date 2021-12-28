@@ -128,10 +128,11 @@ export const useProjectDetail = (): {
       setLoading(false);
     }
   };
+
   const getAllMembers = React.useCallback(async () => {
     setLoading(true);
     try {
-      const response: Pagination<any> = await api.hr.employee.list();
+      const response: Pagination<Employee> = await api.hr.employee.list();
       if (response && response.results && response.results.length > 0) {
         const array: SelectOption[] = [];
         response.results.forEach((values, index) => {
