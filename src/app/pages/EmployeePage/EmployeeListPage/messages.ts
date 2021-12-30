@@ -51,6 +51,8 @@ export const UsersMessages = {
     _t(translations.UsersPage.list.lastName, 'Last name'),
   listEmailTitle: () => _t(translations.UsersPage.list.email, 'Email'),
   listOptionsTitle: () => _t(translations.UsersPage.list.options, 'Actions'),
+  listCopyTooltip: () =>
+    _t(translations.UsersPage.list.copyTooltip, 'Copy to clipboard'),
   listViewTooltip: () => _t(translations.UsersPage.list.viewTooltip, 'View'),
   listEditTooltip: () => _t(translations.UsersPage.list.EditTooltip, 'Edit'),
   listDeleteTooltip: () =>

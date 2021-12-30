@@ -29,6 +29,8 @@ export const ProjectsMessages = {
   listTotalWeeklyHours: () =>
     _t(translations.ProjectsPage.list.totalWeeklyHours, 'Total weekly hours'),
   listOptionsTitle: () => _t(translations.ProjectsPage.list.options, 'Actions'),
+  listCopyTooltip: () =>
+    _t(translations.ProjectsPage.list.copyTooltip, 'Copy to clipboard'),
   listViewTooltip: () => _t(translations.ProjectsPage.list.viewTooltip, 'View'),
   listEditTooltip: () => _t(translations.ProjectsPage.list.EditTooltip, 'Edit'),
   listDeleteTooltip: () =>

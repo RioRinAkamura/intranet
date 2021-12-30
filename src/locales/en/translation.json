@@ -133,6 +133,7 @@
       "lastName": "Last name",
       "email": "Email",
       "options": "Actions",
+      "copyTooltip": "Copy to Clipboard",
       "viewTooltip": "View",
       "EditTooltip": "Edit",
       "DeleteTooltip": "Delete"
@@ -571,6 +572,7 @@
       "code": "Code",
       "totalWeeklyHours": "Total weekly hours",
       "options": "Actions",
+      "copyTooltip": "Copy to Clipboard",
       "viewTooltip": "View",
       "EditTooltip": "Edit",
       "DeleteTooltip": "Delete",

@@ -1,4 +1,5 @@
 import {
+  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
@@ -6,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import { models } from '@hdwebsoft/intranet-api-sdk';
 import {
+  Checkbox,
   Col,
   Form,
   Popover,
@@ -13,10 +15,10 @@ import {
   Table,
   TablePaginationConfig,
   Tooltip,
-  Checkbox,
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
+import { ActionIcon } from 'app/components/ActionIcon';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import Button, { IconButton } from 'app/components/Button';
@@ -37,6 +39,7 @@ import styled from 'styled-components/macro';
 import { StyledLink } from 'styles/StyledCommon';
 import { RootState } from 'types';
 import { api } from 'utils/api';
+import { phoneFormat } from 'utils/phoneFormat';
 import { useTableConfig } from 'utils/tableConfig';
 import { PrivatePath } from 'utils/url.const';
 import { EmployeeList } from './components/EmployeeList/Loadable';
@@ -48,9 +51,7 @@ import {
   selectUserspageIsFilter,
   selectUserspageParams,
 } from './slice/selectors';
-import { phoneFormat } from 'utils/phoneFormat';
 import { useHandleDataTable } from './useHandleDataTable';
-import { ActionIcon } from 'app/components/ActionIcon';
 
 type Employee = models.hr.Employee;
 
@@ -71,7 +72,7 @@ export const EmployeeListPage: React.FC = () => {
   const [isModalMultiDeleteVisible, setIsModalMultiDeleteVisible] = useState(
     false,
   );
-  const [deleteEmployee, setDeleteEmployee] = useState<Employee>();
+  const [selectEmployee, setSelectEmployee] = useState<Employee>();
   const deleteModalState = useSelector(
     (state: RootState) => state.employeespage,
   );
@@ -165,7 +166,7 @@ export const EmployeeListPage: React.FC = () => {
               setTextCopy(true);
             }
           }}
-        >{`${deleteEmployee?.email}`}</strong>
+        >{`${selectEmployee?.email}`}</strong>
       </Tooltip>
       . This will also delete any references to your employee.
     </p>
@@ -235,8 +236,36 @@ export const EmployeeListPage: React.FC = () => {
   ) => {
     setSelectedRows(selectedRowKeys, selectedRows);
   };
+
+  const handleCopyEmployee = record => {
+    const data = {
+      ID: record.id,
+      Name: record.first_name + ' ' + record.last_name,
+      Email: record.email,
+      Phone: record.phone,
+      Tags: record.tags,
+      Project: record.projects.map(pro => pro.name),
+    };
+    navigator.clipboard.writeText(JSON.stringify(data, null, '\t'));
+    notify({
+      type: ToastMessageType.Info,
+      message: 'Copied',
+      duration: 2,
+    });
+  };
   const moreButton = (text: string, record: Employee) => (
     <>
+      <Tooltip title={t(UsersMessages.listCopyTooltip())}>
+        <IconButton
+          type="primary"
+          shape="circle"
+          size="small"
+          icon={<CopyOutlined />}
+          onClick={() => {
+            handleCopyEmployee(record);
+          }}
+        />
+      </Tooltip>
       <Tooltip title={t(UsersMessages.listViewTooltip())}>
         <IconButton
           type="primary"
@@ -270,7 +299,7 @@ export const EmployeeListPage: React.FC = () => {
           onClick={() => {
             showDeleteModal();
             setIdUserDelete(text);
-            setDeleteEmployee(record);
+            setSelectEmployee(record);
           }}
         />
       </Tooltip>
@@ -480,7 +509,7 @@ export const EmployeeListPage: React.FC = () => {
           onDelete={(id: string, user: Employee) => {
             showDeleteModal();
             setIdUserDelete(id);
-            setDeleteEmployee(user);
+            setSelectEmployee(user);
           }}
         />
       ) : (
@@ -558,9 +587,9 @@ export const EmployeeListPage: React.FC = () => {
         visible={isModalVisible}
         handleOk={handleConfirmDelete}
         handleCancel={handleCancelDeleteModal}
-        title={`Remove ${deleteEmployee?.first_name} ${deleteEmployee?.last_name}`}
+        title={`Remove ${selectEmployee?.first_name} ${selectEmployee?.last_name}`}
         description={descriptionDelete}
-        answer={`${deleteEmployee?.email}`}
+        answer={`${selectEmployee?.email}`}
       />
       <DeleteModal
         open={isModalMultiDeleteVisible}
