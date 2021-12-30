@@ -1,58 +1,59 @@
 import {
-  Col,
-  Row,
-  Table,
-  Form,
-  TablePaginationConfig,
-  Tooltip,
-  Popover,
-} from 'antd';
-import React, { Key, useCallback, useEffect, useState } from 'react';
-import { isMobileOnly } from 'react-device-detect';
-import { useTranslation } from 'react-i18next';
-import {
-  ColumnsType,
-  FilterValue,
-  SorterResult,
-} from 'antd/lib/table/interface';
-import { Helmet } from 'react-helmet-async';
-import { HeaderButton } from './components/HeaderButton/Loadable';
-import { ProjectList } from './components/ProjectList/Loadable';
-import {
+  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
+import { Project } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import {
+  Col,
+  Form,
+  Popover,
+  Row,
+  Table,
+  TablePaginationConfig,
+  Tooltip,
+} from 'antd';
+import {
+  ColumnsType,
+  FilterValue,
+  SorterResult,
+} from 'antd/lib/table/interface';
+import { ActionIcon } from 'app/components/ActionIcon';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import Button, { IconButton } from 'app/components/Button';
+import { CardLayout } from 'app/components/CardLayout';
+import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import PageTitle from 'app/components/PageTitle';
+import { TeamMembers } from 'app/components/TeamMembers';
+import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMemberModal';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
+import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
+import moment from 'moment';
+import React, { Key, useCallback, useEffect, useState } from 'react';
+import { isMobileOnly } from 'react-device-detect';
+import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import styled from 'styled-components/macro';
-import { useProjectsSlice } from './slice';
-import { useDispatch, useSelector } from 'react-redux';
-import PageTitle from 'app/components/PageTitle';
-import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import { StyledLink } from 'styles/StyledCommon';
 import { RootState } from 'types';
-import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { useTableConfig } from 'utils/tableConfig';
-import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
+import { DeleteType } from 'utils/types';
+import { PrivatePath } from 'utils/url.const';
+import { useProjectDetail } from '../ProjectDetailPage/useProjectDetail';
+import { HeaderButton } from './components/HeaderButton/Loadable';
+import { ProjectList } from './components/ProjectList/Loadable';
+import { ProjectsMessages } from './messages';
+import { useProjectsSlice } from './slice';
 import {
   selectProjects,
   selectProjectsIsFilter,
   selectProjectsParams,
 } from './slice/selectors';
-import moment from 'moment';
-import { ProjectsMessages } from './messages';
-import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
-import { TeamMembers } from 'app/components/TeamMembers';
-import { CardLayout } from 'app/components/CardLayout';
-import Button, { IconButton } from 'app/components/Button';
-import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMemberModal';
-import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
-import { PrivatePath } from 'utils/url.const';
-import { StyledLink } from 'styles/StyledCommon';
-import { Project } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
-import { DeleteType } from 'utils/types';
-import { useProjectDetail } from '../ProjectDetailPage/useProjectDetail';
-import { ActionIcon } from 'app/components/ActionIcon';
 
 export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -73,6 +74,7 @@ export const ProjectListPage: React.FC = () => {
   const [deleteProject, setDeleteProject] = useState<any>();
   const [memberModal, setMemberModal] = useState(false);
   const [projMemberId, setProjMemberId] = useState('');
+
   const deleteModalState = useSelector(
     (state: RootState) => state.employeespage,
   );
@@ -258,8 +260,44 @@ export const ProjectListPage: React.FC = () => {
     setSelectedRows(selectedRowKeys, selectedRows);
   };
 
+  const handleCopyProject = record => {
+    const projectCopy = {
+      ID: record.id,
+      Name: record.name,
+      Priority: record.priority,
+      Status: record.status,
+      Members: record.total_members,
+      MembersInfo: record.members.map(
+        member =>
+          member.member.first_name +
+          ' ' +
+          member.member.last_name +
+          ', ' +
+          member.member.email +
+          ', ' +
+          member.project_role,
+      ),
+    };
+    navigator.clipboard.writeText(JSON.stringify(projectCopy, null, '\t'));
+    notify({
+      type: ToastMessageType.Info,
+      message: 'Copied',
+      duration: 2,
+    });
+  };
   const moreButton = (text: string, record: any) => (
     <>
+      <Tooltip title={t(ProjectsMessages.listCopyTooltip())}>
+        <IconButton
+          type="primary"
+          shape="circle"
+          size="small"
+          icon={<CopyOutlined />}
+          onClick={() => {
+            handleCopyProject(record);
+          }}
+        />
+      </Tooltip>
       <Tooltip title={t(ProjectsMessages.listViewTooltip())}>
         <IconButton
           type="primary"
