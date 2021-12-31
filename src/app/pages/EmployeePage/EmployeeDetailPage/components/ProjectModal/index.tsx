@@ -70,7 +70,6 @@ export const ProjectModal = memo((props: Props) => {
     if (selectedProject) {
       dispatch(actions.editProject(_values));
     } else {
-      delete _values.data.joined_at;
       dispatch(actions.addProject(_values));
     }
   };
@@ -259,30 +258,8 @@ export const ProjectModal = memo((props: Props) => {
               })}
             </Select>
           </FormSearchItem>
-          <FormSearchItem
-            hidden={!isAddProject}
-            label="Allocable"
-            name="allocable"
-          >
-            <Switch checked={checked} onChange={setChecked} />
-          </FormSearchItem>
-          <FormSearchItem
-            hidden={isAddProject}
-            label="Joined"
-            name="joined_at"
-            rules={
-              isAddProject
-                ? [{}]
-                : [
-                    {
-                      required: true,
-                      message: 'Please select joined date',
-                    },
-                  ]
-            }
-          >
+          <FormSearchItem label="Joined" name="joined_at">
             <DatePicker
-              {...(isAddProject ? datePickerViewProps : {})}
               format={UI_DATE_FORMAT}
               disabledDate={disabledDate}
               style={{ width: '100%' }}
@@ -290,6 +267,14 @@ export const ProjectModal = memo((props: Props) => {
               placeholder="Select joined date"
             />
           </FormSearchItem>
+          <FormSearchItem
+            hidden={!isAddProject}
+            label="Allocable"
+            name="allocable"
+          >
+            <Switch checked={checked} onChange={setChecked} />
+          </FormSearchItem>
+
           <ModalButton>
             <Button
               key="back"

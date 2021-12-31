@@ -188,7 +188,7 @@
           "empty": "Please upload employee avatar"
         },
         "code": {
-          "label": "Employee code",
+          "label": "ID",
           "placeholder": "Enter employee code",
           "empty": "Please enter employee code"
         },
