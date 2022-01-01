@@ -377,13 +377,15 @@ const ManageUserPage: React.FC = () => {
         />
       </PageTitle>
       <Wrapper>
-        <Row align="middle" justify="center">
-          <Col span={2}>
-            <Row justify="start">
+        <Row>
+          <Col span={8}>
+            <Row justify="start" align="middle">
               {userListState.selectedRowKeys &&
                 userListState.selectedRowKeys.length > 0 && (
                   <Button
                     danger
+                    type="primary"
+                    size="middle"
                     disabled={
                       !userListState?.selectedRowKeys?.length ||
                       userListState?.selectedRowKeys?.length === 0
@@ -395,12 +397,10 @@ const ManageUserPage: React.FC = () => {
                     }}
                   />
                 )}
+              <span style={{ marginLeft: '12px' }}>
+                Total: {userListState.pagination?.total}
+              </span>
             </Row>
-          </Col>
-          <Col span={6}>
-            <span style={{ marginLeft: '12px' }}>
-              Total: {userListState.pagination?.total}
-            </span>
           </Col>
           <Col span={16}>
             <HeaderButtons />
