@@ -510,12 +510,14 @@ export const ProjectListPage: React.FC = () => {
         />
       ) : (
         <CardLayout>
-          <Row align="middle" justify="center">
-            <Col span={2}>
-              <Row justify="start">
+          <Row>
+            <Col span={8}>
+              <Row justify="start" align="middle">
                 {getProjectState.selectedRowKeys &&
                   getProjectState.selectedRowKeys.length > 0 && (
                     <Button
+                      type="primary"
+                      size="middle"
                       danger
                       disabled={
                         !getProjectState?.selectedRowKeys?.length ||
@@ -531,12 +533,10 @@ export const ProjectListPage: React.FC = () => {
                       }}
                     />
                   )}
+                <span style={{ marginLeft: '5px' }}>
+                  Total: {getProjectState.pagination?.total}
+                </span>
               </Row>
-            </Col>
-            <Col span={6}>
-              <span style={{ marginLeft: '6px' }}>
-                Total: {getProjectState.pagination?.total}
-              </span>
             </Col>
             <Col span={16}>
               <HeaderButton

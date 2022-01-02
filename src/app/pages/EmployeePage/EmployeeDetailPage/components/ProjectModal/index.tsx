@@ -3,12 +3,15 @@
  * ProjectModal
  *
  */
-import React, { memo, useEffect, useState } from 'react';
-import styled from 'styled-components/macro';
-import { DialogModal } from 'app/components/DialogModal';
 import { Button, DatePicker, Form, Select, Spin, Switch } from 'antd';
-import { useHandleProject } from './useHandleProject';
+import { DialogModal } from 'app/components/DialogModal';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
+import { config } from 'config';
+import moment from 'moment';
+import React, { memo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components/macro';
 import { useEmployeeProjectSlice } from '../Projects/slice';
 import {
   selectEmployeeProjectAddFailed,
@@ -16,11 +19,7 @@ import {
   selectEmployeeProjectEditFailed,
   selectEmployeeProjectEditSuccess,
 } from '../Projects/slice/selectors';
-import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
-import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
-import { datePickerViewProps } from 'utils/types';
-import moment from 'moment';
-import { config } from 'config';
+import { useHandleProject } from './useHandleProject';
 interface Props {
   id: string;
   open: boolean;

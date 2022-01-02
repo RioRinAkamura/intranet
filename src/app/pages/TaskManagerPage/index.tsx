@@ -402,13 +402,14 @@ export const TaskManager = () => {
         </Row>
       </Wrapper>
       <Wrapper>
-        <Row align="middle" justify="center">
-          <Col span={1}>
-            <Row justify="start">
+        <Row>
+          <Col span={8}>
+            <Row justify="start" align="middle">
               {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
                 <Button
+                  type="primary"
                   danger
-                  size="large"
+                  size="middle"
                   disabled={
                     !state?.selectedRowKeys?.length ||
                     state?.selectedRowKeys?.length === 0
@@ -420,12 +421,10 @@ export const TaskManager = () => {
                   }}
                 />
               )}
+              <span style={{ marginLeft: '6px' }}>
+                Total: {state.pagination?.total}
+              </span>
             </Row>
-          </Col>
-          <Col span={7}>
-            <span style={{ marginLeft: '6px' }}>
-              Total: {state.pagination?.total}
-            </span>
           </Col>
           <Col span={16}>
             <Row justify="end">
@@ -440,7 +439,7 @@ export const TaskManager = () => {
                 onClick={() => setIsCreate(true)}
                 icon={<PlusCircleOutlined />}
               >
-                Create Task
+                Create
               </Button>
             </Row>
           </Col>

@@ -555,7 +555,7 @@
   "ProjectsPage": {
     "title": "Projects",
     "description": "Projects",
-    "createProjectButton": "Create project",
+    "createProjectButton": "Create",
     "list": {
       "avatar": "Avatar",
       "name": "Name",

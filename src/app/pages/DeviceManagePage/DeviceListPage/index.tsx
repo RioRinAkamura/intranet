@@ -262,11 +262,13 @@ export const DeviceListPage = () => {
         />
       </PageTitle>
       <Wrapper>
-        <Row align="middle" justify="center">
-          <Col span={2}>
-            <Row justify="start">
+        <Row>
+          <Col span={8}>
+            <Row justify="start" align="middle">
               {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
                 <Button
+                  type="primary"
+                  size="middle"
                   danger
                   disabled={
                     !state?.selectedRowKeys?.length ||
@@ -279,10 +281,10 @@ export const DeviceListPage = () => {
                   }}
                 />
               )}
+              <span style={{ marginLeft: '5px' }}>
+                Total: {state.pagination?.total}
+              </span>
             </Row>
-          </Col>
-          <Col span={6}>
-            <span>Total: {state.pagination?.total}</span>
           </Col>
           <Col span={16}>
             <Row justify="end">
@@ -293,7 +295,7 @@ export const DeviceListPage = () => {
                 onClick={() => history.push(PrivatePath.DEVICES_CREATE)}
                 icon={<PlusCircleOutlined />}
               >
-                Create device
+                Create
               </Button>
               <Button onClick={handleExportCsv} size="middle">
                 <ExportOutlined /> Export CSV
