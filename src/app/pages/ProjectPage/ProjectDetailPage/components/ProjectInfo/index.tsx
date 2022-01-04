@@ -12,15 +12,15 @@ import { SelectValue } from 'antd/lib/select';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { useProjectsSlice } from 'app/pages/ProjectPage/ProjectListPage/slice';
 import { selectProjects } from 'app/pages/ProjectPage/ProjectListPage/slice/selectors';
-import React, { useEffect, useState } from 'react';
 import config from 'config';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components/macro';
 import { datePickerViewProps, inputViewProps } from 'utils/types';
+import { getSelectValues } from 'utils/variable';
 import { ProjectDetailMessages } from '../../messages';
 import { useProjectDetail } from '../../useProjectDetail';
-import { getSelectValues } from 'utils/variable';
 
 interface Props {
   isView?: boolean;
@@ -45,6 +45,8 @@ export const ProjectInfo = (props: Props) => {
   const { isView, form, data, isEdit } = props;
   const { t } = useTranslation();
   const [overview, setOverview] = useState('');
+  const [statusSelect, setStatusSelect] = useState('');
+  const [prioritySelect, setPrioritySelect] = useState('');
 
   const {
     priorities,
@@ -79,6 +81,22 @@ export const ProjectInfo = (props: Props) => {
       form.setFieldsValue({ code: projectState.identity });
     }
   }, [projectState, form, isEdit]);
+
+  const handleSelectStatus = value => {
+    setStatusSelect(
+      value === '1'
+        ? 'orange'
+        : value === '2'
+        ? 'red'
+        : value === '3'
+        ? 'green'
+        : 'grey',
+    );
+  };
+
+  const handleSelectPriority = value => {
+    setPrioritySelect(value);
+  };
 
   return isView ? (
     <>
@@ -216,10 +234,33 @@ export const ProjectInfo = (props: Props) => {
                   placeholder={t(
                     ProjectDetailMessages.formProjectPriorityPlaceholder(),
                   )}
+                  onChange={handleSelectPriority}
+                  style={{
+                    color:
+                      prioritySelect === '1'
+                        ? 'green'
+                        : prioritySelect === '2'
+                        ? 'orange'
+                        : prioritySelect === '3'
+                        ? 'red'
+                        : '',
+                  }}
                 >
                   {priorities.map((item, index: number) => {
                     return (
-                      <Option key={index} value={item.value}>
+                      <Option
+                        key={index}
+                        value={item.value}
+                        style={{
+                          color: `${
+                            item.label === 'Low'
+                              ? 'green'
+                              : item.label === 'Medium'
+                              ? 'orange'
+                              : 'red'
+                          }`,
+                        }}
+                      >
                         {item.label}
                       </Option>
                     );
@@ -238,10 +279,28 @@ export const ProjectInfo = (props: Props) => {
                   placeholder={t(
                     ProjectDetailMessages.formProjectStatusPlaceholder(),
                   )}
+                  onChange={handleSelectStatus}
+                  style={{ color: statusSelect }}
                 >
                   {statuses.map((item, index: number) => {
                     return (
-                      <Option key={index} value={item.value}>
+                      <Option
+                        key={index}
+                        value={item.value}
+                        style={{
+                          color: `${
+                            item.label === 'Preparing'
+                              ? 'orange'
+                              : item.label === 'Going'
+                              ? 'red'
+                              : item.label === 'Released'
+                              ? 'green'
+                              : item.label === 'Archived'
+                              ? 'grey'
+                              : ''
+                          }`,
+                        }}
+                      >
                         {item.label}
                       </Option>
                     );
