@@ -3,18 +3,17 @@
  * UserDetailPage
  *
  */
-import * as React from 'react';
-import styled from 'styled-components/macro';
-import { Col, Form, Row } from 'antd';
-import { useParams } from 'react-router';
-import moment from 'moment';
-import { useDispatch } from 'react-redux';
-
-import { config } from 'config';
 import { models } from '@hdwebsoft/intranet-api-sdk';
-import { ProfileInfo } from '../EmployeeDetailPage/components/ProfileInfo/Loadable';
-import { DetailForm } from '../EmployeeDetailPage/components/DetailForm/Loadable';
+import { Col, Form, Row } from 'antd';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import { config } from 'config';
+import moment from 'moment';
+import * as React from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router';
+import styled from 'styled-components/macro';
+import { DetailForm } from '../EmployeeDetailPage/components/DetailForm/Loadable';
+import { ProfileInfo } from '../EmployeeDetailPage/components/ProfileInfo/Loadable';
 import { useUserDetailsSlice } from '../EmployeeDetailPage/slice';
 import { useHandleEmployeeDetail } from '../EmployeeDetailPage/useHandleEmployeeDetail';
 
