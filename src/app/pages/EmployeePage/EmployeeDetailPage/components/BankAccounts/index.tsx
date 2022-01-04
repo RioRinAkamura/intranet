@@ -3,14 +3,14 @@
  * BankAccounts
  *
  */
-import React from 'react';
-import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
 import { Col, Divider, Form, FormInstance, Input, Row, Select } from 'antd';
-import { UserDetailMessages } from '../../messages';
-import { TitlePath } from '../TitlePath';
-import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import { UserDetailMessages } from '../../messages';
+import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
+import { TitlePath } from '../TitlePath';
 
 const banks = [
   {

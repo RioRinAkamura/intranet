@@ -105,31 +105,44 @@ export function EmployeeDetailPage(props: Props) {
 
   const { TabPane } = Tabs;
   const [isDetailTab, setIsDetailTab] = React.useState(true);
+  const [isContractTab, setIsContractTab] = React.useState(false);
+  const [isBankAccountTab, setIsBankAccountTab] = React.useState(false);
 
   const onChangeTab = (key: string) => {
     if (key === TabKeys.notes) {
       setIsDetailTab(false);
+      setIsContractTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/notes`);
     } else if (key === TabKeys.projects) {
       setIsDetailTab(false);
+      setIsContractTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/projects`);
     } else if (key === TabKeys.devices) {
       setIsDetailTab(false);
+      setIsContractTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/devices`);
     } else if (key === TabKeys.changeLogs) {
       setIsDetailTab(false);
+      setIsContractTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/change-logs`);
     } else if (key === TabKeys.contract) {
       setIsDetailTab(false);
+      setIsContractTab(true);
+      setIsBankAccountTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
     } else if (key === TabKeys.bankAccounts) {
       setIsDetailTab(false);
+      setIsContractTab(false);
+      setIsBankAccountTab(true);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/bank-accounts`);
     } else if (key === TabKeys.citizenInfo) {
       setIsDetailTab(false);
+      setIsContractTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/citizen-info`);
     } else {
-      setIsDetailTab(true);
+      setIsDetailTab(false);
+      setIsContractTab(false);
+      setIsBankAccountTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}`);
     }
   };
@@ -223,40 +236,78 @@ export function EmployeeDetailPage(props: Props) {
     dispatch(userDetailsSlice.actions.fetchEmployeeSkills(id));
   }, [dispatch, getDefaultTab, id, userDetailsSlice.actions]);
 
-  const handleSubmit = () => {
-    form
-      .validateFields()
-      .then(async values => {
-        values.dob = moment(values.dob).format(DATE_FORMAT);
-        if (values.issued_date) {
-          values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
+  const handleSubmit = async () => {
+    try {
+      let values = await form.validateFields();
+      values.dob = moment(values.dob).format(DATE_FORMAT);
+      if (values.issued_date) {
+        values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
+      }
+      if (isEdit) {
+        delete values.email;
+        const response = await update(values);
+        if (response) {
+          setData(response);
+          setIsEdit(false);
+          history.push(`${PrivatePath.EMPLOYEES}/${id}`);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        if (isEdit) {
-          delete values.email;
-          const response = await update(values);
-          if (response) {
-            setData(response);
-            setIsEdit(false);
-            history.push(`${PrivatePath.EMPLOYEES}/${id}`);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }
-        if (isCreate) {
-          values = {
-            bank_accounts: [
-              {
-                bank_name: values.bank_name,
-                number: values.number,
-                branch: values.number,
-              },
-            ],
+      }
+      if (isCreate) {
+        values = {
+          bank_accounts: [
+            {
+              bank_name: values.bank_name,
+              number: values.number,
+              branch: values.number,
+            },
+          ],
 
-            ...omit(values, ['bank_name', 'number', 'branch']),
-          };
-          create(values);
+          ...omit(values, ['bank_name', 'number', 'branch']),
+        };
+        create(values);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleContractEditSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      if (isEdit) {
+        const response = await update(values);
+        if (response) {
+          setData(response);
+          setIsEdit(false);
+          history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-      })
-      .catch(err => console.log(err));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleBankAccountEditSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      values.dob = moment(values.dob).format(DATE_FORMAT);
+      if (values.issued_date) {
+        values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
+      }
+      if (isEdit) {
+        const response = await update(values);
+        if (response) {
+          setData(response);
+          setIsEdit(false);
+          history.push(`${PrivatePath.EMPLOYEES}/${id}/bank-accounts`);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const employeeDetailForm = () =>
@@ -355,8 +406,14 @@ export function EmployeeDetailPage(props: Props) {
             <Route path={PrivatePath.EMPLOYEES_ID_CONTRACT}>
               {employeeDetailForm()}
             </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_CONTRACT_EDIT}>
+              <EmployeeEditPage />
+            </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_BANK_ACCOUNTS}>
               {employeeDetailForm()}
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_BANK_ACCOUNTS_EDIT}>
+              <EmployeeEditPage />
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_CITIZEN_INFO}></Route>
             <Route path={PrivatePath.EMPLOYEES_EDIT}>
@@ -407,6 +464,98 @@ export function EmployeeDetailPage(props: Props) {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   } else {
                     handleSubmit();
+                  }
+                }}
+              >
+                {isView
+                  ? t(UserDetailMessages.formEditButton())
+                  : t(UserDetailMessages.formSubmitButton())}
+              </Button>
+            </Col>
+          </Row>
+        </WrapperButton>
+      )}
+      {isContractTab && (
+        <WrapperButton>
+          <Row gutter={[8, 8]} justify="end">
+            <Col>
+              <Button
+                block
+                onClick={() => {
+                  if (isEdit) {
+                    setIsEdit(false);
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
+                  } else if (isView) {
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
+                  }
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                {t(UserDetailMessages.formBackButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                loading={loading}
+                block
+                type="primary"
+                onClick={() => {
+                  if (isView) {
+                    setIsEdit(true);
+                    history.push(
+                      `${PrivatePath.EMPLOYEES}/${id}/contract/edit`,
+                    );
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  } else {
+                    handleContractEditSubmit();
+                  }
+                }}
+              >
+                {isView
+                  ? t(UserDetailMessages.formEditButton())
+                  : t(UserDetailMessages.formSubmitButton())}
+              </Button>
+            </Col>
+          </Row>
+        </WrapperButton>
+      )}
+      {isBankAccountTab && (
+        <WrapperButton>
+          <Row gutter={[8, 8]} justify="end">
+            <Col>
+              <Button
+                block
+                onClick={() => {
+                  if (isEdit) {
+                    setIsEdit(false);
+                    history.push(
+                      `${PrivatePath.EMPLOYEES}/${id}/bank-accounts`,
+                    );
+                  } else if (isView) {
+                    history.push(
+                      `${PrivatePath.EMPLOYEES}/${id}/bank-accounts`,
+                    );
+                  }
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                {t(UserDetailMessages.formBackButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                loading={loading}
+                block
+                type="primary"
+                onClick={() => {
+                  if (isView) {
+                    setIsEdit(true);
+                    history.push(
+                      `${PrivatePath.EMPLOYEES}/${id}/bank-accounts/edit`,
+                    );
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  } else {
+                    handleBankAccountEditSubmit();
                   }
                 }}
               >

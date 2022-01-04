@@ -3,17 +3,17 @@
  * DetailForm
  *
  */
+import { models } from '@hdwebsoft/intranet-api-sdk';
+import { Col, Divider, Form, FormInstance, Input, Row } from 'antd';
+import { CardLayout } from 'app/components/CardLayout';
 import React, { memo } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import { Col, Form, Divider, FormInstance, Input, Row } from 'antd';
 import { AvatarPath } from '../AvatarPath/Loadable';
 import { BankAccounts } from '../BankAccounts/Loadable';
 import { IdCardInfo } from '../IdCardInfo/Loadable';
 import { JobInfo } from '../JobInfo/Loadable';
 import { SocialNetwork } from '../SocialNetwork/Loadable';
-import { models } from '@hdwebsoft/intranet-api-sdk';
-import { CardLayout } from 'app/components/CardLayout';
-import { useLocation } from 'react-router-dom';
 
 type Employee = models.hr.Employee;
 
@@ -42,9 +42,12 @@ export const DetailForm = memo((props: FormProps) => {
     pathname.includes('bank-accounts') ? (
     <Form form={form} labelAlign="left">
       <Wrapper isView={isView}>
+        <Form.Item hidden name="id">
+          <Input hidden />
+        </Form.Item>
         <Row gutter={[32, 32]}>
           <RightScreen isView={isView} md={19}>
-            {rightScreenItems}
+            {isView && rightScreenItems}
             {!isView && (
               <>
                 <BankAccounts isView={isView} isEdit={isEdit} form={form} />
@@ -62,6 +65,9 @@ export const DetailForm = memo((props: FormProps) => {
       <WrapperSubItem gutter={[64, 32]}>
         <Col span={isView ? 24 : 8}>
           <WrapperItem>
+            <Form.Item hidden name="id">
+              <Input hidden />
+            </Form.Item>
             <JobInfo
               form={form}
               isEdit={isEdit}
