@@ -11,6 +11,7 @@ import {
   Form,
   Popover,
   Row,
+  Select,
   Table,
   TablePaginationConfig,
   Tooltip,
@@ -55,6 +56,8 @@ import {
   selectProjectsParams,
 } from './slice/selectors';
 
+const { Option } = Select;
+
 export const ProjectListPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
   useEffect(() => {
@@ -97,6 +100,7 @@ export const ProjectListPage: React.FC = () => {
     getPriorities,
     getStatuses,
   } = useProjectDetail();
+
   const {
     setSelectedRows,
     setSearchText,
@@ -338,6 +342,31 @@ export const ProjectListPage: React.FC = () => {
     </>
   );
 
+  const handleSelectPriority = async (value, record) => {
+    record = { ...record, priority: value };
+    try {
+      const response = await update(record);
+      if (response) {
+        dispatch(actions.fetchProjects({ params: params }));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleSelectStatus = async (value, record) => {
+    record = { ...record, status: value };
+    try {
+      const response = await update(record);
+
+      if (response) {
+        dispatch(actions.fetchProjects({ params: params }));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const columns: ColumnsType<any> = [
     {
       title: t(ProjectsMessages.listCode()),
@@ -393,6 +422,7 @@ export const ProjectListPage: React.FC = () => {
     {
       title: t(ProjectsMessages.listPriorityTitle()),
       dataIndex: 'priority',
+      width: 140,
       ...getColumnSorterProps('priority', 2),
       ...getColumnSearchCheckboxProps(
         ['priority'],
@@ -410,7 +440,42 @@ export const ProjectListPage: React.FC = () => {
           }
         },
       ),
-      width: 140,
+      render: (text, record: Project) => (
+        <SelectPriority
+          onChange={value => handleSelectPriority(value, record)}
+          defaultValue={text}
+          style={{
+            color:
+              record.priority === '1'
+                ? 'green'
+                : record.priority === '2'
+                ? 'orange'
+                : record.priority === '3'
+                ? 'red'
+                : '',
+          }}
+        >
+          {priorities &&
+            priorities.map((item, index: number) => (
+              <Option
+                key={index}
+                value={item.value}
+                style={{
+                  color:
+                    item.label === 'Low'
+                      ? 'green'
+                      : item.label === 'Medium'
+                      ? 'orange'
+                      : item.label === 'High'
+                      ? 'red'
+                      : '',
+                }}
+              >
+                {item.label}
+              </Option>
+            ))}
+        </SelectPriority>
+      ),
     },
     {
       title: t(ProjectsMessages.listStatusTitle()),
@@ -432,6 +497,46 @@ export const ProjectListPage: React.FC = () => {
             console.log(e);
           }
         },
+      ),
+      render: (text, record: Project) => (
+        <SelectStatus
+          onChange={value => handleSelectStatus(value, record)}
+          defaultValue={text}
+          style={{
+            color:
+              record.status === '1'
+                ? 'orange'
+                : record.status === '2'
+                ? 'red'
+                : record.status === '3'
+                ? 'green'
+                : record.status === '4'
+                ? 'grey'
+                : '',
+          }}
+        >
+          {statuses &&
+            statuses.map((item, index: number) => (
+              <Option
+                key={index}
+                value={item.value}
+                style={{
+                  color:
+                    item.label === 'Preparing'
+                      ? 'orange'
+                      : item.label === 'Going'
+                      ? 'red'
+                      : item.label === 'Released'
+                      ? 'green'
+                      : item.label === 'Archived'
+                      ? 'grey'
+                      : '',
+                }}
+              >
+                {item.label}
+              </Option>
+            ))}
+        </SelectStatus>
       ),
     },
     {
@@ -603,6 +708,13 @@ const TextCenter = styled.span`
   text-align: center;
   width: 100%;
   display: block;
+`;
+
+const SelectStatus = styled(Select)`
+  width: 100%;
+`;
+const SelectPriority = styled(Select)`
+  width: 100%;
 `;
 
 const TableWrapper = styled.div`
