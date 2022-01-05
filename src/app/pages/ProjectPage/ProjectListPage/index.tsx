@@ -95,10 +95,12 @@ export const ProjectListPage: React.FC = () => {
     update,
     priorities,
     statuses,
+    monitorings,
     getAllMembers,
     membersAll,
     getPriorities,
     getStatuses,
+    getMonitorings,
   } = useProjectDetail();
 
   const {
@@ -128,8 +130,15 @@ export const ProjectListPage: React.FC = () => {
     fetchProjects();
     getPriorities();
     getStatuses();
+    getMonitorings();
     getAllMembers();
-  }, [fetchProjects, getPriorities, getStatuses, getAllMembers]);
+  }, [
+    fetchProjects,
+    getPriorities,
+    getStatuses,
+    getMonitorings,
+    getAllMembers,
+  ]);
   // handle project member
   useEffect(() => {
     if (history.location.pathname.includes('members')) {
@@ -367,6 +376,27 @@ export const ProjectListPage: React.FC = () => {
     }
   };
 
+  const handleSelectMonitorings = async (value, record) => {
+    const monitoringValue =
+      value === '1'
+        ? 'Good'
+        : value === '2'
+        ? 'Concerned'
+        : value === '3'
+        ? 'Bad'
+        : '';
+    record = { ...record, monitoring: monitoringValue };
+    try {
+      const response = await update(record);
+
+      if (response) {
+        dispatch(actions.fetchProjects({ params: params }));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const columns: ColumnsType<any> = [
     {
       title: t(ProjectsMessages.listCode()),
@@ -539,6 +569,66 @@ export const ProjectListPage: React.FC = () => {
         </SelectStatus>
       ),
     },
+
+    {
+      title: t(ProjectsMessages.listMonitoringTitle()),
+      dataIndex: 'monitoring',
+      width: 130,
+      ...getColumnSorterProps('monitoring', 2),
+      ...getColumnSearchCheckboxProps(
+        ['monitoring'],
+        monitorings,
+        undefined,
+        undefined,
+        async value => {
+          try {
+            const response = await update(value);
+            if (response) {
+              dispatch(actions.fetchProjects({ params: params }));
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      ),
+      render: (text, record: Project) => (
+        <SelectMonitorings
+          onChange={value => handleSelectMonitorings(value, record)}
+          defaultValue={text}
+          style={{
+            color:
+              record.monitoring === 'Good'
+                ? 'green'
+                : record.monitoring === 'Concerned'
+                ? '#d46b08'
+                : record.monitoring === 'Bad'
+                ? 'red'
+                : '',
+          }}
+        >
+          {monitorings &&
+            monitorings.map((item, index: number) => (
+              <Option
+                key={index}
+                value={item.value}
+                style={{
+                  color:
+                    item.label === 'Good'
+                      ? 'green'
+                      : item.label === 'Concerned'
+                      ? '#d46b08'
+                      : item.label === 'Bad'
+                      ? 'red'
+                      : '',
+                }}
+              >
+                {item.label}
+              </Option>
+            ))}
+        </SelectMonitorings>
+      ),
+    },
+
     {
       title: t(ProjectsMessages.listTotalWeeklyHours()),
       dataIndex: 'total_weekly_hour_allocated',
@@ -714,6 +804,9 @@ const SelectStatus = styled(Select)`
   width: 100%;
 `;
 const SelectPriority = styled(Select)`
+  width: 100%;
+`;
+const SelectMonitorings = styled(Select)`
   width: 100%;
 `;
 

@@ -62,6 +62,7 @@ const sliceOptions = (model: RootStateKeyType) => ({
         name: action.payload.name,
         priority: action.payload.priority,
         status: action.payload.status,
+        moritoring: action.payload.moritoring,
       };
       state.pagination = {
         ...state.pagination,

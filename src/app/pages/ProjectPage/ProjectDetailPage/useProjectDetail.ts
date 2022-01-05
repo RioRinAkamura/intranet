@@ -18,6 +18,7 @@ export const useProjectDetail = (): {
   members: Member[];
   priorities: SelectOption[];
   statuses: SelectOption[];
+  monitorings: SelectOption[];
   roles: SelectOption[];
   allocations: number[];
   loading: boolean;
@@ -32,6 +33,7 @@ export const useProjectDetail = (): {
   addMember: (projectId: string, data: any) => Promise<any | undefined>;
   getPriorities: () => Promise<void>;
   getStatuses: () => Promise<void>;
+  getMonitorings: () => Promise<void>;
   getRoles: () => Promise<void>;
   getAllocations: () => Promise<void>;
 } => {
@@ -40,6 +42,7 @@ export const useProjectDetail = (): {
   const [members, setMembers] = React.useState<Member[]>([]);
   const [priorities, setPriorities] = React.useState<SelectOption[]>([]);
   const [statuses, setStatuses] = React.useState<SelectOption[]>([]);
+  const [monitorings, setMonitorings] = React.useState<SelectOption[]>([]);
   const [roles, setRoles] = React.useState<SelectOption[]>([]);
   const [allocations, setAllocations] = React.useState<number[]>([]);
   const [loading, setLoading] = React.useState(false);
@@ -211,6 +214,17 @@ export const useProjectDetail = (): {
     }
   }, []);
 
+  const getMonitorings = React.useCallback(async () => {
+    try {
+      const response = await api.hr.project.getMonitorings();
+      if (response) {
+        setMonitorings(response);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
+
   const getRoles = React.useCallback(async () => {
     try {
       const response = await api.hr.project.getProjectRoles();
@@ -237,6 +251,7 @@ export const useProjectDetail = (): {
     members,
     priorities,
     statuses,
+    monitorings,
     roles,
     allocations,
     loading,
@@ -251,6 +266,7 @@ export const useProjectDetail = (): {
     getAllMembers,
     getPriorities,
     getStatuses,
+    getMonitorings,
     getRoles,
     getAllocations,
   };
