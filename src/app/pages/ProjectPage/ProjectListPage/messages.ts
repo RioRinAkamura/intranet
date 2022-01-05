@@ -23,6 +23,8 @@ export const ProjectsMessages = {
   listPriorityTitle: () =>
     _t(translations.ProjectsPage.list.priority, 'Priority'),
   listStatusTitle: () => _t(translations.ProjectsPage.list.status, 'Status'),
+  listMonitoringTitle: () =>
+    _t(translations.ProjectsPage.list.monitoring, 'Monitoring'),
   listTotalMembers: () =>
     _t(translations.ProjectsPage.list.totalMembers, 'Members'),
   listCode: () => _t(translations.ProjectsPage.list.code, 'Code'),

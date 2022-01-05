@@ -1,5 +1,4 @@
 import { DeleteOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { models } from '@hdwebsoft/intranet-api-sdk';
 import { Button, Input, Modal, Popover, Tag, Tooltip } from 'antd';
 import { DeleteModal } from 'app/components/DeleteModal';
 import React, { memo, useEffect, useState } from 'react';
@@ -73,7 +72,6 @@ export const SkillsModal = memo((props: skillModalProps) => {
     if (e.keyCode === 13 && customSkill.length > 0) {
       const newSkill = {
         name: customSkill,
-        type: models.hr.SkillType.ENGINEERING,
       };
       try {
         await api.hr.skill.create(newSkill);

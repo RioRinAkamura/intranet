@@ -568,6 +568,7 @@
       "started": "Started",
       "priority": "Priority",
       "status": "Status",
+      "monitoring": "Monitoring",
       "totalMembers": "Members",
       "code": "Code",
       "totalWeeklyHours": "Total weekly hours",
