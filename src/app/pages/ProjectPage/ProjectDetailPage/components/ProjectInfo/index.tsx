@@ -90,12 +90,22 @@ export const ProjectInfo = (props: Props) => {
         ? 'red'
         : value === '3'
         ? 'green'
-        : 'grey',
+        : value === '4'
+        ? 'grey'
+        : '',
     );
   };
 
   const handleSelectPriority = value => {
-    setPrioritySelect(value);
+    setPrioritySelect(
+      value === '1'
+        ? 'green'
+        : value === '2'
+        ? 'orange'
+        : value === '3'
+        ? 'red'
+        : '',
+    );
   };
 
   return isView ? (
@@ -236,14 +246,7 @@ export const ProjectInfo = (props: Props) => {
                   )}
                   onChange={handleSelectPriority}
                   style={{
-                    color:
-                      prioritySelect === '1'
-                        ? 'green'
-                        : prioritySelect === '2'
-                        ? 'orange'
-                        : prioritySelect === '3'
-                        ? 'red'
-                        : '',
+                    color: prioritySelect,
                   }}
                 >
                   {priorities.map((item, index: number) => {
@@ -257,7 +260,9 @@ export const ProjectInfo = (props: Props) => {
                               ? 'green'
                               : item.label === 'Medium'
                               ? 'orange'
-                              : 'red'
+                              : item.label === 'High'
+                              ? 'red'
+                              : ''
                           }`,
                         }}
                       >
