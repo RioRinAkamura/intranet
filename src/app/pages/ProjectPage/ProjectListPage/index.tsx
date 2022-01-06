@@ -575,7 +575,7 @@ export const ProjectListPage: React.FC = () => {
         async value => {
           try {
             const response = await update(value);
-            if(response){
+            if (response) {
               dispatch(actions.fetchProjects({ params: params }));
             }
           } catch (e) {
