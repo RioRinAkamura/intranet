@@ -377,15 +377,7 @@ export const ProjectListPage: React.FC = () => {
   };
 
   const handleSelectMonitorings = async (value, record) => {
-    const monitoringValue =
-      value === '1'
-        ? 'Good'
-        : value === '2'
-        ? 'Concerned'
-        : value === '3'
-        ? 'Bad'
-        : '';
-    record = { ...record, monitoring: monitoringValue };
+    record = { ...record, monitoring: value };
     try {
       const response = await update(record);
 

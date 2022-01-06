@@ -25,6 +25,7 @@ export interface FilterColumns {
   allocable?: string;
   email?: string;
   phoneNumber?: string;
+  monitoring?: string;
   tags?: string;
   from?: string;
   to?: string;
@@ -46,6 +47,7 @@ export interface QueryParams {
   email?: string;
   phoneNumber?: string;
   tags?: string;
+  monitoring?: string;
   from?: string;
   to?: string;
   exact?: string;

@@ -12,12 +12,14 @@ export const useHandleEmployeeDetail = (): {
   error?: Error;
   user: Employee | undefined;
   positions: SelectOption[] | undefined;
+  monitorings: SelectOption[];
   types: SelectOption[] | undefined;
   bankNames: SelectOption[] | undefined;
   getDetail: (id: string) => Promise<void>;
   getPositions: () => Promise<void>;
   getTypes: () => Promise<void>;
   getBankNames: () => Promise<void>;
+  getMonitorings: () => Promise<void>;
   update: (data: Employee) => Promise<Employee | undefined>;
   create: (data: Employee) => Promise<void>;
 } => {
@@ -26,6 +28,7 @@ export const useHandleEmployeeDetail = (): {
   const [error, setError] = useState(undefined);
   const [user, setUser] = useState<Employee | undefined>();
   const [positions, setPositions] = useState<SelectOption[]>([]);
+  const [monitorings, setMonitorings] = useState<SelectOption[]>([]);
   const [types, setTypes] = useState<SelectOption[]>([]);
   const [bankNames, setBankNames] = useState<SelectOption[]>([]);
   const { notify } = useNotify();
@@ -132,6 +135,17 @@ export const useHandleEmployeeDetail = (): {
     }
   }, []);
 
+  const getMonitorings = useCallback(async () => {
+    try {
+      const response = await api.hr.employee.getMonitorings();
+      if (response) {
+        setMonitorings(response);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
+
   return {
     loading,
     error,
@@ -139,10 +153,12 @@ export const useHandleEmployeeDetail = (): {
     positions,
     types,
     bankNames,
+    monitorings,
     getDetail,
     getPositions,
     getTypes,
     getBankNames,
+    getMonitorings,
     update,
     create,
   };
