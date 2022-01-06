@@ -59,6 +59,7 @@ const slice = createSlice({
         email: action.payload.email,
         phoneNumber: action.payload.phoneNumber,
         tags: action.payload.tags,
+        monitoring: action.payload.monitoring,
         from: action.payload.from,
         to: action.payload.to,
       };

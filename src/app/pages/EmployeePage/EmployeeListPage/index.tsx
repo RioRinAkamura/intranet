@@ -12,6 +12,7 @@ import {
   Form,
   Popover,
   Row,
+  Select,
   Table,
   TablePaginationConfig,
   Tooltip,
@@ -29,6 +30,7 @@ import PageTitle from 'app/components/PageTitle';
 import { TagComponent } from 'app/components/Tags/components/Tag';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
+import { ProjectsMessages } from 'app/pages/ProjectPage/ProjectListPage/messages';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { Helmet } from 'react-helmet-async';
@@ -42,6 +44,7 @@ import { api } from 'utils/api';
 import { phoneFormat } from 'utils/phoneFormat';
 import { useTableConfig } from 'utils/tableConfig';
 import { PrivatePath } from 'utils/url.const';
+import { useHandleEmployeeDetail } from '../EmployeeDetailPage/useHandleEmployeeDetail';
 import { EmployeeList } from './components/EmployeeList/Loadable';
 import { HeaderButton } from './components/HeaderButton/Loadable';
 import { UsersMessages } from './messages';
@@ -54,6 +57,8 @@ import {
 import { useHandleDataTable } from './useHandleDataTable';
 
 type Employee = models.hr.Employee;
+
+const { Option } = Select;
 
 export const EmployeeListPage: React.FC = () => {
   const { t } = useTranslation();
@@ -88,6 +93,8 @@ export const EmployeeListPage: React.FC = () => {
   const isFilter = useSelector(selectUserspageIsFilter);
   const getUserListState = useSelector(selectUserspage);
 
+  const { update, monitorings, getMonitorings } = useHandleEmployeeDetail();
+
   const {
     setSelectedRows,
     setSearchText,
@@ -102,6 +109,7 @@ export const EmployeeListPage: React.FC = () => {
     getColumnSearchInputProps,
     getColumnSearchTagProps,
     getColumnSearchCheckboxFromToProps,
+    getColumnSearchCheckboxProps,
   } = useTableConfig(getUserListState, UsersMessages, setFilterText);
 
   const fetchUsers = useCallback(() => {
@@ -112,7 +120,8 @@ export const EmployeeListPage: React.FC = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, [fetchUsers]);
+    getMonitorings();
+  }, [fetchUsers, getMonitorings]);
 
   useEffect(() => {
     if (imported) {
@@ -306,6 +315,19 @@ export const EmployeeListPage: React.FC = () => {
     </>
   );
 
+  const handleSelectMonitorings = async (value, record) => {
+    record = { ...record, monitoring: value };
+    try {
+      const response = await update(record);
+
+      if (response) {
+        dispatch(actions.fetchUsers({ params: params }));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const columns: ColumnProps<Employee>[] = [
     {
       dataIndex: 'avatar',
@@ -408,6 +430,66 @@ export const EmployeeListPage: React.FC = () => {
         );
       },
     },
+
+    {
+      title: t(ProjectsMessages.listMonitoringTitle()),
+      dataIndex: 'monitoring',
+      width: 90,
+      ...getColumnSorterProps('monitoring', 2),
+      ...getColumnSearchCheckboxProps(
+        ['monitoring'],
+        monitorings,
+        undefined,
+        undefined,
+        async value => {
+          try {
+            const response = await update(value);
+            if (response) {
+              dispatch(actions.fetchUsers({ params: params }));
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      ),
+      render: (text, record: Employee) => (
+        <SelectMonitorings
+          onChange={value => handleSelectMonitorings(value, record)}
+          defaultValue={text}
+          style={{
+            color:
+              record.monitoring === 'Good'
+                ? 'green'
+                : record.monitoring === 'Concerned'
+                ? '#d46b08'
+                : record.monitoring === 'Bad'
+                ? 'red'
+                : '',
+          }}
+        >
+          {monitorings &&
+            monitorings.map((item, index: number) => (
+              <Option
+                key={index}
+                value={item.value}
+                style={{
+                  color:
+                    item.label === 'Good'
+                      ? 'green'
+                      : item.label === 'Concerned'
+                      ? '#d46b08'
+                      : item.label === 'Bad'
+                      ? 'red'
+                      : '',
+                }}
+              >
+                {item.label}
+              </Option>
+            ))}
+        </SelectMonitorings>
+      ),
+    },
+
     {
       title: 'Hours per week',
       className: 'totalAllocated',
@@ -622,4 +704,8 @@ const TableWrapper = styled.div`
   .totalAllocated {
     white-space: break-spaces;
   }
+`;
+
+const SelectMonitorings = styled(Select)`
+  width: 100%;
 `;

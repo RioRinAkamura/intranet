@@ -20,6 +20,7 @@ export interface FilterColumns {
   name?: string;
   priority?: string;
   status?: string;
+  monitoring?: string;
   [key: string]: string | undefined;
 }
 
@@ -34,6 +35,7 @@ export interface QueryParams {
   name?: string;
   priority?: string;
   status?: string;
+  monitoring?: string;
   limit?: number;
   page?: number;
   [key: string]: string | number | undefined;

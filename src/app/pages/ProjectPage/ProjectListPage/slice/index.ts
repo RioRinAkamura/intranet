@@ -66,6 +66,7 @@ const slice = createSlice({
         name: action.payload.name,
         priority: action.payload.priority,
         status: action.payload.status,
+        monitoring: action.payload.monitoring,
       };
       state.pagination = {
         ...state.pagination,
