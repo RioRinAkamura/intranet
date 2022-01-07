@@ -506,6 +506,14 @@
         "released": "Released",
         "archived": "Archived"
       },
+      "projectMonitoring": {
+        "label": "Monitoring",
+        "placeholder": "Select Monitoring",
+        "empty": "Please select monitoring",
+        "good": "Good",
+        "concerned": "Concerned",
+        "bad": "Bad"
+      },
       "projectOverview": {
         "label": "Overview",
         "placeholder": "Enter project overview",
