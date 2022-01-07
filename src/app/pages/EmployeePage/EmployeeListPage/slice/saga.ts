@@ -13,6 +13,7 @@ function* fetchUsers(action) {
       phone: params.phone,
       email: params.email,
       tags: params.tags,
+      monitoring: params.monitoring,
       total_allocated_hour_greater: params.from,
       total_allocated_hour_less: params.to,
       total_allocated_hour_exact: params.exact,
