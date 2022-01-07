@@ -93,6 +93,12 @@ const slice = createSlice({
         state.params.page = 1;
       }
     },
+    setSearchDeleted(state, action: PayloadAction<{ text: string }>) {
+      state.params.search = action.payload.text;
+      if (state.params.page && state.params.page > 1) {
+        state.params.page = 1;
+      }
+    },
     resetSearch(state) {
       state.filterColumns = {};
       state.params = {

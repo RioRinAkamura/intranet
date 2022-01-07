@@ -264,6 +264,11 @@ export const ProjectListPage: React.FC = () => {
     setSearchText(values);
   };
 
+  const onSearchDeleted = () => {
+    const values = searchForm.getFieldValue('deleted project');
+    setSearchText(values);
+  };
+
   const resetTotalSearch = () => {
     searchForm.setFieldsValue({ search: undefined });
     resetSearch();
@@ -681,6 +686,8 @@ export const ProjectListPage: React.FC = () => {
           messageTrans={ProjectsMessages}
           onSearch={totalSearch}
           onReset={resetTotalSearch}
+          searchDeleted={true}
+          onSearchDeleted={onSearchDeleted}
         />
       </PageTitle>
       {isMobileOnly ? (

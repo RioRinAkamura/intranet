@@ -98,6 +98,7 @@ export function EmployeeDetailPage(props: Props) {
   const handleSearch = () => {
     setSearchText(searchForm.getFieldValue('search'));
   };
+
   const resetSearchValue = () => {
     searchForm.setFieldsValue({ search: undefined });
     resetSearch();

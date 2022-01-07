@@ -168,6 +168,7 @@ export const DeviceListPage = () => {
     const values = searchForm.getFieldValue('search');
     setSearchText(values);
   };
+
   const resetTotalSearch = () => {
     searchForm.setFieldsValue({ search: undefined });
     resetSearch();
