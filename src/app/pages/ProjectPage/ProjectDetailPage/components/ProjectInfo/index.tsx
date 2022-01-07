@@ -47,12 +47,15 @@ export const ProjectInfo = (props: Props) => {
   const [overview, setOverview] = useState('');
   const [statusSelect, setStatusSelect] = useState('');
   const [prioritySelect, setPrioritySelect] = useState('');
+  const [monitoringSelect, setMonitoringSelect] = useState('');
 
   const {
     priorities,
     statuses,
+    monitorings,
     getPriorities,
     getStatuses,
+    getMonitorings,
   } = useProjectDetail();
 
   const dispatch = useDispatch();
@@ -62,7 +65,8 @@ export const ProjectInfo = (props: Props) => {
   useEffect(() => {
     getPriorities();
     getStatuses();
-  }, [getPriorities, getStatuses]);
+    getMonitorings();
+  }, [getPriorities, getStatuses, getMonitorings]);
 
   useEffect(() => {
     if (data) {
@@ -108,6 +112,18 @@ export const ProjectInfo = (props: Props) => {
     );
   };
 
+  const handleSelectMonitoring = value => {
+    setMonitoringSelect(
+      value === 'Good'
+        ? 'green'
+        : value === 'Concerned'
+        ? '#d46b08'
+        : value === 'Bad'
+        ? 'red'
+        : '',
+    );
+  };
+
   return isView ? (
     <>
       <StyledWrapperDiv>
@@ -141,6 +157,17 @@ export const ProjectInfo = (props: Props) => {
         </StyledTitle>
         <StyledData>
           {(data?.status && getSelectValues(statuses, data.status)?.label) ||
+            'N/A'}
+        </StyledData>
+      </StyledWrapperDiv>
+
+      <StyledWrapperDiv>
+        <StyledTitle>
+          {t(ProjectDetailMessages.formProjectMonitoringLabel())}
+        </StyledTitle>
+        <StyledData>
+          {(data?.monitoring &&
+            getSelectValues(monitorings, data.monitoring)?.label) ||
             'N/A'}
         </StyledData>
       </StyledWrapperDiv>
@@ -314,7 +341,47 @@ export const ProjectInfo = (props: Props) => {
               </FormItem>
             </Col>
           </Row>
+          <Row>
+            <Col span={12}>
+              <FormItem
+                label={t(ProjectDetailMessages.formProjectMonitoringLabel())}
+                name="monitoring"
+              >
+                <Select
+                  {...(isView && selectProps)}
+                  size="large"
+                  placeholder={t(
+                    ProjectDetailMessages.formProjectMonitoringPlaceholder(),
+                  )}
+                  onChange={handleSelectMonitoring}
+                  style={{ color: monitoringSelect }}
+                >
+                  {monitorings.map((item, index: number) => {
+                    return (
+                      <Option
+                        key={index}
+                        value={item.value}
+                        style={{
+                          color:
+                            item.label === 'Good'
+                              ? 'green'
+                              : item.label === 'Concerned'
+                              ? '#d46b08'
+                              : item.label === 'Bad'
+                              ? 'red'
+                              : '',
+                        }}
+                      >
+                        {item.label}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </FormItem>
+            </Col>
+          </Row>
         </Col>
+
         <Col span={12}>
           <FormItem
             label={t(ProjectDetailMessages.formProjectOverviewLabel())}
