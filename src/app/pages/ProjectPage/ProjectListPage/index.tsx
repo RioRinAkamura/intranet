@@ -26,6 +26,7 @@ import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import Button, { IconButton } from 'app/components/Button';
 import { CardLayout } from 'app/components/CardLayout';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import { DialogModal } from 'app/components/DialogModal';
 import PageTitle from 'app/components/PageTitle';
 import { TeamMembers } from 'app/components/TeamMembers';
 import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMemberModal';
@@ -77,6 +78,8 @@ export const ProjectListPage: React.FC = () => {
   const [deleteProject, setDeleteProject] = useState<any>();
   const [memberModal, setMemberModal] = useState(false);
   const [projMemberId, setProjMemberId] = useState('');
+  const [openCheckedModal, setOpenCheckedModal] = useState(false);
+  const [recordValue, setRecordValue] = useState<Project>();
 
   const deleteModalState = useSelector(
     (state: RootState) => state.employeespage,
@@ -380,13 +383,37 @@ export const ProjectListPage: React.FC = () => {
     record = { ...record, monitoring: value };
     try {
       const response = await update(record);
-
       if (response) {
         dispatch(actions.fetchProjects({ params: params }));
       }
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const handleCheckedButton = record => {
+    setRecordValue(record);
+    setOpenCheckedModal(true);
+  };
+
+  const handleCancelCheckedModal = () => {
+    setOpenCheckedModal(false);
+  };
+
+  const handleSubmitCheckedModal = async () => {
+    const today = new Date();
+    if (recordValue) {
+      setRecordValue({ ...recordValue, monitored_at: today });
+      try {
+        const response = await update(recordValue);
+        if (response) {
+          dispatch(actions.fetchProjects({ params: params }));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    setOpenCheckedModal(false);
   };
 
   const columns: ColumnsType<any> = [
@@ -584,40 +611,56 @@ export const ProjectListPage: React.FC = () => {
         },
       ),
       render: (text, record: Project) => (
-        <SelectMonitorings
-          onChange={value => handleSelectMonitorings(value, record)}
-          defaultValue={text}
-          style={{
-            color:
-              record.monitoring === 'Good'
-                ? 'green'
-                : record.monitoring === 'Concerned'
-                ? '#d46b08'
-                : record.monitoring === 'Bad'
-                ? 'red'
-                : '',
-          }}
-        >
-          {monitorings &&
-            monitorings.map((item, index: number) => (
-              <Option
-                key={index}
-                value={item.value}
-                style={{
-                  color:
-                    item.label === 'Good'
-                      ? 'green'
-                      : item.label === 'Concerned'
-                      ? '#d46b08'
-                      : item.label === 'Bad'
-                      ? 'red'
-                      : '',
-                }}
-              >
-                {item.label}
-              </Option>
-            ))}
-        </SelectMonitorings>
+        <>
+          <SelectMonitorings
+            onChange={value => handleSelectMonitorings(value, record)}
+            defaultValue={text}
+            style={{
+              color:
+                record.monitoring === '1'
+                  ? 'green'
+                  : record.monitoring === '2'
+                  ? 'black'
+                  : record.monitoring === '3'
+                  ? '#d46b08'
+                  : record.monitoring === '4'
+                  ? 'red'
+                  : '',
+            }}
+          >
+            {monitorings &&
+              monitorings.map((item, index: number) => (
+                <Option
+                  key={index}
+                  value={item.value}
+                  style={{
+                    color:
+                      item.label === 'Good'
+                        ? 'green'
+                        : item.label === 'Normal'
+                        ? 'black'
+                        : item.label === 'Concerned'
+                        ? '#d46b08'
+                        : item.label === 'Bad'
+                        ? 'red'
+                        : '',
+                  }}
+                >
+                  {item.label}
+                </Option>
+              ))}
+          </SelectMonitorings>
+          <span>
+            Last check: {moment(record.monitored_at).format('DD-MM-YYYY')}
+          </span>
+          <CheckedButton
+            size="small"
+            type="primary"
+            onClick={() => handleCheckedButton(record)}
+          >
+            Checked
+          </CheckedButton>
+        </>
       ),
     },
 
@@ -782,6 +825,16 @@ export const ProjectListPage: React.FC = () => {
         description={descriptionDelete}
         answer={isDeleteMulti ? 'DELETE' : `${deleteProject?.name}`}
       />
+      <DialogModal
+        isOpen={openCheckedModal}
+        cancelText={'No'}
+        okText={'Yes'}
+        title={'Checked'}
+        handleCancel={handleCancelCheckedModal}
+        handleSubmit={handleSubmitCheckedModal}
+      >
+        <p>Are you sure you reviewed this project status carefully today? </p>
+      </DialogModal>
     </>
   );
 };
@@ -799,6 +852,9 @@ const SelectPriority = styled(Select)`
   width: 100%;
 `;
 const SelectMonitorings = styled(Select)`
+  width: 100%;
+`;
+const CheckedButton = styled(Button)`
   width: 100%;
 `;
 
