@@ -511,6 +511,7 @@
         "placeholder": "Select Monitoring",
         "empty": "Please select monitoring",
         "good": "Good",
+        "normal": "Normal",
         "concerned": "Concerned",
         "bad": "Bad"
       },

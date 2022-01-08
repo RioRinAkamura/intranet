@@ -114,11 +114,13 @@ export const ProjectInfo = (props: Props) => {
 
   const handleSelectMonitoring = value => {
     setMonitoringSelect(
-      value === 'Good'
+      value === '1'
         ? 'green'
-        : value === 'Concerned'
+        : value === '2'
+        ? 'black'
+        : value === '3'
         ? '#d46b08'
-        : value === 'Bad'
+        : value === '4'
         ? 'red'
         : '',
     );
@@ -365,6 +367,8 @@ export const ProjectInfo = (props: Props) => {
                           color:
                             item.label === 'Good'
                               ? 'green'
+                              : item.label === 'Normal'
+                              ? 'black'
                               : item.label === 'Concerned'
                               ? '#d46b08'
                               : item.label === 'Bad'
