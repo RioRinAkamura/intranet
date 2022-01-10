@@ -106,6 +106,31 @@ export const ProjectDetailMessages = {
       translations.ProjectDetailPage.form.projectOverview.empty,
       'Please enter project overview',
     ),
+  formProjectMonitoringLabel: () =>
+    _t(
+      translations.ProjectDetailPage.form.projectMonitoring.label,
+      'Monitoring',
+    ),
+  formProjectMonitoringPlaceholder: () =>
+    _t(
+      translations.ProjectDetailPage.form.projectMonitoring.placeholder,
+      'Select Monitoring',
+    ),
+  formProjectMonitoringEmpty: () =>
+    _t(
+      translations.ProjectDetailPage.form.projectMonitoring.empty,
+      'Please select monitoring',
+    ),
+  formProjectMonitoringGood: () =>
+    _t(translations.ProjectDetailPage.form.projectMonitoring.good, 'Good'),
+  formProjectMonitoringConcerned: () =>
+    _t(
+      translations.ProjectDetailPage.form.projectMonitoring.concerned,
+      'Concerned',
+    ),
+  formProjectMonitoringBad: () =>
+    _t(translations.ProjectDetailPage.form.projectMonitoring.bad, 'Bad'),
+
   memberTitle: () =>
     _t(translations.ProjectDetailPage.member.title, 'Team members'),
   memberPM: () =>
