@@ -1,18 +1,42 @@
 import { Link } from 'react-router-dom';
-import { Menu } from 'antd';
+import { Menu as MenuLayout } from 'antd';
 
 // import constants
-import SIDE_BAR_MENU_ITEMS from 'constants/global';
+import SIDE_BAR_MENU_ITEMS, { Menu } from 'constants/global';
+import { useGetIdentity } from '../Auth/useGetIdentity';
+import { ProfileOutlined } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
 
 export const MenuItems: React.FC = () => {
-  const { Item, SubMenu } = Menu;
+  const { Item, SubMenu } = MenuLayout;
+  const [menuItems, setMenuItems] = useState<Menu[]>(SIDE_BAR_MENU_ITEMS);
+  const { identity } = useGetIdentity();
+
+  useEffect(() => {
+    // role length = 0 mean super admin
+    if (identity) {
+      const userIdentity: any = {
+        ...identity,
+      };
+      if (userIdentity.role.includes('Admin') || userIdentity.role.length === 0)
+        setMenuItems(prevMenu => [
+          ...prevMenu,
+          {
+            title: 'Skills',
+            to: '/skills',
+            needPermission: true,
+            icon: <ProfileOutlined />,
+          },
+        ]);
+    }
+  }, [identity]);
 
   return (
-    <Menu
+    <MenuLayout
       theme="dark"
       defaultSelectedKeys={[window.location.pathname]}
       mode="inline"
-      children={SIDE_BAR_MENU_ITEMS.map((item, key) => {
+      children={menuItems.map((item, key) => {
         return item.subMenu ? (
           <SubMenu icon={item.icon} key={key} title={item.title}>
             {item.subMenu.map(menu => {

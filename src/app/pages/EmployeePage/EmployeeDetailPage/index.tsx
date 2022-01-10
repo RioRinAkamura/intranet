@@ -36,6 +36,7 @@ import { useUserDetailsSlice } from './slice';
 import { omit } from 'lodash';
 import { EmployeeEditPage } from '../EmployeeEdit/Loadable';
 import { useHandleEmployeeDetail } from './useHandleEmployeeDetail';
+import { Skills } from './components/Skills/Loadable';
 
 interface Props {}
 
@@ -56,6 +57,7 @@ enum TabKeys {
   'contract' = 'contract',
   'bankAccounts' = 'bankAccounts',
   'citizenInfo' = 'citizenInfo',
+  'skills' = 'skills',
 }
 
 export function EmployeeDetailPage(props: Props) {
@@ -139,6 +141,9 @@ export function EmployeeDetailPage(props: Props) {
       setIsDetailTab(false);
       setIsContractTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/citizen-info`);
+    } else if (key === TabKeys.skills) {
+      setIsDetailTab(false);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/skills`);
     } else {
       setIsDetailTab(false);
       setIsContractTab(false);
@@ -168,6 +173,9 @@ export function EmployeeDetailPage(props: Props) {
     }
     if (history.location.pathname.includes('citizen-info')) {
       return `${TabKeys.citizenInfo}`;
+    }
+    if (history.location.pathname.includes('skills')) {
+      return `${TabKeys.skills}`;
     }
     return `${TabKeys.details}`;
   }, [history.location.pathname]);
@@ -385,6 +393,7 @@ export function EmployeeDetailPage(props: Props) {
             <TabPane tab="Contract" key={TabKeys.contract} />
             <TabPane tab="Bank Accounts" key={TabKeys.bankAccounts} />
             <TabPane tab="Citizen Info" key={TabKeys.citizenInfo} />
+            <TabPane tab="Skills" key={TabKeys.skills} />
           </StyledTabs>
 
           <Switch>
@@ -416,6 +425,9 @@ export function EmployeeDetailPage(props: Props) {
               <EmployeeEditPage />
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_CITIZEN_INFO}></Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_SKILLS}>
+              <Skills employeeId={id} />
+            </Route>
             <Route path={PrivatePath.EMPLOYEES_EDIT}>
               <EmployeeEditPage />
             </Route>

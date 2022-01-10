@@ -20,7 +20,7 @@ import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
 import { RootStateKeyType } from 'utils/types/injector-typings';
 import Button, { IconButton } from 'app/components/Button';
 import { ActionIcon } from '../ActionIcon';
-
+import { TableListState } from './slice/types';
 interface Props {
   columns: any;
   model?: RootStateKeyType;
@@ -37,7 +37,7 @@ const TableListModel: React.FC<Props> = ({
   const history = useHistory();
 
   const { actions } = useTableSlice(model);
-  const state = useSelector(
+  const state: TableListState = useSelector(
     (state: RootState) => state[`${model}`] || initialState,
   );
 
@@ -74,16 +74,16 @@ const TableListModel: React.FC<Props> = ({
     setIsModalVisible(true);
   };
 
-  const handleConfirmDelete = async () => {
+  const handleConfirmDelete = () => {
     setIsModalVisible(false);
     setIsDeleteMulti(false);
     const ids = state.selectedRowKeys || [];
     if (isDeleteMulti && ids.length) {
-      await dispatch(
+      dispatch(
         actions.delete({ id: ids[0], ids: state.selectedRowKeys, model }),
       );
     } else {
-      await dispatch(actions.delete({ id: selectedId, model }));
+      dispatch(actions.delete({ id: selectedId, model }));
     }
   };
 
@@ -199,10 +199,18 @@ const TableListModel: React.FC<Props> = ({
           <Button
             style={{ marginBottom: 10 }}
             type="primary"
-            onClick={() => history.push('/leave_applications/create')}
+            onClick={() => {
+              if (model === 'leave') {
+                history.push(`/leave_applications/create`);
+              } else if (model === 'skill') {
+                history.push('/skills/create');
+              } else if (model === 'category') {
+                history.push('/skills/categories/create');
+              }
+            }}
             icon={<PlusCircleOutlined />}
           >
-            Create leave application
+            {model === 'leave' ? 'Create leave application' : `Create ${model}`}
           </Button>
         </Row>
       </Col>

@@ -639,5 +639,41 @@
       "changesColumn": "Changes",
       "typeColumn": "Type"
     }
+  },
+  "SkillManagePage": {
+    "title": "Skills",
+    "description": "Skills",
+    "skill": {
+      "email": "Email",
+      "options": "Actions",
+      "viewTooltip": "View",
+      "EditTooltip": "Edit",
+      "DeleteTooltip": "Delete",
+      "filter": {
+        "inputPlaceholder": "Search",
+        "searchButton": "Search",
+        "resetButton": "Reset",
+        "filterButton": "Filter"
+      }
+    },
+    "search": {
+      "title": "Search",
+      "search": {
+        "label": "Search",
+        "placeholder": "Search skills' name and categories' name"
+      },
+      "searchButton": "Search",
+      "resetButton": "Reset"
+    },
+    "modal": {
+      "createTitle": "Create skill",
+      "editTitle": "Edit skill",
+      "form": {
+        "deleteButton": "Delete",
+        "deleteContent": "Are you sure to delete this skill?",
+        "cancelButton": "Cancel",
+        "submitButton": "Save"
+      }
+    }
   }
 }
