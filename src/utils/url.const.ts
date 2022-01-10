@@ -2,6 +2,7 @@ export enum PrivatePath {
   PROJECTS = '/projects',
   PROJECTS_CREATE = '/projects/create',
   PROJECTS_ID = '/projects/:id',
+  PROJECTS_ID_NOTES = '/projects/:id/notes',
   PROJECTS_ID_CHANGELOGS = '/projects/:id/change-logs',
   PROJECTS_ID_MEMBERS = '/projects/:id/members',
   PROJECTS_ID_MEMBERS_ADD = '/projects/:id/members/add',

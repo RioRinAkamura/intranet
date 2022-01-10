@@ -11,7 +11,7 @@
     "@draft-js-plugins/inline-toolbar": "4.1.1",
     "@draft-js-plugins/mention": "4.5.0",
     "@draft-js-plugins/static-toolbar": "4.1.0",
-    "@hdwebsoft/intranet-api-sdk": "0.1.16",
+    "@hdwebsoft/intranet-api-sdk": "0.1.17",
     "@reduxjs/toolkit": "1.4.0",
     "@testing-library/jest-dom": "5.11.4",
     "@testing-library/react": "11.0.2",
