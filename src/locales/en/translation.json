@@ -703,5 +703,73 @@
       "changesColumn": "Changes",
       "typeColumn": "Type"
     }
+  },
+  "SkillManagePage": {
+    "skill": {
+      "title": "Skills",
+      "description": "Skills",
+      "options": "Actions",
+      "viewTooltip": "View",
+      "EditTooltip": "Edit",
+      "DeleteTooltip": "Delete",
+      "filter": {
+        "inputPlaceholder": "Search",
+        "searchButton": "Search",
+        "resetButton": "Reset",
+        "filterButton": "Filter"
+      },
+      "search": {
+        "title": "Search",
+        "search": {
+          "label": "Search",
+          "placeholder": "Search skills' name and categories' name"
+        },
+        "searchButton": "Search",
+        "resetButton": "Reset"
+      },
+      "modal": {
+        "createTitle": "Create skill",
+        "editTitle": "Edit skill",
+        "form": {
+          "deleteButton": "Delete",
+          "deleteContent": "Are you sure to delete this skill?",
+          "cancelButton": "Cancel",
+          "submitButton": "Save"
+        }
+      }
+    },
+    "category": {
+      "title": "Categories",
+      "description": "Categories",
+      "options": "Actions",
+      "viewTooltip": "View",
+      "EditTooltip": "Edit",
+      "DeleteTooltip": "Delete",
+      "filter": {
+        "inputPlaceholder": "Search",
+        "searchButton": "Search",
+        "resetButton": "Reset",
+        "filterButton": "Filter"
+      },
+      "search": {
+        "title": "Search",
+        "search": {
+          "label": "Search",
+          "placeholder": "Search skills' name and categories' name"
+        },
+        "searchButton": "Search",
+        "resetButton": "Reset"
+      },
+      "modal": {
+        "createTitle": "Create category",
+        "editTitle": "Edit category",
+        "form": {
+          "deleteButton": "Delete",
+          "deleteContent": "Are you sure to delete this category?",
+          "cancelButton": "Cancel",
+          "submitButton": "Save"
+        }
+      }
+    }
   }
 }

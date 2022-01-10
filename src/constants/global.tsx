@@ -10,9 +10,10 @@ interface MenuItem {
   title: string;
   to?: string;
   icon?: JSX.Element;
+  needPermission?: boolean;
 }
 
-interface Menu extends MenuItem {
+export interface Menu extends MenuItem {
   subMenu?: MenuItem[];
 }
 
@@ -37,6 +38,12 @@ const SIDE_BAR_MENU_ITEMS: Menu[] = [
     to: '/users',
     icon: <UserOutlined />,
   },
+  // {
+  //   title: 'Skills',
+  //   to: '/skills',
+  //   needPermission: true,
+  //   icon: <UserOutlined />,
+  // },
   // {
   //   title: 'Navigation Two',
   //   icon: <AppstoreOutlined />,

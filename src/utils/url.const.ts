@@ -19,6 +19,7 @@ export enum PrivatePath {
   EMPLOYEES_ID_BANK_ACCOUNTS = '/employees/:id/bank-accounts',
   EMPLOYEES_ID_BANK_ACCOUNTS_EDIT = '/employees/:id/bank-accounts/edit',
   EMPLOYEES_ID_CITIZEN_INFO = '/employees/:id/citizen-info',
+  EMPLOYEES_ID_SKILLS = '/employees/:id/skills',
   EMPLOYEES_EDIT = '/employees/:id/edit',
 
   DEVICES = '/devices',
@@ -36,4 +37,9 @@ export enum PrivatePath {
   LEAVE_APPLICATION = '/leave_applications',
   LEAVE_APPLICATION_CREATE = '/leave_applications/create',
   LEAVE_APPLICATION_ID = '/leave_applications/:id',
+
+  SKILLS = '/skills',
+  SKILLS_CREATE = '/skills/create',
+  SKILLS_CATEGORIES = '/skills/categories',
+  SKILLS_CATEGORIES_CREATE = '/skills/categories/create',
 }

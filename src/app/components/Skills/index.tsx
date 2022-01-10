@@ -66,7 +66,6 @@ export const Skills: React.FC<SkillsProps> = memo(({ employeeId, isEdit }) => {
           };
           return api.hr.employee.skill.create(employeeId, mapItem);
         });
-
         Promise.all(arrPromise).then(values => {
           dispatch(actions.fetchEmployeeSkills(employeeId));
         });

@@ -112,7 +112,8 @@
     "extract-messages": "i18next-scanner --config=internals/extractMessages/i18next-scanner.config.js",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "format": "prettier-eslint --write \"{,!(node_modules)/**/}*.{js,jsx,tsx,ts}\""
+    "format": "prettier-eslint --write \"{,!(node_modules)/**/}*.{js,jsx,tsx,ts}\"",
+    "upgrade-sdk": "yarn remove @hdwebsoft/intranet-api-sdk && yarn add @hdwebsoft/intranet-api-sdk"
   },
   "eslintConfig": {
     "extends": "react-app",
