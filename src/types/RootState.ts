@@ -8,6 +8,7 @@ import { EmployeeDetailsState } from 'app/pages/EmployeePage/EmployeeDetailPage/
 import { EmployeePageState } from 'app/pages/EmployeePage/EmployeeListPage/slice/types';
 import { UsersManagePageState } from 'app/pages/ManageUserPage/slice/types';
 import { ProjectChangeLogsState } from 'app/pages/ProjectPage/ProjectDetailPage/components/ChangeLogs/slice/types';
+import { ProjectNoteState } from 'app/pages/ProjectPage/ProjectDetailPage/components/Notes/slice/types';
 import { ProjectsState } from 'app/pages/ProjectPage/ProjectListPage/slice/types';
 import { TaskManagerState } from 'app/pages/TaskManagerPage/slice/types';
 import { ThemeState } from 'styles/theme/slice/types';
@@ -28,6 +29,7 @@ export interface RootState {
   employeeDetails?: EmployeeDetailsState;
   employeeProject?: EmployeeProjectState;
   employeeNote?: EmployeeNoteState;
+  projectNote?: ProjectNoteState;
   employeeChangeLogs?: EmployeeChangeLogsState;
   usersmanagepage?: UsersManagePageState;
   // leaveApplication?: LeaveApplicationState;
