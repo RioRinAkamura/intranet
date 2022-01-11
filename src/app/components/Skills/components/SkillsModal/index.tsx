@@ -74,13 +74,13 @@ export const SkillsModal = memo((props: skillModalProps) => {
         name: customSkill,
       };
       try {
-        await api.hr.skill.create(newSkill);
+        const createdSkill = await api.hr.skill.create(newSkill);
+        const response = await api.hr.skill.get(createdSkill.id);
+        setPickedSkill([...pickedSkill, response]);
+        setCustomSkill('');
       } catch (error) {
         console.log(error);
       }
-
-      setPickedSkill([...pickedSkill, newSkill]);
-      setCustomSkill('');
     }
   };
 
@@ -91,6 +91,7 @@ export const SkillsModal = memo((props: skillModalProps) => {
 
   //handle ok modal
   const handleOkModal = async () => {
+    console.log(pickedSkill);
     onOk(pickedSkill);
   };
 

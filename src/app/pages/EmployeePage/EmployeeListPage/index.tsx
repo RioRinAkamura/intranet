@@ -467,11 +467,13 @@ export const EmployeeListPage: React.FC = () => {
           defaultValue={text}
           style={{
             color:
-              record.monitoring === 'Good'
+              record.monitoring === '1'
                 ? 'green'
-                : record.monitoring === 'Concerned'
+                : record.monitoring === '2'
+                ? 'black'
+                : record.monitoring === '3'
                 ? '#d46b08'
-                : record.monitoring === 'Bad'
+                : record.monitoring === '4'
                 ? 'red'
                 : '',
           }}
@@ -485,6 +487,8 @@ export const EmployeeListPage: React.FC = () => {
                   color:
                     item.label === 'Good'
                       ? 'green'
+                      : item.label === 'Normal'
+                      ? 'black'
                       : item.label === 'Concerned'
                       ? '#d46b08'
                       : item.label === 'Bad'

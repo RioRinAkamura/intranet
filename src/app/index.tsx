@@ -33,6 +33,7 @@ import { DeviceManagePage } from './pages/DeviceManagePage/Loadable';
 import { TaskManagerPage } from './pages/TaskManagerPage/Loadable';
 import '../app.less';
 import { PrivatePath } from 'utils/url.const';
+import { SkillManagePage } from './pages/SkillManagePage/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -117,6 +118,11 @@ export function App() {
                 <PrivateRoute
                   path={PrivatePath.TASKS}
                   component={TaskManagerPage}
+                />
+                {/* Skill */}
+                <PrivateRoute
+                  path={PrivatePath.SKILLS}
+                  component={SkillManagePage}
                 />
               </AppLayout>
 

@@ -16,6 +16,7 @@ import { PrivatePath } from 'utils/url.const';
 import { Route, Switch } from 'react-router-dom';
 import { CardForm } from 'app/components/CardForm';
 import { Employees } from './components/Employees';
+import { Notes } from './components/Notes';
 
 interface Props {}
 interface LocationState {
@@ -26,6 +27,7 @@ const DATE_FORMAT = config.DATE_FORMAT;
 
 enum TabKeys {
   'details' = 'details',
+  'notes' = 'notes',
   'changeLogs' = 'changeLogs',
   'employees' = 'employees',
 }
@@ -49,7 +51,9 @@ export const ProjectDetailPage = (props: Props) => {
   const isView = isCreate || isEdit ? false : true;
 
   const getDefaultTab = React.useMemo(() => {
-    if (history.location.pathname.includes('change-logs')) {
+    if (history.location.pathname.includes('notes')) {
+      return `${TabKeys.notes}`;
+    } else if (history.location.pathname.includes('change-logs')) {
       return `${TabKeys.changeLogs}`;
     } else if (history.location.pathname.includes('employees')) {
       return `${TabKeys.employees}`;
@@ -58,7 +62,9 @@ export const ProjectDetailPage = (props: Props) => {
   }, [history.location.pathname]);
 
   const onChangeTab = (key: string) => {
-    if (key === TabKeys.changeLogs) {
+    if (key === TabKeys.notes) {
+      history.push(`${PrivatePath.PROJECTS}/${id}/notes`);
+    } else if (key === TabKeys.changeLogs) {
       history.push(`${PrivatePath.PROJECTS}/${id}/change-logs`);
     } else if (key === TabKeys.employees) {
       history.push(`${PrivatePath.PROJECTS}/${id}/employees`);
@@ -174,6 +180,7 @@ export const ProjectDetailPage = (props: Props) => {
         <>
           <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
             <TabPane tab="Details" key={TabKeys.details} />
+            <TabPane tab="Notes" key={TabKeys.notes} />
             <TabPane tab="Change logs" key={TabKeys.changeLogs} />
             <TabPane tab="Members" key={TabKeys.employees} />
           </StyledTabs>
@@ -183,6 +190,11 @@ export const ProjectDetailPage = (props: Props) => {
               exact
               path={PrivatePath.PROJECTS_ID}
               component={() => projectDetailForm()}
+            />
+            <Route
+              exact
+              path={PrivatePath.PROJECTS_ID_NOTES}
+              component={() => <Notes projectId={id} />}
             />
             <Route
               path={PrivatePath.PROJECTS_ID_CHANGELOGS}

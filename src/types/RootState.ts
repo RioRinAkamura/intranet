@@ -4,10 +4,12 @@ import { DevicesManagerState } from 'app/pages/DeviceManagePage/DeviceListPage/s
 import { EmployeeChangeLogsState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/ChangeLogs/slice/types';
 import { EmployeeNoteState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/Notes/slice/types';
 import { EmployeeProjectState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/Projects/slice/types';
+import { EmployeeSkillState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/Skills/slice/types';
 import { EmployeeDetailsState } from 'app/pages/EmployeePage/EmployeeDetailPage/slice/types';
 import { EmployeePageState } from 'app/pages/EmployeePage/EmployeeListPage/slice/types';
 import { UsersManagePageState } from 'app/pages/ManageUserPage/slice/types';
 import { ProjectChangeLogsState } from 'app/pages/ProjectPage/ProjectDetailPage/components/ChangeLogs/slice/types';
+import { ProjectNoteState } from 'app/pages/ProjectPage/ProjectDetailPage/components/Notes/slice/types';
 import { ProjectsState } from 'app/pages/ProjectPage/ProjectListPage/slice/types';
 import { TaskManagerState } from 'app/pages/TaskManagerPage/slice/types';
 import { ThemeState } from 'styles/theme/slice/types';
@@ -28,12 +30,16 @@ export interface RootState {
   employeeDetails?: EmployeeDetailsState;
   employeeProject?: EmployeeProjectState;
   employeeNote?: EmployeeNoteState;
+  projectNote?: ProjectNoteState;
   employeeChangeLogs?: EmployeeChangeLogsState;
+  employeeSkill: EmployeeSkillState;
   usersmanagepage?: UsersManagePageState;
   // leaveApplication?: LeaveApplicationState;
   DeviceManager?: DevicesManagerState;
   table: TableListState;
   leave: TableListState;
   TaskManager: TaskManagerState;
+  skill: TableListState;
+  category: TableListState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }

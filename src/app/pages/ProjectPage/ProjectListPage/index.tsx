@@ -33,6 +33,7 @@ import { TeamMemberModal } from 'app/components/TeamMembers/components/TeamMembe
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
 import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
+import config from 'config';
 import moment from 'moment';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
@@ -79,7 +80,7 @@ export const ProjectListPage: React.FC = () => {
   const [memberModal, setMemberModal] = useState(false);
   const [projMemberId, setProjMemberId] = useState('');
   const [openCheckedModal, setOpenCheckedModal] = useState(false);
-  const [recordValue, setRecordValue] = useState<Project>();
+  let [recordValue, setRecordValue] = useState<Project>();
 
   const deleteModalState = useSelector(
     (state: RootState) => state.employeespage,
@@ -405,10 +406,11 @@ export const ProjectListPage: React.FC = () => {
     setOpenCheckedModal(false);
   };
 
+  const DATE_FORMAT = config.DATE_FORMAT;
   const handleSubmitCheckedModal = async () => {
-    const today = new Date();
+    const checkedDate = moment(new Date()).format(DATE_FORMAT);
     if (recordValue) {
-      setRecordValue({ ...recordValue, monitored_at: today });
+      recordValue = { ...recordValue, monitored_at: checkedDate };
       try {
         const response = await update(recordValue);
         if (response) {

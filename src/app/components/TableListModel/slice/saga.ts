@@ -15,7 +15,6 @@ function* fetchList(action) {
         queryParams[key] = params[key];
       }
     });
-
     const response = yield call(
       [api, api.hr[model].list],
       params.search,
@@ -24,7 +23,6 @@ function* fetchList(action) {
       params.page,
       params.limit,
     );
-
     yield put(actions.fetchListSuccess(response));
   } catch (err) {
     console.log(err);
