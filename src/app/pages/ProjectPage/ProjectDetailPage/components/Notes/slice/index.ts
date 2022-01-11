@@ -37,7 +37,10 @@ const slice = createSlice({
     fetchProjectNotes(state, action: PayloadAction<ProjectNotesFetchData>) {
       state.loading = true;
     },
-    fetchProjectNotesSuccess(state, action: PayloadAction<ProjectNotePayloadAction>) {
+    fetchProjectNotesSuccess(
+      state,
+      action: PayloadAction<ProjectNotePayloadAction>,
+    ) {
       state.notes = action.payload.results;
       state.pagination!.total = Number(action.payload.count);
       state.pagination!.current = Number(state.params.page);
