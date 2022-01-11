@@ -7,7 +7,7 @@ import { identity, isArray, isEmpty, pickBy } from 'lodash';
 
 interface useDataTable {
   setSearchText: (text: string) => void;
-  setSearchDeleted: (text: string, selectDeleted: boolean) => void;
+  setSearchDeleted: (text: string) => void;
   resetSearch: () => void;
   setFilterText: (value: FilterColumns) => void;
   setSelectedRows: <T>(selectedRowKeys: Key[], selectedRows: T[]) => void;
@@ -99,22 +99,17 @@ export const useHandleDataTable = (
     dispatch(actions.setSearchText({ text }));
   };
 
-  const setSearchDeleted = (text: string, selectDeleted: boolean): void => {
-    console.log('text from useHandleDataTable', text);
-
+  const setSearchDeleted = (text: string): void => {
     if (urlParams.limit || urlParams.page) {
       history.replace({
         search: stringify({ search: text, is_deleted: 0 }),
       });
-    } else if (text && selectDeleted) {
-      history.replace({
-        search: stringify({ ...urlParams, search: text, is_deleted: 1 }),
-      });
     } else if (text) {
       history.replace({
-        search: stringify({ ...urlParams, search: text }),
-      });
-    } else {
+        search: stringify({ ...urlParams, search: text, is_deleted: 1 }),
+      })
+    }
+    else {
       history.replace({
         search: stringify({ ...urlParams, search: undefined }),
       });

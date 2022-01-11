@@ -5,7 +5,7 @@
  */
 import { SearchOutlined } from '@ant-design/icons';
 import { Checkbox, Col, Form, FormInstance, Input, Row } from 'antd';
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { MessageTranslate } from 'utils/types';
@@ -31,13 +31,21 @@ export const TotalSearchForm = memo((props: Props) => {
     searchDeleted,
   } = props;
   const { t } = useTranslation();
+  const [checked, setChecked] = useState(false);
 
   return (
     <Form form={form}>
       <Row gutter={[8, 8]} align="middle" justify="end">
         {searchDeleted && (
           <FormItem name="deleted">
-            <Checkbox onChange={onSearchDeleted}>Deleted</Checkbox>
+            <Checkbox
+              onChange={() => {
+                setChecked(!checked);
+                onSearchDeleted;
+              }}
+            >
+              Deleted
+            </Checkbox>
           </FormItem>
         )}
         <Col xl={18} lg={24} md={24} sm={24} xs={24}>

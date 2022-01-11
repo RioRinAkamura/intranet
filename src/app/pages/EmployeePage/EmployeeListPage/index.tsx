@@ -92,7 +92,7 @@ export const EmployeeListPage: React.FC = () => {
   const params = useSelector(selectUserspageParams);
   const isFilter = useSelector(selectUserspageIsFilter);
   const getUserListState = useSelector(selectUserspage);
-  const [is_deleted, setIsDeleted] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const { update, monitorings, getMonitorings } = useHandleEmployeeDetail();
 
@@ -238,9 +238,7 @@ export const EmployeeListPage: React.FC = () => {
 
   const searchDeleted = () => {
     const values = searchForm.getFieldValue('search');
-    setIsDeleted(true);
-    console.log('is_deleted', is_deleted);
-    setSearchDeleted(values, is_deleted);
+    setSearchDeleted(values);
   };
 
   const resetTotalSearch = () => {
