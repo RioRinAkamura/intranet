@@ -18,7 +18,10 @@ export const MenuItems: React.FC = () => {
       const userIdentity: any = {
         ...identity,
       };
-      if (userIdentity.role.includes('Admin') || userIdentity.role.length === 0)
+      // role to array string
+      const userRoles = [...userIdentity.role].map(role => role.role);
+
+      if (userRoles.includes('Admin') || userRoles.length === 0)
         setMenuItems(prevMenu => [
           ...prevMenu,
           {
