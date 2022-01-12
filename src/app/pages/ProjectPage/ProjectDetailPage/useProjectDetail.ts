@@ -15,6 +15,7 @@ import {
 } from '@hdwebsoft/intranet-api-sdk/libs/type';
 
 export const useProjectDetail = (): {
+  setMembers: React.Dispatch<React.SetStateAction<Member[]>>;
   members: Member[];
   priorities: SelectOption[];
   statuses: SelectOption[];
@@ -155,7 +156,11 @@ export const useProjectDetail = (): {
   const fetchMembers = React.useCallback(async (id: string) => {
     setLoading(true);
     try {
-      const response: Pagination<Member> = await api.hr.project.getMembers(id);
+      const response: Pagination<Member> = await api.hr.project.getMembers(
+        id,
+        1,
+        100,
+      );
       setMembers(response.results);
     } catch (error: any) {
       setError(error);
@@ -248,6 +253,7 @@ export const useProjectDetail = (): {
   }, []);
 
   return {
+    setMembers,
     members,
     priorities,
     statuses,

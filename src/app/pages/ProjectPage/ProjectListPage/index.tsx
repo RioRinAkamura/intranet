@@ -21,6 +21,7 @@ import {
   FilterValue,
   SorterResult,
 } from 'antd/lib/table/interface';
+import { parse, ParsedQuery, stringify } from 'query-string';
 import { ActionIcon } from 'app/components/ActionIcon';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import Button, { IconButton } from 'app/components/Button';
@@ -57,7 +58,6 @@ import {
   selectProjectsIsFilter,
   selectProjectsParams,
 } from './slice/selectors';
-
 const { Option } = Select;
 
 export const ProjectListPage: React.FC = () => {
@@ -67,6 +67,7 @@ export const ProjectListPage: React.FC = () => {
   }, [setBreadCrumb]);
   const { t } = useTranslation();
   const history = useHistory();
+  const [searchParams, setSearchParams] = useState<ParsedQuery<string>>({});
   const [moreLoading, setMoreLoading] = useState(true);
   const [userList, setUserList] = useState<any[]>([]);
   const [isMore, setIsMore] = useState(true);
@@ -458,6 +459,10 @@ export const ProjectListPage: React.FC = () => {
       render: (members, record: any) => (
         <TeamMembers
           callback={members => {
+            // set search params
+            // eslint-disable-next-line no-restricted-globals
+            const parseSearchParams = parse(window.location.search);
+            setSearchParams(parseSearchParams);
             // dispatch(actions.fetchProjects({ params: params }));
             setMemberModal(true);
             setProjMemberId(record.id);
@@ -697,15 +702,16 @@ export const ProjectListPage: React.FC = () => {
   ];
 
   const handleMemberModalOk = () => {
-    dispatch(actions.fetchProjects({ params: params }));
-    setMemberModal(false);
+    // handle ok
+    // dispatch(actions.fetchProjects({ params: params }));
+    // setMemberModal(false);
+    // history.push(`${PrivatePath.PROJECTS}?${stringify(searchParams)}`);
   };
 
   const handleMemberModalCancel = () => {
     dispatch(actions.fetchProjects({ params: params }));
     setMemberModal(false);
-    history.push(PrivatePath.PROJECTS);
-    // remove params
+    history.push(`${PrivatePath.PROJECTS}?${stringify(searchParams)}`);
   };
 
   return (
