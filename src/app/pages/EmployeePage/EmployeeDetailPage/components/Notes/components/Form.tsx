@@ -25,6 +25,7 @@ import { RichEditor } from 'app/components/RichEditor';
 import { api } from 'utils/api';
 
 import { EmployeeNoteMessages } from '../messages';
+import config from 'config';
 
 interface FormProps {
   t: TFunction;
@@ -94,6 +95,13 @@ export const Form: React.FC<FormProps> = ({
     if (!isView) getCategories();
   }, [isView]);
 
+  const UI_DATE_FORMAT = 'MM-DD-YYYY';
+  const DATE_FORMAT = config.DATE_FORMAT;
+  const today = new Date();
+  const disabledDate = (current: moment.Moment) => {
+    return current > moment().endOf('day');
+  };
+
   return (
     <FormAntd layout="vertical" form={form}>
       <StyledWrapperCategory>
@@ -160,7 +168,13 @@ export const Form: React.FC<FormProps> = ({
         name="date"
         label={t(EmployeeNoteMessages.modalDateLabel())}
       >
-        <StyledDatePicker size="large" disabled={isView} />
+        <StyledDatePicker
+          size="large"
+          disabled={isView}
+          disabledDate={disabledDate}
+          defaultValue={moment(today, DATE_FORMAT)}
+          format={UI_DATE_FORMAT}
+        />
       </FormAntd.Item>
       <FormAntd.Item
         name="content"
