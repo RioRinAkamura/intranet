@@ -38,6 +38,7 @@ export const useHandleEmployeeDetail = (): {
     setLoading(true);
     try {
       const response = await api.hr.employee.get(id);
+
       if (response) {
         setUser(response);
       }

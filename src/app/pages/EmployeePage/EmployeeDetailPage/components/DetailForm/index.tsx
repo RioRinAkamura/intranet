@@ -96,27 +96,10 @@ export const DetailForm = memo((props: FormProps) => {
           </LeftScreen>
           <RightScreen isView={isView} md={19}>
             {rightScreenItems}
-            {!isView && (
-              <>
-                <BankAccounts isView={isView} isEdit={isEdit} form={form} />
-                <Divider />
-                <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
-              </>
-            )}
           </RightScreen>
         </Row>
       </Wrapper>
       <WrapperSubItem gutter={[32, 32]}>
-        <Col span={isView ? 12 : 8}>
-          <WrapperItem>
-            <JobInfo
-              form={form}
-              isEdit={isEdit}
-              isView={isView}
-              employeeId={data?.id}
-            />
-          </WrapperItem>
-        </Col>
         <Col span={isView ? 12 : 16}>
           <WrapperItem>
             <SocialNetwork isView={isView} />
@@ -147,7 +130,7 @@ const WrapperSubItem = styled(Row)`
 `;
 
 const Wrapper = styled(CardLayout)`
-  margin-top: ${(props: ScreenProps) => (props.isView ? '0' : '2rem')};
+  margin-top: ${(props: ScreenProps) => (props.isView ? '0' : '0rem')};
 `;
 
 const WrapperItem = styled(CardLayout)`
