@@ -97,14 +97,12 @@ export const EmployeeListPage: React.FC = () => {
   const params = useSelector(selectUserspageParams);
   const isFilter = useSelector(selectUserspageIsFilter);
   const getUserListState = useSelector(selectUserspage);
-  const [isDeleted, setIsDeleted] = useState(false);
 
   const { update, monitorings, getMonitorings } = useHandleEmployeeDetail();
 
   const {
     setSelectedRows,
     setSearchText,
-    setSearchDeleted,
     resetSearch,
     setOrdering,
     setPagination,
@@ -236,14 +234,9 @@ export const EmployeeListPage: React.FC = () => {
     userList,
   ]);
 
-  const totalSearch = () => {
+  const totalSearch = checked => {
     const values = searchForm.getFieldValue('search');
-    setSearchText(values);
-  };
-
-  const searchDeleted = () => {
-    const values = searchForm.getFieldValue('search');
-    setSearchDeleted(values);
+    setSearchText(values, checked);
   };
 
   const resetTotalSearch = () => {
@@ -634,7 +627,6 @@ export const EmployeeListPage: React.FC = () => {
           onSearch={totalSearch}
           onReset={resetTotalSearch}
           searchDeleted={true}
-          onSearchDeleted={searchDeleted}
         />
       </PageTitle>
       {isMobileOnly ? (

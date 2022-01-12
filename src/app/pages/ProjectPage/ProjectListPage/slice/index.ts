@@ -92,8 +92,12 @@ const slice = createSlice({
       state.selectedRowKeys = action.payload.selectedRowKeys;
       state.selectedRows = action.payload.selectedRows;
     },
-    setSearchText(state, action: PayloadAction<{ text: string }>) {
+    setSearchText(
+      state,
+      action: PayloadAction<{ text: string; isDeleted: number | undefined }>,
+    ) {
       state.params.search = action.payload.text;
+      state.params.is_deleted = action.payload.isDeleted;
       if (state.params.page && state.params.page > 1) {
         state.params.page = 1;
       }

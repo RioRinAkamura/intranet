@@ -20,6 +20,9 @@ function* fetchUsers(action) {
       allocable: params.allocable,
       is_deleted: params.is_deleted,
     };
+    if (Boolean(params.is_deleted) === false) {
+      delete queryParams.is_deleted;
+    }
     const response = yield call(
       [api, api.hr.employee.list],
       params.search,

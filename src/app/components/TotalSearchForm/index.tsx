@@ -10,9 +10,8 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { MessageTranslate } from 'utils/types';
 interface Props {
-  onSearch: () => void;
+  onSearch: (checked) => void;
   onReset: () => void;
-  onSearchDeleted?: () => void;
   searchDeleted?: boolean;
   messageTrans?: MessageTranslate;
   form: FormInstance;
@@ -21,15 +20,7 @@ interface Props {
 }
 
 export const TotalSearchForm = memo((props: Props) => {
-  const {
-    form,
-    onSearch,
-    onReset,
-    onSearchDeleted,
-    value,
-    messageTrans,
-    searchDeleted,
-  } = props;
+  const { form, onSearch, onReset, value, messageTrans, searchDeleted } = props;
   const { t } = useTranslation();
   const [checked, setChecked] = useState(false);
 
@@ -39,7 +30,9 @@ export const TotalSearchForm = memo((props: Props) => {
         {searchDeleted && (
           <FormItem name="deleted">
             <Checkbox
-              onChange={onSearchDeleted}
+              onChange={() => {
+                setChecked(!checked);
+              }}
             >
               Deleted
             </Checkbox>
@@ -52,11 +45,13 @@ export const TotalSearchForm = memo((props: Props) => {
               allowClear
               size="large"
               onChange={e => e.type === 'click' && onReset()}
-              onPressEnter={onSearch}
+              onPressEnter={() => {
+                onSearch(checked);
+              }}
               suffix={
                 <SearchOutlined
                   style={{ color: '#1890ff', fontSize: 'x-large' }}
-                  onClick={onSearch}
+                  onClick={() => onSearch(checked)}
                 />
               }
             />

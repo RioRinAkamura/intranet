@@ -110,7 +110,6 @@ export const ProjectListPage: React.FC = () => {
   const {
     setSelectedRows,
     setSearchText,
-    setSearchDeleted,
     resetSearch,
     setOrdering,
     setPagination,
@@ -264,14 +263,9 @@ export const ProjectListPage: React.FC = () => {
     userList,
   ]);
 
-  const totalSearch = () => {
+  const totalSearch = checked => {
     const values = searchForm.getFieldValue('search');
-    setSearchText(values);
-  };
-
-  const onSearchDeleted = () => {
-    const values = searchForm.getFieldValue('search');
-    // setSearchDeleted(values, true);
+    setSearchText(values, checked);
   };
 
   const resetTotalSearch = () => {
@@ -736,7 +730,6 @@ export const ProjectListPage: React.FC = () => {
           onSearch={totalSearch}
           onReset={resetTotalSearch}
           searchDeleted={true}
-          onSearchDeleted={onSearchDeleted}
         />
       </PageTitle>
       {isMobileOnly ? (
