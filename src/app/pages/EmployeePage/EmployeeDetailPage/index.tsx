@@ -98,8 +98,9 @@ export function EmployeeDetailPage(props: Props) {
   );
 
   const handleSearch = () => {
-    setSearchText(searchForm.getFieldValue('search'));
+    setSearchText(searchForm.getFieldValue('search'), false);
   };
+
   const resetSearchValue = () => {
     searchForm.setFieldsValue({ search: undefined });
     resetSearch();
@@ -364,7 +365,7 @@ export function EmployeeDetailPage(props: Props) {
     <>
       <StyledPageTitle
         title={
-          isView && isEdit
+          isView
             ? `${data ? data.first_name + ' ' + data.last_name : ''}`
             : isEdit
             ? 'Edit Employee'

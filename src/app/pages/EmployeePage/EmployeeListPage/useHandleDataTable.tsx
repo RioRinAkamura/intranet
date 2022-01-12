@@ -6,7 +6,7 @@ import { Key, SorterResult } from 'antd/lib/table/interface';
 import { identity, isArray, isEmpty, pickBy } from 'lodash';
 
 interface useDataTable {
-  setSearchText: (text: string) => void;
+  setSearchText: (text: string, isDeleted: boolean) => void;
   resetSearch: () => void;
   setFilterText: (value: FilterColumns) => void;
   setSelectedRows: <T>(selectedRowKeys: Key[], selectedRows: T[]) => void;
@@ -81,21 +81,24 @@ export const useHandleDataTable = (
     dispatch(actions.selectedRows({ selectedRowKeys, selectedRows }));
   };
 
-  const setSearchText = (text: string): void => {
+  const setSearchText = (text: string, isDeleted: boolean): void => {
     if (urlParams.limit || urlParams.page) {
       history.replace({
         search: stringify({ search: text }),
       });
     } else if (text) {
       history.replace({
-        search: stringify({ ...urlParams, search: text }),
+        search: stringify({
+          search: text,
+          is_deleted: isDeleted ? 1 : undefined,
+        }),
       });
     } else {
       history.replace({
         search: stringify({ ...urlParams, search: undefined }),
       });
     }
-    dispatch(actions.setSearchText({ text }));
+    dispatch(actions.setSearchText({ text, isDeleted }));
   };
 
   const resetSearch = () => {

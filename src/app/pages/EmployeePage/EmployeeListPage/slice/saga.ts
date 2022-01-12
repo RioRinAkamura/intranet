@@ -18,7 +18,11 @@ function* fetchUsers(action) {
       total_allocated_hour_less: params.to,
       total_allocated_hour_exact: params.exact,
       allocable: params.allocable,
+      is_deleted: params.is_deleted,
     };
+    if (Boolean(params.is_deleted) === false) {
+      delete queryParams.is_deleted;
+    }
     const response = yield call(
       [api, api.hr.employee.list],
       params.search,

@@ -1,21 +1,11 @@
 import React, { memo, useEffect, useState } from 'react';
-import {
-  Form,
-  FormInstance,
-  Input,
-  message,
-  Select,
-  Spin,
-  Typography,
-} from 'antd';
+import { Form, FormInstance, Input, message, Select, Spin } from 'antd';
 import styled from 'styled-components';
 import {
   Category,
   Skill,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { useSkillDetails } from 'app/pages/SkillManagePage/useSkillDetails';
-import { useHistory } from 'react-router-dom';
-import { PrivatePath } from 'utils/url.const';
 
 const FormSearchItem = Form.Item;
 const { Option } = Select;
@@ -25,11 +15,9 @@ interface Props {
   skill?: Skill;
 }
 
-const { Link } = Typography;
-
 export const DetailForm = memo((props: Props) => {
   const { form, skill } = props;
-  const history = useHistory();
+
   // state
   const [categories, setCategories] = useState<Category[] | undefined>([]);
   const [searchLoad, setSearchLoad] = useState(false);
@@ -119,10 +107,6 @@ export const DetailForm = memo((props: Props) => {
             None
           </Option>
         </Select>
-
-        <Link onClick={() => history.push(PrivatePath.SKILLS_CATEGORIES)}>
-          Manage Categories
-        </Link>
       </FormSearchItem>
     </Form>
   );

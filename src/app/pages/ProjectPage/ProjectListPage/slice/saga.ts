@@ -26,7 +26,11 @@ function* fetchProjects(action) {
       status: params.status,
       monitoring: params.monitoring,
       employee_id: params.members,
+      is_deleted: params.is_deleted,
     };
+    if (Boolean(params.is_deleted) === false) {
+      delete queryParams.is_deleted;
+    }
     const response = yield call(
       [api, api.hr.project.list],
       params.search,

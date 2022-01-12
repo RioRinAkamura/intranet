@@ -264,9 +264,9 @@ export const ProjectListPage: React.FC = () => {
     userList,
   ]);
 
-  const totalSearch = () => {
+  const totalSearch = checked => {
     const values = searchForm.getFieldValue('search');
-    setSearchText(values);
+    setSearchText(values, checked);
   };
 
   const resetTotalSearch = () => {
@@ -735,6 +735,7 @@ export const ProjectListPage: React.FC = () => {
           messageTrans={ProjectsMessages}
           onSearch={totalSearch}
           onReset={resetTotalSearch}
+          searchDeleted={true}
         />
       </PageTitle>
       {isMobileOnly ? (

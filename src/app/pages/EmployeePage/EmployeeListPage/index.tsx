@@ -234,9 +234,9 @@ export const EmployeeListPage: React.FC = () => {
     userList,
   ]);
 
-  const totalSearch = () => {
+  const totalSearch = checked => {
     const values = searchForm.getFieldValue('search');
-    setSearchText(values);
+    setSearchText(values, checked);
   };
 
   const resetTotalSearch = () => {
@@ -626,6 +626,7 @@ export const EmployeeListPage: React.FC = () => {
           messageTrans={UsersMessages}
           onSearch={totalSearch}
           onReset={resetTotalSearch}
+          searchDeleted={true}
         />
       </PageTitle>
       {isMobileOnly ? (
