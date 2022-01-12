@@ -11,6 +11,7 @@ export enum PrivatePath {
   EMPLOYEES = '/employees',
   EMPLOYEES_CREATE = '/employees/create',
   EMPLOYEES_ID = '/employees/:id',
+  EMPLOYEES_ID_EDIT = '/employees/:id/edit',
   EMPLOYEES_ID_NOTES = '/employees/:id/notes',
   EMPLOYEES_ID_PROJECTS = '/employees/:id/projects',
   EMPLOYEES_ID_DEVICES = '/employees/:id/devices',
@@ -21,7 +22,6 @@ export enum PrivatePath {
   EMPLOYEES_ID_BANK_ACCOUNTS_EDIT = '/employees/:id/bank-accounts/edit',
   EMPLOYEES_ID_CITIZEN_INFO = '/employees/:id/citizen-info',
   EMPLOYEES_ID_SKILLS = '/employees/:id/skills',
-  EMPLOYEES_EDIT = '/employees/:id/edit',
 
   DEVICES = '/devices',
   DEVICES_CREATE = '/devices/create',

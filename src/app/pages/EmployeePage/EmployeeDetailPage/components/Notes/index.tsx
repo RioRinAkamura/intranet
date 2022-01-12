@@ -238,6 +238,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
       title: t(EmployeeNoteMessages.listDate()),
       dataIndex: 'date',
       ...getColumnSorterProps('date', 2),
+      render: text => (text ? moment(text).format('MM-DD-YYYY') : ''),
     },
     {
       title: t(EmployeeNoteMessages.listContent()),

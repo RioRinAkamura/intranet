@@ -39,10 +39,7 @@ export const TotalSearchForm = memo((props: Props) => {
         {searchDeleted && (
           <FormItem name="deleted">
             <Checkbox
-              onChange={() => {
-                setChecked(!checked);
-                onSearchDeleted;
-              }}
+              onChange={onSearchDeleted}
             >
               Deleted
             </Checkbox>

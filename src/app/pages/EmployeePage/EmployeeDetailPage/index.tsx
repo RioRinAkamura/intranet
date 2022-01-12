@@ -124,10 +124,6 @@ export function EmployeeDetailPage(props: Props) {
       setIsDetailTab(false);
       setIsContractTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/devices`);
-    } else if (key === TabKeys.changeLogs) {
-      setIsDetailTab(false);
-      setIsContractTab(false);
-      history.push(`${PrivatePath.EMPLOYEES}/${id}/change-logs`);
     } else if (key === TabKeys.contract) {
       setIsDetailTab(false);
       setIsContractTab(true);
@@ -145,8 +141,12 @@ export function EmployeeDetailPage(props: Props) {
     } else if (key === TabKeys.skills) {
       setIsDetailTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/skills`);
-    } else {
+    } else if (key === TabKeys.changeLogs) {
       setIsDetailTab(false);
+      setIsContractTab(false);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/change-logs`);
+    } else {
+      setIsDetailTab(true);
       setIsContractTab(false);
       setIsBankAccountTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}`);
@@ -163,9 +163,7 @@ export function EmployeeDetailPage(props: Props) {
     if (history.location.pathname.includes('devices')) {
       return `${TabKeys.devices}`;
     }
-    if (history.location.pathname.includes('change-logs')) {
-      return `${TabKeys.changeLogs}`;
-    }
+
     if (history.location.pathname.includes('contract')) {
       return `${TabKeys.contract}`;
     }
@@ -177,6 +175,9 @@ export function EmployeeDetailPage(props: Props) {
     }
     if (history.location.pathname.includes('skills')) {
       return `${TabKeys.skills}`;
+    }
+    if (history.location.pathname.includes('change-logs')) {
+      return `${TabKeys.changeLogs}`;
     }
     return `${TabKeys.details}`;
   }, [history.location.pathname]);
@@ -248,7 +249,7 @@ export function EmployeeDetailPage(props: Props) {
   const handleSubmit = async () => {
     try {
       let values = await form.validateFields();
-      values.dob = moment(values.dob).format(DATE_FORMAT);
+      values = { ...values, dob: moment(values.dob).format(DATE_FORMAT) };
       if (values.issued_date) {
         values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
       }
@@ -271,7 +272,6 @@ export function EmployeeDetailPage(props: Props) {
               branch: values.number,
             },
           ],
-
           ...omit(values, ['bank_name', 'number', 'branch']),
         };
         create(values);
@@ -365,7 +365,7 @@ export function EmployeeDetailPage(props: Props) {
     <>
       <StyledPageTitle
         title={
-          isView
+          isView && isEdit
             ? `${data ? data.first_name + ' ' + data.last_name : ''}`
             : isEdit
             ? 'Edit Employee'
@@ -383,24 +383,21 @@ export function EmployeeDetailPage(props: Props) {
           />
         )}
       </StyledPageTitle>
-      {isView ? (
+      {isView || isEdit ? (
         <>
           <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
             <TabPane tab="Details" key={TabKeys.details} />
             <TabPane tab="Projects" key={TabKeys.projects} />
             <TabPane tab="Notes" key={TabKeys.notes} />
             <TabPane tab="Devices" key={TabKeys.devices} />
-            <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
             <TabPane tab="Contract" key={TabKeys.contract} />
             <TabPane tab="Bank Accounts" key={TabKeys.bankAccounts} />
             <TabPane tab="Citizen Info" key={TabKeys.citizenInfo} />
             <TabPane tab="Skills" key={TabKeys.skills} />
+            <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
           </StyledTabs>
 
           <Switch>
-            <Route exact path={PrivatePath.EMPLOYEES_ID}>
-              {employeeDetailForm()}
-            </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_NOTES}>
               <Notes employeeId={id} />
             </Route>
@@ -409,9 +406,6 @@ export function EmployeeDetailPage(props: Props) {
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_DEVICES}>
               <Device employeeId={id} />
-            </Route>
-            <Route path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}>
-              <ChangeLogs employeeId={id} />
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_CONTRACT}>
               {employeeDetailForm()}
@@ -429,7 +423,13 @@ export function EmployeeDetailPage(props: Props) {
             <Route path={PrivatePath.EMPLOYEES_ID_SKILLS}>
               <Skills employeeId={id} />
             </Route>
-            <Route path={PrivatePath.EMPLOYEES_EDIT}>
+            <Route path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}>
+              <ChangeLogs employeeId={id} />
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID}>
+              {employeeDetailForm()}
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_EDIT}>
               <EmployeeEditPage />
             </Route>
           </Switch>
@@ -453,11 +453,11 @@ export function EmployeeDetailPage(props: Props) {
                 onClick={() => {
                   if (isEdit) {
                     setIsEdit(false);
-                    history.push(PrivatePath.EMPLOYEES);
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}`);
                   } else if (isView) {
-                    history.push(PrivatePath.EMPLOYEES);
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}`);
                   } else if (isCreate) {
-                    history.push(PrivatePath.EMPLOYEES);
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}`);
                   }
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
