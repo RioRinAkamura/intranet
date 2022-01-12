@@ -245,7 +245,12 @@ export const MemberTable = memo((props: Props) => {
 
   return (
     <div>
-      <Table dataSource={data} loading={loading} columns={columns} />
+      <Table
+        dataSource={data}
+        loading={loading}
+        columns={columns}
+        pagination={false}
+      />
       <DeleteConfirmModal
         type={DeleteType.NAME}
         visible={isModalVisible}

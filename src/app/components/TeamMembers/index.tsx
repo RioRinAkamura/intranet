@@ -17,9 +17,8 @@ export const TeamMembers = memo((props: TeamMembersProps) => {
   const { members, projId, callback } = props;
 
   const handlevisibleModal = () => {
-    history.push(`projects/${projId}/members`);
-
     callback(members);
+    history.push(`projects/${projId}/members`);
   };
 
   return (

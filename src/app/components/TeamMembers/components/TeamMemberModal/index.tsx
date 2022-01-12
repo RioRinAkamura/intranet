@@ -7,7 +7,7 @@ import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/usePro
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { PrivatePath } from 'utils/url.const';
 import { api } from 'utils/api';
-import { Member } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/project/models';
+// import { Member } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/project/models';
 import { MemberTable } from '../MemberTable';
 import { AddMember } from '../AddMember';
 import config from 'config';
@@ -20,14 +20,6 @@ interface TeamMemberProps {
   projId: string;
 }
 
-interface ProjectType {
-  members: Array<Member>;
-  name?: string;
-  overview?: string;
-  status?: string;
-  total_member?: number;
-}
-
 const { TabPane } = Tabs;
 
 const allocations: number[] = [2];
@@ -38,22 +30,14 @@ for (let i = 4; i <= 40; i += 4) {
 export const TeamMemberModal = memo((props: TeamMemberProps) => {
   const history = useHistory();
   const { t } = useTranslation();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [dataSource, setDatasource] = useState<Member[]>([]);
+
   const [memberForm] = Form.useForm();
   const [loadingMember, setLoadingMember] = useState(false);
   const [modalWidth, setModalWidth] = useState(1000);
   const [activeKey, setActiveKey] = useState('1');
-  const [members, setMembers] = useState<Member[]>([]);
-  const { fetchId } = useProjectDetail();
+  const { members, loading, fetchMembers, setMembers } = useProjectDetail();
   const { visibility, handleOk, handleCancel, projId } = props;
   const DATE_FORMAT = config.DATE_FORMAT;
-
-  useEffect(() => {
-    if (members) {
-      setDatasource(members);
-    }
-  }, [members]);
 
   useEffect(() => {
     if (!visibility) {
@@ -76,17 +60,13 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
     if (projId) {
       (async () => {
         try {
-          setLoading(true);
-          const projectRes: ProjectType = await fetchId(projId);
-          setMembers(projectRes.members);
+          fetchMembers(projId);
         } catch (error) {
           console.log(error);
-        } finally {
-          setLoading(false);
         }
       })();
     }
-  }, [projId, fetchId]);
+  }, [projId, fetchMembers]);
 
   // add members
 
@@ -112,9 +92,8 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
           const newMember: any = {
             ...employee,
           };
-
-          const newDs = dataSource && [
-            ...dataSource,
+          const newDs = members && [
+            ...members,
             {
               ...newMember,
               name:
@@ -123,7 +102,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
               ...newMember.member,
             },
           ];
-          setDatasource(newDs);
+          setMembers(newDs);
           history.push(`${PrivatePath.PROJECTS}/${projId}/members`);
         }
       }
@@ -182,7 +161,7 @@ export const TeamMemberModal = memo((props: TeamMemberProps) => {
         <TabPane tab="Team Members" key="1">
           <MemberTable
             projectId={projId}
-            dataSource={dataSource}
+            dataSource={members}
             loading={loading}
           />
         </TabPane>
