@@ -745,9 +745,9 @@ export const ProjectListPage: React.FC = () => {
         />
       ) : (
         <CardLayout>
-          <Row>
+          <Row gutter={[0, 8]}>
             <Col span={8}>
-              <Row justify="start" align="middle">
+              <Row justify="start" align="middle" style={{ height: '100%' }}>
                 {getProjectState.selectedRowKeys &&
                   getProjectState.selectedRowKeys.length > 0 && (
                     <Button

@@ -36,9 +36,6 @@ export const HeaderButton = (props: HeaderButtonProps) => {
 };
 
 const OptionButton = styled(Col)`
-  margin-left: 1em;
-  margin-bottom: 1em;
-
   button {
     display: flex;
     align-items: center;
