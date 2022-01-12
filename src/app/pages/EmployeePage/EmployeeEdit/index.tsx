@@ -4,14 +4,13 @@
  *
  */
 import { models } from '@hdwebsoft/intranet-api-sdk';
-import { Col, Form, Row } from 'antd';
+import { Form } from 'antd';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { config } from 'config';
 import moment from 'moment';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
-import styled from 'styled-components/macro';
 import { DetailForm } from '../EmployeeDetailPage/components/DetailForm/Loadable';
 import { ProfileInfo } from '../EmployeeDetailPage/components/ProfileInfo/Loadable';
 import { useUserDetailsSlice } from '../EmployeeDetailPage/slice';
@@ -62,44 +61,17 @@ export function EmployeeEditPage(props: Props) {
 
   React.useEffect(() => {
     if (!id) return;
-
     dispatch(userDetailsSlice.actions.fetchEmployeeSkills(id));
   }, [dispatch, id, userDetailsSlice.actions]);
 
   return (
-    <>
-      <Wrapper>
-        <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col sm={16} xs={24}>
-            <PageTitle>Edit Employee</PageTitle>
-          </Col>
-          <Col sm={8} xs={24}></Col>
-        </Row>
-      </Wrapper>
-      <DetailForm
-        form={form}
-        data={data}
-        isEdit={true}
-        isView={false}
-        leftScreenItems={<></>}
-        rightScreenItems={<ProfileInfo isView={false} isEdit={true} />}
-      />
-    </>
+    <DetailForm
+      form={form}
+      data={data}
+      isEdit={true}
+      isView={false}
+      leftScreenItems={<></>}
+      rightScreenItems={<ProfileInfo isView={false} isEdit={true} />}
+    />
   );
 }
-
-const Wrapper = styled.div`
-  background-color: white;
-  padding: 1rem;
-  margin-bottom: 2rem;
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
-  border-radius: 12px;
-`;
-
-const PageTitle = styled.p`
-  font-size: 25px;
-  line-height: 30px;
-  color: rgb(112 112 112);
-  padding: 0;
-  margin: 0;
-`;

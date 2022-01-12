@@ -91,7 +91,6 @@ export const SkillsModal = memo((props: skillModalProps) => {
 
   //handle ok modal
   const handleOkModal = async () => {
-    console.log(pickedSkill);
     onOk(pickedSkill);
   };
 
