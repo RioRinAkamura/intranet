@@ -320,11 +320,10 @@ export const EmployeeListPage: React.FC = () => {
     </>
   );
 
-  const handleSelectMonitorings = async (value, record) => {
+  const handleSelectMonitorings = async (value, record: Employee) => {
     record = { ...record, monitoring: value };
     try {
       const response = await update(record);
-
       if (response) {
         dispatch(actions.fetchUsers({ params: params }));
       }
@@ -345,17 +344,17 @@ export const EmployeeListPage: React.FC = () => {
   const DATE_FORMAT = config.DATE_FORMAT;
   const handleSubmitCheckedModal = async () => {
     const checkedDate = moment(new Date()).format(DATE_FORMAT);
-    // if (recordValue) {
-    //   recordValue = { ...recordValue, monitored_at: checkedDate };
-    //   try {
-    //     const response = await update(recordValue);
-    //     if (response) {
-    //       dispatch(actions.fetchUsers({ params: params }));
-    //     }
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // }
+    if (recordValue) {
+      recordValue = { ...recordValue, monitored_at: checkedDate };
+      try {
+        const response = await update(recordValue);
+        if (response) {
+          dispatch(actions.fetchUsers({ params: params }));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
     setOpenCheckedModal(false);
   };
 
@@ -524,7 +523,7 @@ export const EmployeeListPage: React.FC = () => {
               ))}
           </SelectMonitorings>
           <span>
-            {/* Last check: {moment(record.monitored_at).format('DD-MM-YYYY')} */}
+            Last check: {moment(record.monitored_at).format('DD-MM-YYYY')}
           </span>
           <CheckedButton
             size="small"
