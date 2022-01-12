@@ -55,6 +55,9 @@ import {
   selectUserspageParams,
 } from './slice/selectors';
 import { useHandleDataTable } from './useHandleDataTable';
+import moment from 'moment';
+import config from 'config';
+import { DialogModal } from 'app/components/DialogModal';
 
 type Employee = models.hr.Employee;
 
@@ -85,6 +88,8 @@ export const EmployeeListPage: React.FC = () => {
   const deleteFailed = deleteModalState?.deleteFailed;
   const [textCopy, setTextCopy] = useState(false);
   const [imported, setImported] = useState(false);
+  const [openCheckedModal, setOpenCheckedModal] = useState(false);
+  let [recordValue, setRecordValue] = useState<Employee>();
 
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
@@ -315,17 +320,42 @@ export const EmployeeListPage: React.FC = () => {
     </>
   );
 
-  const handleSelectMonitorings = async (value, record) => {
+  const handleSelectMonitorings = async (value, record: Employee) => {
     record = { ...record, monitoring: value };
     try {
       const response = await update(record);
-
       if (response) {
         dispatch(actions.fetchUsers({ params: params }));
       }
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const handleCheckedButton = record => {
+    setRecordValue(record);
+    setOpenCheckedModal(true);
+  };
+
+  const handleCancelCheckedModal = () => {
+    setOpenCheckedModal(false);
+  };
+
+  const DATE_FORMAT = config.DATE_FORMAT;
+  const handleSubmitCheckedModal = async () => {
+    const checkedDate = moment(new Date()).format(DATE_FORMAT);
+    if (recordValue) {
+      recordValue = { ...recordValue, monitored_at: checkedDate };
+      try {
+        const response = await update(recordValue);
+        if (response) {
+          dispatch(actions.fetchUsers({ params: params }));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    setOpenCheckedModal(false);
   };
 
   const columns: ColumnProps<Employee>[] = [
@@ -453,44 +483,56 @@ export const EmployeeListPage: React.FC = () => {
         },
       ),
       render: (text, record: Employee) => (
-        <SelectMonitorings
-          onChange={value => handleSelectMonitorings(value, record)}
-          defaultValue={text}
-          style={{
-            color:
-              record.monitoring === '1'
-                ? 'green'
-                : record.monitoring === '2'
-                ? 'black'
-                : record.monitoring === '3'
-                ? '#d46b08'
-                : record.monitoring === '4'
-                ? 'red'
-                : '',
-          }}
-        >
-          {monitorings &&
-            monitorings.map((item, index: number) => (
-              <Option
-                key={index}
-                value={item.value}
-                style={{
-                  color:
-                    item.label === 'Good'
-                      ? 'green'
-                      : item.label === 'Normal'
-                      ? 'black'
-                      : item.label === 'Concerned'
-                      ? '#d46b08'
-                      : item.label === 'Bad'
-                      ? 'red'
-                      : '',
-                }}
-              >
-                {item.label}
-              </Option>
-            ))}
-        </SelectMonitorings>
+        <>
+          <SelectMonitorings
+            onChange={value => handleSelectMonitorings(value, record)}
+            defaultValue={text}
+            style={{
+              color:
+                record.monitoring === '1'
+                  ? 'green'
+                  : record.monitoring === '2'
+                  ? 'black'
+                  : record.monitoring === '3'
+                  ? '#d46b08'
+                  : record.monitoring === '4'
+                  ? 'red'
+                  : '',
+            }}
+          >
+            {monitorings &&
+              monitorings.map((item, index: number) => (
+                <Option
+                  key={index}
+                  value={item.value}
+                  style={{
+                    color:
+                      item.label === 'Good'
+                        ? 'green'
+                        : item.label === 'Normal'
+                        ? 'black'
+                        : item.label === 'Concerned'
+                        ? '#d46b08'
+                        : item.label === 'Bad'
+                        ? 'red'
+                        : '',
+                  }}
+                >
+                  {item.label}
+                </Option>
+              ))}
+          </SelectMonitorings>
+          <span>
+            Last check: {moment(record.monitored_at).format('DD-MM-YYYY')}
+          </span>
+          <CheckedButton
+            size="small"
+            type="primary"
+            onClick={() => handleCheckedButton(record)}
+          >
+            Checked
+          </CheckedButton>
+        </>
       ),
     },
 
@@ -683,6 +725,16 @@ export const EmployeeListPage: React.FC = () => {
         handleCancel={handleCancelMultiDeleteModal}
         content="Are you sure you want to delete this information?"
       />
+      <DialogModal
+        isOpen={openCheckedModal}
+        cancelText={'No'}
+        okText={'Yes'}
+        title={'Checked'}
+        handleCancel={handleCancelCheckedModal}
+        handleSubmit={handleSubmitCheckedModal}
+      >
+        <p>Are you sure you reviewed this project status carefully today? </p>
+      </DialogModal>
     </>
   );
 };
@@ -711,5 +763,9 @@ const TableWrapper = styled.div`
 `;
 
 const SelectMonitorings = styled(Select)`
+  width: 100%;
+`;
+
+const CheckedButton = styled(Button)`
   width: 100%;
 `;
