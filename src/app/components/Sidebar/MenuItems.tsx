@@ -6,9 +6,11 @@ import SIDE_BAR_MENU_ITEMS, { Menu } from 'constants/global';
 import { useGetIdentity } from '../Auth/useGetIdentity';
 import { ProfileOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+const { Item, SubMenu } = MenuLayout;
 
 export const MenuItems: React.FC = () => {
-  const { Item, SubMenu } = MenuLayout;
   const [menuItems, setMenuItems] = useState<Menu[]>(SIDE_BAR_MENU_ITEMS);
   const { identity } = useGetIdentity();
 
@@ -51,11 +53,18 @@ export const MenuItems: React.FC = () => {
             })}
           </SubMenu>
         ) : (
-          <Item key={item.to} icon={item.icon}>
+          <StyledMenuItem key={item.to} icon={item.icon}>
             <Link to={item.to!}>{item.title}</Link>
-          </Item>
+          </StyledMenuItem>
         );
       })}
     />
   );
 };
+
+const StyledMenuItem = styled(Item)`
+  &.ant-menu-item {
+    display: flex;
+    align-items: center;
+  }
+`;

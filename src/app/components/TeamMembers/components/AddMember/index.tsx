@@ -86,7 +86,7 @@ export const AddMember = memo((props: Props) => {
 
   const options = employees?.map(employee => (
     <Option key={employee.id} value={employee.id}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <span>
           <Avatar
             src={employee.avatar}
@@ -95,7 +95,7 @@ export const AddMember = memo((props: Props) => {
           />
         </span>
 
-        <span>
+        <span style={{ marginLeft: '30px', width: '40%' }}>
           {employee.first_name} {employee.last_name}
         </span>
         <span style={{ width: '55%' }}>
