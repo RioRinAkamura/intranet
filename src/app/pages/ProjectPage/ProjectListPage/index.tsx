@@ -367,6 +367,9 @@ export const ProjectListPage: React.FC = () => {
     }
   };
 
+  const searchStatusCheckbox = statuses.filter(
+    status => status.label !== 'Archived',
+  );
   const handleSelectStatus = async (value, record) => {
     record = { ...record, status: value };
     try {
@@ -535,7 +538,7 @@ export const ProjectListPage: React.FC = () => {
       ...getColumnSorterProps('status', 2),
       ...getColumnSearchCheckboxProps(
         ['status'],
-        statuses,
+        searchStatusCheckbox,
         undefined,
         undefined,
         async value => {
