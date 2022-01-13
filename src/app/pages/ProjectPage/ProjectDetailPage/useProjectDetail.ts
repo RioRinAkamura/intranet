@@ -136,7 +136,13 @@ export const useProjectDetail = (): {
   const getAllMembers = React.useCallback(async () => {
     setLoading(true);
     try {
-      const response: Pagination<Employee> = await api.hr.employee.list();
+      const response: Pagination<Employee> = await api.hr.employee.list(
+        undefined,
+        undefined,
+        undefined,
+        1,
+        500,
+      );
       if (response && response.results && response.results.length > 0) {
         const array: SelectOption[] = [];
         response.results.forEach(values => {
