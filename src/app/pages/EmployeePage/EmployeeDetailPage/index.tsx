@@ -3,40 +3,38 @@
  * UserDetailPage
  *
  */
-import * as React from 'react';
-import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
-import { Col, Form, Row, Tabs, Divider } from 'antd';
-import { useHistory, useLocation, useParams } from 'react-router';
-import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { config } from 'config';
-import PageTitle from 'app/components/PageTitle';
-import Button from 'app/components/Button';
-import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { models } from '@hdwebsoft/intranet-api-sdk';
-import { ProfileInfo } from './components/ProfileInfo/Loadable';
-import { IdCardInfo } from './components/IdCardInfo/Loadable';
-
-import { UserDetailMessages } from './messages';
-import { Notes } from './components/Notes/Loadable';
-import { BankAccounts } from './components/BankAccounts/Loadable';
-import { Device } from './components/Devices/Loadable';
-import { DetailForm } from './components/DetailForm/Loadable';
-import { Projects } from './components/Projects/Loadable';
-import { useNotesSlice } from './components/Notes/slice';
-import { useHandleDataTable } from '../EmployeeListPage/useHandleDataTable';
-import { selectEmployeeNotes } from './components/Notes/slice/selectors';
+import { Col, Form, Row, Tabs } from 'antd';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
-import { ChangeLogs } from './components/ChangeLogs';
-import { PrivatePath } from 'utils/url.const';
-import { Route, Switch } from 'react-router-dom';
-import { useUserDetailsSlice } from './slice';
+import Button from 'app/components/Button';
+import PageTitle from 'app/components/PageTitle';
+import { TotalSearchForm } from 'app/components/TotalSearchForm';
+import { config } from 'config';
 import { omit } from 'lodash';
+import moment from 'moment';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation, useParams } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import { PrivatePath } from 'utils/url.const';
 import { EmployeeEditPage } from '../EmployeeEdit/Loadable';
-import { useHandleEmployeeDetail } from './useHandleEmployeeDetail';
+import { useHandleDataTable } from '../EmployeeListPage/useHandleDataTable';
+import { BankAccounts } from './components/BankAccounts/Loadable';
+import { ChangeLogs } from './components/ChangeLogs';
+import { DetailForm } from './components/DetailForm/Loadable';
+import { Device } from './components/Devices/Loadable';
+import { IdCardInfo } from './components/IdCardInfo/Loadable';
+import { Notes } from './components/Notes/Loadable';
+import { useNotesSlice } from './components/Notes/slice';
+import { selectEmployeeNotes } from './components/Notes/slice/selectors';
+import { ProfileInfo } from './components/ProfileInfo/Loadable';
+import { Projects } from './components/Projects/Loadable';
 import { Skills } from './components/Skills/Loadable';
+import { UserDetailMessages } from './messages';
+import { useUserDetailsSlice } from './slice';
+import { useHandleEmployeeDetail } from './useHandleEmployeeDetail';
 
 interface Props {}
 
@@ -110,45 +108,62 @@ export function EmployeeDetailPage(props: Props) {
   const [isDetailTab, setIsDetailTab] = React.useState(true);
   const [isContractTab, setIsContractTab] = React.useState(false);
   const [isBankAccountTab, setIsBankAccountTab] = React.useState(false);
+  const [isCitizentTab, setIsCitizenTab] = React.useState(false);
 
   const onChangeTab = (key: string) => {
     if (key === TabKeys.notes) {
       setIsDetailTab(false);
+      setIsBankAccountTab(false);
       setIsContractTab(false);
+      setIsCitizenTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/notes`);
     } else if (key === TabKeys.projects) {
       setIsDetailTab(false);
+      setIsBankAccountTab(false);
       setIsContractTab(false);
+      setIsCitizenTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/projects`);
     } else if (key === TabKeys.devices) {
       setIsDetailTab(false);
+      setIsBankAccountTab(false);
       setIsContractTab(false);
+      setIsCitizenTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/devices`);
     } else if (key === TabKeys.contract) {
       setIsDetailTab(false);
       setIsContractTab(true);
       setIsBankAccountTab(false);
+      setIsCitizenTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
     } else if (key === TabKeys.bankAccounts) {
       setIsDetailTab(false);
       setIsContractTab(false);
       setIsBankAccountTab(true);
+      setIsCitizenTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/bank-accounts`);
     } else if (key === TabKeys.citizenInfo) {
       setIsDetailTab(false);
+      setIsBankAccountTab(false);
       setIsContractTab(false);
+      setIsCitizenTab(true);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/citizen-info`);
     } else if (key === TabKeys.skills) {
       setIsDetailTab(false);
+      setIsContractTab(false);
+      setIsBankAccountTab(false);
+      setIsCitizenTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/skills`);
     } else if (key === TabKeys.changeLogs) {
       setIsDetailTab(false);
+      setIsBankAccountTab(false);
       setIsContractTab(false);
+      setIsCitizenTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/change-logs`);
     } else {
       setIsDetailTab(true);
       setIsContractTab(false);
       setIsBankAccountTab(false);
+      setIsCitizenTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}`);
     }
   };
@@ -319,6 +334,27 @@ export function EmployeeDetailPage(props: Props) {
     }
   };
 
+  const handleCitizenEditSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      values.dob = moment(values.dob).format(DATE_FORMAT);
+      if (values.issued_date) {
+        values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
+      }
+      if (isEdit) {
+        const response = await update(values);
+        if (response) {
+          setData(response);
+          setIsEdit(false);
+          history.push(`${PrivatePath.EMPLOYEES}/${id}/citizen-info`);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const employeeDetailForm = () =>
     // is page: "Bank Accounts"
     pathname.includes('employees') && pathname.includes('bank-accounts') ? (
@@ -331,18 +367,20 @@ export function EmployeeDetailPage(props: Props) {
         rightScreenItems={
           <>
             <BankAccounts isView={isView} form={form} isEdit={isEdit} />
-            {isView && (
-              <>
-                <Divider />
-                <Form form={form}>
-                  <Row gutter={[128, 0]} align="middle">
-                    <Col md={24} xs={24}>
-                      <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
-                    </Col>
-                  </Row>
-                </Form>
-              </>
-            )}
+          </>
+        }
+      />
+    ) : // is page: "Citizen Info"
+    pathname.includes('employees') && pathname.includes('citizen-info') ? (
+      <DetailForm
+        form={form}
+        data={data}
+        isEdit={isEdit}
+        isView={isView}
+        leftScreenItems={<></>}
+        rightScreenItems={
+          <>
+            <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
           </>
         }
       />
@@ -419,7 +457,12 @@ export function EmployeeDetailPage(props: Props) {
             <Route path={PrivatePath.EMPLOYEES_ID_BANK_ACCOUNTS_EDIT}>
               <EmployeeEditPage />
             </Route>
-            <Route path={PrivatePath.EMPLOYEES_ID_CITIZEN_INFO}></Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_CITIZEN_INFO}>
+              {employeeDetailForm()}
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_CITIZEN_INFO_EDIT}>
+              <EmployeeEditPage />
+            </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_SKILLS}>
               <Skills employeeId={id} />
             </Route>
@@ -569,6 +612,50 @@ export function EmployeeDetailPage(props: Props) {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   } else {
                     handleBankAccountEditSubmit();
+                  }
+                }}
+              >
+                {isView
+                  ? t(UserDetailMessages.formEditButton())
+                  : t(UserDetailMessages.formSubmitButton())}
+              </Button>
+            </Col>
+          </Row>
+        </WrapperButton>
+      )}
+      {isCitizentTab && (
+        <WrapperButton>
+          <Row gutter={[8, 8]} justify="end">
+            <Col>
+              <Button
+                block
+                onClick={() => {
+                  if (isEdit) {
+                    setIsEdit(false);
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}/citizen-info`);
+                  } else if (isView) {
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}/citizen-info`);
+                  }
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                {t(UserDetailMessages.formBackButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                loading={loading}
+                block
+                type="primary"
+                onClick={() => {
+                  if (isView) {
+                    setIsEdit(true);
+                    history.push(
+                      `${PrivatePath.EMPLOYEES}/${id}/citizen-info/edit`,
+                    );
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  } else {
+                    handleCitizenEditSubmit();
                   }
                 }}
               >
