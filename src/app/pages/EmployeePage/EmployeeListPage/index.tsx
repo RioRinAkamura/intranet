@@ -549,7 +549,7 @@ export const EmployeeListPage: React.FC = () => {
           { label: '40h per week', value: 2 },
           { label: '> 40h per week', value: 3 },
         ],
-        '40',
+        '40.0',
       ),
       render: (text, record: Employee) =>
         text ? (
@@ -734,7 +734,7 @@ export const EmployeeListPage: React.FC = () => {
         handleCancel={handleCancelCheckedModal}
         handleSubmit={handleSubmitCheckedModal}
       >
-        <p>Are you sure you reviewed this project status carefully today? </p>
+        <p>Are you sure you reviewed this employee status carefully today? </p>
       </DialogModal>
     </>
   );
