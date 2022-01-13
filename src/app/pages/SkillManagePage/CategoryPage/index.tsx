@@ -98,20 +98,17 @@ export const CategoryPage: React.FC = () => {
     {
       title: 'Name',
       dataIndex: 'name',
-      width: 40,
+      width: 80,
       render: text => <span>{text}</span>,
     },
     {
       title: 'Skills',
       dataIndex: 'skills',
-      width: 40,
+      width: 250,
       render: (value: string[]) =>
         skills
           .filter(skill => value.includes(skill.id))
           .map(skill => <div>{skill.name}</div>),
-    },
-    {
-      width: 180,
     },
     {
       title: <ActionIcon />,

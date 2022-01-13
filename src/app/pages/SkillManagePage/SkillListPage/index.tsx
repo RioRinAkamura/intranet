@@ -153,7 +153,9 @@ export const SkillListPage: React.FC = () => {
           size="small"
           onClick={() => {
             setIsEdit(true);
-            setSelectedSkill(record);
+            console.log(record, 'record');
+            // setSelectedSkill(record);
+            form.setFieldsValue({ ...record });
           }}
         />
       </Tooltip>
@@ -301,7 +303,7 @@ export const SkillListPage: React.FC = () => {
         handleCancel={handleCancel}
         handleSubmit={isEdit ? handleEditSkill : handleAddSkill}
       >
-        <DetailForm form={form} skill={selectedSkill} />
+        <DetailForm form={form} />
       </DialogModal>
       <DeleteConfirmModal
         type={DeleteType.NAME}

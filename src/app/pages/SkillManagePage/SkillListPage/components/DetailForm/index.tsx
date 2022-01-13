@@ -1,113 +1,87 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Form, FormInstance, Input, message, Select, Spin } from 'antd';
+import { Form, FormInstance, Input, Select, Spin, Typography } from 'antd';
 import styled from 'styled-components';
-import {
-  Category,
-  Skill,
-} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { Category } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { useSkillDetails } from 'app/pages/SkillManagePage/useSkillDetails';
+import { useHistory } from 'react-router-dom';
+import { PrivatePath } from 'utils/url.const';
 
-const FormSearchItem = Form.Item;
 const { Option } = Select;
 
 interface Props {
   form: FormInstance;
-  skill?: Skill;
 }
 
+const { Link } = Typography;
+
 export const DetailForm = memo((props: Props) => {
-  const { form, skill } = props;
-
-  // state
-  const [categories, setCategories] = useState<Category[] | undefined>([]);
-  const [searchLoad, setSearchLoad] = useState(false);
-
-  // func
-  const { fetchCategory, fetchSingleCategory } = useSkillDetails();
-  // hooks
-
-  const handleSearch = async (value: string) => {
-    try {
-      setSearchLoad(true);
-      const response = await fetchCategory(value);
-      if (response) {
-        setCategories(response);
-      }
-    } catch (error: any) {
-      message.error(error.message);
-    } finally {
-      setSearchLoad(false);
-    }
-  };
+  const { form } = props;
+  // clone state to storage
+  const history = useHistory();
+  const { fetchAllCategory, categories, categoryLoading } = useSkillDetails();
+  const [formCategories, setFormCategories] = useState(categories);
 
   useEffect(() => {
-    (async () => {
-      try {
-        if (skill) {
-          if (skill.category) {
-            const response = await fetchSingleCategory(skill.category);
-            if (response) {
-              form.setFieldsValue({
-                id: skill.id,
-                name: skill.name,
-                category: response.name,
-              });
-            }
-          } else {
-            form.setFieldsValue({
-              id: skill.id,
-              name: skill.name,
-            });
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [form, skill, fetchSingleCategory]);
+    fetchAllCategory();
+  }, [fetchAllCategory]);
 
-  const options = categories?.map(category => (
+  useEffect(() => {
+    setFormCategories(categories);
+  }, [categories]);
+
+  const handleSearch = async (value: string) => {
+    const newCategories = [...categories].filter((category: Category) =>
+      category.name.toLowerCase().includes(value),
+    );
+    console.log(newCategories, 'new');
+    setFormCategories([...newCategories]);
+  };
+
+  const options = formCategories?.map(category => (
     <Option key={category.id} value={category.id}>
       {category.name}
     </Option>
   ));
-
+  console.log(categories, 'categories');
   return (
     <Form form={form} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-      <FormItem hidden name="id">
-        <Input hidden />
-      </FormItem>
-      <FormItem
-        name="name"
-        rules={[
-          {
-            required: true,
-            message: 'Please input skill name',
-          },
-        ]}
-        label="Skill name"
-      >
-        <Input placeholder="Skill name" size="large" />
-      </FormItem>
-      <FormSearchItem name="category" label="Category" initialValue={null}>
-        <Select
-          showSearch
-          defaultActiveFirstOption={false}
-          showArrow={false}
-          filterOption={false}
-          size="large"
-          loading={searchLoad}
-          placeholder="Category"
-          onSearch={handleSearch}
-          onFocus={() => handleSearch(' ')}
-          notFoundContent={searchLoad ? <Spin size="default" /> : null}
-        >
-          {options}
-          <Option key="None" value="">
-            None
-          </Option>
-        </Select>
-      </FormSearchItem>
+      {categoryLoading ? (
+        <StyleSpin />
+      ) : (
+        <>
+          <FormItem hidden name="id">
+            <Input hidden />
+          </FormItem>
+          <FormItem
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: 'Please input skill name',
+              },
+            ]}
+            label="Skill name"
+          >
+            <Input placeholder="Skill name" size="large" />
+          </FormItem>
+          <FormItem name="category" label="category">
+            <Select
+              placeholder="Select Category"
+              onSearch={handleSearch}
+              showSearch
+              filterOption={false}
+            >
+              {options}
+              <Option value="">None</Option>
+            </Select>
+          </FormItem>
+          <StyledLink
+            onClick={() => history.push(PrivatePath.SKILLS_CATEGORIES)}
+          >
+            Manage Categories
+          </StyledLink>
+        </>
+      )}
     </Form>
   );
 });
@@ -116,5 +90,16 @@ const FormItem = styled(Form.Item)`
   label {
     font-weight: 500;
     min-width: 150px;
+  }
+`;
+
+const StyledLink = styled(Link)`
+  margin-top: 10px;
+`;
+
+const StyleSpin = styled(Spin)`
+  &.ant-spin.ant-spin-spinning {
+    display: block;
+    margin: 0 auto;
   }
 `;

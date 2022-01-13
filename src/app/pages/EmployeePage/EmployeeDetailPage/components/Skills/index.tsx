@@ -5,6 +5,7 @@ import {
   Form,
   Modal,
   Popover,
+  Rate,
   Select,
   Table,
   TablePaginationConfig,
@@ -18,7 +19,7 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { UsersMessages } from 'app/pages/EmployeePage/EmployeeListPage/messages';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import { useEmployeeSkillSlice } from './slice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -57,6 +58,8 @@ const { Option } = Select;
 
 export const Skills = memo(({ employeeId }: SkillProps) => {
   const { categories, fetchAllCategory } = useSkillDetails();
+  const { id } = useParams<Record<string, string>>();
+
   const { data: skills } = useGetSkills(true);
   const { t } = useTranslation();
   const history = useHistory();
@@ -216,6 +219,23 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
       dataIndex: 'skill',
       render: (value, record) => {
         return value ? value.name : '';
+      },
+    },
+    {
+      title: 'Level',
+      dataIndex: 'level',
+      render: (value, record: EmployeeSkill) => {
+        const handleRateChange = async value => {
+          console.log(record, 'record');
+          const updatedSkill = {
+            id: record.id,
+            employee_id: id,
+            level: value,
+            skill_id: record.skill.id,
+          };
+          await api.hr.employee.skill.update(id, updatedSkill);
+        };
+        return <Rate defaultValue={value} onChange={handleRateChange} />;
       },
     },
     {

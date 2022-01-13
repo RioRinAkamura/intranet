@@ -25,21 +25,33 @@ export const useSkillDetails = (): {
   fetchSkill: () => Promise<Skill[] | undefined>;
   createSkill: (data: any) => Promise<any | undefined>;
   updateSkill: (data: any) => Promise<any | undefined>;
+  categoryLoading: boolean;
+  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
 } => {
   // const { t } = useTranslation();
   const [loading, setLoading] = React.useState(false);
+  const [categoryLoading, setCategoryLoading] = React.useState(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [skills, setSkills] = React.useState<Skill[]>([]);
   const [error, setError] = React.useState<any>();
   const { notify } = useNotify();
 
   const fetchAllCategory = React.useCallback(async () => {
+    setCategoryLoading(true);
     try {
-      const response = await api.hr.category.list();
+      const response = await api.hr.category.list(
+        undefined,
+        undefined,
+        undefined,
+        1,
+        500,
+      );
       setCategories(response.results);
       return response.results;
     } catch (error) {
       setError(error);
+    } finally {
+      setCategoryLoading(false);
     }
   }, []);
 
@@ -161,7 +173,7 @@ export const useSkillDetails = (): {
         notify({
           type: ToastMessageType.Info,
           duration: 2,
-          // message: t(CategoryMessages.modalEditTitle()),
+          message: 'Update skill success',
         });
         return response;
       }
@@ -190,5 +202,7 @@ export const useSkillDetails = (): {
     fetchSkill,
     updateSkill,
     createSkill,
+    categoryLoading,
+    setCategories,
   };
 };
