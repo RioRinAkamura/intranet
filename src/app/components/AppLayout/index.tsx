@@ -20,7 +20,7 @@ const AppLayout: React.FC<AdminRouteProps> = ({
   const [collapsed, setCollapsed] = React.useState(true);
   const { loading } = useAuthState();
   const onCollapse = (collapsed: boolean): void => {
-    setCollapsed(collapsed);
+    setCollapsed(!collapsed);
   };
   if (loading)
     return (
