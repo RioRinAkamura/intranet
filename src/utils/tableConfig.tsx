@@ -1,4 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons';
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import {
   Button,
   Checkbox,
@@ -11,6 +12,7 @@ import {
   Select,
   Space,
 } from 'antd';
+import { Avatar } from 'app/components/Avatar';
 import { TagsInput } from 'app/components/Tags';
 import { FilterColumns } from 'app/pages/EmployeePage/EmployeeListPage/slice/types';
 import { TableStateProps } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
@@ -51,6 +53,12 @@ interface useTableProps {
   ) => {};
   getCustomColumnSearchInputCheckboxProps: (
     dataIndex: string[],
+    options: CheckboxOptionType[],
+    filterIndex?: number,
+    filterOptions?: CheckboxOptionType[],
+  ) => {};
+  getColumnSearchInputCheckboxAvatarProps: (
+    dataIndex: Employee[],
     options: CheckboxOptionType[],
     filterIndex?: number,
     filterOptions?: CheckboxOptionType[],
@@ -597,6 +605,102 @@ export const useTableConfig = (
         : '',
   });
 
+  const getColumnSearchInputCheckboxAvatarProps = (
+    dataIndex: Employee[],
+    options: CheckboxOptionType[],
+    filterIndex?: number,
+    filterOptions?: CheckboxOptionType[],
+  ) => ({
+    filterDropdown: ({ confirm }) => {
+      if (searchData.length === 0) {
+        setSearchOptions(options);
+        setSearch(options);
+      }
+      return (
+        <Wrapper>
+          <Search
+            onChange={handleSearchInput}
+            placeholder="Search"
+            style={{ margin: '0 0 10px 0' }}
+          />
+          <WrapperCheckbox>
+            {dataIndex && (
+              <Checkbox.Group
+                value={
+                  selectedKeys[
+                    dataIndex.map(index => index.id)[filterIndex || 0]
+                  ]
+                }
+                onChange={e => {
+                  setSelectedKeys(prevState => ({
+                    ...prevState,
+                    [dataIndex.map(index => index.id)[filterIndex || 0]]: e
+                      ? e
+                      : null,
+                  }));
+                }}
+              >
+                {dataIndex.map(data => (
+                  <Row>
+                    <Checkbox value={data.id}>
+                      <Avatar
+                        size={30}
+                        src={data.avatar}
+                        name={data.first_name + ' ' + data.last_name}
+                      />{' '}
+                      {`${data.first_name} ${data.last_name}`}
+                    </Checkbox>
+                  </Row>
+                ))}
+              </Checkbox.Group>
+            )}
+          </WrapperCheckbox>
+          <Row gutter={[8, 0]}>
+            <Col>
+              <Button
+                type="primary"
+                onClick={() =>
+                  handleSearch(
+                    dataIndex.map(index => index.id)[filterIndex || 0],
+                    confirm,
+                  )
+                }
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90 }}
+                loading={state.loading}
+              >
+                {t(messageTrans.filterSearchButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                onClick={() =>
+                  handleReset(
+                    dataIndex.map(index => index.id)[filterIndex || 0],
+                    confirm,
+                  )
+                }
+                size="small"
+                loading={state.loading}
+                style={{ width: 90 }}
+              >
+                {t(messageTrans.filterResetButton())}
+              </Button>
+            </Col>
+          </Row>
+        </Wrapper>
+      );
+    },
+    onFilter: (value, record) =>
+      record[dataIndex.map((data, index) => index)[filterIndex || 0]]
+        ? record[dataIndex.map(index => index.id)[filterIndex || 0]]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : '',
+  });
+
   const getCustomColumnSearchInputCheckboxProps = (
     dataIndex: string[],
     options: CheckboxOptionType[],
@@ -814,6 +918,7 @@ export const useTableConfig = (
     ConfirmModal,
     getColumnSearchInputCheckboxProps,
     getCustomColumnSearchInputCheckboxProps,
+    getColumnSearchInputCheckboxAvatarProps,
   };
 };
 

@@ -5,6 +5,7 @@ import { Form, FormInstance, Select, Input } from 'antd';
 import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { UpdateTaskParam } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { SelectOption } from '@hdwebsoft/intranet-api-sdk/libs/type';
+import { Avatar } from 'app/components/Avatar';
 
 const { Option } = Select;
 
@@ -73,6 +74,11 @@ export const TaskForm: React.FC<FormProps> = ({
           {employees.map(employee => {
             return (
               <Option value={employee.id}>
+                <Avatar
+                  size={30}
+                  src={employee.avatar}
+                  name={employee.first_name + ' ' + employee.last_name}
+                />{' '}
                 {`${employee.first_name} ${employee.last_name}`}
               </Option>
             );

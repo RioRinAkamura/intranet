@@ -21,7 +21,6 @@ import {
   FilterValue,
   SorterResult,
 } from 'antd/lib/table/interface';
-import { parse, ParsedQuery, stringify } from 'query-string';
 import { ActionIcon } from 'app/components/ActionIcon';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import Button, { IconButton } from 'app/components/Button';
@@ -36,6 +35,7 @@ import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
 import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
 import config from 'config';
 import moment from 'moment';
+import { parse, ParsedQuery, stringify } from 'query-string';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { Helmet } from 'react-helmet-async';
@@ -45,6 +45,7 @@ import { useHistory, useParams } from 'react-router';
 import styled from 'styled-components/macro';
 import { StyledLink } from 'styles/StyledCommon';
 import { RootState } from 'types';
+import { api } from 'utils/api';
 import { useTableConfig } from 'utils/tableConfig';
 import { DeleteType } from 'utils/types';
 import { PrivatePath } from 'utils/url.const';
@@ -58,6 +59,7 @@ import {
   selectProjectsIsFilter,
   selectProjectsParams,
 } from './slice/selectors';
+
 const { Option } = Select;
 
 export const ProjectListPage: React.FC = () => {
@@ -81,6 +83,7 @@ export const ProjectListPage: React.FC = () => {
   const [memberModal, setMemberModal] = useState(false);
   const [projMemberId, setProjMemberId] = useState('');
   const [openCheckedModal, setOpenCheckedModal] = useState(false);
+
   let [recordValue, setRecordValue] = useState<Project>();
 
   const deleteModalState = useSelector(
@@ -96,6 +99,23 @@ export const ProjectListPage: React.FC = () => {
   const isFilter = useSelector(selectProjectsIsFilter);
   const getProjectState = useSelector(selectProjects);
   const { id } = useParams<Record<string, string>>();
+  const [employeeList, setEmployeeList] = useState<any[]>([]);
+
+  const fetchEmployee = useCallback(async () => {
+    try {
+      const response = await api.hr.employee.list();
+      if (response) {
+        setEmployeeList(response.results);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEmployee();
+  }, [fetchEmployee]);
+
   const {
     update,
     priorities,
@@ -122,7 +142,7 @@ export const ProjectListPage: React.FC = () => {
     getColumnSearchInputProps,
     getColumnSearchCheckboxProps,
     ConfirmModal,
-    getColumnSearchInputCheckboxProps,
+    getColumnSearchInputCheckboxAvatarProps,
   } = useTableConfig(getProjectState, ProjectsMessages, setFilterText);
 
   const fetchProjects = useCallback(() => {
@@ -455,7 +475,7 @@ export const ProjectListPage: React.FC = () => {
       width: 200,
       dataIndex: 'members',
       ...getColumnSorterProps('members', 2),
-      ...getColumnSearchInputCheckboxProps(['members'], membersAll, 0),
+      ...getColumnSearchInputCheckboxAvatarProps(employeeList, membersAll, 0),
       render: (members, record: any) => (
         <TeamMembers
           callback={members => {
