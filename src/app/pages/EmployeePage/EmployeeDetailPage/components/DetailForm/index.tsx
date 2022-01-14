@@ -4,7 +4,7 @@
  *
  */
 import { models } from '@hdwebsoft/intranet-api-sdk';
-import { Col, Divider, Form, FormInstance, Input, Row } from 'antd';
+import { Col, Form, FormInstance, Input, Row } from 'antd';
 import { CardLayout } from 'app/components/CardLayout';
 import React, { memo } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -51,8 +51,6 @@ export const DetailForm = memo((props: FormProps) => {
             {!isView && (
               <>
                 <BankAccounts isView={isView} isEdit={isEdit} form={form} />
-                <Divider />
-                <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
               </>
             )}
           </RightScreen>
@@ -63,7 +61,7 @@ export const DetailForm = memo((props: FormProps) => {
   pathname.includes('employees') && pathname.includes('contract') ? (
     <Form form={form} labelAlign="left">
       <WrapperSubItem gutter={[64, 32]}>
-        <Col span={isView ? 24 : 8}>
+        <Col span={isView ? 24 : 12}>
           <WrapperItem>
             <Form.Item hidden name="id">
               <Input hidden />
@@ -77,6 +75,27 @@ export const DetailForm = memo((props: FormProps) => {
           </WrapperItem>
         </Col>
       </WrapperSubItem>
+    </Form>
+  ) : // is tab: "Cityzen-info"
+  pathname.includes('employees') && pathname.includes('citizen-info') ? (
+    <Form form={form} labelAlign="left">
+      <Wrapper isView={isView}>
+        <Col span={isView ? 24 : 24}>
+          <Form.Item hidden name="id">
+            <Input hidden />
+          </Form.Item>
+          <Row gutter={[32, 32]}>
+            <RightScreen isView={isView} md={19}>
+              {isView && rightScreenItems}
+              {!isView && (
+                <>
+                  <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
+                </>
+              )}
+            </RightScreen>
+          </Row>
+        </Col>
+      </Wrapper>
     </Form>
   ) : (
     <Form form={form} labelAlign="left">
