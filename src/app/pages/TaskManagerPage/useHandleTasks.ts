@@ -26,7 +26,13 @@ export const useHandleTasks = (): {
 
   const getProjects = useCallback(async () => {
     try {
-      const response = await api.hr.project.list();
+      const response = await api.hr.project.list(
+        undefined,
+        undefined,
+        undefined,
+        1,
+        500,
+      );
       if (response) {
         const mapProjectsOption: any = [...response.results].map(project => {
           return {
@@ -44,7 +50,13 @@ export const useHandleTasks = (): {
 
   const getEmployees = useCallback(async () => {
     try {
-      const response = await api.hr.employee.list();
+      const response = await api.hr.employee.list(
+        undefined,
+        undefined,
+        undefined,
+        1,
+        500,
+      );
       if (response) {
         const mapEmployeeOption: SelectOption[] = [...response.results].map(
           employee => {

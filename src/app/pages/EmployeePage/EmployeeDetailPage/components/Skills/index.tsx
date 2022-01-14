@@ -2,14 +2,18 @@ import React, { memo, useState, useEffect, Key } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import {
+  Checkbox,
   Form,
   Modal,
   Popover,
   Rate,
-  Select,
   Table,
   TablePaginationConfig,
   Tooltip,
+  Row,
+  Col,
+  Input,
+  Typography,
 } from 'antd';
 
 import {
@@ -50,16 +54,21 @@ import { ActionIcon } from 'app/components/ActionIcon';
 import { useSkillDetails } from 'app/pages/SkillManagePage/useSkillDetails';
 import { useGetSkills } from 'app/components/Skills/useGetSkill';
 import { api } from 'utils/api';
+import { CheckboxValueType } from 'antd/lib/checkbox/Group';
+import { uniq } from 'lodash';
 interface SkillProps {
   employeeId: string;
 }
 
-const { Option } = Select;
-
 export const Skills = memo(({ employeeId }: SkillProps) => {
-  const { categories, fetchAllCategory } = useSkillDetails();
+  const [selectedSkill, setSelectedSkill] = useState<
+    CheckboxValueType[] | undefined
+  >([]);
+  const [checkedList, setCheckedList] = React.useState<string[]>([]);
+  const [skillErr, setSkillErr] = useState('');
+  const [cloneFilteredSkill, setCloneFilteredSkill] = useState<Skill[]>([]);
+  const { categories, fetchAllCategory, setCategories } = useSkillDetails();
   const { id } = useParams<Record<string, string>>();
-
   const { data: skills } = useGetSkills(true);
   const { t } = useTranslation();
   const history = useHistory();
@@ -94,12 +103,22 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
       const mapEmployeeSkillIdArr = [...getEmployeeSkillState?.skills].map(
         (skill: EmployeeSkill) => skill.skill.id,
       );
+      const filteredSkillCategory: Category[] = [];
       const filteredSkill = [...skills.results].filter((skill: Skill) => {
-        return !mapEmployeeSkillIdArr.includes(skill.id);
+        if (!mapEmployeeSkillIdArr.includes(skill.id)) {
+          const category = categories.find(
+            category => category.id === skill.category,
+          );
+          if (category) filteredSkillCategory.push(category);
+          return true;
+        }
+
+        return false;
       });
       setSkillOptions(filteredSkill);
+      setCloneFilteredSkill(filteredSkill);
     }
-  }, [skills, getEmployeeSkillState.skills]);
+  }, [skills, getEmployeeSkillState.skills, categories]);
 
   React.useEffect(() => {
     fetchAllCategory();
@@ -226,7 +245,6 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
       dataIndex: 'level',
       render: (value, record: EmployeeSkill) => {
         const handleRateChange = async value => {
-          console.log(record, 'record');
           const updatedSkill = {
             id: record.id,
             employee_id: id,
@@ -269,17 +287,78 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
   };
 
   const handleAddSkill = async () => {
-    form.validateFields().then(async (values: { skill: string }) => {
-      const newSkill: CreateEmployeeSkillQueryParam = {
-        skill_id: values.skill,
-        employee_id: employeeId,
-      };
-      await api.hr.employee.skill.create(employeeId, newSkill);
+    if (selectedSkill && selectedSkill.length <= 0) {
+      setSkillErr('Please select skill');
+      return;
+    }
 
-      dispatch(actions.fetchEmployeeSkill({ id: employeeId, params: params }));
+    try {
+      const arrPromise: any = await selectedSkill?.map(skillId => {
+        const newSkill: CreateEmployeeSkillQueryParam = {
+          skill_id: skillId as string,
+          employee_id: employeeId,
+        };
 
-      setOpenSkillModal(false);
-    });
+        return api.hr.employee.skill.create(employeeId, newSkill);
+      });
+
+      Promise.all(arrPromise).then(values => {
+        setSkillErr('');
+        setOpenSkillModal(false);
+        dispatch(
+          actions.fetchEmployeeSkill({ id: employeeId, params: params }),
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+    }
+  };
+
+  const handleSearchSkill = e => {
+    const newSkillOptions = [...skillOptions].filter(skill =>
+      skill.name.toLowerCase().includes(e.target.value.toLowerCase()),
+    );
+
+    setCloneFilteredSkill(newSkillOptions);
+  };
+
+  const handleSelectSkill = checkedValue => {
+    setSelectedSkill(checkedValue);
+  };
+
+  const handleChangeCheckbox = e => {
+    const skills = [...cloneFilteredSkill]
+      .filter(skill => skill.category === e.target.value)
+      .map(skill => skill.id);
+
+    if (e.target.checked) {
+      const newList = [...checkedList, e.target.value];
+      setCheckedList(newList);
+      // find checked category skill
+      setSelectedSkill(uniq([...skills, ...(selectedSkill as string[])]));
+    } else {
+      const newList = [...checkedList].filter(cat => cat !== e.target.value);
+      setCheckedList(newList);
+      const newSelectedSkill = [...(selectedSkill as string[])].filter(
+        skill => !skills.includes(skill),
+      );
+      setSelectedSkill(newSelectedSkill);
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log('new categories');
+  // }, [categories]);
+  const resetStateSkillModal = () => {
+    setSelectedSkill([]);
+    setSkillErr('');
+
+    setCategories([...categories]);
+  };
+
+  const handleSelectChangeCategoryGroup = () => {
+    console.log('change');
   };
 
   return (
@@ -296,24 +375,57 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
         </StyledButton>
       </Header>
       <Modal
+        width={500}
         title={'Add Skill'}
         visible={isOpenSkillModal}
-        onCancel={() => setOpenSkillModal(false)}
+        onCancel={() => {
+          setOpenSkillModal(false);
+          resetStateSkillModal();
+        }}
         onOk={handleAddSkill}
-        okText="Add"
+        okText="Add Skill"
       >
         <Form form={form}>
-          <Form.Item rules={[{ required: true }]} name="skill">
-            <Select showSearch placeholder="Select a skill">
-              {skillOptions.map((skill: Skill) => {
-                return (
-                  <Option key={skill.id} value={skill.id}>
-                    {skill.name}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
+          <WrapperSearch>
+            <Input placeholder="Search" onChange={handleSearchSkill} />
+            <WrapperCheckbox>
+              <h5 style={{ marginBottom: '5px' }}>Select By Categories</h5>
+              <Checkbox.Group
+                value={checkedList}
+                onChange={handleSelectChangeCategoryGroup}
+                style={{ marginBottom: '10px' }}
+              >
+                <Row gutter={[0, 4]}>
+                  {categories.map(category => (
+                    <Col span={8}>
+                      <Checkbox
+                        onChange={handleChangeCheckbox}
+                        value={category.id}
+                      >
+                        {category.name}
+                      </Checkbox>
+                    </Col>
+                  ))}
+                </Row>
+              </Checkbox.Group>
+              <h5 style={{ marginBottom: '5px' }}>Select Skills</h5>
+              <Checkbox.Group
+                onChange={handleSelectSkill}
+                value={selectedSkill}
+              >
+                <Row gutter={[0, 4]}>
+                  {cloneFilteredSkill.map(skill => (
+                    <Col span={8}>
+                      <Checkbox value={skill.id}>{skill.name}</Checkbox>
+                    </Col>
+                  ))}
+                </Row>
+              </Checkbox.Group>
+            </WrapperCheckbox>
+            <Typography.Text type="danger" style={{ marginTop: '10px' }}>
+              {skillErr}
+            </Typography.Text>
+          </WrapperSearch>
         </Form>
       </Modal>
 
@@ -355,4 +467,25 @@ const StyledButton = styled(Button)`
   svg {
     vertical-align: baseline;
   }
+`;
+
+const WrapperSearch = styled.div`
+  padding: 8px;
+  position: relative;
+`;
+
+const WrapperCheckbox = styled.div`
+  .ant-checkbox-group,
+  .ant-select {
+    display: grid;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  margin-top: 2px;
+  border-radius: 5px;
+  padding: 10px 8px;
+  background: white;
+  border: 1px solid #d5d4d5;
+  z-index: 1000;
+  margin-bottom: 7px;
 `;
