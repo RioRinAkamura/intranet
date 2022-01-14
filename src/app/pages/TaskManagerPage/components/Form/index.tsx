@@ -42,7 +42,16 @@ export const TaskForm: React.FC<FormProps> = ({
         <Input size="large" />
       </Form.Item>
       <Form.Item name="project_id" rules={FORM_RULES.PROJECT} label="Project">
-        <Select placeholder="Project" disabled={isView} size="large">
+        <Select
+          placeholder="Project"
+          disabled={isView}
+          size="large"
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }
+        >
           {projects.map(project => {
             return <Option value={project.id}>{project.name}</Option>;
           })}
