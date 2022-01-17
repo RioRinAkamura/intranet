@@ -13,10 +13,11 @@ import React, {
   useState,
 } from 'react';
 import styled, { css } from 'styled-components/macro';
-import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
+import { convertFromRaw, EditorState } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
-import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
+import { markdownToDraft } from 'markdown-draft-js';
 import { Popover } from 'antd';
+import { convertToHTML } from 'draft-convert';
 import createMentionPlugin, {
   MentionPluginTheme,
 } from '@draft-js-plugins/mention';
@@ -164,23 +165,23 @@ export const RichEditor = memo((props: Props) => {
     setEditorState(_editorState);
 
     const content = editorState.getCurrentContent();
-    const rawObject = convertToRaw(content);
-    const markdownString = draftToMarkdown(rawObject, {
-      entityItems: {
-        mention: {
-          open: function (entity: any) {
-            return ``;
-          },
+    // const rawObject = convertToRaw(content);
+    // const markdownString = draftToMarkdown(rawObject, {
+    //   entityItems: {
+    //     mention: {
+    //       open: function (entity: any) {
+    //         return ``;
+    //       },
 
-          close: function (entity: any) {
-            return `(${entity.data.mention.id})`;
-          },
-        },
-      },
-    });
+    //       close: function (entity: any) {
+    //         return `(${entity.data.mention.id})`;
+    //       },
+    //     },
+    //   },
+    // });
 
     if (callback) {
-      callback(markdownString);
+      callback(convertToHTML(content));
     }
   };
 

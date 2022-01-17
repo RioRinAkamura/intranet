@@ -113,6 +113,7 @@ export const Employees = memo(() => {
         okText={isEdit ? 'Edit' : 'Add'}
         handleCancel={handleCancel}
         handleSubmit={isEdit ? handleEditMember : handleAddMember}
+        width={600}
       >
         <AddMember
           member={editMember}

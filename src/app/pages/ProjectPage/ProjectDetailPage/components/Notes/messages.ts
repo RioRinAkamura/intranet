@@ -8,7 +8,7 @@ import { _t } from 'utils/messages';
 
 export const ProjectNoteMessages = {
   //Header
-  createNoteBtn: () => _t(translations.NotesPage.createNoteBtn, 'Create note'),
+  createNoteBtn: () => _t(translations.NotesPage.createNoteBtn, 'Create'),
   //List
   listType: () => _t(translations.NotesPage.list.type, 'Type'),
   listSummary: () => _t(translations.NotesPage.list.summary, 'Summary'),
@@ -23,7 +23,7 @@ export const ProjectNoteMessages = {
   modalViewTitle: () =>
     _t(translations.NotesPage.modal.viewTitle, 'Note details'),
   modalCreateTitle: () =>
-    _t(translations.NotesPage.modal.createTitle, 'Create note'),
+    _t(translations.NotesPage.modal.createTitle, 'Create'),
   modalEditTitle: () => _t(translations.NotesPage.modal.editTitle, 'Edit note'),
   modalCategoryLabel: () =>
     _t(translations.NotesPage.modal.form.category.label, 'Category'),

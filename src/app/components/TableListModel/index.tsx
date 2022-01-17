@@ -1,7 +1,7 @@
 import { Row, Col, Popover, Table, TablePaginationConfig, Tooltip } from 'antd';
 import { useHistory } from 'react-router';
 import styled from 'styled-components/macro';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { initialState, useTableSlice } from './slice';
 import { useHandleDataTable } from './useHandleDataTable';
@@ -26,6 +26,7 @@ interface Props {
   model?: RootStateKeyType;
   handleOnClickViewButton?: (id?: string) => void;
   handleOnClickEditButton?: (id?: string) => void;
+  chilren?: ReactNode;
 }
 
 const TableListModel: React.FC<Props> = ({
@@ -33,6 +34,7 @@ const TableListModel: React.FC<Props> = ({
   model = 'table',
   handleOnClickViewButton = () => {},
   handleOnClickEditButton = () => {},
+  children,
 }) => {
   const history = useHistory();
 
@@ -196,6 +198,7 @@ const TableListModel: React.FC<Props> = ({
       </Col>
       <Col span={16}>
         <Row justify="end">
+          {children}
           <Button
             style={{ marginBottom: 10 }}
             type="primary"
@@ -210,7 +213,7 @@ const TableListModel: React.FC<Props> = ({
             }}
             icon={<PlusCircleOutlined />}
           >
-            {model === 'leave' ? 'Create leave application' : `Create ${model}`}
+            {model === 'leave' ? 'Create leave application' : `Create`}
           </Button>
         </Row>
       </Col>

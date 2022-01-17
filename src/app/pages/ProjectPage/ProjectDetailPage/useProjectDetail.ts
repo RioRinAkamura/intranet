@@ -58,7 +58,7 @@ export const useProjectDetail = (): {
         undefined,
         undefined,
         undefined,
-        6,
+        500,
       );
       return response.results;
     } catch (error) {
