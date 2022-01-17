@@ -25,7 +25,7 @@ function* fetchProjects(action) {
       priority: params.priority,
       status: params.status,
       monitoring: params.monitoring,
-      employee_id: params.members,
+      employee_id: params.employee_id,
       is_deleted: params.is_deleted,
     };
     if (Boolean(params.is_deleted) === false) {

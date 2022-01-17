@@ -103,7 +103,13 @@ export const ProjectListPage: React.FC = () => {
 
   const fetchEmployee = useCallback(async () => {
     try {
-      const response = await api.hr.employee.list();
+      const response = await api.hr.employee.list(
+        undefined,
+        undefined,
+        undefined,
+        1,
+        500,
+      );
       if (response) {
         setEmployeeList(response.results);
       }
@@ -475,7 +481,7 @@ export const ProjectListPage: React.FC = () => {
       width: 200,
       dataIndex: 'members',
       ...getColumnSorterProps('members', 2),
-      ...getColumnSearchInputCheckboxAvatarProps(employeeList, membersAll, 0),
+      ...getColumnSearchInputCheckboxAvatarProps(employeeList, membersAll),
       render: (members, record: any) => (
         <TeamMembers
           callback={members => {

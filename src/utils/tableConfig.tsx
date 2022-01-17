@@ -275,6 +275,20 @@ export const useTableConfig = (
     confirm();
   };
 
+  const handleSearchAvatar = (dataIndex: string, confirm: () => void) => {
+    setFilterText({ employee_id: selectedKeys[dataIndex] });
+    confirm();
+  };
+
+  const handleResetAvatar = (dataIndex: string, confirm: () => void) => {
+    setSelectedKeys(prevState => ({
+      ...prevState,
+      [dataIndex]: undefined,
+    }));
+    setFilterText({ employee_id: undefined });
+    confirm();
+  };
+
   const handleSearchInput = e => {
     const newOptions = [...searchData].filter((item: any) => {
       return item.label.toLowerCase().includes(e.target.value.toLowerCase());
@@ -627,14 +641,12 @@ export const useTableConfig = (
             {dataIndex && (
               <Checkbox.Group
                 value={
-                  selectedKeys[
-                    dataIndex.map(index => index.id)[filterIndex || 0]
-                  ]
+                  selectedKeys[dataIndex.map(data => data.id)[filterIndex || 0]]
                 }
                 onChange={e => {
                   setSelectedKeys(prevState => ({
                     ...prevState,
-                    [dataIndex.map(index => index.id)[filterIndex || 0]]: e
+                    [dataIndex.map(data => data.id)[filterIndex || 0]]: e
                       ? e
                       : null,
                   }));
@@ -660,7 +672,7 @@ export const useTableConfig = (
               <Button
                 type="primary"
                 onClick={() =>
-                  handleSearch(
+                  handleSearchAvatar(
                     dataIndex.map(index => index.id)[filterIndex || 0],
                     confirm,
                   )
@@ -676,8 +688,8 @@ export const useTableConfig = (
             <Col>
               <Button
                 onClick={() =>
-                  handleReset(
-                    dataIndex.map(index => index.id)[filterIndex || 0],
+                  handleResetAvatar(
+                    dataIndex.map(data => data.id)[filterIndex || 0],
                     confirm,
                   )
                 }
@@ -694,7 +706,7 @@ export const useTableConfig = (
     },
     onFilter: (value, record) =>
       record[dataIndex.map((data, index) => index)[filterIndex || 0]]
-        ? record[dataIndex.map(index => index.id)[filterIndex || 0]]
+        ? record[dataIndex.map(data => data.id)[filterIndex || 0]]
             .toString()
             .toLowerCase()
             .includes(value.toLowerCase())
