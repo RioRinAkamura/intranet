@@ -769,13 +769,6 @@ export const ProjectListPage: React.FC = () => {
         <meta name="description" content={t(ProjectsMessages.description())} />
       </Helmet>
       <PageTitle title={t(ProjectsMessages.title())}>
-        {/* <Select
-          defaultValue="all"
-          onChange={value => handleNextMonitoringAt(value)}
-        >
-          <Option value="all">All</Option>
-          <Option value="need-actions">Need Actions</Option>
-        </Select> */}
         <TotalSearchForm
           form={searchForm}
           value={getProjectState.params.search}
