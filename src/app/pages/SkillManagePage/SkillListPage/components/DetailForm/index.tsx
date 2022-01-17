@@ -94,7 +94,7 @@ const FormItem = styled(Form.Item)`
 `;
 
 const StyledLink = styled(Link)`
-  margin-top: 10px;
+  margin-top: 5px;
 `;
 
 const StyleSpin = styled(Spin)`

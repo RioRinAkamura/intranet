@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { models } from '@hdwebsoft/intranet-api-sdk';
-import { Form, Popover, Tooltip } from 'antd';
+import { Button, Form, Popover, Tooltip } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import styled from 'styled-components';
 import PageTitle from 'app/components/PageTitle';
@@ -294,7 +294,18 @@ export const SkillListPage: React.FC = () => {
         />
       </PageTitle>
       <Wrapper>
-        <TableListModel model={model} columns={columns} />
+        <TableListModel model={model} columns={columns}>
+          <Button
+            style={{ marginRight: 10 }}
+            shape="round"
+            size="large"
+            onClick={() => {
+              history.push(PrivatePath.SKILLS_CATEGORIES);
+            }}
+          >
+            Categories
+          </Button>
+        </TableListModel>
       </Wrapper>
       <DialogModal
         isOpen={!isView}

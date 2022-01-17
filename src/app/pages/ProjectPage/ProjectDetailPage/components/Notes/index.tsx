@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState, Key } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Table, Tooltip, Form as FormAntd, Row, Col } from 'antd';
+import { Table, Tooltip, Form as FormAntd, Row, Col, Typography } from 'antd';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
@@ -37,6 +37,8 @@ const DATE_FORMAT = config.DATE_FORMAT;
 interface NotesProps {
   projectId: string;
 }
+
+const { Title } = Typography;
 
 export const Notes = memo(({ projectId }: NotesProps) => {
   const { t } = useTranslation();
@@ -221,28 +223,34 @@ export const Notes = memo(({ projectId }: NotesProps) => {
     {
       title: t(ProjectNoteMessages.listType()),
       dataIndex: 'category',
+      width: 200,
       ...getColumnSorterProps('category', 0),
       ...getColumnSearchInputProps(['category']),
       render: text => text.name,
+    },
+    {
+      title: t(ProjectNoteMessages.listDate()),
+      dataIndex: 'date',
+      width: 140,
+      ...getColumnSorterProps('date', 2),
+    },
+    {
+      title: t(ProjectNoteMessages.listContent()),
+      dataIndex: 'content',
+      render: content => (
+        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+      ),
     },
     {
       title: t(ProjectNoteMessages.listSummary()),
       dataIndex: 'summary',
       ...getColumnSorterProps('summary', 1),
       ...getColumnSearchInputProps(['summary']),
-    },
-    {
-      title: t(ProjectNoteMessages.listDate()),
-      dataIndex: 'date',
-      ...getColumnSorterProps('date', 2),
-    },
-    {
-      title: t(ProjectNoteMessages.listContent()),
-      dataIndex: 'content',
-      ...getColumnSorterProps('content', 3),
+      render: text => <Title level={5}>{text}</Title>,
     },
     {
       title: <ActionIcon />,
+      width: 80,
       dataIndex: 'id',
       render: (id, record: ProjectNote) => (
         <Actions

@@ -6,7 +6,7 @@
 import React, { memo, useEffect, useState, Key } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Table, Tooltip, Form as FormAntd, Row, Col } from 'antd';
+import { Table, Tooltip, Form as FormAntd, Row, Col, Typography } from 'antd';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
@@ -42,6 +42,8 @@ const DATE_FORMAT = config.DATE_FORMAT;
 interface NotesProps {
   employeeId: string;
 }
+
+const { Title } = Typography;
 
 export const Notes = memo(({ employeeId }: NotesProps) => {
   const { t } = useTranslation();
@@ -224,30 +226,36 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
     {
       title: t(EmployeeNoteMessages.listType()),
       dataIndex: 'category',
+      width: 200,
       ...getColumnSorterProps('category', 0),
       ...getColumnSearchInputProps(['category']),
       render: text => text.name,
+    },
+    {
+      title: t(EmployeeNoteMessages.listDate()),
+      dataIndex: 'date',
+      ...getColumnSorterProps('date', 2),
+      width: 140,
+      render: text => (text ? moment(text).format('MM-DD-YYYY') : ''),
+    },
+    {
+      title: t(EmployeeNoteMessages.listContent()),
+      dataIndex: 'content',
+      render: content => (
+        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+      ),
     },
     {
       title: t(EmployeeNoteMessages.listSummary()),
       dataIndex: 'summary',
       ...getColumnSorterProps('summary', 1),
       ...getColumnSearchInputProps(['summary']),
-    },
-    {
-      title: t(EmployeeNoteMessages.listDate()),
-      dataIndex: 'date',
-      ...getColumnSorterProps('date', 2),
-      render: text => (text ? moment(text).format('MM-DD-YYYY') : ''),
-    },
-    {
-      title: t(EmployeeNoteMessages.listContent()),
-      dataIndex: 'content',
-      ...getColumnSorterProps('content', 3),
+      render: text => <Title level={5}>{text}</Title>,
     },
     {
       title: <ActionIcon />,
       dataIndex: 'id',
+      width: 80,
       render: (id, record: EmployeeNote) => (
         <Actions
           t={t}
