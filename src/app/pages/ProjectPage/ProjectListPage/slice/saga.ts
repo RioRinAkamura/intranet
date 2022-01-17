@@ -27,7 +27,12 @@ function* fetchProjects(action) {
       monitoring: params.monitoring,
       employee_id: params.employee_id,
       is_deleted: params.is_deleted,
+      actions: params.actions,
     };
+    if (Boolean(params.actions) === false) {
+      delete queryParams.actions;
+    }
+
     if (Boolean(params.is_deleted) === false) {
       delete queryParams.is_deleted;
     }

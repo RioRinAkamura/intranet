@@ -53,7 +53,7 @@ const PageTitleHeader = ({
         <div
           className={`${
             className && className !== 'no-responsive'
-              ? className + ' ant-col ant-col-xs-24 ant-col-sm-8'
+              ? className + ' ant-col ant-col-xs-24 ant-col-sm-14'
               : ''
           }`}
         >

@@ -90,7 +90,7 @@ export const useHandleDataTable = (
       history.replace({
         search: stringify({
           search: text,
-          is_deleted: isDeleted ? 1 : undefined,
+          is_deleted: isDeleted ? 'true' : undefined,
         }),
       });
     } else {
