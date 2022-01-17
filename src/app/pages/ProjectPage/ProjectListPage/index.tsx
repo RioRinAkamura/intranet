@@ -151,7 +151,7 @@ export const ProjectListPage: React.FC = () => {
     getColumnSearchInputCheckboxAvatarProps,
   } = useTableConfig(getProjectState, ProjectsMessages, setFilterText);
 
-  const fetchProjects = useCallback(() => {
+  const fetchProjects = useCallback(async () => {
     if (!isFilter) {
       dispatch(actions.fetchProjects({ params: params }));
     }
@@ -420,6 +420,21 @@ export const ProjectListPage: React.FC = () => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const handleSearchNextMonitoringAt = value => {
+    if (value === 'all') {
+      history.push(`${PrivatePath.PROJECTS}`);
+      dispatch(actions.changeState({ ...params, actions: undefined }));
+    } else {
+      history.replace({
+        search: stringify({
+          actions: true,
+        }),
+      });
+      dispatch(actions.changeState({ ...params, actions: 'true' }));
+    }
+    dispatch(actions.fetchProjects({ params: params }));
   };
 
   const handleCheckedButton = record => {
@@ -754,6 +769,13 @@ export const ProjectListPage: React.FC = () => {
         <meta name="description" content={t(ProjectsMessages.description())} />
       </Helmet>
       <PageTitle title={t(ProjectsMessages.title())}>
+        {/* <Select
+          defaultValue="all"
+          onChange={value => handleNextMonitoringAt(value)}
+        >
+          <Option value="all">All</Option>
+          <Option value="need-actions">Need Actions</Option>
+        </Select> */}
         <TotalSearchForm
           form={searchForm}
           value={getProjectState.params.search}
@@ -762,6 +784,8 @@ export const ProjectListPage: React.FC = () => {
           onSearch={totalSearch}
           onReset={resetTotalSearch}
           searchDeleted={true}
+          searchNextMonitoring={true}
+          searchNextMonitoringAt={handleSearchNextMonitoringAt}
         />
       </PageTitle>
       {isMobileOnly ? (

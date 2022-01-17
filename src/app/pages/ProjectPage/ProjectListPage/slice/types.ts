@@ -35,6 +35,7 @@ export interface QueryParams {
   name?: string;
   priority?: string;
   status?: string;
+  actions?: string;
   monitoring?: string;
   limit?: number;
   page?: number;

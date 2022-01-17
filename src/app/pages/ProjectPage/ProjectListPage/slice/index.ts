@@ -94,7 +94,7 @@ const slice = createSlice({
     },
     setSearchText(
       state,
-      action: PayloadAction<{ text: string; isDeleted: number | undefined }>,
+      action: PayloadAction<{ text: string; isDeleted: string | undefined }>,
     ) {
       state.params.search = action.payload.text;
       state.params.is_deleted = action.payload.isDeleted;
