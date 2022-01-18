@@ -71,14 +71,17 @@ export const TaskForm: React.FC<FormProps> = ({
           disabled={isView}
           size="large"
           optionFilterProp="children"
-          filterOption={(input, option) =>
-            option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          }
-          filterSort={(optionA, optionB) =>
-            optionA.children
+          filterOption={(input, option) => {
+            return (
+              option?.children[2].toLowerCase().indexOf(input.toLowerCase()) >=
+              0
+            );
+          }}
+          filterSort={(optionA, optionB) => {
+            return optionA.children[2]
               .toLowerCase()
-              .localeCompare(optionB.children.toLowerCase())
-          }
+              .localeCompare(optionB.children[2].toLowerCase());
+          }}
         >
           {employees.map(employee => {
             return (

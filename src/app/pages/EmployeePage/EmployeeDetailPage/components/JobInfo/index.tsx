@@ -20,7 +20,6 @@ import { UserDetailMessages } from '../../messages';
 import { SelectValue } from 'antd/lib/select';
 import { TitlePath } from '../TitlePath';
 import { TagsInput } from 'app/components/Tags';
-import { Skills } from 'app/components/Skills';
 import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
 
 const { Option } = Select;
@@ -45,9 +44,8 @@ const selectProps: SelectProps<SelectValue> = {
 };
 
 export const JobInfo = (props: JobInfoProps) => {
-  const { isView, form, isEdit, employeeId } = props;
+  const { isView, form } = props;
   const { t } = useTranslation();
-  const isShowSkill = isEdit || isView ? true : false;
   const {
     positions,
     types,
@@ -171,11 +169,11 @@ export const JobInfo = (props: JobInfoProps) => {
             />
           </FormItem>
         </Col>
-        {isShowSkill && (
+        {/* {isShowSkill && (
           <Col md={24} xs={24}>
             <Skills employeeId={employeeId} isEdit={isEdit} />
           </Col>
-        )}
+        )} */}
       </Row>
     </>
   );
