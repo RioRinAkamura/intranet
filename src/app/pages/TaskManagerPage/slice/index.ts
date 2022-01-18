@@ -16,13 +16,16 @@ export const initialState: TaskManagerState = {
   params: {
     limit: 20,
     page: 1,
+    status: ['Open', 'Going'],
   },
   pagination: {
     pageSize: 20,
     current: 1,
     total: 20,
   },
-  filterColumns: {},
+  filterColumns: {
+    status: ['Open', 'Going'],
+  },
   selectedRowKeys: [],
 };
 
@@ -35,11 +38,14 @@ const slice = createSlice({
     },
 
     resetSearch(state) {
-      state.filterColumns = {};
+      state.filterColumns = {
+        status: ['Open', 'Going'],
+      };
       state.params = {
         limit: 20,
         page: 1,
         ordering: '',
+        status: ['Open', 'Going'],
       };
       state.selectedRowKeys = undefined;
       state.selectedRows = undefined;
