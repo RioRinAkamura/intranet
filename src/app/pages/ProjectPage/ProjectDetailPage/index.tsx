@@ -181,8 +181,8 @@ export const ProjectDetailPage = (props: Props) => {
           <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
             <TabPane tab="Details" key={TabKeys.details} />
             <TabPane tab="Notes" key={TabKeys.notes} />
-            <TabPane tab="Change logs" key={TabKeys.changeLogs} />
             <TabPane tab="Members" key={TabKeys.employees} />
+            <TabPane tab="Change Log" key={TabKeys.changeLogs} />
           </StyledTabs>
 
           <Switch>
