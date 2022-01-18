@@ -15,7 +15,7 @@ export interface QueryParams {
   ordering?: string;
   limit?: number;
   page?: number;
-  [key: string]: string | number | undefined;
+  [key: string]: string | string[] | number | undefined;
 }
 
 export interface ListResponse {
@@ -51,7 +51,7 @@ export interface TablePagination {
 }
 
 export interface FilterColumns {
-  [key: string]: string | undefined;
+  [key: string]: string | string[] | undefined;
 }
 
 export interface TableActions {

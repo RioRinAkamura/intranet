@@ -27,12 +27,12 @@ export interface TablePagination {
 }
 
 interface Params {
-  [key: string]: string | number | undefined;
+  [key: string]: string | string[] | number | undefined;
   ordering?: string;
   search?: string;
 }
 interface FilterColumns {
-  [key: string]: string | undefined;
+  [key: string]: string | string[] | undefined;
 }
 
 interface TableActions {
