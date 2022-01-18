@@ -25,13 +25,13 @@ export interface TaskManagerState {
 }
 
 export interface FilterColumns {
-  status?: string;
+  status?: string | string[];
   health_status?: string;
   code?: string;
   category?: string;
   since?: string;
   employee?: string;
-  [key: string]: string | undefined;
+  [key: string]: string | string[] | undefined;
 }
 
 export interface QueryParams {
@@ -39,7 +39,8 @@ export interface QueryParams {
   ordering?: string;
   page?: number;
   limit?: number;
-  [key: string]: string | number | undefined;
+  status?: string | string[];
+  [key: string]: string | number | string[] | undefined;
 }
 
 export interface Pagination {
