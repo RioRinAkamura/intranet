@@ -11,6 +11,7 @@ import {
   Col,
   Form,
   Popover,
+  Rate,
   Row,
   Select,
   Table,
@@ -26,11 +27,14 @@ import Button, { IconButton } from 'app/components/Button';
 import { CardLayout } from 'app/components/CardLayout';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { DeleteModal } from 'app/components/DeleteModal';
+import { DialogModal } from 'app/components/DialogModal';
 import PageTitle from 'app/components/PageTitle';
 import { TagComponent } from 'app/components/Tags/components/Tag';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { ProjectsMessages } from 'app/pages/ProjectPage/ProjectListPage/messages';
+import config from 'config';
+import moment from 'moment';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { Helmet } from 'react-helmet-async';
@@ -55,9 +59,6 @@ import {
   selectUserspageParams,
 } from './slice/selectors';
 import { useHandleDataTable } from './useHandleDataTable';
-import moment from 'moment';
-import config from 'config';
-import { DialogModal } from 'app/components/DialogModal';
 
 type Employee = models.hr.Employee;
 
@@ -89,7 +90,10 @@ export const EmployeeListPage: React.FC = () => {
   const [textCopy, setTextCopy] = useState(false);
   const [imported, setImported] = useState(false);
   const [openCheckedModal, setOpenCheckedModal] = useState(false);
+  const [openSkillsModal, setOpenSkillModal] = useState(false);
   let [recordValue, setRecordValue] = useState<Employee>();
+  const [employeeSkills, setEmployeeSkills] = useState<any[]>([]);
+  const [employeeRecord, setEmployeeRecord] = useState<Employee>();
 
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
@@ -113,6 +117,7 @@ export const EmployeeListPage: React.FC = () => {
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchTagProps,
+    getColumnSearchSkillsProps,
     getColumnSearchCheckboxFromToProps,
     getColumnSearchCheckboxProps,
   } = useTableConfig(getUserListState, UsersMessages, setFilterText);
@@ -358,6 +363,15 @@ export const EmployeeListPage: React.FC = () => {
     setOpenCheckedModal(false);
   };
 
+  const handleSubmitSkillModal = employeeRecord => {
+    history.push(`${PrivatePath.EMPLOYEES}/${employeeRecord.id}/skills/edit`);
+    setOpenSkillModal(false);
+  };
+
+  const handleCancelSkillModal = () => {
+    setOpenSkillModal(false);
+  };
+
   const columns: ColumnProps<Employee>[] = [
     {
       dataIndex: 'avatar',
@@ -446,9 +460,42 @@ export const EmployeeListPage: React.FC = () => {
       render: (status: boolean) => <Checkbox checked={status} />,
     },
     {
+      title: 'Skills',
+      dataIndex: 'skills',
+      width: 80,
+      ...getColumnSearchSkillsProps('skills'),
+      render: (value, record: Employee) => {
+        const starArr = value.map(star => star.level);
+        let totalStar = starArr.reduce((total, current) => {
+          return total + current;
+        }, 0);
+        const averageStar = Number(
+          (totalStar / (value.length ? value.length : 1)).toFixed(1),
+        );
+        const handleClickedSkills = (value, record: Employee) => {
+          setEmployeeSkills(value);
+          setEmployeeRecord(record);
+          setOpenSkillModal(true);
+        };
+        return (
+          <div
+            style={{ cursor: 'pointer' }}
+            onClick={() => handleClickedSkills(value, record)}
+          >
+            <RateSkill
+              disabled
+              allowHalf
+              defaultValue={averageStar}
+              style={{ cursor: 'pointer' }}
+            />
+          </div>
+        );
+      },
+    },
+    {
       title: 'Tags',
       dataIndex: 'tags',
-      width: 60,
+      width: 90,
       ...getColumnSearchTagProps('tags'),
       render: (text, record: Employee, index: number) => {
         return (
@@ -705,7 +752,7 @@ export const EmployeeListPage: React.FC = () => {
                   }}
                   loading={getUserListState.loading}
                   onChange={handleTableChange}
-                  scroll={{ x: 1200 }}
+                  scroll={{ x: 1400 }}
                 />
               </TableWrapper>
             </Col>
@@ -735,6 +782,33 @@ export const EmployeeListPage: React.FC = () => {
         handleSubmit={handleSubmitCheckedModal}
       >
         <p>Are you sure you reviewed this employee status carefully today? </p>
+      </DialogModal>
+      <DialogModal
+        isOpen={openSkillsModal}
+        cancelText={'Cancel'}
+        okText={'Update'}
+        title={'Employee Skills'}
+        handleCancel={handleCancelSkillModal}
+        handleSubmit={() => handleSubmitSkillModal(employeeRecord)}
+      >
+        <h3>
+          Employee name:{' '}
+          {employeeRecord?.first_name + ' ' + employeeRecord?.last_name}
+        </h3>
+        <h3>Skills: </h3>
+        {employeeSkills &&
+          employeeSkills.map((skill, index) => (
+            <Row gutter={[8, 8]} key={index}>
+              <Col span={6}>
+                <span>
+                  {index + 1}. {skill.skill.name}
+                </span>
+              </Col>
+              <Col span={18}>
+                <RateSkill defaultValue={skill.level} />
+              </Col>
+            </Row>
+          ))}
       </DialogModal>
     </>
   );
@@ -769,4 +843,8 @@ const SelectMonitorings = styled(Select)`
 
 const CheckedButton = styled(Button)`
   width: 100%;
+`;
+
+const RateSkill = styled(Rate)`
+  font-size: 14px;
 `;
