@@ -19,6 +19,7 @@ function* fetchUsers(action) {
       total_allocated_hour_exact: params.exact,
       allocable: params.allocable,
       is_deleted: params.is_deleted,
+      skills: params.skills,
     };
     if (Boolean(params.is_deleted) === false) {
       delete queryParams.is_deleted;

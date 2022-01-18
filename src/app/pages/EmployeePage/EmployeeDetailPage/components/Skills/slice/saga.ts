@@ -10,7 +10,6 @@ function* fetchEmployeeSkill(action) {
   try {
     const { params } = action.payload;
     const id = action.payload.id;
-    console.log('fetch employee skills');
     const response: EmployeeSkill[] = yield call(
       [api, api.hr.employee.skill.list],
       id,

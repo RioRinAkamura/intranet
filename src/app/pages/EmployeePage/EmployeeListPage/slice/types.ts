@@ -27,6 +27,7 @@ export interface FilterColumns {
   phoneNumber?: string;
   monitoring?: string;
   tags?: string;
+  skills?: string;
   from?: string;
   to?: string;
   exact?: string;
@@ -53,6 +54,7 @@ export interface QueryParams {
   exact?: string;
   limit?: number;
   page?: number;
+  skills?: string;
   [key: string]: string | number | undefined;
 }
 

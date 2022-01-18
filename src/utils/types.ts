@@ -42,6 +42,12 @@ export interface TagType {
   slug: string;
 }
 
+export interface SkillType {
+  id: number;
+  name: string;
+  level: number;
+}
+
 export interface MessageTranslate {
   [key: string]: Function;
 }

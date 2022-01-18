@@ -13,6 +13,7 @@ import {
   Space,
 } from 'antd';
 import { Avatar } from 'app/components/Avatar';
+import { SkillTagsInput } from 'app/components/SkillTag';
 import { TagsInput } from 'app/components/Tags';
 import { FilterColumns } from 'app/pages/EmployeePage/EmployeeListPage/slice/types';
 import { TableStateProps } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
@@ -24,7 +25,7 @@ import * as React from 'react';
 import Highlighter from 'react-highlight-words';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
-import { MessageTranslate, TagType } from './types';
+import { MessageTranslate, SkillType, TagType } from './types';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
@@ -38,6 +39,7 @@ interface useTableProps {
     type?: string,
   ) => {};
   getColumnSearchTagProps: (dataIndex: string, tags?: TagType[]) => {};
+  getColumnSearchSkillsProps: (dataIndex: string, skills?: SkillType[]) => {};
   getColumnSearchCheckboxProps: (
     dataIndex: string[],
     options: CheckboxOptionType[],
@@ -361,6 +363,54 @@ export const useTableConfig = (
       return (
         <Wrapper>
           <TagsInput
+            value={selectedKeys[dataIndex]}
+            callback={e => {
+              setSelectedKeys(prevState => ({
+                ...prevState,
+                [dataIndex]: e ? e : null,
+              }));
+            }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(dataIndex, confirm)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+              loading={state.loading}
+            >
+              {t(messageTrans.filterSearchButton())}
+            </Button>
+            <Button
+              onClick={() => handleReset(dataIndex, confirm)}
+              size="small"
+              loading={state.loading}
+              style={{ width: 90 }}
+            >
+              {t(messageTrans.filterResetButton())}
+            </Button>
+          </Space>
+        </Wrapper>
+      );
+    },
+    filterIcon: filtered => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : '',
+  });
+
+  const getColumnSearchSkillsProps = (dataIndex: string) => ({
+    filterDropdown: ({ confirm }) => {
+      return (
+        <Wrapper>
+          <SkillTagsInput
             value={selectedKeys[dataIndex]}
             callback={e => {
               setSelectedKeys(prevState => ({
@@ -924,6 +974,7 @@ export const useTableConfig = (
     getColumnSorterProps,
     getColumnSearchInputProps,
     getColumnSearchTagProps,
+    getColumnSearchSkillsProps,
     getColumnSearchCheckboxProps,
     getColumnSearchCheckboxFromToProps,
     getColumnSearchSelectProps,

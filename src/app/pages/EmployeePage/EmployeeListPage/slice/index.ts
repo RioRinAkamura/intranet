@@ -62,6 +62,7 @@ const slice = createSlice({
         monitoring: action.payload.monitoring,
         from: action.payload.from,
         to: action.payload.to,
+        skills: action.payload.skills,
       };
       state.pagination = {
         ...state.pagination,
