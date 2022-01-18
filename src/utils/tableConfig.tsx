@@ -519,7 +519,7 @@ export const useTableConfig = (
         >
           {options.map(option => {
             return (
-              <Option value={`${option.value}`}>
+              <Option key={`${option.value}`} value={`${option.value}`}>
                 <Highlighter
                   highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                   searchWords={[
