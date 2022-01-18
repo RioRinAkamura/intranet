@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import styled from 'styled-components/macro';
 import { Member } from './components/Member';
-import { useHistory } from 'react-router-dom';
 import { SettingOutlined } from '@ant-design/icons';
 import { Member as MemberModel } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
@@ -12,13 +11,11 @@ interface TeamMembersProps {
 }
 
 export const TeamMembers = memo((props: TeamMembersProps) => {
-  const history = useHistory();
-
-  const { members, projId, callback } = props;
+  const { members, callback } = props;
 
   const handlevisibleModal = () => {
     callback(members);
-    history.push(`projects/${projId}/members`);
+    // history.push(`projects/${projId}/members`);
   };
 
   return (

@@ -91,10 +91,8 @@ export const useTableConfig = (
   const [selectedKeys, setSelectedKeys] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
   const [formValue, setFormValue] = React.useState({});
-  const [searchOptions, setSearchOptions] = React.useState<
-    CheckboxOptionType[]
-  >([]);
-  const [searchData, setSearch] = React.useState<CheckboxOptionType[]>([]);
+  const [searchOptions, setSearchOptions] = React.useState<any[]>([]);
+  const [searchData, setSearch] = React.useState<any[]>([]);
   const [customSearchOptions, setCustomSearchOptions] = React.useState<
     CheckboxOptionType[]
   >([]);
@@ -293,6 +291,14 @@ export const useTableConfig = (
     const newOptions = [...searchData].filter((item: any) => {
       return item.label.toLowerCase().includes(e.target.value.toLowerCase());
     });
+    setSearchOptions(newOptions);
+  };
+
+  const handleAvatarSearchInput = e => {
+    const newOptions = [...searchData].filter((item: any) => {
+      return item.name.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+
     setSearchOptions(newOptions);
   };
 
@@ -627,13 +633,13 @@ export const useTableConfig = (
   ) => ({
     filterDropdown: ({ confirm }) => {
       if (searchData.length === 0) {
-        setSearchOptions(options);
-        setSearch(options);
+        setSearchOptions(dataIndex as any);
+        setSearch(dataIndex as any);
       }
       return (
         <Wrapper>
           <Search
-            onChange={handleSearchInput}
+            onChange={handleAvatarSearchInput}
             placeholder="Search"
             style={{ margin: '0 0 10px 0' }}
           />
@@ -652,7 +658,7 @@ export const useTableConfig = (
                   }));
                 }}
               >
-                {dataIndex.map(data => (
+                {searchOptions.map(data => (
                   <Row>
                     <Checkbox value={data.id}>
                       <Avatar
