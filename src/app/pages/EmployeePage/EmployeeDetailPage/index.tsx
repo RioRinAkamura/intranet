@@ -226,6 +226,8 @@ export function EmployeeDetailPage(props: Props) {
         ...data,
         id: data.id,
         dob: data.dob && moment(data.dob, DATE_FORMAT),
+        starting_date:
+          data.starting_date && moment(data.starting_date, DATE_FORMAT),
         issued_date: data.issued_date && moment(data.issued_date, DATE_FORMAT),
         bank_accounts:
           data.bank_accounts && data.bank_accounts.length
@@ -275,7 +277,11 @@ export function EmployeeDetailPage(props: Props) {
   const handleSubmit = async () => {
     try {
       let values = await form.validateFields();
-      values = { ...values, dob: moment(values.dob).format(DATE_FORMAT) };
+      values = {
+        ...values,
+        dob: moment(values.dob).format(DATE_FORMAT),
+        starting_date: moment(values.starting_date).format(DATE_FORMAT),
+      };
       if (values.issued_date) {
         values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
       }

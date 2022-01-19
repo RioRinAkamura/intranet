@@ -171,6 +171,13 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.profile.status.married.label,
       'Married',
     ),
+  formJoinedLabel: () =>
+    _t(translations.UserDetailPage.modal.form.profile.joined.label, 'Joined'),
+  formJoinedPlaceholder: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.joined.placeholder,
+      'Joined date',
+    ),
   formIDCardTitle: () =>
     _t(
       translations.UserDetailPage.modal.form.profile.idCard.title,
