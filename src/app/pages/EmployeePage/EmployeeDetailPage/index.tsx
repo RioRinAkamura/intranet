@@ -32,6 +32,7 @@ import { selectEmployeeNotes } from './components/Notes/slice/selectors';
 import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { Projects } from './components/Projects/Loadable';
 import { Skills } from './components/Skills/Loadable';
+import { SocialNetwork } from './components/SocialNetwork';
 import { UserDetailMessages } from './messages';
 import { useUserDetailsSlice } from './slice';
 import { useHandleEmployeeDetail } from './useHandleEmployeeDetail';
@@ -56,6 +57,7 @@ enum TabKeys {
   'bankAccounts' = 'bankAccounts',
   'citizenInfo' = 'citizenInfo',
   'skills' = 'skills',
+  'socialAccounts' = 'socialAccounts',
 }
 
 export function EmployeeDetailPage(props: Props) {
@@ -153,6 +155,12 @@ export function EmployeeDetailPage(props: Props) {
       setIsBankAccountTab(false);
       setIsCitizenTab(false);
       history.push(`${PrivatePath.EMPLOYEES}/${id}/skills`);
+    } else if (key === TabKeys.socialAccounts) {
+      setIsDetailTab(false);
+      setIsBankAccountTab(false);
+      setIsContractTab(false);
+      setIsCitizenTab(false);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/social-accounts`);
     } else if (key === TabKeys.changeLogs) {
       setIsDetailTab(false);
       setIsBankAccountTab(false);
@@ -190,6 +198,9 @@ export function EmployeeDetailPage(props: Props) {
     }
     if (history.location.pathname.includes('skills')) {
       return `${TabKeys.skills}`;
+    }
+    if (history.location.pathname.includes('social-accounts')) {
+      return `${TabKeys.socialAccounts}`;
     }
     if (history.location.pathname.includes('change-logs')) {
       return `${TabKeys.changeLogs}`;
@@ -432,6 +443,7 @@ export function EmployeeDetailPage(props: Props) {
             <TabPane tab="Bank Accounts" key={TabKeys.bankAccounts} />
             <TabPane tab="Citizen Info" key={TabKeys.citizenInfo} />
             <TabPane tab="Skills" key={TabKeys.skills} />
+            <TabPane tab="Social Accouns" key={TabKeys.socialAccounts} />
             <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
           </StyledTabs>
 
@@ -465,6 +477,9 @@ export function EmployeeDetailPage(props: Props) {
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_SKILLS}>
               <Skills employeeId={id} />
+            </Route>
+            <Route path={PrivatePath.EMPLOYEES_ID_SOCIAL_ACCOUNTS}>
+              <SocialNetwork employeeId={id} />
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}>
               <ChangeLogs employeeId={id} />

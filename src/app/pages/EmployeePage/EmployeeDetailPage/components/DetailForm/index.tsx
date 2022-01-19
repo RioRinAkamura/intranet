@@ -13,7 +13,7 @@ import { AvatarPath } from '../AvatarPath/Loadable';
 import { BankAccounts } from '../BankAccounts/Loadable';
 import { IdCardInfo } from '../IdCardInfo/Loadable';
 import { JobInfo } from '../JobInfo/Loadable';
-import { SocialNetwork } from '../SocialNetwork/Loadable';
+import { SocialNetworkDetail } from '../SocialNetwork/components/SocialNetworkDetail';
 
 type Employee = models.hr.Employee;
 
@@ -37,6 +37,7 @@ export const DetailForm = memo((props: FormProps) => {
   } = props;
   const location = useLocation();
   const { pathname } = location;
+
   // is tab: "Bank Accounts"
   return pathname.includes('employees') &&
     pathname.includes('bank-accounts') ? (
@@ -97,6 +98,27 @@ export const DetailForm = memo((props: FormProps) => {
         </Col>
       </Wrapper>
     </Form>
+  ) : //is Tab: Social Accounts
+  pathname.includes('employees') && pathname.includes('social-accounts') ? (
+    <Form form={form} labelAlign="left">
+      <Wrapper isView={isView}>
+        <Col span={isView ? 24 : 24}>
+          <Form.Item hidden name="id">
+            <Input hidden />
+          </Form.Item>
+          <Row gutter={[32, 32]}>
+            <RightScreen isView={isView} md={19}>
+              {isView && rightScreenItems}
+              {!isView && (
+                <>
+                  <SocialNetworkDetail isView={isView} isEdit={isEdit} />
+                </>
+              )}
+            </RightScreen>
+          </Row>
+        </Col>
+      </Wrapper>
+    </Form>
   ) : (
     <Form form={form} labelAlign="left">
       <Form.Item hidden name="id">
@@ -118,13 +140,6 @@ export const DetailForm = memo((props: FormProps) => {
           </RightScreen>
         </Row>
       </Wrapper>
-      <WrapperSubItem gutter={[32, 32]}>
-        <Col span={isView ? 12 : 16}>
-          <WrapperItem>
-            <SocialNetwork isView={isView} />
-          </WrapperItem>
-        </Col>
-      </WrapperSubItem>
     </Form>
   );
 });
