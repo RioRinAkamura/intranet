@@ -1,20 +1,7 @@
 import React, { memo, useState, useEffect, Key } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import {
-  Checkbox,
-  Form,
-  Modal,
-  Popover,
-  Rate,
-  Table,
-  TablePaginationConfig,
-  Tooltip,
-  Row,
-  Col,
-  Input,
-  Typography,
-} from 'antd';
+import { Popover, Rate, Table, TablePaginationConfig, Tooltip } from 'antd';
 
 import {
   DeleteOutlined,
@@ -48,37 +35,28 @@ import {
   Category,
   CreateEmployeeSkillQueryParam,
   EmployeeSkill,
-  Skill,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { ActionIcon } from 'app/components/ActionIcon';
 import { useSkillDetails } from 'app/pages/SkillManagePage/useSkillDetails';
 import { useGetSkills } from 'app/components/Skills/useGetSkill';
 import { api } from 'utils/api';
-import { CheckboxValueType } from 'antd/lib/checkbox/Group';
-import { uniq } from 'lodash';
+
+import AddSkillModal from 'app/components/AddSkillModal';
 interface SkillProps {
   employeeId: string;
 }
 
 export const Skills = memo(({ employeeId }: SkillProps) => {
-  const [selectedSkill, setSelectedSkill] = useState<
-    CheckboxValueType[] | undefined
-  >([]);
-  const [checkedList, setCheckedList] = React.useState<string[]>([]);
-  const [skillErr, setSkillErr] = useState('');
-  const [cloneFilteredSkill, setCloneFilteredSkill] = useState<Skill[]>([]);
-  const { categories, fetchAllCategory, setCategories } = useSkillDetails();
+  const { categories, fetchAllCategory } = useSkillDetails();
   const { id } = useParams<Record<string, string>>();
   const { data: skills } = useGetSkills(true);
   const { t } = useTranslation();
   const history = useHistory();
   const { notify } = useNotify();
-  const [form] = Form.useForm();
   // Delete Modal State
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isOpenSkillModal, setOpenSkillModal] = useState(false);
   const [deleteSkill, setDeleteSkill] = useState<EmployeeSkill>();
-  const [skillOptions, setSkillOptions] = useState<Skill[]>([]);
   const [textCopy, setTextCopy] = useState(false);
   const { actions } = useEmployeeSkillSlice();
   const dispatch = useDispatch();
@@ -98,27 +76,27 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
   );
 
   // map skill
-  React.useEffect(() => {
-    if (skills && getEmployeeSkillState.skills) {
-      const mapEmployeeSkillIdArr = [...getEmployeeSkillState?.skills].map(
-        (skill: EmployeeSkill) => skill.skill.id,
-      );
-      const filteredSkillCategory: Category[] = [];
-      const filteredSkill = [...skills.results].filter((skill: Skill) => {
-        if (!mapEmployeeSkillIdArr.includes(skill.id)) {
-          const category = categories.find(
-            category => category.id === skill.category,
-          );
-          if (category) filteredSkillCategory.push(category);
-          return true;
-        }
+  // React.useEffect(() => {
+  //   if (skills && getEmployeeSkillState.skills) {
+  //     const mapEmployeeSkillIdArr = [...getEmployeeSkillState?.skills].map(
+  //       (skill: EmployeeSkill) => skill.skill.id,
+  //     );
+  //     const filteredSkillCategory: Category[] = [];
+  //     const filteredSkill = [...skills.results].filter((skill: Skill) => {
+  //       if (!mapEmployeeSkillIdArr.includes(skill.id)) {
+  //         const category = categories.find(
+  //           category => category.id === skill.category,
+  //         );
+  //         if (category) filteredSkillCategory.push(category);
+  //         return true;
+  //       }
 
-        return false;
-      });
-      setSkillOptions(filteredSkill);
-      setCloneFilteredSkill(filteredSkill);
-    }
-  }, [skills, getEmployeeSkillState.skills, categories]);
+  //       return false;
+  //     });
+  //     setSkillOptions(filteredSkill);
+  //     setCloneFilteredSkill(filteredSkill);
+  //   }
+  // }, [skills, getEmployeeSkillState.skills, categories]);
 
   React.useEffect(() => {
     fetchAllCategory();
@@ -286,11 +264,11 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
     setSelectedRows(selectedRowKeys, selectedRows);
   };
 
-  const handleAddSkill = async () => {
-    if (selectedSkill && selectedSkill.length <= 0) {
-      setSkillErr('Please select skill');
-      return;
-    }
+  const handleAddSkill = async selectedSkill => {
+    // if (selectedSkill && selectedSkill.length <= 0) {
+    //   setSkillErr('Please select skill');
+    //   return;
+    // }
 
     try {
       const arrPromise: any = await selectedSkill?.map(skillId => {
@@ -303,7 +281,6 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
       });
 
       Promise.all(arrPromise).then(values => {
-        setSkillErr('');
         setOpenSkillModal(false);
         dispatch(
           actions.fetchEmployeeSkill({ id: employeeId, params: params }),
@@ -313,52 +290,6 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
       console.log(e);
     } finally {
     }
-  };
-
-  const handleSearchSkill = e => {
-    const newSkillOptions = [...skillOptions].filter(skill =>
-      skill.name.toLowerCase().includes(e.target.value.toLowerCase()),
-    );
-
-    setCloneFilteredSkill(newSkillOptions);
-  };
-
-  const handleSelectSkill = checkedValue => {
-    setSelectedSkill(checkedValue);
-  };
-
-  const handleChangeCheckbox = e => {
-    const skills = [...cloneFilteredSkill]
-      .filter(skill => skill.category === e.target.value)
-      .map(skill => skill.id);
-
-    if (e.target.checked) {
-      const newList = [...checkedList, e.target.value];
-      setCheckedList(newList);
-      // find checked category skill
-      setSelectedSkill(uniq([...skills, ...(selectedSkill as string[])]));
-    } else {
-      const newList = [...checkedList].filter(cat => cat !== e.target.value);
-      setCheckedList(newList);
-      const newSelectedSkill = [...(selectedSkill as string[])].filter(
-        skill => !skills.includes(skill),
-      );
-      setSelectedSkill(newSelectedSkill);
-    }
-  };
-
-  // useEffect(() => {
-  //   console.log('new categories');
-  // }, [categories]);
-  const resetStateSkillModal = () => {
-    setSelectedSkill([]);
-    setSkillErr('');
-
-    setCategories([...categories]);
-  };
-
-  const handleSelectChangeCategoryGroup = () => {
-    console.log('change');
   };
 
   return (
@@ -374,7 +305,17 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
           Add skill
         </StyledButton>
       </Header>
-      <Modal
+      <AddSkillModal
+        isOpenSkilLModal={isOpenSkillModal}
+        onCancel={() => {
+          setOpenSkillModal(false);
+        }}
+        skills={skills}
+        employeeSkills={getEmployeeSkillState.skills}
+        categories={categories}
+        callback={handleAddSkill}
+      />
+      {/* <Modal
         width={500}
         title={'Add Skill'}
         visible={isOpenSkillModal}
@@ -427,7 +368,7 @@ export const Skills = memo(({ employeeId }: SkillProps) => {
             </Typography.Text>
           </WrapperSearch>
         </Form>
-      </Modal>
+      </Modal> */}
 
       <Table
         rowSelection={{
@@ -467,25 +408,4 @@ const StyledButton = styled(Button)`
   svg {
     vertical-align: baseline;
   }
-`;
-
-const WrapperSearch = styled.div`
-  padding: 8px;
-  position: relative;
-`;
-
-const WrapperCheckbox = styled.div`
-  .ant-checkbox-group,
-  .ant-select {
-    display: grid;
-    max-height: 300px;
-    overflow-y: auto;
-  }
-  margin-top: 2px;
-  border-radius: 5px;
-  padding: 10px 8px;
-  background: white;
-  border: 1px solid #d5d4d5;
-  z-index: 1000;
-  margin-bottom: 7px;
 `;
