@@ -469,7 +469,7 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: 'Skills',
       dataIndex: 'skills',
-      width: 80,
+      width: 90,
       ...getColumnSearchSkillsProps('skills'),
       render: (value, record: Employee) => {
         const starArr = value.map(star => star.level);
@@ -891,4 +891,8 @@ const CheckedButton = styled(Button)`
 
 const RateSkill = styled(Rate)`
   font-size: 14px;
+  li {
+    padding: 0px 1px;
+    margin-right: 2px !important;
+  }
 `;

@@ -9,7 +9,13 @@ import { useTranslation } from 'react-i18next';
 import { Table, Tooltip, Form as FormAntd, Row, Col, Typography } from 'antd';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
-import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  DislikeTwoTone,
+  FormOutlined,
+  LikeTwoTone,
+  MinusCircleTwoTone,
+} from '@ant-design/icons';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { EmployeeNote } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
@@ -36,6 +42,7 @@ import { Actions } from './components/Actions';
 import { Form } from './components/Form';
 import { api } from 'utils/api';
 import { ActionIcon } from 'app/components/ActionIcon';
+import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
@@ -82,11 +89,17 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
     setFilterText,
   } = useHandleDataTable(employeeNoteState, actions);
 
-  const { getColumnSorterProps, getColumnSearchInputProps } = useTableConfig(
-    employeeNoteState,
-    EmployeeNoteMessages,
-    setFilterText,
-  );
+  const {
+    update,
+    employeeNoteScores,
+    getEmployeeNoteScores,
+  } = useHandleEmployeeDetail();
+
+  const {
+    getColumnSorterProps,
+    getColumnSearchInputProps,
+    getColumnSearchCheckboxProps,
+  } = useTableConfig(employeeNoteState, EmployeeNoteMessages, setFilterText);
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -191,7 +204,8 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
 
   useEffect(() => {
     setNote(note);
-  }, [note]);
+    getEmployeeNoteScores();
+  }, [note, getEmployeeNoteScores]);
 
   useEffect(() => {
     if (!isFilter) {
@@ -223,6 +237,43 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [employeeNoteState.deleteIsFailure, employeeNoteState.deleteIsSuccess]);
   const columns: ColumnProps<EmployeeNote>[] = [
+    {
+      title: t(EmployeeNoteMessages.listScore()),
+      dataIndex: 'score',
+      width: 130,
+      ...getColumnSorterProps('score', 0),
+      ...getColumnSearchCheckboxProps(
+        ['score'],
+        employeeNoteScores,
+        undefined,
+        undefined,
+        async value => {
+          try {
+            const response = await update(value);
+            if (response) {
+              dispatch(
+                actions.fetchEmployeeNotes({ employeeId, params: params }),
+              );
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      ),
+      render: text => (
+        <NotesScoreIcon>
+          {text === '1' ? (
+            <LikeTwoTone twoToneColor="green" />
+          ) : text === '2' ? (
+            <MinusCircleTwoTone twoToneColor="grey" />
+          ) : text === '3' ? (
+            <DislikeTwoTone twoToneColor="red" />
+          ) : (
+            ''
+          )}
+        </NotesScoreIcon>
+      ),
+    },
     {
       title: t(EmployeeNoteMessages.listType()),
       dataIndex: 'category',
@@ -421,4 +472,9 @@ const StyledButton = styled(Button)`
   svg {
     vertical-align: baseline;
   }
+`;
+
+const NotesScoreIcon = styled.div`
+  font-size: 20px;
+  padding-bottom: 6px;
 `;

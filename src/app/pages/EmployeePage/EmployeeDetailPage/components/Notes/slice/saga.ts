@@ -13,6 +13,7 @@ export function* fetchEmployeeNotes(action) {
       category: params.category,
       date: params.content,
       summary: params.summary,
+      score: params.score,
     };
 
     const response = yield call(

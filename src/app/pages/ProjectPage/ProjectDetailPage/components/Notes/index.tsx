@@ -4,7 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { Table, Tooltip, Form as FormAntd, Row, Col, Typography } from 'antd';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
-import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  DislikeTwoTone,
+  FormOutlined,
+  LikeTwoTone,
+  MinusCircleTwoTone,
+} from '@ant-design/icons';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProjectNote } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
@@ -31,6 +37,7 @@ import { api } from 'utils/api';
 import { ActionIcon } from 'app/components/ActionIcon';
 import { useNotesSlice } from './slice';
 import { Form } from './components/Form';
+import { useProjectDetail } from '../../useProjectDetail';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
@@ -66,17 +73,23 @@ export const Notes = memo(({ projectId }: NotesProps) => {
   const projectNoteState = useSelector(selectProjectNotes);
 
   const {
+    update,
+    projectNoteScores,
+    getProjectNoteScores,
+  } = useProjectDetail();
+
+  const {
     setSelectedRows,
     setOrdering,
     setPagination,
     setFilterText,
   } = useHandleDataTable(projectNoteState, actions);
 
-  const { getColumnSorterProps, getColumnSearchInputProps } = useTableConfig(
-    projectNoteState,
-    ProjectNoteMessages,
-    setFilterText,
-  );
+  const {
+    getColumnSorterProps,
+    getColumnSearchInputProps,
+    getColumnSearchCheckboxProps,
+  } = useTableConfig(projectNoteState, ProjectNoteMessages, setFilterText);
 
   const handleSelectedRows = (
     selectedRowKeys: Key[],
@@ -181,7 +194,8 @@ export const Notes = memo(({ projectId }: NotesProps) => {
 
   useEffect(() => {
     setNote(note);
-  }, [note]);
+    getProjectNoteScores();
+  }, [note, getProjectNoteScores]);
 
   useEffect(() => {
     if (!isFilter) {
@@ -220,6 +234,43 @@ export const Notes = memo(({ projectId }: NotesProps) => {
   ]);
 
   const columns: ColumnProps<ProjectNote>[] = [
+    {
+      title: t(ProjectNoteMessages.listScore()),
+      dataIndex: 'score',
+      width: 130,
+      ...getColumnSorterProps('score', 0),
+      ...getColumnSearchCheckboxProps(
+        ['score'],
+        projectNoteScores,
+        undefined,
+        undefined,
+        async value => {
+          try {
+            const response = await update(value);
+            if (response) {
+              dispatch(
+                actions.fetchProjectNotes({ projectId, params: params }),
+              );
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      ),
+      render: text => (
+        <NotesScoreIcon>
+          {text === '1' ? (
+            <LikeTwoTone twoToneColor="green" />
+          ) : text === '2' ? (
+            <MinusCircleTwoTone twoToneColor="grey" />
+          ) : text === '3' ? (
+            <DislikeTwoTone twoToneColor="red" />
+          ) : (
+            ''
+          )}
+        </NotesScoreIcon>
+      ),
+    },
     {
       title: t(ProjectNoteMessages.listType()),
       dataIndex: 'category',
@@ -417,4 +468,9 @@ const StyledButton = styled(Button)`
   svg {
     vertical-align: baseline;
   }
+`;
+
+const NotesScoreIcon = styled.div`
+  font-size: 20px;
+  padding-bottom: 6px;
 `;

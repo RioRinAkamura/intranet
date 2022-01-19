@@ -1609,10 +1609,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hdwebsoft/intranet-api-sdk@0.1.19":
-  version "0.1.19"
-  resolved "https://gitlab.com/api/v4/projects/31966285/packages/npm/@hdwebsoft/intranet-api-sdk/-/@hdwebsoft/intranet-api-sdk-0.1.19.tgz#c4ed4f6aa957a3e89f9fd8e89ec9e398dd69e1be"
-  integrity sha1-xO1PaqlXo+ifn9jonsnjmN1p4b4=
+"@hdwebsoft/intranet-api-sdk@0.1.20":
+  version "0.1.20"
+  resolved "https://gitlab.com/api/v4/projects/31966285/packages/npm/@hdwebsoft/intranet-api-sdk/-/@hdwebsoft/intranet-api-sdk-0.1.20.tgz#d8ee1ade4a0d6ea370be14f1147039cc31eb32f1"
+  integrity sha1-2O4a3koNbqNwvhTxFHA5zDHrMvE=
   dependencies:
     axios "0.24.0"
     axios-cache-adapter "^2.7.3"
@@ -2933,7 +2933,7 @@
 
 "@types/draft-convert@2.1.4":
   version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@types/draft-convert/-/draft-convert-2.1.4.tgz#8f32f86133eca5ddfede46d31a40ba6c964f605f"
+  resolved "https://registry.npmjs.org/@types/draft-convert/-/draft-convert-2.1.4.tgz"
   integrity sha512-NbhE0ijzENK6ZQa3zO0KK6cNS80XESnQ03Bg7DEzE/qBg6YvpIEni6vzruYCYPkm1Sc6z0K7XbtJu4p53elGdA==
   dependencies:
     "@types/draft-js" "*"
@@ -6899,7 +6899,7 @@ downshift@^6.0.15:
 
 draft-convert@2.1.12:
   version "2.1.12"
-  resolved "https://registry.yarnpkg.com/draft-convert/-/draft-convert-2.1.12.tgz#ef77b4d2bf416c1aea2916662e3fa669916644e9"
+  resolved "https://registry.npmjs.org/draft-convert/-/draft-convert-2.1.12.tgz"
   integrity sha512-6Bt338J+ZA00OLlzHipd0ZcQCCrVEM0vCyXb/eDlLdY89mmQ4XWkflSD9vql8TzVJ5ENk4s8cywMO9YTaTnZyg==
   dependencies:
     "@babel/runtime" "^7.5.5"
