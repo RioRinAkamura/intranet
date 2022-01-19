@@ -259,6 +259,10 @@
               "label": "Married"
             }
           },
+          "joined": {
+            "label": "Joined",
+            "placeholder": "Joined date"
+          },
           "idCard": {
             "title": "ID card information"
           },

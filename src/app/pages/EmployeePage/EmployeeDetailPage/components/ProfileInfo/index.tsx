@@ -46,6 +46,10 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
   const { isView, isEdit } = props;
   const { t } = useTranslation();
 
+  const disabledDate = (current: moment.Moment) => {
+    return current > moment().endOf('day');
+  };
+
   const validateDob = (
     rule: RuleObject,
     value: string,
@@ -189,6 +193,25 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                     </Radio>
                   </Radio.Group>
                 )}
+              </FormItem>
+            </Col>
+            <Col md={isView ? 8 : 24} xs={24}>
+              <span className="label">
+                {t(UserDetailMessages.formJoinedLabel())}
+              </span>
+            </Col>
+            <Col md={isView ? 16 : 24} xs={24}>
+              <FormItem isView={isView} name="starting_date">
+                <DatePicker
+                  {...(isView ? datePickerProps : {})}
+                  disabledDate={disabledDate}
+                  format={DATE_FORMAT}
+                  tabIndex={3}
+                  size="large"
+                  placeholder={
+                    isView ? '' : t(UserDetailMessages.formJoinedPlaceholder())
+                  }
+                />
               </FormItem>
             </Col>
           </Row>
