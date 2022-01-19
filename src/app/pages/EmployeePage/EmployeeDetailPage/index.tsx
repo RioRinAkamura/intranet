@@ -57,7 +57,7 @@ enum TabKeys {
   'bankAccounts' = 'bankAccounts',
   'citizenInfo' = 'citizenInfo',
   'skills' = 'skills',
-  'socialAccounts' = 'socialAccounts'
+  'socialAccounts' = 'socialAccounts',
 }
 
 export function EmployeeDetailPage(props: Props) {

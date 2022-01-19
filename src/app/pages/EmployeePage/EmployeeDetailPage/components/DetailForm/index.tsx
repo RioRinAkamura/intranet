@@ -13,7 +13,7 @@ import { AvatarPath } from '../AvatarPath/Loadable';
 import { BankAccounts } from '../BankAccounts/Loadable';
 import { IdCardInfo } from '../IdCardInfo/Loadable';
 import { JobInfo } from '../JobInfo/Loadable';
-import { SocialNetwork } from '../SocialNetwork/Loadable';
+import { SocialNetworkDetail } from '../SocialNetwork/components/SocialNetworkDetail';
 
 type Employee = models.hr.Employee;
 
@@ -111,7 +111,7 @@ export const DetailForm = memo((props: FormProps) => {
               {isView && rightScreenItems}
               {!isView && (
                 <>
-                  <SocialNetwork isView={isView} isEdit={isEdit} />
+                  <SocialNetworkDetail isView={isView} isEdit={isEdit} />
                 </>
               )}
             </RightScreen>
