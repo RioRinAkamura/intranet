@@ -13,11 +13,12 @@ import { RichEditor } from 'app/components/RichEditor/Loadable';
 import { useProjectsSlice } from 'app/pages/ProjectPage/ProjectListPage/slice';
 import { selectProjects } from 'app/pages/ProjectPage/ProjectListPage/slice/selectors';
 import config from 'config';
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components/macro';
 import { datePickerViewProps, inputViewProps } from 'utils/types';
+import Loading from 'app/components/LoadingTable';
 import { getSelectValues } from 'utils/variable';
 import { ProjectDetailMessages } from '../../messages';
 import { useProjectDetail } from '../../useProjectDetail';
@@ -27,6 +28,8 @@ interface Props {
   form: FormInstance;
   data?: any;
   isEdit?: boolean;
+  isLoading?: boolean;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 const selectProps: SelectProps<SelectValue> = {
@@ -42,7 +45,7 @@ const DATE_FORMAT = config.DATE_FORMAT;
 const { Option } = Select;
 
 export const ProjectInfo = (props: Props) => {
-  const { isView, form, data, isEdit } = props;
+  const { isView, form, data, isEdit, isLoading, setIsLoading } = props;
   const { t } = useTranslation();
   const [overview, setOverview] = useState('');
   const [statusSelect, setStatusSelect] = useState('');
@@ -63,16 +66,18 @@ export const ProjectInfo = (props: Props) => {
   const projectState = useSelector(selectProjects);
 
   useEffect(() => {
+    setIsLoading(true);
     getPriorities();
     getStatuses();
     getMonitorings();
-  }, [getPriorities, getStatuses, getMonitorings]);
+  }, [getPriorities, getStatuses, getMonitorings, setIsLoading]);
 
   useEffect(() => {
     if (data) {
       setOverview(data.overview);
+      setIsLoading(false);
     }
-  }, [data]);
+  }, [data, setIsLoading]);
 
   useEffect(() => {
     if (!isEdit && !isView) {
@@ -128,58 +133,64 @@ export const ProjectInfo = (props: Props) => {
 
   return isView ? (
     <>
-      <StyledWrapperDiv>
-        <StyledTitle>
-          {t(ProjectDetailMessages.formProjectNameLabel())}
-        </StyledTitle>
-        <StyledData>{data?.name || 'N/A'}</StyledData>
-      </StyledWrapperDiv>
+      <StyledWrapperLoading>
+        {isLoading && <Loading />}
+        <div className={`${isLoading ? 'spin-blur' : ''}`}>
+          <StyledWrapperDiv>
+            <StyledTitle>
+              {t(ProjectDetailMessages.formProjectNameLabel())}
+            </StyledTitle>
+            <StyledData>{data?.name || 'N/A'}</StyledData>
+          </StyledWrapperDiv>
 
-      <StyledWrapperDiv>
-        <StyledTitle>
-          {t(ProjectDetailMessages.formProjectStartedLabel())}
-        </StyledTitle>
-        <StyledData>{data?.started || 'N/A'}</StyledData>
-      </StyledWrapperDiv>
+          <StyledWrapperDiv>
+            <StyledTitle>
+              {t(ProjectDetailMessages.formProjectStartedLabel())}
+            </StyledTitle>
+            <StyledData>{data?.started || 'N/A'}</StyledData>
+          </StyledWrapperDiv>
 
-      <StyledWrapperDiv>
-        <StyledTitle>
-          {t(ProjectDetailMessages.formProjectPriorityLabel())}
-        </StyledTitle>
-        <StyledData>
-          {(data?.priority &&
-            getSelectValues(priorities, data.priority)?.label) ||
-            'N/A'}
-        </StyledData>
-      </StyledWrapperDiv>
+          <StyledWrapperDiv>
+            <StyledTitle>
+              {t(ProjectDetailMessages.formProjectPriorityLabel())}
+            </StyledTitle>
+            <StyledData>
+              {(data?.priority &&
+                getSelectValues(priorities, data.priority)?.label) ||
+                'N/A'}
+            </StyledData>
+          </StyledWrapperDiv>
 
-      <StyledWrapperDiv>
-        <StyledTitle>
-          {t(ProjectDetailMessages.formProjectStatusLabel())}
-        </StyledTitle>
-        <StyledData>
-          {(data?.status && getSelectValues(statuses, data.status)?.label) ||
-            'N/A'}
-        </StyledData>
-      </StyledWrapperDiv>
+          <StyledWrapperDiv>
+            <StyledTitle>
+              {t(ProjectDetailMessages.formProjectStatusLabel())}
+            </StyledTitle>
+            <StyledData>
+              {(data?.status &&
+                getSelectValues(statuses, data.status)?.label) ||
+                'N/A'}
+            </StyledData>
+          </StyledWrapperDiv>
 
-      <StyledWrapperDiv>
-        <StyledTitle>
-          {t(ProjectDetailMessages.formProjectMonitoringLabel())}
-        </StyledTitle>
-        <StyledData>
-          {(data?.monitoring &&
-            getSelectValues(monitorings, data.monitoring)?.label) ||
-            'N/A'}
-        </StyledData>
-      </StyledWrapperDiv>
+          <StyledWrapperDiv>
+            <StyledTitle>
+              {t(ProjectDetailMessages.formProjectMonitoringLabel())}
+            </StyledTitle>
+            <StyledData>
+              {(data?.monitoring &&
+                getSelectValues(monitorings, data.monitoring)?.label) ||
+                'N/A'}
+            </StyledData>
+          </StyledWrapperDiv>
 
-      <StyledWrapperDiv>
-        <StyledTitle>
-          {t(ProjectDetailMessages.formProjectOverviewLabel())}
-        </StyledTitle>
-        <StyledData>{data?.overview || 'N/A'}</StyledData>
-      </StyledWrapperDiv>
+          <StyledWrapperDiv>
+            <StyledTitle>
+              {t(ProjectDetailMessages.formProjectOverviewLabel())}
+            </StyledTitle>
+            <StyledData>{data?.overview || 'N/A'}</StyledData>
+          </StyledWrapperDiv>
+        </div>
+      </StyledWrapperLoading>
     </>
   ) : (
     <Wrapper isView={isView}>
@@ -454,4 +465,15 @@ const StyledData = styled(StyledDiv)`
   font-weight: 500;
   padding-left: 20px;
   font-size: 16px;
+`;
+const StyledWrapperLoading = styled.div`
+  position: relative;
+  .spin-blur {
+    clear: both;
+    overflow: hidden;
+    opacity: 0.5;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
+  }
 `;
