@@ -479,7 +479,7 @@ export function EmployeeDetailPage(props: Props) {
               <Skills employeeId={id} />
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_SOCIAL_ACCOUNTS}>
-              <SocialNetwork />
+              <SocialNetwork employeeId={id} />
             </Route>
             <Route path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}>
               <ChangeLogs employeeId={id} />

@@ -37,6 +37,7 @@ export const DetailForm = memo((props: FormProps) => {
   } = props;
   const location = useLocation();
   const { pathname } = location;
+
   // is tab: "Bank Accounts"
   return pathname.includes('employees') &&
     pathname.includes('bank-accounts') ? (
@@ -90,6 +91,27 @@ export const DetailForm = memo((props: FormProps) => {
               {!isView && (
                 <>
                   <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
+                </>
+              )}
+            </RightScreen>
+          </Row>
+        </Col>
+      </Wrapper>
+    </Form>
+  ) : //is Tab: Social Accounts
+  pathname.includes('employees') && pathname.includes('social-accounts') ? (
+    <Form form={form} labelAlign="left">
+      <Wrapper isView={isView}>
+        <Col span={isView ? 24 : 24}>
+          <Form.Item hidden name="id">
+            <Input hidden />
+          </Form.Item>
+          <Row gutter={[32, 32]}>
+            <RightScreen isView={isView} md={19}>
+              {isView && rightScreenItems}
+              {!isView && (
+                <>
+                  <SocialNetwork isView={isView} isEdit={isEdit} />
                 </>
               )}
             </RightScreen>
