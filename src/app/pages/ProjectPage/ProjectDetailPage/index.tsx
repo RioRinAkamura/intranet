@@ -47,6 +47,7 @@ export const ProjectDetailPage = (props: Props) => {
   const [data, setData] = useState<any>();
   const [isCreate, setIsCreate] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isView = isCreate || isEdit ? false : true;
 
@@ -160,7 +161,14 @@ export const ProjectDetailPage = (props: Props) => {
         <Form.Item hidden name="id">
           <Input hidden />
         </Form.Item>
-        <ProjectInfo isView={isView} form={form} data={data} isEdit={isEdit} />
+        <ProjectInfo
+          isView={isView}
+          form={form}
+          data={data}
+          isEdit={isEdit}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+        />
       </Form>
     </CardForm>
   );
@@ -170,7 +178,9 @@ export const ProjectDetailPage = (props: Props) => {
       <PageTitle
         title={
           isView
-            ? `${data?.name || 'Unknown'}`
+            ? isLoading
+              ? ''
+              : `${data?.name || 'Unknown'}`
             : isEdit
             ? t(ProjectDetailMessages.editTitle())
             : t(ProjectDetailMessages.createTitle())
