@@ -6,6 +6,7 @@ import {
   MoreOutlined,
 } from '@ant-design/icons';
 import { models } from '@hdwebsoft/intranet-api-sdk';
+import { CreateEmployeeSkillQueryParam } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import {
   Checkbox,
   Col,
@@ -21,6 +22,7 @@ import {
 import { ColumnProps } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { ActionIcon } from 'app/components/ActionIcon';
+import AddSkillModal from 'app/components/AddSkillModal';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import Button, { IconButton } from 'app/components/Button';
@@ -29,10 +31,12 @@ import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { DialogModal } from 'app/components/DialogModal';
 import PageTitle from 'app/components/PageTitle';
+import { useGetSkills } from 'app/components/Skills/useGetSkill';
 import { TagComponent } from 'app/components/Tags/components/Tag';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import { ProjectsMessages } from 'app/pages/ProjectPage/ProjectListPage/messages';
+import { useSkillDetails } from 'app/pages/SkillManagePage/useSkillDetails';
 import config from 'config';
 import moment from 'moment';
 import React, { Key, useCallback, useEffect, useState } from 'react';
@@ -73,6 +77,7 @@ export const EmployeeListPage: React.FC = () => {
   }, [setBreadCrumb]);
   const [moreLoading, setMoreLoading] = useState(true);
   const [userList, setUserList] = useState<Employee[]>([]);
+  const { categories, fetchAllCategory } = useSkillDetails();
   const [isMore, setIsMore] = useState(true);
   const { notify } = useNotify();
   const [searchForm] = Form.useForm();
@@ -85,6 +90,8 @@ export const EmployeeListPage: React.FC = () => {
   const deleteModalState = useSelector(
     (state: RootState) => state.employeespage,
   );
+  const { data: skills } = useGetSkills(true);
+
   const deleteSuccess = deleteModalState?.deleteSuccess;
   const deleteFailed = deleteModalState?.deleteFailed;
   const [textCopy, setTextCopy] = useState(false);
@@ -94,7 +101,7 @@ export const EmployeeListPage: React.FC = () => {
   let [recordValue, setRecordValue] = useState<Employee>();
   const [employeeSkills, setEmployeeSkills] = useState<any[]>([]);
   const [employeeRecord, setEmployeeRecord] = useState<Employee>();
-
+  const [skillModalVisible, setSkillModalVisible] = useState<boolean>(false);
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
 
@@ -132,6 +139,10 @@ export const EmployeeListPage: React.FC = () => {
     fetchUsers();
     getMonitorings();
   }, [fetchUsers, getMonitorings]);
+
+  useEffect(() => {
+    fetchAllCategory();
+  }, [fetchAllCategory]);
 
   useEffect(() => {
     if (imported) {
@@ -363,13 +374,9 @@ export const EmployeeListPage: React.FC = () => {
     setOpenCheckedModal(false);
   };
 
-  const handleSubmitSkillModal = employeeRecord => {
-    history.push(`${PrivatePath.EMPLOYEES}/${employeeRecord.id}/skills/edit`);
-    setOpenSkillModal(false);
-  };
-
   const handleCancelSkillModal = () => {
     setOpenSkillModal(false);
+    dispatch(actions.fetchUsers({ params: params }));
   };
 
   const columns: ColumnProps<Employee>[] = [
@@ -659,6 +666,35 @@ export const EmployeeListPage: React.FC = () => {
     setIsModalMultiDeleteVisible(false);
   };
 
+  const handleAddEmployeeSkill = async selectedSkills => {
+    try {
+      const arrPromise: any = await selectedSkills?.map(skillId => {
+        const newSkill: CreateEmployeeSkillQueryParam = {
+          skill_id: skillId as string,
+          employee_id: employeeRecord?.id as string,
+        };
+
+        return api.hr.employee.skill.create(
+          employeeRecord?.id as string,
+          newSkill,
+        );
+      });
+
+      Promise.all(arrPromise).then(values => {
+        const newEmloyeeSkills = [...employeeSkills, ...values];
+        setEmployeeSkills(newEmloyeeSkills);
+        setSkillModalVisible(false);
+        notify({
+          type: ToastMessageType.Info,
+          message: 'Add skill successful',
+          duration: 2,
+        });
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -786,16 +822,16 @@ export const EmployeeListPage: React.FC = () => {
       <DialogModal
         isOpen={openSkillsModal}
         cancelText={'Cancel'}
-        okText={'Update'}
-        title={'Employee Skills'}
+        okText={'Add Skill'}
+        title={
+          employeeRecord?.first_name +
+          ' ' +
+          employeeRecord?.last_name +
+          'skills'
+        }
         handleCancel={handleCancelSkillModal}
-        handleSubmit={() => handleSubmitSkillModal(employeeRecord)}
+        handleSubmit={() => setSkillModalVisible(true)}
       >
-        <h3>
-          Employee name:{' '}
-          {employeeRecord?.first_name + ' ' + employeeRecord?.last_name}
-        </h3>
-        <h3>Skills: </h3>
         {employeeSkills &&
           employeeSkills.map((skill, index) => (
             <Row gutter={[8, 8]} key={index}>
@@ -805,11 +841,19 @@ export const EmployeeListPage: React.FC = () => {
                 </span>
               </Col>
               <Col span={18}>
-                <RateSkill defaultValue={skill.level} />
+                <RateSkill disabled defaultValue={skill.level} />
               </Col>
             </Row>
           ))}
       </DialogModal>
+      <AddSkillModal
+        skills={skills}
+        categories={categories}
+        onCancel={() => setSkillModalVisible(false)}
+        isOpenSkilLModal={skillModalVisible}
+        employeeSkills={employeeSkills}
+        callback={handleAddEmployeeSkill}
+      />
     </>
   );
 };
