@@ -15,6 +15,8 @@ export const useHandleEmployeeDetail = (): {
   monitorings: SelectOption[];
   types: SelectOption[] | undefined;
   bankNames: SelectOption[] | undefined;
+  employeeNoteScores: SelectOption[];
+  getEmployeeNoteScores: () => Promise<void>;
   getDetail: (id: string) => Promise<void>;
   getPositions: () => Promise<void>;
   getTypes: () => Promise<void>;
@@ -29,6 +31,9 @@ export const useHandleEmployeeDetail = (): {
   const [user, setUser] = useState<Employee | undefined>();
   const [positions, setPositions] = useState<SelectOption[]>([]);
   const [monitorings, setMonitorings] = useState<SelectOption[]>([]);
+  const [employeeNoteScores, setEmployeeNoteScores] = useState<SelectOption[]>(
+    [],
+  );
   const [types, setTypes] = useState<SelectOption[]>([]);
   const [bankNames, setBankNames] = useState<SelectOption[]>([]);
   const { notify } = useNotify();
@@ -147,6 +152,17 @@ export const useHandleEmployeeDetail = (): {
     }
   }, []);
 
+  const getEmployeeNoteScores = useCallback(async () => {
+    try {
+      const response = await api.hr.employee.note.getEmployeeNoteScores();
+      if (response) {
+        setEmployeeNoteScores(response);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
+
   return {
     loading,
     error,
@@ -155,6 +171,8 @@ export const useHandleEmployeeDetail = (): {
     types,
     bankNames,
     monitorings,
+    employeeNoteScores,
+    getEmployeeNoteScores,
     getDetail,
     getPositions,
     getTypes,

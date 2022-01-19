@@ -10,6 +10,7 @@ export const ProjectNoteMessages = {
   //Header
   createNoteBtn: () => _t(translations.NotesPage.createNoteBtn, 'Create'),
   //List
+  listScore: () => _t(translations.NotesPage.list.score, 'Score'),
   listType: () => _t(translations.NotesPage.list.type, 'Type'),
   listSummary: () => _t(translations.NotesPage.list.summary, 'Summary'),
   listDate: () => _t(translations.NotesPage.list.date, 'Date'),

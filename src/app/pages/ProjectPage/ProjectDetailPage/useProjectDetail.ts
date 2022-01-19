@@ -25,6 +25,7 @@ export const useProjectDetail = (): {
   loading: boolean;
   error?: Error;
   membersAll: SelectOption[];
+  projectNoteScores: SelectOption[];
   fetchUser: (search: string) => Promise<Employee[] | undefined>;
   fetchId: (id: string) => Promise<any | undefined>;
   fetchMembers: (id: string) => void;
@@ -35,6 +36,7 @@ export const useProjectDetail = (): {
   getPriorities: () => Promise<void>;
   getStatuses: () => Promise<void>;
   getMonitorings: () => Promise<void>;
+  getProjectNoteScores: () => Promise<void>;
   getRoles: () => Promise<void>;
   getAllocations: () => Promise<void>;
 } => {
@@ -44,6 +46,9 @@ export const useProjectDetail = (): {
   const [priorities, setPriorities] = React.useState<SelectOption[]>([]);
   const [statuses, setStatuses] = React.useState<SelectOption[]>([]);
   const [monitorings, setMonitorings] = React.useState<SelectOption[]>([]);
+  const [projectNoteScores, setProjectNoteScores] = React.useState<
+    SelectOption[]
+  >([]);
   const [roles, setRoles] = React.useState<SelectOption[]>([]);
   const [allocations, setAllocations] = React.useState<number[]>([]);
   const [loading, setLoading] = React.useState(false);
@@ -258,12 +263,24 @@ export const useProjectDetail = (): {
     }
   }, []);
 
+  const getProjectNoteScores = React.useCallback(async () => {
+    try {
+      const response = await api.hr.project.note.getProjectNoteScores();
+      if (response) {
+        setProjectNoteScores(response);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
+
   return {
     setMembers,
     members,
     priorities,
     statuses,
     monitorings,
+    projectNoteScores,
     roles,
     allocations,
     loading,
@@ -279,6 +296,7 @@ export const useProjectDetail = (): {
     getPriorities,
     getStatuses,
     getMonitorings,
+    getProjectNoteScores,
     getRoles,
     getAllocations,
   };

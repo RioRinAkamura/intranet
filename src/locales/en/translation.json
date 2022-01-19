@@ -86,8 +86,9 @@
     }
   },
   "NotesPage": {
-    "createNoteBtn": "Create note",
+    "createNoteBtn": "Create",
     "list": {
+      "score": "Score",
       "type": "Type",
       "summary": "Summary",
       "date": "Date",
