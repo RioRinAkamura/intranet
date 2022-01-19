@@ -17,9 +17,14 @@ import {
 } from '@ant-design/icons';
 import { UserDetailMessages } from '../../messages';
 import { TitlePath } from '../TitlePath';
+import Button from 'app/components/Button';
+import { useHistory, useParams } from 'react-router-dom';
+import { PrivatePath } from 'utils/url.const';
+import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 
 interface SocialNetworkProps {
-  isView?: boolean;
+  // isView?: boolean;
 }
 
 const inputProps: InputProps = {
@@ -28,8 +33,35 @@ const inputProps: InputProps = {
 };
 
 export const SocialNetwork = (props: SocialNetworkProps) => {
-  const { isView } = props;
+  // const { isView } = props;
   const { t } = useTranslation();
+  const { id } = useParams<Record<string, string>>();
+  const history = useHistory();
+  const [isEdit, setIsEdit] = React.useState(false);
+  const isView = !isEdit;
+  const {
+    update,
+    loading,
+  } = useHandleEmployeeDetail();
+  const [form] = Form.useForm();
+  const [data, setData] = React.useState<Employee>();
+
+  const handleSocialAccountstEditSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      if (isEdit) {
+        const response = await update(values);
+        if (response) {
+          setData(response);
+          setIsEdit(false);
+          history.push(`${PrivatePath.EMPLOYEES}/${id}/social-accounts`);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   return (
     <>
@@ -297,6 +329,50 @@ export const SocialNetwork = (props: SocialNetworkProps) => {
           </Row>
         </Col>
       </Row>
+      <WrapperButton>
+          <Row gutter={[8, 8]} justify="end">
+            <Col>
+              <Button
+                block
+                onClick={() => {
+                  if (isEdit) {
+                    setIsEdit(false);
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}/social-accounts`);
+                  } else if (isView) {
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}/social-accounts`);
+                  }
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                {t(UserDetailMessages.formBackButton())}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                loading={loading}
+                block
+                type="primary"
+                onClick={() => {
+                  if (isView) {
+                    setIsEdit(true);
+                    console.log('isView', isView);
+
+                    history.push(
+                      `${PrivatePath.EMPLOYEES}/${id}/social-accounts/edit`,
+                    );
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  } else {
+                    handleSocialAccountstEditSubmit();
+                  }
+                }}
+              >
+                {isView
+                  ? t(UserDetailMessages.formEditButton())
+                  : t(UserDetailMessages.formSubmitButton())}
+              </Button>
+            </Col>
+          </Row>
+        </WrapperButton>
     </>
   );
 };
@@ -313,4 +389,10 @@ const FormItem = styled(Form.Item)`
   label {
     font-weight: 500;
   }
+`;
+
+const WrapperButton = styled.div`
+  margin-top: 3em;
+  padding: 10px;
+  height: 100%;
 `;

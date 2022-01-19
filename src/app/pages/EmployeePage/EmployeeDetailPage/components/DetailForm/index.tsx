@@ -118,13 +118,6 @@ export const DetailForm = memo((props: FormProps) => {
           </RightScreen>
         </Row>
       </Wrapper>
-      <WrapperSubItem gutter={[32, 32]}>
-        <Col span={isView ? 12 : 16}>
-          <WrapperItem>
-            <SocialNetwork isView={isView} />
-          </WrapperItem>
-        </Col>
-      </WrapperSubItem>
     </Form>
   );
 });
