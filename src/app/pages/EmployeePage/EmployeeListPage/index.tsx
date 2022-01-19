@@ -462,7 +462,7 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: 'Skills',
       dataIndex: 'skills',
-      width: 80,
+      width: 120,
       ...getColumnSearchSkillsProps('skills'),
       render: (value, record: Employee) => {
         const starArr = value.map(star => star.level);
