@@ -266,6 +266,11 @@ export function EmployeeDetailPage(props: Props) {
         history.replace(location.pathname, {});
       }
     }
+    if (
+      location.pathname.split('/').findIndex(local => local === 'edit') !== -1
+    ) {
+      setIsEdit(true);
+    }
   }, [history, location]);
 
   React.useEffect(() => {
@@ -442,14 +447,14 @@ export function EmployeeDetailPage(props: Props) {
         <>
           <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
             <TabPane tab="Details" key={TabKeys.details} />
-            <TabPane tab="Projects" key={TabKeys.projects} />
-            <TabPane tab="Notes" key={TabKeys.notes} />
-            <TabPane tab="Devices" key={TabKeys.devices} />
             <TabPane tab="Contract" key={TabKeys.contract} />
             <TabPane tab="Bank Accounts" key={TabKeys.bankAccounts} />
             <TabPane tab="Citizen Info" key={TabKeys.citizenInfo} />
             <TabPane tab="Skills" key={TabKeys.skills} />
             <TabPane tab="Social Accounts" key={TabKeys.socialAccounts} />
+            <TabPane tab="Projects" key={TabKeys.projects} />
+            <TabPane tab="Notes" key={TabKeys.notes} />
+            <TabPane tab="Devices" key={TabKeys.devices} />
             <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
           </StyledTabs>
 

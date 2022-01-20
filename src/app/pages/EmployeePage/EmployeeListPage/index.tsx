@@ -378,16 +378,16 @@ export const EmployeeListPage: React.FC = () => {
     setOpenSkillModal(false);
     dispatch(actions.fetchUsers({ params: params }));
   };
-  const calcMonitoringDate = (date) => {
+  const calcMonitoringDate = date => {
     let calc = moment().diff(moment(date), 'days');
     if (calc < 1) {
       return 'Today';
     } else if (calc < 2) {
-      return `${calc} day ago.`
+      return `${calc} day ago.`;
     } else {
-      return `${calc} days ago.`
+      return `${calc} days ago.`;
     }
-  }
+  };
 
   const columns: ColumnProps<Employee>[] = [
     {
@@ -595,19 +595,25 @@ export const EmployeeListPage: React.FC = () => {
       width: 80,
       align: 'center',
       render: (text, record: Employee) => (
-          <>
-            <span>
-              Last check: {calcMonitoringDate(record.monitored_at)}
-            </span>
-            <CheckedButton
-              size="small"
-              className={`${moment().diff(moment(record.next_monitored_at), 'days') >= 0 ? '' : 'color-grey'}`}
-              type={`${moment().diff(moment(record.next_monitored_at), 'days') >= 0 ? 'danger' : 'default'}`}
-              onClick={() => handleCheckedButton(record)}
-            >
-              Check
-            </CheckedButton>
-          </>
+        <>
+          <span>Last check: {calcMonitoringDate(record.monitored_at)}</span>
+          <CheckedButton
+            size="small"
+            className={`${
+              moment().diff(moment(record.next_monitored_at), 'days') >= 0
+                ? ''
+                : 'color-grey'
+            }`}
+            type={`${
+              moment().diff(moment(record.next_monitored_at), 'days') >= 0
+                ? 'danger'
+                : 'default'
+            }`}
+            onClick={() => handleCheckedButton(record)}
+          >
+            Check
+          </CheckedButton>
+        </>
       ),
     },
 
