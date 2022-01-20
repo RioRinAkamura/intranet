@@ -3,13 +3,13 @@ import { Helmet } from 'react-helmet-async';
 import { PageWrapper } from 'app/components/PageWrapper';
 import { PieChartOutlined } from '@ant-design/icons';
 import styled from 'styled-components/macro';
-import { Chart } from './components/Chart';
+// import { Chart } from './components/Chart';
 import { Col, Row } from 'antd';
-import { Managers } from './components/Managers';
-import { Activities } from './components/Activities';
-import { PerformanceEmployees } from './components/PerformanceEmployees';
-import { NewEmployees } from './components/NewEmployees';
-import { Recruitments } from './components/Recruitments';
+// import { Managers } from './components/Managers';
+// import { Activities } from './components/Activities';
+// import { PerformanceEmployees } from './components/PerformanceEmployees';
+// import { NewEmployees } from './components/NewEmployees';
+// import { Recruitments } from './components/Recruitments';
 import PageTitle from 'app/components/PageTitle';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import LiveEmployeeWidgets from 'app/components/LiveEmployeesWidget';
@@ -36,9 +36,7 @@ export const HomePage: React.FC = () => {
           <PieChartOutlined />
           <PageTitle title="Dashboard" />
         </TitleWrapper>
-        <WrapperItem>
-          <Chart />
-        </WrapperItem>
+        <WrapperItem>{/* <Chart /> */}</WrapperItem>
         <WrapperItem>
           <LiveEmployeeWidgets />
         </WrapperItem>
@@ -46,27 +44,17 @@ export const HomePage: React.FC = () => {
           <LiveProjectsWidget />
         </WrapperItem>
 
-        <WrapperItem>
-          <Managers />
-        </WrapperItem>
+        <WrapperItem>{/* <Managers /> */}</WrapperItem>
         <WrapperItem>
           <Row gutter={[32, 32]}>
-            <Col span={12}>
-              <Recruitments />
-            </Col>
-            <Col span={12}>
-              <Activities />
-            </Col>
+            <Col span={12}>{/* <Recruitments /> */}</Col>
+            <Col span={12}>{/* <Activities /> */}</Col>
           </Row>
         </WrapperItem>
         <WrapperItem>
           <Row gutter={[32, 32]}>
-            <Col span={12}>
-              <PerformanceEmployees />
-            </Col>
-            <Col span={12}>
-              <NewEmployees />
-            </Col>
+            <Col span={12}>{/* <PerformanceEmployees /> */}</Col>
+            <Col span={12}>{/* <NewEmployees /> */}</Col>
           </Row>
         </WrapperItem>
       </PageWrapper>
