@@ -6,7 +6,11 @@ import {
   MoreOutlined,
 } from '@ant-design/icons';
 import { models } from '@hdwebsoft/intranet-api-sdk';
-import { CreateEmployeeSkillQueryParam } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import {
+  CreateEmployeeSkillQueryParam,
+  EmployeeSkill,
+  UpdateEmployeeSkillQueryParam,
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import {
   Checkbox,
   Col,
@@ -722,6 +726,23 @@ export const EmployeeListPage: React.FC = () => {
     }
   };
 
+  const onEmployeeSkillChange = async (employeeSkill: EmployeeSkill, value) => {
+    try {
+      const updatedSkill: UpdateEmployeeSkillQueryParam = {
+        id: employeeSkill.id,
+        level: value,
+        employee_id: employeeRecord?.id as string,
+        skill_id: employeeSkill.skill.id,
+      };
+      await api.hr.employee.skill.update(
+        employeeRecord?.id as string,
+        updatedSkill,
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -849,12 +870,12 @@ export const EmployeeListPage: React.FC = () => {
       <DialogModal
         isOpen={openSkillsModal}
         cancelText={'Cancel'}
-        okText={'Add Skill'}
+        okText={'Add'}
         title={
           employeeRecord?.first_name +
           ' ' +
           employeeRecord?.last_name +
-          'skills'
+          ' skills'
         }
         handleCancel={handleCancelSkillModal}
         handleSubmit={() => setSkillModalVisible(true)}
@@ -868,7 +889,12 @@ export const EmployeeListPage: React.FC = () => {
                 </span>
               </Col>
               <Col span={18}>
-                <RateSkill disabled defaultValue={skill.level} />
+                <RateSkill
+                  onChange={value => {
+                    onEmployeeSkillChange(skill, value);
+                  }}
+                  defaultValue={skill.level}
+                />
               </Col>
             </Row>
           ))}
