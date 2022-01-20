@@ -378,8 +378,8 @@ const ManageUserPage: React.FC = () => {
       </PageTitle>
       <Wrapper>
         <Row>
-          <Col span={8}>
-            <Row justify="start" align="middle">
+          <Col span={8} style={{ marginBottom: '12px' }}>
+            <Row justify="start" align="middle" style={{ height: '100%' }}>
               {userListState.selectedRowKeys &&
                 userListState.selectedRowKeys.length > 0 && (
                   <Button

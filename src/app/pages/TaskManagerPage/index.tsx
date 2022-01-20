@@ -403,10 +403,10 @@ export const TaskManager = () => {
       </Wrapper>
       <Wrapper>
         <Row>
-          <Col span={8}>
-            <Row justify="start" align="middle">
+          <Col span={8} style={{ marginBottom: '10px' }}>
+            <Row justify="start" align="middle" style={{ height: '100%' }}>
               {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
-                <Button
+                <StyledButton
                   type="primary"
                   danger
                   size="middle"
@@ -562,3 +562,8 @@ const FollowersWrapper = styled.div`
   flex-flow: wrap;
   width: 80%;
 `;
+const StyledButton = styled(Button)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`

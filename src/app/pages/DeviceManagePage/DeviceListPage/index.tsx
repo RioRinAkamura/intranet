@@ -264,8 +264,8 @@ export const DeviceListPage = () => {
       </PageTitle>
       <Wrapper>
         <Row>
-          <Col span={8}>
-            <Row justify="start" align="middle">
+          <Col span={8} style={{ marginBottom: '10px' }}>
+            <Row justify="start" align="middle" style={{ height: '100%' }}>
               {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
                 <Button
                   type="primary"
