@@ -36,9 +36,7 @@ export const HomePage: React.FC = () => {
           <PieChartOutlined />
           <PageTitle title="Dashboard" />
         </TitleWrapper>
-        <WrapperItem>
-          <Chart />
-        </WrapperItem>
+        <WrapperItem>{/* <Chart /> */}</WrapperItem>
         <WrapperItem>
           <LiveEmployeeWidgets />
         </WrapperItem>
@@ -46,9 +44,7 @@ export const HomePage: React.FC = () => {
           <LiveProjectsWidget />
         </WrapperItem>
 
-        <WrapperItem>
-          <Managers />
-        </WrapperItem>
+        <WrapperItem>{/* <Managers /> */}</WrapperItem>
         <WrapperItem>
           <Row gutter={[32, 32]}>
             <Col span={12}>{/* <Recruitments /> */}</Col>
