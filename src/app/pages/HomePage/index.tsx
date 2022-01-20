@@ -12,6 +12,8 @@ import { NewEmployees } from './components/NewEmployees';
 import { Recruitments } from './components/Recruitments';
 import PageTitle from 'app/components/PageTitle';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import LiveEmployeeWidgets from 'app/components/LiveEmployeesWidget';
+import LiveProjectsWidget from 'app/components/LiveProjectsWidget';
 
 export const HomePage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -37,6 +39,13 @@ export const HomePage: React.FC = () => {
         <WrapperItem>
           <Chart />
         </WrapperItem>
+        <WrapperItem>
+          <LiveEmployeeWidgets />
+        </WrapperItem>
+        <WrapperItem>
+          <LiveProjectsWidget />
+        </WrapperItem>
+
         <WrapperItem>
           <Managers />
         </WrapperItem>
