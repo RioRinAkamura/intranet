@@ -190,8 +190,8 @@ export const ProjectDetailPage = (props: Props) => {
         <>
           <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
             <TabPane tab="Details" key={TabKeys.details} />
-            <TabPane tab="Notes" key={TabKeys.notes} />
             <TabPane tab="Members" key={TabKeys.employees} />
+            <TabPane tab="Notes" key={TabKeys.notes} />
             <TabPane tab="Change Log" key={TabKeys.changeLogs} />
           </StyledTabs>
 
@@ -202,6 +202,10 @@ export const ProjectDetailPage = (props: Props) => {
               component={() => projectDetailForm()}
             />
             <Route
+              path={PrivatePath.PROJECTS_ID_EMPLOYEES}
+              component={() => <Employees />}
+            />
+            <Route
               exact
               path={PrivatePath.PROJECTS_ID_NOTES}
               component={() => <Notes projectId={id} />}
@@ -209,10 +213,6 @@ export const ProjectDetailPage = (props: Props) => {
             <Route
               path={PrivatePath.PROJECTS_ID_CHANGELOGS}
               component={() => <ChangeLogs project_id={id} />}
-            />
-            <Route
-              path={PrivatePath.PROJECTS_ID_EMPLOYEES}
-              component={() => <Employees />}
             />
           </Switch>
         </>
