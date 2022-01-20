@@ -709,7 +709,7 @@ export const useTableConfig = (
                 }}
               >
                 {searchOptions.map(data => (
-                  <Row>
+                  <Row key={data.id}>
                     <Checkbox value={data.id}>
                       <Avatar
                         size={30}

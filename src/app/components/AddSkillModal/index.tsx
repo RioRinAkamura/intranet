@@ -128,7 +128,7 @@ export default function AddSkillModal(props: AddSkillModalProps) {
             >
               <Row gutter={[0, 4]}>
                 {categories.map(category => (
-                  <Col span={8}>
+                  <Col key={category.id} span={8}>
                     <Checkbox
                       onChange={handleChangeCheckbox}
                       value={category.id}
