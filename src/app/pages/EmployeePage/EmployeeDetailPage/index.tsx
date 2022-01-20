@@ -270,6 +270,8 @@ export function EmployeeDetailPage(props: Props) {
       location.pathname.split('/').findIndex(local => local === 'edit') !== -1
     ) {
       setIsEdit(true);
+    } else {
+      setIsEdit(false);
     }
   }, [history, location]);
 
