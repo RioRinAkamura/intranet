@@ -284,6 +284,7 @@ export const Notes = memo(({ projectId }: NotesProps) => {
       dataIndex: 'date',
       width: 140,
       ...getColumnSorterProps('date', 2),
+      render: text => (text ? moment(text).format('MM-DD-YYYY') : ''),
     },
     {
       title: t(ProjectNoteMessages.listContent()),

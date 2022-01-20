@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Form as FormAntd,
   Select,
   Input,
   FormInstance,
   DatePicker,
+  Row,
 } from 'antd';
 import {
   DeleteOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
   PlusCircleOutlined,
+  LikeTwoTone,
+  MinusCircleTwoTone,
+  DislikeTwoTone,
 } from '@ant-design/icons';
 import { TFunction } from 'i18next';
 import moment from 'moment';
@@ -25,6 +29,8 @@ import { RichEditor } from 'app/components/RichEditor';
 import { api } from 'utils/api';
 
 import { ProjectNoteMessages } from '../messages';
+import { SelectOption } from '@hdwebsoft/intranet-api-sdk/libs/type';
+import config from 'config';
 
 interface FormProps {
   t: TFunction;
@@ -50,6 +56,7 @@ export const Form: React.FC<FormProps> = ({
   );
   const { notify } = useNotify();
   const [categoryList, setCategoryList] = React.useState<NoteCategory[]>([]);
+  const [scoreList, setScoreList] = React.useState<SelectOption[]>([]);
 
   const onCreateCategory = async () => {
     const name = form.getFieldValue('category_name');
@@ -85,6 +92,15 @@ export const Form: React.FC<FormProps> = ({
     setCategoryList(categories.results);
   };
 
+  const getProjectNoteScores = useCallback(async () => {
+    const employeeNoteScores = await api.hr.project.note.getProjectNoteScores();
+    setScoreList(employeeNoteScores);
+  }, []);
+
+  React.useEffect(() => {
+    getProjectNoteScores();
+  }, [getProjectNoteScores]);
+
   const handleDeleteCategory = (id: string) => {
     setVisible(true);
     setCategoryId(id);
@@ -94,8 +110,39 @@ export const Form: React.FC<FormProps> = ({
     if (!isView) getCategories();
   }, [isView]);
 
+  const UI_DATE_FORMAT = 'MM-DD-YYYY';
+  const DATE_FORMAT = config.DATE_FORMAT;
+  const today = new Date();
+  const disabledDate = (current: moment.Moment) => {
+    return current > moment().endOf('day');
+  };
+
   return (
     <FormAntd layout="vertical" form={form}>
+      <FormAntd.Item
+        name="score"
+        label={t(ProjectNoteMessages.modalScoreLabel())}
+      >
+        <Select size="large" defaultValue="2">
+          {scoreList &&
+            scoreList.map(score => (
+              <Option key={score.value} value={score.value}>
+                <Row justify="space-between" align="middle">
+                  {score.label}
+                  {score.label === 'Positive' ? (
+                    <LikeTwoTone twoToneColor="green" />
+                  ) : score.label === 'Neutral' ? (
+                    <MinusCircleTwoTone twoToneColor="grey" />
+                  ) : score.label === 'Negative' ? (
+                    <DislikeTwoTone twoToneColor="red" />
+                  ) : (
+                    ''
+                  )}
+                </Row>
+              </Option>
+            ))}
+        </Select>
+      </FormAntd.Item>
       <StyledWrapperCategory>
         {isCreateCategory ? (
           <FormAntd.Item
@@ -160,7 +207,13 @@ export const Form: React.FC<FormProps> = ({
         name="date"
         label={t(ProjectNoteMessages.modalDateLabel())}
       >
-        <StyledDatePicker size="large" disabled={isView} />
+        <StyledDatePicker
+          size="large"
+          disabled={isView}
+          disabledDate={disabledDate}
+          defaultValue={moment(today, DATE_FORMAT)}
+          format={UI_DATE_FORMAT}
+        />
       </FormAntd.Item>
       <FormAntd.Item
         name="content"

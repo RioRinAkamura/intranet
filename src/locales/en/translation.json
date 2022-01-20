@@ -103,6 +103,7 @@
       "createTitle": "Create note",
       "editTitle": "Edit note",
       "form": {
+        "score": "Score",
         "category": {
           "label": "Category",
           "placeholder": "Enter category",

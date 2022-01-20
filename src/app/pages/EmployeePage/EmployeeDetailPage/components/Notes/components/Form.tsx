@@ -1,31 +1,34 @@
-import React from 'react';
 import {
-  Form as FormAntd,
-  Select,
-  Input,
-  FormInstance,
-  DatePicker,
-} from 'antd';
-import {
-  DeleteOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
+  DeleteOutlined,
+  DislikeTwoTone,
+  LikeTwoTone,
+  MinusCircleTwoTone,
   PlusCircleOutlined,
 } from '@ant-design/icons';
-import { TFunction } from 'i18next';
-import moment from 'moment';
-import styled from 'styled-components';
 import {
   EmployeeNote,
   NoteCategory,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
-
-import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
+import { SelectOption } from '@hdwebsoft/intranet-api-sdk/libs/type';
+import {
+  DatePicker,
+  Form as FormAntd,
+  FormInstance,
+  Input,
+  Row,
+  Select,
+} from 'antd';
 import { RichEditor } from 'app/components/RichEditor';
-import { api } from 'utils/api';
-
-import { EmployeeNoteMessages } from '../messages';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import config from 'config';
+import { TFunction } from 'i18next';
+import moment from 'moment';
+import React, { useCallback } from 'react';
+import styled from 'styled-components';
+import { api } from 'utils/api';
+import { EmployeeNoteMessages } from '../messages';
 
 interface FormProps {
   t: TFunction;
@@ -51,6 +54,7 @@ export const Form: React.FC<FormProps> = ({
   );
   const { notify } = useNotify();
   const [categoryList, setCategoryList] = React.useState<NoteCategory[]>([]);
+  const [scoreList, setScoreList] = React.useState<SelectOption[]>([]);
 
   const onCreateCategory = async () => {
     const name = form.getFieldValue('category_name');
@@ -86,6 +90,15 @@ export const Form: React.FC<FormProps> = ({
     setCategoryList(categories.results);
   };
 
+  const getEmployeeNoteScores = useCallback(async () => {
+    const employeeNoteScores = await api.hr.employee.note.getEmployeeNoteScores();
+    setScoreList(employeeNoteScores);
+  }, []);
+
+  React.useEffect(() => {
+    getEmployeeNoteScores();
+  }, [getEmployeeNoteScores]);
+
   const handleDeleteCategory = (id: string) => {
     setVisible(true);
     setCategoryId(id);
@@ -104,6 +117,30 @@ export const Form: React.FC<FormProps> = ({
 
   return (
     <FormAntd layout="vertical" form={form}>
+      <FormAntd.Item
+        name="score"
+        label={t(EmployeeNoteMessages.modalScoreLabel())}
+      >
+        <Select size="large" defaultValue="2">
+          {scoreList &&
+            scoreList.map(score => (
+              <Option key={score.value} value={score.value}>
+                <Row justify="space-between" align="middle">
+                  {score.label}
+                  {score.label === 'Positive' ? (
+                    <LikeTwoTone twoToneColor="green" />
+                  ) : score.label === 'Neutral' ? (
+                    <MinusCircleTwoTone twoToneColor="grey" />
+                  ) : score.label === 'Negative' ? (
+                    <DislikeTwoTone twoToneColor="red" />
+                  ) : (
+                    ''
+                  )}
+                </Row>
+              </Option>
+            ))}
+        </Select>
+      </FormAntd.Item>
       <StyledWrapperCategory>
         {isCreateCategory ? (
           <FormAntd.Item

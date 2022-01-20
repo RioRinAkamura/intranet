@@ -449,7 +449,7 @@ export function EmployeeDetailPage(props: Props) {
             <TabPane tab="Bank Accounts" key={TabKeys.bankAccounts} />
             <TabPane tab="Citizen Info" key={TabKeys.citizenInfo} />
             <TabPane tab="Skills" key={TabKeys.skills} />
-            <TabPane tab="Social Accouns" key={TabKeys.socialAccounts} />
+            <TabPane tab="Social Accounts" key={TabKeys.socialAccounts} />
             <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
           </StyledTabs>
 
