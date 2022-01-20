@@ -6,7 +6,11 @@ import {
   MoreOutlined,
 } from '@ant-design/icons';
 import { models } from '@hdwebsoft/intranet-api-sdk';
-import { CreateEmployeeSkillQueryParam } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import {
+  CreateEmployeeSkillQueryParam,
+  EmployeeSkill,
+  UpdateEmployeeSkillQueryParam,
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import {
   Checkbox,
   Col,
@@ -378,16 +382,16 @@ export const EmployeeListPage: React.FC = () => {
     setOpenSkillModal(false);
     dispatch(actions.fetchUsers({ params: params }));
   };
-  const calcMonitoringDate = (date) => {
+  const calcMonitoringDate = date => {
     let calc = moment().diff(moment(date), 'days');
     if (calc < 1) {
       return 'Today';
     } else if (calc < 2) {
-      return `${calc} day ago.`
+      return `${calc} day ago.`;
     } else {
-      return `${calc} days ago.`
+      return `${calc} days ago.`;
     }
-  }
+  };
 
   const columns: ColumnProps<Employee>[] = [
     {
@@ -595,19 +599,25 @@ export const EmployeeListPage: React.FC = () => {
       width: 80,
       align: 'center',
       render: (text, record: Employee) => (
-          <>
-            <span>
-              Last check: {calcMonitoringDate(record.monitored_at)}
-            </span>
-            <CheckedButton
-              size="small"
-              className={`${moment().diff(moment(record.next_monitored_at), 'days') >= 0 ? '' : 'color-grey'}`}
-              type={`${moment().diff(moment(record.next_monitored_at), 'days') >= 0 ? 'danger' : 'default'}`}
-              onClick={() => handleCheckedButton(record)}
-            >
-              Check
-            </CheckedButton>
-          </>
+        <>
+          <span>Last check: {calcMonitoringDate(record.monitored_at)}</span>
+          <CheckedButton
+            size="small"
+            className={`${
+              moment().diff(moment(record.next_monitored_at), 'days') >= 0
+                ? ''
+                : 'color-grey'
+            }`}
+            type={`${
+              moment().diff(moment(record.next_monitored_at), 'days') >= 0
+                ? 'danger'
+                : 'default'
+            }`}
+            onClick={() => handleCheckedButton(record)}
+          >
+            Check
+          </CheckedButton>
+        </>
       ),
     },
 
@@ -711,6 +721,23 @@ export const EmployeeListPage: React.FC = () => {
           duration: 2,
         });
       });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onEmployeeSkillChange = async (employeeSkill: EmployeeSkill, value) => {
+    try {
+      const updatedSkill: UpdateEmployeeSkillQueryParam = {
+        id: employeeSkill.id,
+        level: value,
+        employee_id: employeeRecord?.id as string,
+        skill_id: employeeSkill.skill.id,
+      };
+      await api.hr.employee.skill.update(
+        employeeRecord?.id as string,
+        updatedSkill,
+      );
     } catch (e) {
       console.log(e);
     }
@@ -843,12 +870,12 @@ export const EmployeeListPage: React.FC = () => {
       <DialogModal
         isOpen={openSkillsModal}
         cancelText={'Cancel'}
-        okText={'Add Skill'}
+        okText={'Add'}
         title={
           employeeRecord?.first_name +
           ' ' +
           employeeRecord?.last_name +
-          'skills'
+          ' skills'
         }
         handleCancel={handleCancelSkillModal}
         handleSubmit={() => setSkillModalVisible(true)}
@@ -862,7 +889,12 @@ export const EmployeeListPage: React.FC = () => {
                 </span>
               </Col>
               <Col span={18}>
-                <RateSkill disabled defaultValue={skill.level} />
+                <RateSkill
+                  onChange={value => {
+                    onEmployeeSkillChange(skill, value);
+                  }}
+                  defaultValue={skill.level}
+                />
               </Col>
             </Row>
           ))}

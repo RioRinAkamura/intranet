@@ -12,6 +12,8 @@ import { Col, Row } from 'antd';
 // import { Recruitments } from './components/Recruitments';
 import PageTitle from 'app/components/PageTitle';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import LiveEmployeeWidgets from 'app/components/LiveEmployeesWidget';
+import LiveProjectsWidget from 'app/components/LiveProjectsWidget';
 
 export const HomePage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -34,8 +36,19 @@ export const HomePage: React.FC = () => {
           <PieChartOutlined />
           <PageTitle title="Dashboard" />
         </TitleWrapper>
-        <WrapperItem>{/* <Chart /> */}</WrapperItem>
-        <WrapperItem>{/* <Managers /> */}</WrapperItem>
+        <WrapperItem>
+          <Chart />
+        </WrapperItem>
+        <WrapperItem>
+          <LiveEmployeeWidgets />
+        </WrapperItem>
+        <WrapperItem>
+          <LiveProjectsWidget />
+        </WrapperItem>
+
+        <WrapperItem>
+          <Managers />
+        </WrapperItem>
         <WrapperItem>
           <Row gutter={[32, 32]}>
             <Col span={12}>{/* <Recruitments /> */}</Col>
