@@ -727,7 +727,7 @@ export const EmployeeListPage: React.FC = () => {
       ) : (
         <CardLayout>
           <Row>
-            <Col span={8}>
+            <Col span={8} style={{ marginBottom: '1em' }}>
               <Row style={{ height: '100%' }} justify="start" align="middle">
                 {getUserListState.selectedRowKeys &&
                   getUserListState.selectedRowKeys.length > 0 && (
