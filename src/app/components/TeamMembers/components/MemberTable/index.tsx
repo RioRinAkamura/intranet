@@ -127,7 +127,7 @@ export const MemberTable = memo((props: Props) => {
           size="small"
           icon={<EyeOutlined />}
           onClick={() => {
-            history.push(`${PrivatePath.EMPLOYEES}/${record.id}`);
+            history.push(`${PrivatePath.EMPLOYEES}/${record.member.id}`);
           }}
         />
       </Tooltip>
