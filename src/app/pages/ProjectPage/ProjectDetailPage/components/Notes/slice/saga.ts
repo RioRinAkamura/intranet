@@ -48,7 +48,7 @@ function* updateProjectNote(action) {
   try {
     yield call(
       [api, api.hr.project.note.update],
-      action.payload.project,
+      action.payload.project_id,
       action.payload,
     );
     yield put(actions.updateProjectNoteSuccess());
