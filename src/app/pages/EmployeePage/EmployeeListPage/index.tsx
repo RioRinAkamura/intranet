@@ -133,7 +133,7 @@ export const EmployeeListPage: React.FC = () => {
     if (!isFilter) {
       dispatch(actions.fetchUsers({ params: params }));
     }
-  }, [actions, dispatch, isFilter, params]);
+  }, [actions, dispatch, params, isFilter]);
 
   useEffect(() => {
     fetchUsers();
@@ -455,14 +455,14 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: 'Position',
       dataIndex: 'position',
-      width: 70,
+      width: 90,
       ...getColumnSorterProps('position', 5),
       ...getColumnSearchInputProps(['position']),
     },
     {
       title: 'Allocable',
       dataIndex: 'allocable',
-      width: 80,
+      width: 90,
       ...getColumnSorterProps('allocable', 6),
       ...getColumnSearchCheckboxFromToProps(
         ['allocable'],
@@ -479,7 +479,7 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: 'Skills',
       dataIndex: 'skills',
-      width: 90,
+      width: 100,
       ...getColumnSearchSkillsProps('skills'),
       render: (value, record: Employee) => {
         const starArr = value.map(star => star.level);
@@ -489,6 +489,9 @@ export const EmployeeListPage: React.FC = () => {
         const averageStar = Number(
           (totalStar / (value.length ? value.length : 1)).toFixed(1),
         );
+        const skillArr = [...value];
+        const bestSkills = skillArr.sort((a, b) => b.level - a.level);
+        const fiveBestSkills = bestSkills.slice(0, 5);
         const handleClickedSkills = (value, record: Employee) => {
           setEmployeeSkills(value);
           setEmployeeRecord(record);
@@ -505,6 +508,11 @@ export const EmployeeListPage: React.FC = () => {
               defaultValue={averageStar}
               style={{ cursor: 'pointer' }}
             />
+            {fiveBestSkills.map(skill => (
+              <span style={{ fontSize: '12px' }}>
+                {skill.skill.name}({skill.level}),
+              </span>
+            ))}
           </div>
         );
       },
@@ -528,7 +536,7 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: t(ProjectsMessages.listMonitoringTitle()),
       dataIndex: 'monitoring',
-      width: 90,
+      width: 95,
       ...getColumnSorterProps('monitoring', 2),
       ...getColumnSearchCheckboxProps(
         ['monitoring'],
@@ -815,7 +823,7 @@ export const EmployeeListPage: React.FC = () => {
                   }}
                   loading={getUserListState.loading}
                   onChange={handleTableChange}
-                  scroll={{ x: 1400 }}
+                  scroll={{ x: 1450 }}
                 />
               </TableWrapper>
             </Col>
