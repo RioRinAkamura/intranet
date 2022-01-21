@@ -5,7 +5,8 @@
  */
 import { SearchOutlined } from '@ant-design/icons';
 import { Checkbox, Col, Form, FormInstance, Input, Row, Select } from 'antd';
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
+import { useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { MessageTranslate } from 'utils/types';
@@ -22,6 +23,9 @@ interface Props {
   value?: string | number;
   loading: boolean;
 }
+interface LocationState {
+  is_deteted: boolean;
+}
 
 export const TotalSearchForm = memo((props: Props) => {
   const {
@@ -36,12 +40,25 @@ export const TotalSearchForm = memo((props: Props) => {
   } = props;
   const { t } = useTranslation();
   const [checked, setChecked] = useState(false);
+  
+  const location = useLocation<LocationState>();
 
   const handlNextMornitoringChange = value => {
     if (searchNextMonitoringAt) {
       searchNextMonitoringAt(value);
     }
   };
+  useEffect(() => {
+    const paramsDeleted = new URLSearchParams(location.search);
+    const checkDeleted = paramsDeleted.get('is_deleted');
+    if (checkDeleted) {
+      if (!checked) {
+        setChecked(true);
+      }
+    } else {
+      setChecked(false);
+    }
+  }, [location])
 
   return (
     <Form form={form}>
@@ -61,6 +78,7 @@ export const TotalSearchForm = memo((props: Props) => {
                   onSearch(!checked);
                   setChecked(!checked);
                 }}
+                checked={checked}
               >
                 Deleted
               </Checkbox>
