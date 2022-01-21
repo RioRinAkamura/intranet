@@ -94,9 +94,21 @@ export const useHandleDataTable = (
         }),
       });
     } else {
-      history.replace({
-        search: stringify({ ...urlParams, search: undefined }),
-      });
+      if (isDeleted) {
+        history.replace({
+          search: stringify({
+            is_deleted: 'true',
+          }),
+        });
+      } else {
+        history.replace({
+          search: stringify({
+            ...urlParams,
+            search: undefined,
+            is_deleted: undefined,
+          }),
+        });
+      }
     }
     dispatch(actions.setSearchText({ text, isDeleted }));
   };
