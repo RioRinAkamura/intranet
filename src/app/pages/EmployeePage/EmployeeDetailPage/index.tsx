@@ -97,8 +97,8 @@ export function EmployeeDetailPage(props: Props) {
     actions,
   );
 
-  const handleSearch = () => {
-    setSearchText(searchForm.getFieldValue('search'), false);
+  const handleSearch = (isDelete: boolean) => {
+    setSearchText(searchForm.getFieldValue('search'), isDelete);
   };
 
   const resetSearchValue = () => {

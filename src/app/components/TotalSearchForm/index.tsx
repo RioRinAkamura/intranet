@@ -12,7 +12,7 @@ import { MessageTranslate } from 'utils/types';
 
 const { Option } = Select;
 interface Props {
-  onSearch: (checked) => void;
+  onSearch: (checked: boolean) => void;
   onReset: () => void;
   searchDeleted?: boolean;
   searchNextMonitoring?: boolean;
@@ -58,6 +58,7 @@ export const TotalSearchForm = memo((props: Props) => {
             <FormItem name="deleted">
               <Checkbox
                 onChange={() => {
+                  onSearch(!checked);
                   setChecked(!checked);
                 }}
               >
