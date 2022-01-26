@@ -17,7 +17,6 @@ enum LiveProjectLabelColor {
   unallocable = 'black',
   on_tracking = 'green',
   off_tracking = 'red',
-  hight = 'red',
   medium = 'orange',
   low = 'green',
   high = 'red',
@@ -67,14 +66,12 @@ export default function LiveProjectsWidget() {
         return LiveProjectLabelColor.on_tracking;
       case 'off_tracking':
         return LiveProjectLabelColor.off_tracking;
-      case 'hight':
-        return LiveProjectLabelColor.hight;
+      case 'high':
+        return LiveProjectLabelColor.high;
       case 'medium':
         return LiveProjectLabelColor.medium;
       case 'low':
         return LiveProjectLabelColor.low;
-      case 'high':
-        return LiveProjectLabelColor.high;
       default:
         return 'black';
     }
