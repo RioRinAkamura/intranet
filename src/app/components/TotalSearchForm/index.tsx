@@ -10,6 +10,7 @@ import { useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { MessageTranslate } from 'utils/types';
+import queryString from 'query-string';
 
 const { Option } = Select;
 interface Props {
@@ -32,7 +33,6 @@ export const TotalSearchForm = memo((props: Props) => {
     form,
     onSearch,
     onReset,
-    value,
     messageTrans,
     searchNextMonitoringAt,
     searchDeleted,
@@ -40,14 +40,24 @@ export const TotalSearchForm = memo((props: Props) => {
   } = props;
   const { t } = useTranslation();
   const [checked, setChecked] = useState(false);
-  
+
   const location = useLocation<LocationState>();
+  const [inputSearch, setInputSearch] = useState<any>(
+    queryString.parse(location.search).search,
+  );
+
+  useEffect(() => {
+    if (location.search) {
+      setInputSearch(queryString.parse(location.search).search);
+    }
+  }, [location.search]);
 
   const handlNextMornitoringChange = value => {
     if (searchNextMonitoringAt) {
       searchNextMonitoringAt(value);
     }
   };
+
   useEffect(() => {
     const paramsDeleted = new URLSearchParams(location.search);
     const checkDeleted = paramsDeleted.get('is_deleted');
@@ -58,7 +68,7 @@ export const TotalSearchForm = memo((props: Props) => {
     } else {
       setChecked(false);
     }
-  }, [location])
+  }, [location, checked]);
 
   return (
     <Form form={form}>
@@ -100,11 +110,12 @@ export const TotalSearchForm = memo((props: Props) => {
           </Col>
         )}
         <Col xl={14} lg={24} md={24} sm={24} xs={24}>
-          <FormItem name="search" initialValue={value}>
+          <FormItem name="search" initialValue={inputSearch}>
             <Input
               placeholder={t(messageTrans?.searchPlaceholder())}
               allowClear
               size="large"
+              value={inputSearch}
               onChange={e => e.type === 'click' && onReset()}
               onPressEnter={() => {
                 onSearch(checked);
