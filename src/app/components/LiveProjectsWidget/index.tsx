@@ -72,8 +72,6 @@ export default function LiveProjectsWidget() {
         return LiveProjectLabelColor.medium;
       case 'low':
         return LiveProjectLabelColor.low;
-      case 'high':
-        return LiveProjectLabelColor.high;
       default:
         return 'black';
     }
