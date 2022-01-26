@@ -392,6 +392,14 @@ export const EmployeeListPage: React.FC = () => {
       return `${calc} days ago.`;
     }
   };
+  const copyToClipBoard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    notify({
+      type: ToastMessageType.Info,
+      message: 'Copied',
+      duration: 2,
+    });
+  };
 
   const columns: ColumnProps<Employee>[] = [
     {
@@ -447,6 +455,17 @@ export const EmployeeListPage: React.FC = () => {
       width: 120,
       ...getColumnSorterProps('email', 3),
       ...getColumnSearchInputProps(['email']),
+      render: (text, record: Employee) =>
+        text ? (
+          <>
+            <span>{text}</span>
+            <StyledCopyIcon onClick={() => copyToClipBoard(text)}>
+              <CopyOutlined />
+            </StyledCopyIcon>
+          </>
+        ) : (
+          ''
+        ),
     },
     {
       title: 'Phone',
@@ -454,7 +473,14 @@ export const EmployeeListPage: React.FC = () => {
       width: 85,
       ...getColumnSorterProps('phone', 4),
       ...getColumnSearchInputProps(['phone']),
-      render: (text, record: Employee) => phoneFormat(text),
+      render: (text, record: Employee) => (
+        <>
+          <span>{phoneFormat(text)}</span>
+          <StyledCopyIcon onClick={() => copyToClipBoard(text)}>
+            <CopyOutlined />
+          </StyledCopyIcon>
+        </>
+      ),
     },
     {
       title: 'Position',
@@ -959,5 +985,12 @@ const RateSkill = styled(Rate)`
   li {
     padding: 0px 1px;
     margin-right: 2px !important;
+  }
+`;
+const StyledCopyIcon = styled.div`
+  width: fit-content;
+  position: absolute;
+  span {
+    cursor: pointer;
   }
 `;
