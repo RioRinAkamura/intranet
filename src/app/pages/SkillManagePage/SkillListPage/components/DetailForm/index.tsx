@@ -64,7 +64,7 @@ export const DetailForm = memo((props: Props) => {
           >
             <Input placeholder="Skill name" size="large" />
           </FormItem>
-          <FormItem name="category" label="category">
+          <FormItem name="category" label="Category">
             <Select
               placeholder="Select Category"
               onSearch={handleSearch}
