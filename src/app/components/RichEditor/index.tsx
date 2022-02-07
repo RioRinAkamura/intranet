@@ -3,6 +3,37 @@
  * DraftEditor
  *
  */
+import createLinkPlugin from '@draft-js-plugins/anchor';
+import {
+  BlockquoteButton,
+  BoldButton,
+  HeadlineOneButton,
+  HeadlineThreeButton,
+  HeadlineTwoButton,
+  ItalicButton,
+  OrderedListButton,
+  UnderlineButton,
+  UnorderedListButton,
+} from '@draft-js-plugins/buttons';
+import Editor from '@draft-js-plugins/editor';
+import createHashtagPlugin from '@draft-js-plugins/hashtag';
+import '@draft-js-plugins/hashtag/lib/plugin.css';
+import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
+import '@draft-js-plugins/inline-toolbar/lib/plugin.css';
+import createMentionPlugin, {
+  MentionData,
+  MentionPluginTheme,
+} from '@draft-js-plugins/mention';
+import '@draft-js-plugins/mention/lib/plugin.css';
+import createToolbarPlugin, {
+  Separator,
+} from '@draft-js-plugins/static-toolbar';
+import '@draft-js-plugins/static-toolbar/lib/plugin.css';
+import { Popover } from 'antd';
+import { convertToHTML } from 'draft-convert';
+import { convertFromRaw, EditorState } from 'draft-js';
+import 'draft-js/dist/Draft.css';
+import { markdownToDraft } from 'markdown-draft-js';
 import React, {
   memo,
   MouseEvent,
@@ -13,45 +44,11 @@ import React, {
   useState,
 } from 'react';
 import styled, { css } from 'styled-components/macro';
-import { convertFromRaw, EditorState } from 'draft-js';
-import Editor from '@draft-js-plugins/editor';
-import { markdownToDraft } from 'markdown-draft-js';
-import { Popover } from 'antd';
-import { convertToHTML } from 'draft-convert';
-import createMentionPlugin, {
-  MentionPluginTheme,
-} from '@draft-js-plugins/mention';
-import createHashtagPlugin from '@draft-js-plugins/hashtag';
-import createLinkPlugin from '@draft-js-plugins/anchor';
-
-import { MentionData } from '@draft-js-plugins/mention';
-
-import createToolbarPlugin, {
-  Separator,
-} from '@draft-js-plugins/static-toolbar';
-import {
-  ItalicButton,
-  BoldButton,
-  UnderlineButton,
-  HeadlineOneButton,
-  HeadlineTwoButton,
-  HeadlineThreeButton,
-  UnorderedListButton,
-  OrderedListButton,
-  BlockquoteButton,
-} from '@draft-js-plugins/buttons';
-
-import '@draft-js-plugins/mention/lib/plugin.css';
-import '@draft-js-plugins/hashtag/lib/plugin.css';
-import '@draft-js-plugins/static-toolbar/lib/plugin.css';
-import '@draft-js-plugins/inline-toolbar/lib/plugin.css';
-import 'draft-js/dist/Draft.css';
-
-import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
 import { api } from 'utils/api';
 import { EntryMention } from './components/EntryMention';
 import { MentionContent } from './components/MentionContent';
 import { mentionRemarkPlugin } from './remarkPlugin';
+
 const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
 
@@ -166,6 +163,9 @@ export const RichEditor = memo((props: Props) => {
 
     const content = editorState.getCurrentContent();
     // const rawObject = convertToRaw(content);
+    // const text = rawObject.blocks.map(block => block.text);
+    // const textConvert = text.toString().replace(/<[^>]*>/g, ' ');
+
     // const markdownString = draftToMarkdown(rawObject, {
     //   entityItems: {
     //     mention: {

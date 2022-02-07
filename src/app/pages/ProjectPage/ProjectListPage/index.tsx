@@ -8,6 +8,7 @@ import {
 import { Project } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import {
   Col,
+  DatePicker,
   Form,
   Popover,
   Row,
@@ -15,6 +16,7 @@ import {
   Table,
   TablePaginationConfig,
   Tooltip,
+  Checkbox,
 } from 'antd';
 import {
   ColumnsType,
@@ -437,18 +439,37 @@ export const ProjectListPage: React.FC = () => {
     dispatch(actions.fetchProjects({ params: params }));
   };
 
+  const DATE_FORMAT = config.DATE_FORMAT;
+  const today = moment(new Date()).format(DATE_FORMAT);
+  const [newDateCheck, setNewDateCheck] = useState(false);
+  const [todayCheck, setTodayCheck] = useState(false);
+  const [checkedDate, setCheckedDate] = useState<string>();
+  const disabledDate = (current: moment.Moment) => {
+    return current > moment().endOf('day');
+  };
+
   const handleCheckedButton = record => {
     setRecordValue(record);
     setOpenCheckedModal(true);
   };
 
-  const handleCancelCheckedModal = () => {
-    setOpenCheckedModal(false);
+  const handleSetNewReviewDate = () => {
+    setTodayCheck(false);
+    setNewDateCheck(true);
   };
 
-  const DATE_FORMAT = config.DATE_FORMAT;
+  const handleTodayCheck = () => {
+    setNewDateCheck(false);
+    setTodayCheck(true);
+    setCheckedDate(today);
+  };
+
+  const handleNewDateCheck = date => {
+    const newDate = moment(date).format(DATE_FORMAT);
+    setCheckedDate(newDate);
+  };
+
   const handleSubmitCheckedModal = async () => {
-    const checkedDate = moment(new Date()).format(DATE_FORMAT);
     if (recordValue) {
       recordValue = { ...recordValue, monitored_at: checkedDate };
       try {
@@ -461,7 +482,16 @@ export const ProjectListPage: React.FC = () => {
       }
     }
     setOpenCheckedModal(false);
+    setNewDateCheck(false);
+    setTodayCheck(false);
   };
+
+  const handleCancelCheckedModal = () => {
+    setOpenCheckedModal(false);
+    setNewDateCheck(false);
+    setTodayCheck(false);
+  };
+
   const calcMonitoringDate = date => {
     let calc = moment().diff(moment(date), 'days');
     if (calc < 1) {
@@ -717,7 +747,7 @@ export const ProjectListPage: React.FC = () => {
     {
       title: 'Checked',
       dataIndex: '',
-      width: 80,
+      width: 100,
       align: 'center',
       render: (text, record: Project) => (
         <>
@@ -916,6 +946,24 @@ export const ProjectListPage: React.FC = () => {
         handleSubmit={handleSubmitCheckedModal}
       >
         <p>Are you sure you reviewed this project status carefully today? </p>
+        <Checkbox checked={newDateCheck} onChange={handleSetNewReviewDate}>
+          Set next review date
+        </Checkbox>
+        <Checkbox
+          checked={todayCheck}
+          onChange={handleTodayCheck}
+          style={{ marginLeft: '24px' }}
+        >
+          {today}
+        </Checkbox>
+        {newDateCheck && (
+          <DatePicker
+            disabledDate={disabledDate}
+            style={{ marginTop: '12px' }}
+            onChange={date => handleNewDateCheck(date)}
+            placeholder="Select next review date"
+          ></DatePicker>
+        )}
       </DialogModal>
     </>
   );
