@@ -666,12 +666,12 @@ export const EmployeeListPage: React.FC = () => {
           <CheckedButton
             size="small"
             className={`${
-              moment().diff(moment(record.next_monitored_at), 'days') >= 0
+              moment(today).diff(moment(record.monitored_at), 'days') > 0
                 ? ''
                 : 'color-grey'
             }`}
             type={`${
-              moment().diff(moment(record.next_monitored_at), 'days') >= 0
+              moment(today).diff(moment(record.monitored_at), 'days') > 0
                 ? 'danger'
                 : 'default'
             }`}
