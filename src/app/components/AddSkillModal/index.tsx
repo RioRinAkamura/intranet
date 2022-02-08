@@ -121,7 +121,7 @@ export default function AddSkillModal(props: AddSkillModalProps) {
         <WrapperSearch>
           <Input placeholder="Search" onChange={handleSearchSkill} />
           <WrapperCheckbox>
-            <h5 style={{ marginBottom: '5px' }}>Select By Categories</h5>
+            <h3 style={{ marginBottom: '5px' }}>Select By Categories</h3>
             <Checkbox.Group
               value={checkedList}
               style={{ marginBottom: '10px' }}
@@ -139,7 +139,7 @@ export default function AddSkillModal(props: AddSkillModalProps) {
                 ))}
               </Row>
             </Checkbox.Group>
-            <h5 style={{ marginBottom: '5px' }}>Select Skills</h5>
+            <h3 style={{ marginBottom: '5px' }}>Select Skills</h3>
             <Checkbox.Group onChange={handleSelectSkill} value={selectedSkill}>
               <Row gutter={[0, 4]}>
                 {cloneFilteredSkill.map(skill => (

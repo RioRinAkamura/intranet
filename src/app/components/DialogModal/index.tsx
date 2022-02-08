@@ -45,30 +45,41 @@ export const DialogModal = React.memo(
         onCancel={handleCancel}
         onOk={handleOk}
         footer={
-          footer
-            ? footer
-            : cancelText && okText
-            ? [
-                <Button
-                  key="onCancel"
-                  shape="round"
-                  size="large"
-                  onClick={handleCancel}
-                >
-                  {cancelText}
-                </Button>,
-                <Button
-                  key="onSave"
-                  type="primary"
-                  shape="round"
-                  size="large"
-                  loading={loading}
-                  onClick={handleSubmit}
-                >
-                  {okText}
-                </Button>,
-              ]
-            : null
+          footer ? (
+            footer
+          ) : cancelText && okText ? (
+            [
+              <Button
+                key="onCancel"
+                shape="round"
+                size="large"
+                onClick={handleCancel}
+              >
+                {cancelText}
+              </Button>,
+              <Button
+                key="onSave"
+                type="primary"
+                shape="round"
+                size="large"
+                loading={loading}
+                onClick={handleSubmit}
+              >
+                {okText}
+              </Button>,
+            ]
+          ) : okText ? (
+            <Button
+              key="onSave"
+              type="primary"
+              shape="round"
+              size="large"
+              loading={loading}
+              onClick={handleSubmit}
+            >
+              {okText}
+            </Button>
+          ) : null
         }
         width={width}
       >
