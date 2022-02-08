@@ -18,7 +18,13 @@ export const useGetSkills = (
     setLoading(true);
     (async () => {
       try {
-        const response = await api.hr.skill.list();
+        const response = await api.hr.skill.list(
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          500,
+        );
         setData(response);
       } catch (e) {
         setError(e);

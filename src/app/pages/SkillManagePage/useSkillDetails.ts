@@ -148,7 +148,7 @@ export const useSkillDetails = (): {
         notify({
           type: ToastMessageType.Info,
           duration: 2,
-          // message: t(CategoryMessages.modalCreateTitle()),
+          message: 'Create skill successfully',
         });
         return response;
       }

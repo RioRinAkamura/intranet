@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import img from './assets/logo@3x.png';
+// import img from './assets/logo@3x.png';
+import img from './assets/hdwebsoft-logo-white-new.svg';
+
 // const img = require('./assets/logo@3x.png');
 export function Logo() {
   return (
