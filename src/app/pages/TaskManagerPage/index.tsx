@@ -170,7 +170,7 @@ export const TaskManager = () => {
       dataIndex: 'project',
       width: 100,
       ...getColumnSearchInputCheckboxProps(['project'], projectOptions, 0),
-      render: value => value.name,
+      render: value => value?.name,
     },
     {
       title: 'Assignee',

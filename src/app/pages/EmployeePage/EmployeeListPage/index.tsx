@@ -568,7 +568,7 @@ export const EmployeeListPage: React.FC = () => {
             />
             {fiveBestSkills.map(skill => (
               <span style={{ fontSize: '12px' }}>
-                {skill.skill.name}({skill.level}),
+                {skill.skill.name}({skill.level})&nbsp;
               </span>
             ))}
           </div>
@@ -949,7 +949,6 @@ export const EmployeeListPage: React.FC = () => {
       </DialogModal>
       <DialogModal
         isOpen={openSkillsModal}
-        cancelText={'Cancel'}
         okText={'Add'}
         title={
           employeeRecord?.first_name +
