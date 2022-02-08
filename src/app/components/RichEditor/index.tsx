@@ -31,9 +31,8 @@ import createToolbarPlugin, {
 import '@draft-js-plugins/static-toolbar/lib/plugin.css';
 import { Popover } from 'antd';
 import { convertToHTML } from 'draft-convert';
-import { convertFromRaw, EditorState } from 'draft-js';
+import { ContentState, convertFromHTML, EditorState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { markdownToDraft } from 'markdown-draft-js';
 import React, {
   memo,
   MouseEvent,
@@ -47,7 +46,6 @@ import styled, { css } from 'styled-components/macro';
 import { api } from 'utils/api';
 import { EntryMention } from './components/EntryMention';
 import { MentionContent } from './components/MentionContent';
-import { mentionRemarkPlugin } from './remarkPlugin';
 
 const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
@@ -97,32 +95,20 @@ export const RichEditor = memo((props: Props) => {
   const ref = useRef<Editor>(null);
   const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<MentionData[]>();
-  const [editorState, setEditorState] = useState<any>();
+  const [editorState, setEditorState] = useState<any>(() =>
+    EditorState.createEmpty(),
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (data) {
-      const markdownString = data;
-      const rawData = markdownToDraft(markdownString, {
-        remarkablePlugins: [mentionRemarkPlugin],
-        blockEntities: {
-          mention_open: function (item: any) {
-            return {
-              type: 'mention',
-              mutability: 'IMMUTABLE',
-              data: {
-                mention: {
-                  id: item.id,
-                  name: item.name,
-                  link: item.link,
-                },
-              },
-            };
-          },
-        },
-      });
-      const contentState = convertFromRaw(rawData);
-      setEditorState(EditorState.createWithContent(contentState));
+      const blocksFromHTML = convertFromHTML(data);
+      const state = ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap,
+      );
+
+      setEditorState(EditorState.createWithContent(state));
       setLoading(false);
     } else {
       setEditorState(EditorState.createEmpty());
@@ -162,24 +148,6 @@ export const RichEditor = memo((props: Props) => {
     setEditorState(_editorState);
 
     const content = editorState.getCurrentContent();
-    // const rawObject = convertToRaw(content);
-    // const text = rawObject.blocks.map(block => block.text);
-    // const textConvert = text.toString().replace(/<[^>]*>/g, ' ');
-
-    // const markdownString = draftToMarkdown(rawObject, {
-    //   entityItems: {
-    //     mention: {
-    //       open: function (entity: any) {
-    //         return ``;
-    //       },
-
-    //       close: function (entity: any) {
-    //         return `(${entity.data.mention.id})`;
-    //       },
-    //     },
-    //   },
-    // });
-
     if (callback) {
       callback(convertToHTML(content));
     }
