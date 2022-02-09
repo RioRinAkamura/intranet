@@ -358,9 +358,6 @@ export const EmployeeListPage: React.FC = () => {
   const [newDateCheck, setNewDateCheck] = useState(false);
   const [todayCheck, setTodayCheck] = useState(false);
   const [checkedDate, setCheckedDate] = useState<string>();
-  const disabledDate = (current: moment.Moment) => {
-    return current > moment().endOf('day');
-  };
 
   const handleCheckedButton = record => {
     setRecordValue(record);
@@ -384,8 +381,18 @@ export const EmployeeListPage: React.FC = () => {
   };
 
   const handleSubmitCheckedModal = async () => {
-    if (recordValue) {
+    if (todayCheck && recordValue) {
       recordValue = { ...recordValue, monitored_at: checkedDate };
+      try {
+        const response = await update(recordValue);
+        if (response) {
+          dispatch(actions.fetchUsers({ params: params }));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    } else if (recordValue) {
+      recordValue = { ...recordValue, next_monitored_at: checkedDate };
       try {
         const response = await update(recordValue);
         if (response) {
@@ -940,7 +947,6 @@ export const EmployeeListPage: React.FC = () => {
         </Checkbox>
         {newDateCheck && (
           <DatePicker
-            disabledDate={disabledDate}
             style={{ marginTop: '12px' }}
             onChange={date => handleNewDateCheck(date)}
             placeholder="Select next review date"
