@@ -115,6 +115,7 @@ export const TotalSearchForm = memo((props: Props) => {
               placeholder={t(messageTrans?.searchPlaceholder())}
               allowClear
               size="large"
+              autoFocus
               value={inputSearch}
               onChange={e => e.type === 'click' && onReset()}
               onPressEnter={() => {
