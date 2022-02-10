@@ -15,6 +15,7 @@ import { SelectValue } from 'antd/lib/select';
 import { Avatar } from 'app/components/Avatar';
 import { ProjectDetailMessages } from 'app/pages/ProjectPage/ProjectDetailPage/messages';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
+import config from 'config';
 import moment from 'moment';
 import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +23,7 @@ import { useTranslation } from 'react-i18next';
 const FormSearchItem = Form.Item;
 const { Option } = Select;
 
-const DATE_FORMAT = 'MM-DD-YYYY';
+const DATE_FORMAT = config.DATE_FORMAT;
 interface Props {
   projId: string;
   form: FormInstance;
@@ -78,7 +79,9 @@ export const AddMember = memo((props: Props) => {
           member_id: member.member.first_name + ' ' + member.member.last_name,
           allocation: member.allocation,
           project_role: member.project_role,
-          joined_at: member.joined_at ? moment(member.joined_at) : '',
+          joined_at: member.joined_at
+            ? moment(member.joined_at, DATE_FORMAT)
+            : '',
         },
       });
     }
