@@ -247,6 +247,7 @@ export const TaskManager = () => {
           size="small"
           onClick={() => {
             setTask(record);
+            console.log(record, 'record');
             setIsUpdate(true);
           }}
         />
@@ -328,7 +329,7 @@ export const TaskManager = () => {
     return {
       ...task,
       assignee_id: task.assignee.id,
-      project_id: task.project.id,
+      project_id: task.project ? task.project.id : '',
       follower_ids: followerIds,
     };
   };
