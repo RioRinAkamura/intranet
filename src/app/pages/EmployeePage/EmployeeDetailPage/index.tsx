@@ -287,8 +287,10 @@ export function EmployeeDetailPage(props: Props) {
       values = {
         ...values,
         dob: moment(values.dob).format(DATE_FORMAT),
-        starting_date: moment(values.starting_date).format(DATE_FORMAT),
       };
+      if (values.starting_date) {
+        values.starting_date = moment(values.starting_date).format(DATE_FORMAT);
+      }
       if (values.issued_date) {
         values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
       }
