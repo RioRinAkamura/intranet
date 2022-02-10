@@ -247,7 +247,6 @@ export const TaskManager = () => {
           size="small"
           onClick={() => {
             setTask(record);
-            console.log(record, 'record');
             setIsUpdate(true);
           }}
         />

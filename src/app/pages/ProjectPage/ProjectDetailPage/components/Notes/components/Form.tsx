@@ -118,117 +118,122 @@ export const Form: React.FC<FormProps> = ({
   };
 
   return (
-    <FormAntd layout="vertical" form={form}>
-      <FormAntd.Item
-        name="score"
-        label={t(ProjectNoteMessages.modalScoreLabel())}
-      >
-        <Select size="large" defaultValue="2">
-          {scoreList &&
-            scoreList.map(score => (
-              <Option key={score.value} value={score.value}>
-                <Row justify="space-between" align="middle">
-                  {score.label}
-                  {score.label === 'Positive' ? (
-                    <LikeTwoTone twoToneColor="green" />
-                  ) : score.label === 'Neutral' ? (
-                    <MinusCircleTwoTone twoToneColor="grey" />
-                  ) : score.label === 'Negative' ? (
-                    <DislikeTwoTone twoToneColor="red" />
-                  ) : (
-                    ''
-                  )}
-                </Row>
-              </Option>
-            ))}
-        </Select>
-      </FormAntd.Item>
-      <StyledWrapperCategory>
-        {isCreateCategory ? (
-          <FormAntd.Item
-            name="category_name"
-            label={t(ProjectNoteMessages.modalCategoryLabel())}
-          >
-            <Input
-              size="large"
-              placeholder={t(ProjectNoteMessages.modalCategoryPlaceholder())}
-              onPressEnter={onCreateCategory}
-            />
-          </FormAntd.Item>
-        ) : (
-          <FormAntd.Item
-            name="category_id"
-            label={t(ProjectNoteMessages.modalCategoryLabel())}
-          >
-            <StyledSelect
-              size="large"
-              disabled={isView}
-              placeholder={t(
-                ProjectNoteMessages.modalCategorySelectPlaceholder(),
-              )}
-            >
-              {categoryList.map(category => (
-                <Option key={category.id} value={category.id}>
-                  <div style={{ float: 'left' }}>{category.name}</div>
-                  <StyledDeleteOutlined
-                    onClick={() => handleDeleteCategory(category.id)}
-                  />
+    <StyledFormAntd layout="vertical" form={form}>
+      <StyledFormAntdSectionLeft>
+        <FormAntd.Item
+          name="summary"
+          label={t(ProjectNoteMessages.modalSummaryLabel())}
+        >
+          <Input
+            size="large"
+            placeholder={t(ProjectNoteMessages.modalSummaryPlaceholder())}
+            disabled={isView}
+          />
+        </FormAntd.Item>
+        <StyledFormAntdItemContent
+          name="content"
+          label={t(ProjectNoteMessages.modalContentLabel())}
+        >
+          <RichEditor
+            data={note?.content}
+            width="100%"
+            callback={value => {
+              form.setFieldsValue({ content: value });
+            }}
+            isView={isView}
+          />
+        </StyledFormAntdItemContent>
+      </StyledFormAntdSectionLeft>
+      <StyledFormAntdSectionRight>
+        
+        <FormAntd.Item
+          name="score"
+          label={t(ProjectNoteMessages.modalScoreLabel())}
+        >
+          <Select size="large" defaultValue="2">
+            {scoreList &&
+              scoreList.map(score => (
+                <Option key={score.value} value={score.value}>
+                  <Row justify="space-between" align="middle">
+                    {score.label}
+                    {score.label === 'Positive' ? (
+                      <LikeTwoTone twoToneColor="green" />
+                    ) : score.label === 'Neutral' ? (
+                      <MinusCircleTwoTone twoToneColor="grey" />
+                    ) : score.label === 'Negative' ? (
+                      <DislikeTwoTone twoToneColor="red" />
+                    ) : (
+                      ''
+                    )}
+                  </Row>
                 </Option>
               ))}
-            </StyledSelect>
-          </FormAntd.Item>
-        )}
-
-        {!isView &&
-          (isCreateCategory ? (
-            <>
-              <StyledCheckCircleOutlined onClick={onCreateCategory} />
-              <StyledCloseCircleOutlined
-                onClick={() => setIsCreateCategory(false)}
+          </Select>
+        </FormAntd.Item>
+        <StyledWrapperCategory>
+          {isCreateCategory ? (
+            <FormAntd.Item
+              name="category_name"
+              label={t(ProjectNoteMessages.modalCategoryLabel())}
+            >
+              <Input
+                size="large"
+                placeholder={t(ProjectNoteMessages.modalCategoryPlaceholder())}
+                onPressEnter={onCreateCategory}
               />
-            </>
+            </FormAntd.Item>
           ) : (
-            <StyledPlusCircleOutlined
-              onClick={() => setIsCreateCategory(true)}
-            />
-          ))}
-      </StyledWrapperCategory>
-      <FormAntd.Item
-        name="summary"
-        label={t(ProjectNoteMessages.modalSummaryLabel())}
-      >
-        <Input
-          size="large"
-          placeholder={t(ProjectNoteMessages.modalSummaryPlaceholder())}
-          disabled={isView}
-        />
-      </FormAntd.Item>
-      <FormAntd.Item
-        name="date"
-        label={t(ProjectNoteMessages.modalDateLabel())}
-      >
-        <StyledDatePicker
-          size="large"
-          disabled={isView}
-          disabledDate={disabledDate}
-          defaultValue={moment(today, DATE_FORMAT)}
-          format={UI_DATE_FORMAT}
-        />
-      </FormAntd.Item>
-      <FormAntd.Item
-        name="content"
-        label={t(ProjectNoteMessages.modalContentLabel())}
-      >
-        <RichEditor
-          data={note?.content}
-          width="100%"
-          callback={value => {
-            form.setFieldsValue({ content: value });
-          }}
-          isView={isView}
-        />
-      </FormAntd.Item>
-    </FormAntd>
+            <FormAntd.Item
+              name="category_id"
+              label={t(ProjectNoteMessages.modalCategoryLabel())}
+            >
+              <StyledSelect
+                size="large"
+                disabled={isView}
+                placeholder={t(
+                  ProjectNoteMessages.modalCategorySelectPlaceholder(),
+                )}
+              >
+                {categoryList.map(category => (
+                  <Option key={category.id} value={category.id}>
+                    <div style={{ float: 'left' }}>{category.name}</div>
+                    <StyledDeleteOutlined
+                      onClick={() => handleDeleteCategory(category.id)}
+                    />
+                  </Option>
+                ))}
+              </StyledSelect>
+            </FormAntd.Item>
+          )}
+
+          {!isView &&
+            (isCreateCategory ? (
+              <>
+                <StyledCheckCircleOutlined onClick={onCreateCategory} />
+                <StyledCloseCircleOutlined
+                  onClick={() => setIsCreateCategory(false)}
+                />
+              </>
+            ) : (
+              <StyledPlusCircleOutlined
+                onClick={() => setIsCreateCategory(true)}
+              />
+            ))}
+        </StyledWrapperCategory>
+        <FormAntd.Item
+          name="date"
+          label={t(ProjectNoteMessages.modalDateLabel())}
+        >
+          <StyledDatePicker
+            size="large"
+            disabled={isView}
+            disabledDate={disabledDate}
+            defaultValue={moment(today, DATE_FORMAT)}
+            format={UI_DATE_FORMAT}
+          />
+        </FormAntd.Item>
+      </StyledFormAntdSectionRight>
+    </StyledFormAntd>
   );
 };
 
@@ -275,3 +280,21 @@ const StyledDeleteOutlined = styled(DeleteOutlined)`
   margin-top: 5px;
   color: red;
 `;
+const StyledFormAntd = styled(FormAntd)`
+  display: flex;
+`;
+
+const StyledFormAntdSectionLeft = styled.div`
+  padding-right: 10px;
+`;
+const StyledFormAntdSectionRight = styled.div`
+  padding-left: 10px;
+  width: 50%;
+`;
+
+const StyledFormAntdItemContent = styled(FormAntd.Item)`
+  margin-bottom: 0px;
+  .editor {
+    padding: 80px 16px 16px 16px;
+  }
+`
