@@ -440,38 +440,60 @@ export const ProjectListPage: React.FC = () => {
   };
 
   const DATE_FORMAT = config.DATE_FORMAT;
-  const today = moment(new Date()).format(DATE_FORMAT);
+  const todayPicker = moment(new Date());
+  const todayFormat = todayPicker.format(DATE_FORMAT);
   const [newDateCheck, setNewDateCheck] = useState(false);
   const [todayCheck, setTodayCheck] = useState(false);
+  const [dayPickerValue, setDayPickerValue] = useState<any>();
+
   const [checkedDate, setCheckedDate] = useState<string>();
   const disabledDate = (current: moment.Moment) => {
-    return current > moment().endOf('day');
+    return current < moment().startOf('day');
   };
 
   const handleCheckedButton = record => {
     setRecordValue(record);
     setOpenCheckedModal(true);
-  };
-
-  const handleSetNewReviewDate = () => {
-    setTodayCheck(false);
-    setNewDateCheck(true);
-  };
-
-  const handleTodayCheck = () => {
-    setNewDateCheck(false);
     setTodayCheck(true);
-    setCheckedDate(today);
+    setDayPickerValue(todayPicker);
+  };
+
+  const handleCheckNewReviewDate = () => {
+    setNewDateCheck(!newDateCheck);
+    setCheckedDate(todayFormat);
+    setTodayCheck(false);
   };
 
   const handleNewDateCheck = date => {
-    const newDate = moment(date).format(DATE_FORMAT);
-    setCheckedDate(newDate);
+    setDayPickerValue(date);
+    setTodayCheck(false);
+    const newDate = moment(date);
+    const newDateFormat = moment(date).format(DATE_FORMAT);
+
+    if (
+      newDate.date() === todayPicker.date() &&
+      newDate.month() === todayPicker.month() &&
+      newDate.year() === todayPicker.year()
+    ) {
+      setCheckedDate(todayFormat);
+    } else {
+      setCheckedDate(newDateFormat);
+    }
   };
 
   const handleSubmitCheckedModal = async () => {
-    if (recordValue) {
-      recordValue = { ...recordValue, monitored_at: checkedDate };
+    if (todayCheck && recordValue) {
+      recordValue = { ...recordValue, monitored_at: todayFormat };
+      try {
+        const response = await update(recordValue);
+        if (response) {
+          dispatch(actions.fetchProjects({ params: params }));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    } else if (recordValue) {
+      recordValue = { ...recordValue, next_monitoring_at: checkedDate };
       try {
         const response = await update(recordValue);
         if (response) {
@@ -483,13 +505,12 @@ export const ProjectListPage: React.FC = () => {
     }
     setOpenCheckedModal(false);
     setNewDateCheck(false);
-    setTodayCheck(false);
+    setDayPickerValue(todayPicker);
   };
 
   const handleCancelCheckedModal = () => {
     setOpenCheckedModal(false);
     setNewDateCheck(false);
-    setTodayCheck(false);
   };
 
   const calcMonitoringDate = date => {
@@ -755,12 +776,12 @@ export const ProjectListPage: React.FC = () => {
           <CheckedButton
             size="small"
             className={`${
-              moment(today).diff(moment(record.monitored_at), 'days') > 0
+              moment(todayFormat).diff(moment(record.monitored_at), 'days') > 0
                 ? ''
                 : 'color-grey'
             }`}
             type={`${
-              moment(today).diff(moment(record.monitored_at), 'days') > 0
+              moment(todayFormat).diff(moment(record.monitored_at), 'days') > 0
                 ? 'danger'
                 : 'default'
             }`}
@@ -946,24 +967,20 @@ export const ProjectListPage: React.FC = () => {
         handleSubmit={handleSubmitCheckedModal}
       >
         <p>Are you sure you reviewed this project status carefully today? </p>
-        <Checkbox checked={newDateCheck} onChange={handleSetNewReviewDate}>
+        <Checkbox
+          checked={newDateCheck}
+          onChange={handleCheckNewReviewDate}
+          style={{ margin: '12px 0px 12px 0px' }}
+        >
           Set next review date
         </Checkbox>
-        <Checkbox
-          checked={todayCheck}
-          onChange={handleTodayCheck}
-          style={{ marginLeft: '24px' }}
-        >
-          {today}
-        </Checkbox>
-        {newDateCheck && (
-          <DatePicker
-            disabledDate={disabledDate}
-            style={{ marginTop: '12px' }}
-            onChange={date => handleNewDateCheck(date)}
-            placeholder="Select next review date"
-          ></DatePicker>
-        )}
+        <DatePicker
+          style={{ marginLeft: '16px' }}
+          disabledDate={disabledDate}
+          onChange={date => handleNewDateCheck(date)}
+          value={dayPickerValue}
+          disabled={!newDateCheck}
+        ></DatePicker>
       </DialogModal>
     </>
   );
