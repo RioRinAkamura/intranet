@@ -407,7 +407,11 @@ export const EmployeeListPage: React.FC = () => {
         console.log(e);
       }
     } else if (recordValue) {
-      recordValue = { ...recordValue, next_monitored_at: checkedDate };
+      recordValue = {
+        ...recordValue,
+        monitored_at: todayFormat,
+        next_monitored_at: checkedDate,
+      };
       try {
         const response = await update(recordValue);
         if (response) {

@@ -493,7 +493,11 @@ export const ProjectListPage: React.FC = () => {
         console.log(e);
       }
     } else if (recordValue) {
-      recordValue = { ...recordValue, next_monitoring_at: checkedDate };
+      recordValue = {
+        ...recordValue,
+        monitored_at: todayFormat,
+        next_monitoring_at: checkedDate,
+      };
       try {
         const response = await update(recordValue);
         if (response) {
