@@ -287,18 +287,19 @@ export const Notes = memo(({ projectId }: NotesProps) => {
       render: text => (text ? moment(text).format('MM-DD-YYYY') : ''),
     },
     {
+      title: t(ProjectNoteMessages.listSummary()),
+      dataIndex: 'summary',
+      width: 140,
+      ...getColumnSorterProps('summary', 1),
+      ...getColumnSearchInputProps(['summary']),
+      render: text => <StyledWrapContent>{text}</StyledWrapContent>,
+    },
+    {
       title: t(ProjectNoteMessages.listContent()),
       dataIndex: 'content',
       render: content => (
         <div dangerouslySetInnerHTML={{ __html: content }}></div>
       ),
-    },
-    {
-      title: t(ProjectNoteMessages.listSummary()),
-      dataIndex: 'summary',
-      ...getColumnSorterProps('summary', 1),
-      ...getColumnSearchInputProps(['summary']),
-      render: text => <Title level={5}>{text}</Title>,
     },
     {
       title: <ActionIcon />,
@@ -475,3 +476,7 @@ const NotesScoreIcon = styled.div`
   font-size: 20px;
   padding-bottom: 6px;
 `;
+
+const StyledWrapContent = styled.div`
+  white-space: pre-wrap;
+`
