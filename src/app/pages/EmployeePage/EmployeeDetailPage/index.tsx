@@ -419,7 +419,7 @@ export function EmployeeDetailPage(props: Props) {
         leftScreenItems={<></>}
         rightScreenItems={
           <>
-            <ProfileInfo isView={isView} isEdit={isEdit} />
+            <ProfileInfo isView={isView} isEdit={isEdit} form={form} />
           </>
         }
       />

@@ -187,9 +187,13 @@ export const ProjectInfo = (props: Props) => {
             <StyledTitle>
               {t(ProjectDetailMessages.formProjectOverviewLabel())}
             </StyledTitle>
-            {data?.overview ? 
-            <StyledData dangerouslySetInnerHTML={{ __html: data?.overview }}></StyledData>
-            : <StyledData>N/A</StyledData>}
+            {data?.overview ? (
+              <StyledData
+                dangerouslySetInnerHTML={{ __html: data?.overview }}
+              ></StyledData>
+            ) : (
+              <StyledData>N/A</StyledData>
+            )}
           </StyledWrapperDiv>
         </div>
       </StyledWrapperLoading>
