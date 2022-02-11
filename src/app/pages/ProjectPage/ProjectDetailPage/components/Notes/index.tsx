@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState, Key } from 'react';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { Table, Tooltip, Form as FormAntd, Row, Col, Typography } from 'antd';
+import { Table, Tooltip, Form as FormAntd, Row, Col } from 'antd';
 import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
 import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import {
@@ -44,8 +44,6 @@ const DATE_FORMAT = config.DATE_FORMAT;
 interface NotesProps {
   projectId: string;
 }
-
-const { Title } = Typography;
 
 export const Notes = memo(({ projectId }: NotesProps) => {
   const { t } = useTranslation();
@@ -479,4 +477,4 @@ const NotesScoreIcon = styled.div`
 
 const StyledWrapContent = styled.div`
   white-space: pre-wrap;
-`
+`;

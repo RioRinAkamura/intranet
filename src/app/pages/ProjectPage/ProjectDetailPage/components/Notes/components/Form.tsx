@@ -145,7 +145,6 @@ export const Form: React.FC<FormProps> = ({
         </StyledFormAntdItemContent>
       </StyledFormAntdSectionLeft>
       <StyledFormAntdSectionRight>
-        
         <FormAntd.Item
           name="score"
           label={t(ProjectNoteMessages.modalScoreLabel())}
@@ -297,4 +296,4 @@ const StyledFormAntdItemContent = styled(FormAntd.Item)`
   .editor {
     padding: 80px 16px 16px 16px;
   }
-`
+`;

@@ -11,20 +11,25 @@ import {
   DatePicker,
   DatePickerProps,
   Form,
+  FormInstance,
   Input,
   InputProps,
   Radio,
   Row,
 } from 'antd';
 import { UserDetailMessages } from '../../messages';
+import { IconButton } from 'app/components/Button';
 import { TitlePath } from '../TitlePath';
 import { RuleObject } from 'rc-field-form/lib/interface';
 import moment from 'moment';
 import config from 'config';
+import { CopyOutlined } from '@ant-design/icons';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 
 interface ProfileInfoProps {
   isView?: boolean;
   isEdit?: boolean;
+  form?: FormInstance;
 }
 
 const inputProps: InputProps = {
@@ -43,8 +48,9 @@ const datePickerProps: DatePickerProps = {
 const DATE_FORMAT = config.DATE_FORMAT;
 
 export const ProfileInfo = (props: ProfileInfoProps) => {
-  const { isView, isEdit } = props;
+  const { isView, isEdit, form } = props;
   const { t } = useTranslation();
+  const { notify } = useNotify();
 
   const disabledDate = (current: moment.Moment) => {
     return current > moment().endOf('day');
@@ -66,12 +72,26 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
     }
   };
 
+  const handleCopyEmployeeData = (fieldName: string) => {
+    let data = form?.getFieldValue(fieldName);
+    if (moment.isMoment(data)) {
+      data = data.format(DATE_FORMAT);
+    }
+
+    navigator.clipboard.writeText(JSON.stringify(data, null, '\t'));
+    notify({
+      type: ToastMessageType.Info,
+      message: 'Copied',
+      duration: 2,
+    });
+  };
+
   return (
     <ProfileInfoStyled>
       <TitlePath>
         <b>{t(UserDetailMessages.formProfileTitle())}</b>
       </TitlePath>
-      <Row gutter={[128, 0]} align="top">
+      <Row gutter={[64, 0]} align="top">
         <Col md={12} xs={24}>
           <Row gutter={[0, 12]} align="middle">
             <Col md={isView ? 8 : 24} xs={24}>
@@ -111,7 +131,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 {t(UserDetailMessages.formDOBLabel())}
               </span>
             </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
+            <Col md={isView ? 14 : 24} xs={24}>
               <FormItem
                 isView={isView}
                 name="dob"
@@ -138,12 +158,26 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 />
               </FormItem>
             </Col>
+            {isView && (
+              <Col md={2}>
+                <IconButton
+                  type="primary"
+                  shape="circle"
+                  size="small"
+                  icon={<CopyOutlined />}
+                  onClick={() => {
+                    handleCopyEmployeeData('dob');
+                  }}
+                />
+              </Col>
+            )}
+
             <Col md={isView ? 8 : 24} xs={24}>
               <span className="label">
                 {t(UserDetailMessages.formEmailLabel())}
               </span>
             </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
+            <Col md={isView ? 14 : 24} xs={24}>
               {' '}
               <FormItem
                 isView={isView}
@@ -174,6 +208,20 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 />
               </FormItem>
             </Col>
+            {isView && (
+              <Col md={2}>
+                <IconButton
+                  type="primary"
+                  shape="circle"
+                  size="small"
+                  icon={<CopyOutlined />}
+                  onClick={() => {
+                    handleCopyEmployeeData('email');
+                  }}
+                />
+              </Col>
+            )}
+
             <Col md={isView ? 8 : 24} xs={24}>
               <span className="label">
                 {t(UserDetailMessages.formStatusLabel())}
@@ -200,7 +248,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 {t(UserDetailMessages.formJoinedLabel())}
               </span>
             </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
+            <Col md={isView ? 14 : 24} xs={24}>
               <FormItem isView={isView} name="starting_date">
                 <DatePicker
                   {...(isView ? datePickerProps : {})}
@@ -214,6 +262,20 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 />
               </FormItem>
             </Col>
+
+            {isView && (
+              <Col md={2}>
+                <IconButton
+                  type="primary"
+                  shape="circle"
+                  size="small"
+                  icon={<CopyOutlined />}
+                  onClick={() => {
+                    handleCopyEmployeeData('starting_date');
+                  }}
+                />
+              </Col>
+            )}
           </Row>
         </Col>
         <Col
@@ -297,7 +359,7 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 {t(UserDetailMessages.formPhoneNumberLabel())}
               </span>
             </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
+            <Col md={isView ? 14 : 24} xs={24}>
               <FormItem
                 isView={isView}
                 name="phone"
@@ -324,12 +386,26 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 />
               </FormItem>
             </Col>
+            {isView && (
+              <Col md={2}>
+                <IconButton
+                  type="primary"
+                  shape="circle"
+                  size="small"
+                  icon={<CopyOutlined />}
+                  onClick={() => {
+                    handleCopyEmployeeData('phone');
+                  }}
+                />
+              </Col>
+            )}
+
             <Col md={isView ? 8 : 24} xs={24}>
               <span className="label">
                 {t(UserDetailMessages.formInsuranceNoLabel())}
               </span>
             </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
+            <Col md={isView ? 14 : 24} xs={24}>
               {' '}
               <FormItem name="social_insurance_no" isView={isView}>
                 <Input
@@ -344,12 +420,27 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 />
               </FormItem>
             </Col>
+            {isView && (
+              <Col md={2}>
+                <IconButton
+                  type="primary"
+                  shape="circle"
+                  size="small"
+                  icon={<CopyOutlined />}
+                  onClick={() => {
+                    // handleCopyEmployee(record);
+                    handleCopyEmployeeData('social_insurance_no');
+                  }}
+                />
+              </Col>
+            )}
+
             <Col md={isView ? 8 : 24} xs={24}>
               <span className="label">
                 {t(UserDetailMessages.formNicknameLabel())}
               </span>
             </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
+            <Col md={isView ? 14 : 24} xs={24}>
               <FormItem name="nickname" isView={isView}>
                 <Input
                   {...(isView ? inputProps : {})}
@@ -363,6 +454,20 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
                 />
               </FormItem>
             </Col>
+            {isView && (
+              <Col md={2}>
+                <IconButton
+                  type="primary"
+                  shape="circle"
+                  size="small"
+                  icon={<CopyOutlined />}
+                  onClick={() => {
+                    // handleCopyEmployee(record);
+                    handleCopyEmployeeData('nickname');
+                  }}
+                />
+              </Col>
+            )}
           </Row>
         </Col>
       </Row>
