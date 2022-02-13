@@ -55,11 +55,11 @@ export const Employees = memo(() => {
 
   const handleEditMember = () => {
     form.validateFields().then(async values => {
+      values.members.joined_at = values.members.joined_at
+        ? moment(values.members.joined_at).format(DATE_FORMAT)
+        : null;
       try {
         delete values.members.member_id;
-        values.members.joined_at = moment(values.members.joined_at).format(
-          DATE_FORMAT,
-        );
         if (editMember) {
           const response = await api.hr.project.updateMember(
             id,

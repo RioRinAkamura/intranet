@@ -485,6 +485,7 @@ export const ProjectListPage: React.FC = () => {
     if (todayCheck && recordValue) {
       recordValue = { ...recordValue, monitored_at: todayFormat };
       try {
+        delete recordValue.next_monitoring_at;
         const response = await update(recordValue);
         if (response) {
           dispatch(actions.fetchProjects({ params: params }));

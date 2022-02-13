@@ -1,9 +1,3 @@
-import React, { memo, useEffect, useState, Key } from 'react';
-import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
-import { Table, Tooltip, Form as FormAntd, Row, Col } from 'antd';
-import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
-import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import {
   DeleteOutlined,
   DislikeTwoTone,
@@ -11,33 +5,37 @@ import {
   LikeTwoTone,
   MinusCircleTwoTone,
 } from '@ant-design/icons';
-import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
 import { ProjectNote } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
-
-import { config } from 'config';
-import { DialogModal } from 'app/components/DialogModal';
-import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
-import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
-import { useTableConfig } from 'utils/tableConfig';
-import Button from 'app/components/Button';
-import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
-import { Wrapper } from 'styles/StyledCommon';
-import { DeleteModal } from 'app/components/DeleteModal';
-import {
-  selectProjectNotes,
-  selectProjectNoteIsFilter,
-  selectProjectNotesParams,
-  selectProjectNoteIsSuccess,
-} from './slice/selectors';
-import { Actions } from './components/Actions';
-
-import { ProjectNoteMessages } from './messages';
-import { api } from 'utils/api';
+import { Col, Form as FormAntd, Row, Table, Tooltip } from 'antd';
+import { ColumnProps, TablePaginationConfig } from 'antd/lib/table';
+import { FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { ActionIcon } from 'app/components/ActionIcon';
-import { useNotesSlice } from './slice';
-import { Form } from './components/Form';
+import Button from 'app/components/Button';
+import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import { DeleteModal } from 'app/components/DeleteModal';
+import { DialogModal } from 'app/components/DialogModal';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import { useHandleDataTable } from 'app/pages/EmployeePage/EmployeeListPage/useHandleDataTable';
+import { config } from 'config';
+import moment from 'moment';
+import React, { Key, memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components/macro';
+import { Wrapper } from 'styles/StyledCommon';
+import { api } from 'utils/api';
+import { useTableConfig } from 'utils/tableConfig';
 import { useProjectDetail } from '../../useProjectDetail';
+import { Actions } from './components/Actions';
+import { Form } from './components/Form';
+import { ProjectNoteMessages } from './messages';
+import { useNotesSlice } from './slice';
+import {
+  selectProjectNoteIsFilter,
+  selectProjectNoteIsSuccess,
+  selectProjectNotes,
+  selectProjectNotesParams,
+} from './slice/selectors';
 
 const DATE_FORMAT = config.DATE_FORMAT;
 
