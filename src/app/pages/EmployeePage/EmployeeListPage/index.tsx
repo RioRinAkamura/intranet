@@ -399,6 +399,7 @@ export const EmployeeListPage: React.FC = () => {
     if (todayCheck && recordValue) {
       recordValue = { ...recordValue, monitored_at: todayFormat };
       try {
+        delete recordValue.next_monitored_at;
         const response = await update(recordValue);
         if (response) {
           dispatch(actions.fetchUsers({ params: params }));
@@ -588,7 +589,7 @@ export const EmployeeListPage: React.FC = () => {
             <RateSkill
               disabled
               allowHalf
-              defaultValue={averageStar}
+              value={averageStar}
               style={{ cursor: 'pointer' }}
             />
             {fiveBestSkills.map(skill => (
@@ -990,10 +991,8 @@ export const EmployeeListPage: React.FC = () => {
               </Col>
               <Col span={18}>
                 <RateSkill
-                  onChange={value => {
-                    onEmployeeSkillChange(skill, value);
-                  }}
-                  defaultValue={skill.level}
+                  onChange={value => onEmployeeSkillChange(skill, value)}
+                  value={skill.level}
                 />
               </Col>
             </Row>
