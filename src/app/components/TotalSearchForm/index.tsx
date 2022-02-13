@@ -19,6 +19,8 @@ interface Props {
   searchDeleted?: boolean;
   searchNextMonitoring?: boolean;
   searchNextMonitoringAt?: (value) => void;
+  searchEmployeeProjects?: boolean;
+  searchEmployeeProjectList?: (value) => void;
   messageTrans?: MessageTranslate;
   form: FormInstance;
   value?: string | number;
@@ -37,6 +39,8 @@ export const TotalSearchForm = memo((props: Props) => {
     searchNextMonitoringAt,
     searchDeleted,
     searchNextMonitoring,
+    searchEmployeeProjects,
+    searchEmployeeProjectList,
   } = props;
   const { t } = useTranslation();
   const [checked, setChecked] = useState(false);
@@ -55,6 +59,12 @@ export const TotalSearchForm = memo((props: Props) => {
   const handlNextMornitoringChange = value => {
     if (searchNextMonitoringAt) {
       searchNextMonitoringAt(value);
+    }
+  };
+
+  const handleSearchEmployeeProjectList = value => {
+    if (searchEmployeeProjectList) {
+      searchEmployeeProjectList(value);
     }
   };
 
@@ -109,6 +119,23 @@ export const TotalSearchForm = memo((props: Props) => {
             </FormItem>
           </Col>
         )}
+
+        {searchEmployeeProjects && (
+          <Col xl={6} lg={12} md={12} sm={12} xs={12}>
+            <FormItem name="same_projects">
+              <SelectProjectList
+                size="large"
+                defaultValue="all"
+                onChange={value => handleSearchEmployeeProjectList(value)}
+              >
+                <Option value="all">All Projects</Option>
+                <Option value="active_projects">My Active Projects</Option>
+                <Option value="achieved_projects">My All Projects</Option>
+              </SelectProjectList>
+            </FormItem>
+          </Col>
+        )}
+
         <Col xl={14} lg={24} md={24} sm={24} xs={24}>
           <FormItem name="search" initialValue={inputSearch}>
             <Input
@@ -147,5 +174,8 @@ const FormItem = styled(Form.Item)`
 `;
 
 const SelectNextMonitoredAt = styled(Select)`
+  width: 100%;
+`;
+const SelectProjectList = styled(Select)`
   width: 100%;
 `;

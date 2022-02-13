@@ -235,6 +235,16 @@ export const UserDetailMessages = {
     ),
   formJobTitle: () =>
     _t(translations.UserDetailPage.modal.form.job.title, 'Job infomation'),
+  formJobDescription: () =>
+    _t(
+      translations.UserDetailPage.modal.form.job.jobDesc.label,
+      'Job description',
+    ),
+  formJobDesPlaceholder: () =>
+    _t(
+      translations.UserDetailPage.modal.form.job.jobDesc.placeholder,
+      'Job description',
+    ),
   formJobTitleLabel: () =>
     _t(translations.UserDetailPage.modal.form.job.jobTitle.label, 'Job title'),
   formJobTitlePlaceholder: () =>

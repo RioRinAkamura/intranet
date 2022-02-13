@@ -44,6 +44,7 @@ import { ProjectsMessages } from 'app/pages/ProjectPage/ProjectListPage/messages
 import { useSkillDetails } from 'app/pages/SkillManagePage/useSkillDetails';
 import config from 'config';
 import moment from 'moment';
+import { stringify } from 'querystring';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { Helmet } from 'react-helmet-async';
@@ -263,6 +264,32 @@ export const EmployeeListPage: React.FC = () => {
   const resetTotalSearch = () => {
     searchForm.setFieldsValue({ search: undefined });
     resetSearch();
+  };
+
+  const handleSearchEmployeeProjectList = value => {
+    if (value === 'all') {
+      history.push(`${PrivatePath.EMPLOYEES}`);
+      dispatch(actions.changeState({ ...params, same_projects: undefined }));
+    } else if (value === 'active_projects') {
+      history.replace({
+        search: stringify({
+          same_project: 'active_projects',
+        }),
+      });
+      dispatch(
+        actions.changeState({ ...params, same_projects: 'active_projects' }),
+      );
+    } else if (value === 'achieved_projects') {
+      history.replace({
+        search: stringify({
+          same_project: 'achieved_projects',
+        }),
+      });
+      dispatch(
+        actions.changeState({ ...params, same_projects: 'achieved_projects' }),
+      );
+    }
+    dispatch(actions.fetchUsers({ params: params }));
   };
 
   const handleSelectedRows = (
@@ -846,6 +873,8 @@ export const EmployeeListPage: React.FC = () => {
           onSearch={totalSearch}
           onReset={resetTotalSearch}
           searchDeleted={true}
+          searchEmployeeProjects={true}
+          searchEmployeeProjectList={handleSearchEmployeeProjectList}
         />
       </PageTitle>
       {isMobileOnly ? (
@@ -992,7 +1021,7 @@ export const EmployeeListPage: React.FC = () => {
               <Col span={18}>
                 <RateSkill
                   onChange={value => onEmployeeSkillChange(skill, value)}
-                  value={skill.level}
+                  defaultValue={skill.level}
                 />
               </Col>
             </Row>

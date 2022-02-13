@@ -63,6 +63,7 @@ const slice = createSlice({
         from: action.payload.from,
         to: action.payload.to,
         skills: action.payload.skills,
+        same_projects: action.payload.same_projects,
       };
       state.pagination = {
         ...state.pagination,
