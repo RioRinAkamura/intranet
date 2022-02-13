@@ -31,6 +31,7 @@ export interface FilterColumns {
   from?: string;
   to?: string;
   exact?: string;
+  same_projects?: string;
   [key: string]: string | undefined;
 }
 
@@ -55,6 +56,7 @@ export interface QueryParams {
   limit?: number;
   page?: number;
   skills?: string;
+  same_projects?: string;
   [key: string]: string | number | undefined;
 }
 

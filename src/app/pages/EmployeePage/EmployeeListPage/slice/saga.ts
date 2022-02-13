@@ -20,6 +20,7 @@ function* fetchUsers(action) {
       allocable: params.allocable,
       is_deleted: params.is_deleted,
       skills: params.skills,
+      same_projects: params.same_projects,
     };
     if (Boolean(params.is_deleted) === false) {
       delete queryParams.is_deleted;

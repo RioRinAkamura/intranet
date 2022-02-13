@@ -300,6 +300,10 @@
           "jobTags": {
             "label": "Tags",
             "placeholder": "Employee tags"
+          },
+          "jobDesc": {
+            "label": "Job description",
+            "placeholder": "Job description"
           }
         },
         "bank": {
