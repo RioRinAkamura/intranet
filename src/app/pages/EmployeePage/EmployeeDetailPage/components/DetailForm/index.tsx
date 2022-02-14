@@ -62,7 +62,7 @@ export const DetailForm = memo((props: FormProps) => {
   pathname.includes('employees') && pathname.includes('contract') ? (
     <Form form={form} labelAlign="left">
       <WrapperSubItem gutter={[64, 32]}>
-        <Col span={isView ? 24 : 12}>
+        <Col span={isView ? 24 : 24}>
           <WrapperItem>
             <Form.Item hidden name="id">
               <Input hidden />
