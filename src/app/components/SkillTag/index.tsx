@@ -79,7 +79,6 @@ export const SkillTagsInput = memo((props: Props) => {
       placeholder={
         isView ? '' : placeholder || `${t(messages.tagsInputSearchSkills())}`
       }
-      size="large"
       value={value}
       onChange={handleOnChangeTags}
       className={className}

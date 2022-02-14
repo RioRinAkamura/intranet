@@ -13,6 +13,7 @@ import {
   Space,
 } from 'antd';
 import { Avatar } from 'app/components/Avatar';
+import { PhoneNumber } from 'app/components/PhoneNumber';
 import { SkillTagsInput } from 'app/components/SkillTag';
 import { TagsInput } from 'app/components/Tags';
 import { FilterColumns } from 'app/pages/EmployeePage/EmployeeListPage/slice/types';
@@ -40,6 +41,7 @@ interface useTableProps {
   ) => {};
   getColumnSearchTagProps: (dataIndex: string, tags?: TagType[]) => {};
   getColumnSearchSkillsProps: (dataIndex: string, skills?: SkillType[]) => {};
+  getColumnSearchPhoneProps: (dataIndex: string) => {};
   getColumnSearchCheckboxProps: (
     dataIndex: string[],
     options: CheckboxOptionType[],
@@ -369,6 +371,54 @@ export const useTableConfig = (
       return (
         <Wrapper>
           <TagsInput
+            value={selectedKeys[dataIndex]}
+            callback={e => {
+              setSelectedKeys(prevState => ({
+                ...prevState,
+                [dataIndex]: e ? e : null,
+              }));
+            }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(dataIndex, confirm)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+              loading={state.loading}
+            >
+              {t(messageTrans.filterSearchButton())}
+            </Button>
+            <Button
+              onClick={() => handleReset(dataIndex, confirm)}
+              size="small"
+              loading={state.loading}
+              style={{ width: 90 }}
+            >
+              {t(messageTrans.filterResetButton())}
+            </Button>
+          </Space>
+        </Wrapper>
+      );
+    },
+    filterIcon: filtered => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : '',
+  });
+
+  const getColumnSearchPhoneProps = (dataIndex: string) => ({
+    filterDropdown: ({ confirm }) => {
+      return (
+        <Wrapper>
+          <PhoneNumber
             value={selectedKeys[dataIndex]}
             callback={e => {
               setSelectedKeys(prevState => ({
@@ -981,6 +1031,7 @@ export const useTableConfig = (
     getColumnSearchInputProps,
     getColumnSearchTagProps,
     getColumnSearchSkillsProps,
+    getColumnSearchPhoneProps,
     getColumnSearchCheckboxProps,
     getColumnSearchCheckboxFromToProps,
     getColumnSearchSelectProps,
