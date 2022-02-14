@@ -218,8 +218,6 @@ export const useProjectDetail = (): {
     memberId: string,
     values: any,
   ) => {
-    console.log('values', values);
-
     setLoading(true);
     try {
       const response = await api.hr.project.updateMember(

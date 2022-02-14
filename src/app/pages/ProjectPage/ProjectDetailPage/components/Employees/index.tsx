@@ -66,7 +66,6 @@ export const Employees = memo(() => {
             ? moment(values.members.joined_at).format(DATE_FORMAT)
             : undefined;
           const memberEdit = values.members;
-          console.log('memberEdit', memberEdit);
           const response = await updateMember(
             id,
             editMember.member.id,
