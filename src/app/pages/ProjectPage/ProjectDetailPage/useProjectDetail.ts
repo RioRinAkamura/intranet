@@ -33,6 +33,11 @@ export const useProjectDetail = (): {
   update: (data: any) => Promise<any | undefined>;
   create: (data: any) => void;
   addMember: (projectId: string, data: any) => Promise<any | undefined>;
+  updateMember: (
+    projectId: string,
+    memberId: string,
+    data: any,
+  ) => Promise<any | undefined>;
   getPriorities: () => Promise<void>;
   getStatuses: () => Promise<void>;
   getMonitorings: () => Promise<void>;
@@ -208,6 +213,39 @@ export const useProjectDetail = (): {
     }
   };
 
+  const updateMember = async (
+    projectId: string,
+    memberId: string,
+    values: any,
+  ) => {
+    setLoading(true);
+    try {
+      const response = await api.hr.project.updateMember(
+        projectId,
+        memberId,
+        values,
+      );
+      if (response) {
+        notify({
+          type: ToastMessageType.Info,
+          duration: 2,
+          message: t(ProjectDetailMessages.messageEditProjectSuccess()),
+        });
+
+        return response;
+      }
+    } catch (error: any) {
+      setError(error);
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getPriorities = React.useCallback(async () => {
     try {
       const response = await api.hr.project.getPriorities();
@@ -292,6 +330,7 @@ export const useProjectDetail = (): {
     update,
     create,
     addMember,
+    updateMember,
     getAllMembers,
     getPriorities,
     getStatuses,

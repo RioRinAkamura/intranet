@@ -10,8 +10,6 @@ import { useProjectDetail } from '../../useProjectDetail';
 import { Member } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/project/models';
 import { config } from 'config';
 import moment from 'moment';
-import { api } from 'utils/api';
-
 interface LocationParams {
   id: string;
 }
@@ -20,7 +18,13 @@ const DATE_FORMAT = config.DATE_FORMAT;
 
 export const Employees = memo(() => {
   const { id } = useParams<LocationParams>();
-  const { members, loading, fetchMembers, addMember } = useProjectDetail();
+  const {
+    members,
+    loading,
+    fetchMembers,
+    addMember,
+    updateMember,
+  } = useProjectDetail();
 
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -55,17 +59,19 @@ export const Employees = memo(() => {
 
   const handleEditMember = () => {
     form.validateFields().then(async values => {
-      values.members.joined_at = values.members.joined_at
-        ? moment(values.members.joined_at).format(DATE_FORMAT)
-        : null;
       try {
         delete values.members.member_id;
         if (editMember) {
-          const response = await api.hr.project.updateMember(
+          values.members.joined_at = values.members.joined_at
+            ? moment(values.members.joined_at).format(DATE_FORMAT)
+            : undefined;
+          const memberEdit = values.members;
+          const response = await updateMember(
             id,
             editMember.member.id,
-            values.members,
+            memberEdit,
           );
+
           if (response) {
             setOpenModal(false);
             setIsEdit(false);
