@@ -129,6 +129,7 @@ export const EmployeeListPage: React.FC = () => {
   const {
     getColumnSorterProps,
     getColumnSearchInputProps,
+    getColumnSearchPhoneProps,
     getColumnSearchTagProps,
     getColumnSearchSkillsProps,
     getColumnSearchCheckboxFromToProps,
@@ -551,9 +552,9 @@ export const EmployeeListPage: React.FC = () => {
     {
       title: 'Phone',
       dataIndex: 'phone',
-      width: 85,
+      width: 95,
       ...getColumnSorterProps('phone', 4),
-      ...getColumnSearchInputProps(['phone']),
+      ...getColumnSearchPhoneProps('phone'),
       render: (text, record: Employee) => (
         <>
           <span>{phoneFormat(text)}</span>

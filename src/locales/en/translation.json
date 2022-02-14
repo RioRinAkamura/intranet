@@ -38,6 +38,10 @@
     "validate": "Please input more 1 word",
     "searchTags": "Search Skills"
   },
+  "phoneNumberInput": {
+    "validate": "Please input more 1 word",
+    "searchPhoneNumber": "Search Phone Number..."
+  },
   "translations": {
     "someThing": "default value"
   },

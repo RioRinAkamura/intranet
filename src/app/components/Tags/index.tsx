@@ -77,7 +77,6 @@ export const TagsInput = memo((props: Props) => {
       placeholder={
         isView ? '' : placeholder || `${t(messages.tagsInputSearchTags())}`
       }
-      size="large"
       value={value}
       onChange={handleOnChangeTags}
       className={className}
