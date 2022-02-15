@@ -55,18 +55,16 @@ export const ProjectModal = memo((props: Props) => {
 
   const handleProject = async values => {
     const allocable = selectedProject ? selectedProject.allocable : checked;
-    let _values: any = {
+    let _values = {
       employeeId: id,
       data: {
         project_id: values.project,
         allocation: values.allocation,
         project_role: values.project_role,
         allocable,
+        joined_at: values.joined_at ? values.joined_at.format(DATE_FORMAT) : undefined
       },
     };
-    if (values.joined_at) {
-      _values.data.joined_at = values.joined_at.format(DATE_FORMAT);
-    }
 
     if (selectedProject) {
       dispatch(actions.editProject(_values));

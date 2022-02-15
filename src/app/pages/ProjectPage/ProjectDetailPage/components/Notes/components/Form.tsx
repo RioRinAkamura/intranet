@@ -281,19 +281,36 @@ const StyledDeleteOutlined = styled(DeleteOutlined)`
 `;
 const StyledFormAntd = styled(FormAntd)`
   display: flex;
+  flex-wrap: wrap;
 `;
 
 const StyledFormAntdSectionLeft = styled.div`
   padding-right: 10px;
+  width: 50%;
+  @media screen and (max-width: 756px) {
+    width: 100%;
+    padding-right: 0px;
+    -webkit-order: 2;
+    order: 2;
+  }
 `;
 const StyledFormAntdSectionRight = styled.div`
   padding-left: 10px;
   width: 50%;
+  @media screen and (max-width: 756px) {
+    width: 100%;
+    padding-left: 0px;
+    -webkit-order: 1;
+    order: 1;
+  }
 `;
 
 const StyledFormAntdItemContent = styled(FormAntd.Item)`
   margin-bottom: 0px;
-  .editor {
-    padding: 80px 16px 16px 16px;
+  
+  @media screen and (max-width: 414px) {
+    .editor {
+      padding: 80px 16px 16px 16px;
+    }
   }
 `;

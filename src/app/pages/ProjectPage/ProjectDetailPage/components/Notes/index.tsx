@@ -424,6 +424,7 @@ export const Notes = memo(({ projectId }: NotesProps) => {
         }
         handleCancel={handleCancel}
         handleSubmit={handleSubmit}
+        className="custom-note-modal"
       >
         <Form
           t={t}
