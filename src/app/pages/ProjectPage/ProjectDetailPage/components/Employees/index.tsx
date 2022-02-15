@@ -62,14 +62,20 @@ export const Employees = memo(() => {
       try {
         delete values.members.member_id;
         if (editMember) {
-          values.members.joined_at = values.members.joined_at
-            ? moment(values.members.joined_at).format(DATE_FORMAT)
-            : undefined;
-          const memberEdit = values.members;
+          const membersData = {
+            ...values.members,
+            joined_at: values.members.joined_at
+              ? moment(values.members.joined_at).format(DATE_FORMAT)
+              : null,
+          };
+          // values.members.joined_at = values.members.joined_at
+          //   ? moment(values.members.joined_at).format(DATE_FORMAT)
+          //   : null;
+          // const memberEdit = values.members;
           const response = await updateMember(
             id,
             editMember.member.id,
-            memberEdit,
+            membersData,
           );
 
           if (response) {
