@@ -3,6 +3,7 @@ import { Avatar } from 'app/components/Avatar/Loadable';
 import styled from 'styled-components/macro';
 import { MemberTooltip } from '../MemberTooltip';
 import { Member as MemberModel } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { PrivatePath } from 'utils/url.const';
 
 interface MemberProps {
   member: MemberModel;
@@ -13,15 +14,24 @@ export const Member = memo((props: MemberProps) => {
     member: { member },
   } = props;
 
+  const handleEmployeePillClick = memberId => {
+    const win = window.open(`${PrivatePath.EMPLOYEES}/${memberId}`, '_blank');
+    if (win) {
+      win.focus();
+    }
+  };
+
   return (
     <MemberWrapper>
       <AvatarWrapper>
         {member && (
-          <Avatar
-            size={30}
-            src={member.avatar}
-            name={member.first_name + ' ' + member.last_name}
-          />
+          <span onClick={() => handleEmployeePillClick(member.id)}>
+            <Avatar
+              size={30}
+              src={member.avatar}
+              name={member.first_name + ' ' + member.last_name}
+            />
+          </span>
         )}
       </AvatarWrapper>
       <MemberTooltip member={props.member} />
