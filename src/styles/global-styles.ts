@@ -91,4 +91,8 @@ export const GlobalStyle = createGlobalStyle`
     & .customClassname {
       width: 500px;
     }
+  .custom-note-modal {
+    max-width: 800px;
+    width: 100% !important;
+  }
 `;
