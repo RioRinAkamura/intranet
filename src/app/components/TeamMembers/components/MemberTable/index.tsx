@@ -2,6 +2,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
+  LinkOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
 import {
@@ -22,6 +23,7 @@ import { PrivatePath } from 'utils/url.const';
 import { getSelectValues } from 'utils/variable';
 import moment from 'moment';
 import { ActionIcon } from 'app/components/ActionIcon';
+import styled from 'styled-components';
 interface Props {
   projectId: string;
   dataSource: Member[];
@@ -118,6 +120,13 @@ export const MemberTable = memo((props: Props) => {
     }
   };
 
+  const handleLinkEmployeeClick = member => {
+    const win = window.open(`${PrivatePath.EMPLOYEES}/${member.id}`, '_blank');
+    if (win) {
+      win.focus();
+    }
+  };
+
   const moreButton = (record: Member) => (
     <>
       <Tooltip title={'Detail'}>
@@ -175,16 +184,36 @@ export const MemberTable = memo((props: Props) => {
       dataIndex: 'member',
       width: 150,
       render: text => (
-        <div>
-          <Avatar
-            src={text.avatar}
-            name={text.first_name + ' ' + text.last_name}
-            size={30}
-          />
-          <span style={{ marginLeft: '5px ' }}>
-            {text.first_name + ' ' + text.last_name}
+        <span
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <span style={{ display: 'block', flex: 2 }}>
+            <Avatar
+              src={text.avatar}
+              name={text.first_name + ' ' + text.last_name}
+              size={30}
+            />
           </span>
-        </div>
+          <span
+            style={{
+              display: 'flex',
+              flex: 8,
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <span style={{ marginLeft: '5px', display: 'block' }}>
+              {text.first_name + ' ' + text.last_name}
+            </span>
+            <span style={{ display: 'block', lineHeight: '100%' }}>
+              <LinkEmployee onClick={() => handleLinkEmployeeClick(text)} />
+            </span>
+          </span>
+        </span>
       ),
     },
     {
@@ -263,3 +292,9 @@ export const MemberTable = memo((props: Props) => {
     </div>
   );
 });
+
+const LinkEmployee = styled(LinkOutlined)`
+  /* margin-left: 12px; */
+  color: #1890ff;
+  cursor: pointer;
+`;
