@@ -307,7 +307,7 @@ const StyledFormAntdSectionRight = styled.div`
 
 const StyledFormAntdItemContent = styled(FormAntd.Item)`
   margin-bottom: 0px;
-  
+
   @media screen and (max-width: 414px) {
     .editor {
       padding: 80px 16px 16px 16px;

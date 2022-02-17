@@ -62,7 +62,9 @@ export const ProjectModal = memo((props: Props) => {
         allocation: values.allocation,
         project_role: values.project_role,
         allocable,
-        joined_at: values.joined_at ? values.joined_at.format(DATE_FORMAT) : undefined
+        joined_at: values.joined_at
+          ? values.joined_at.format(DATE_FORMAT)
+          : undefined,
       },
     };
 
