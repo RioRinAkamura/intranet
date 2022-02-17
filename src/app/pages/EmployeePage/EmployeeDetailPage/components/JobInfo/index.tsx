@@ -3,9 +3,6 @@
  * JobInfo
  *
  */
-import * as React from 'react';
-import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
 import {
   Col,
   Form,
@@ -16,12 +13,16 @@ import {
   Select,
   SelectProps,
 } from 'antd';
-import { UserDetailMessages } from '../../messages';
 import { SelectValue } from 'antd/lib/select';
-import { TitlePath } from '../TitlePath';
+import { RichEditor } from 'app/components/RichEditor';
 import { TagsInput } from 'app/components/Tags';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import { UserDetailMessages } from '../../messages';
 import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
-const { TextArea } = Input;
+import { TitlePath } from '../TitlePath';
 
 const { Option } = Select;
 
@@ -45,19 +46,35 @@ const selectProps: SelectProps<SelectValue> = {
 };
 
 export const JobInfo = (props: JobInfoProps) => {
+  const { id } = useParams<Record<string, string>>();
   const { isView, form } = props;
   const { t } = useTranslation();
+  const [jobDesc, setJobDesc] = React.useState<any>();
+
   const {
+    user,
     positions,
     types,
     getPositions,
     getTypes,
+    getDetail,
   } = useHandleEmployeeDetail();
 
   React.useEffect(() => {
     getPositions();
     getTypes();
-  }, [getPositions, getTypes]);
+    getDetail(id);
+  }, [getPositions, getTypes, getDetail, id]);
+
+  React.useEffect(() => {
+    if (user) {
+      setJobDesc(user.job_description);
+      form.setFieldsValue({
+        ...user,
+        job_description: user.job_description,
+      });
+    }
+  }, [form, user]);
 
   return (
     <>
@@ -189,7 +206,19 @@ export const JobInfo = (props: JobInfoProps) => {
             </Col>
             <Col md={isView ? 24 : 24} xs={24}>
               <FormItem isView={isView} name="job_description">
-                <TextArea rows={8} disabled={isView} />
+                {isView ? (
+                  jobDesc && <RichEditor data={jobDesc} isView={isView} />
+                ) : (
+                  <RichEditor
+                    width="100%"
+                    height="340px"
+                    data={jobDesc}
+                    placeholder={isView ? '' : 'Descriptions'}
+                    callback={value => {
+                      form.setFieldsValue({ job_description: value });
+                    }}
+                  />
+                )}
               </FormItem>
             </Col>
           </Row>
