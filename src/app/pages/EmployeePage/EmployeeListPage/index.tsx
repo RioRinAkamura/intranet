@@ -106,7 +106,7 @@ export const EmployeeListPage: React.FC = () => {
   const [openSkillsModal, setOpenSkillModal] = useState(false);
   let [recordValue, setRecordValue] = useState<Employee>();
   const [employeeSkills, setEmployeeSkills] = useState<any[]>([]);
-  const [employeeRecord, setEmployeeRecord] = useState<Employee>();
+  const [employeeRecord, setEmployeeRecord] = useState<any>();
   const [skillModalVisible, setSkillModalVisible] = useState<boolean>(false);
   const [skillChange, setSkillChange] = useState<boolean>(false);
   const { actions } = useUserspageSlice();
@@ -487,6 +487,12 @@ export const EmployeeListPage: React.FC = () => {
     });
   };
 
+  const handleClickedSkills = (value, record: Employee) => {
+    setEmployeeSkills(() => [...value]);
+    setEmployeeRecord(() => ({ ...record }));
+    setOpenSkillModal(true);
+  };
+
   const columns: ColumnProps<Employee>[] = [
     {
       dataIndex: 'avatar',
@@ -608,11 +614,7 @@ export const EmployeeListPage: React.FC = () => {
         const skillArr = [...value];
         const bestSkills = skillArr.sort((a, b) => b.level - a.level);
         const fiveBestSkills = bestSkills.slice(0, 5);
-        const handleClickedSkills = (value, record: Employee) => {
-          setEmployeeSkills(value);
-          setEmployeeRecord(record);
-          setOpenSkillModal(true);
-        };
+
         return (
           <div
             style={{ cursor: 'pointer' }}
@@ -847,6 +849,22 @@ export const EmployeeListPage: React.FC = () => {
   };
 
   const onEmployeeSkillChange = async (employeeSkill: EmployeeSkill, value) => {
+    setEmployeeRecord(prevState => {
+      const newSkill = [...prevState.skills].map(skill => {
+        // if (skill.id === employeeSkill.id) {
+        //   skill.level = value;
+        // }
+
+        return {
+          ...skill,
+          level: skill.id === employeeSkill.id ? value : skill.level,
+        };
+      });
+      return {
+        ...prevState,
+        skills: newSkill,
+      };
+    });
     setSkillChange(true);
     try {
       const updatedSkill: UpdateEmployeeSkillQueryParam = {
@@ -1016,8 +1034,8 @@ export const EmployeeListPage: React.FC = () => {
         handleCancel={handleCancelSkillModal}
         handleSubmit={() => setSkillModalVisible(true)}
       >
-        {employeeSkills &&
-          employeeSkills.map((skill, index) => (
+        {employeeRecord &&
+          employeeRecord?.skills.map((skill, index) => (
             <Row gutter={[8, 8]} key={index}>
               <Col span={6}>
                 <span>
@@ -1027,7 +1045,7 @@ export const EmployeeListPage: React.FC = () => {
               <Col span={18}>
                 <RateSkill
                   onChange={value => onEmployeeSkillChange(skill, value)}
-                  defaultValue={skill.level}
+                  value={skill.level}
                 />
               </Col>
             </Row>

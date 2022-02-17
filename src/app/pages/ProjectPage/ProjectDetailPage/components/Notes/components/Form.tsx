@@ -19,6 +19,7 @@ import {
 import { TFunction } from 'i18next';
 import moment from 'moment';
 import styled from 'styled-components';
+
 import {
   ProjectNote,
   NoteCategory,
@@ -307,7 +308,7 @@ const StyledFormAntdSectionRight = styled.div`
 
 const StyledFormAntdItemContent = styled(FormAntd.Item)`
   margin-bottom: 0px;
-  
+
   @media screen and (max-width: 414px) {
     .editor {
       padding: 80px 16px 16px 16px;
