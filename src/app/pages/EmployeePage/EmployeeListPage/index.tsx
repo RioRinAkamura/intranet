@@ -108,6 +108,7 @@ export const EmployeeListPage: React.FC = () => {
   const [employeeSkills, setEmployeeSkills] = useState<any[]>([]);
   const [employeeRecord, setEmployeeRecord] = useState<Employee>();
   const [skillModalVisible, setSkillModalVisible] = useState<boolean>(false);
+  const [skillChange, setSkillChange] = useState<boolean>(false);
   const { actions } = useUserspageSlice();
   const dispatch = useDispatch();
 
@@ -460,9 +461,12 @@ export const EmployeeListPage: React.FC = () => {
     setNewDateCheck(false);
   };
 
-  const handleCancelSkillModal = () => {
+  const handleCancelSkillModal = async () => {
     setOpenSkillModal(false);
-    dispatch(actions.fetchUsers({ params: params }));
+    if (skillChange) {
+      dispatch(actions.fetchUsers({ params: params }));
+      setSkillChange(false);
+    }
   };
   const calcMonitoringDate = date => {
     let calc = moment().diff(moment(date), 'days');
@@ -843,6 +847,7 @@ export const EmployeeListPage: React.FC = () => {
   };
 
   const onEmployeeSkillChange = async (employeeSkill: EmployeeSkill, value) => {
+    setSkillChange(true);
     try {
       const updatedSkill: UpdateEmployeeSkillQueryParam = {
         id: employeeSkill.id,

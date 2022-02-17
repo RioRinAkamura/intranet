@@ -675,8 +675,10 @@ export const ProjectListPage: React.FC = () => {
                 : record.status === '2'
                 ? 'red'
                 : record.status === '3'
-                ? 'green'
+                ? '#13c2c2'
                 : record.status === '4'
+                ? 'green'
+                : record.status === '5'
                 ? 'grey'
                 : '',
           }}
@@ -692,6 +694,8 @@ export const ProjectListPage: React.FC = () => {
                       ? 'orange'
                       : item.label === 'Going'
                       ? 'red'
+                      : item.label === 'Pending'
+                      ? '#13c2c2'
                       : item.label === 'Released'
                       ? 'green'
                       : item.label === 'Archived'

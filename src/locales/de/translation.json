@@ -497,6 +497,7 @@
         "empty": "Please select status",
         "preparing": "Preparing",
         "going": "Going",
+        "pending": "Pending",
         "released": "Released",
         "archived": "Archived"
       },

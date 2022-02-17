@@ -21,6 +21,7 @@ export enum Type {
 export enum EmployeeProjectStatus {
   'Preparing' = 'Preparing',
   'Going' = 'Going',
+  'Pending' = 'Pending',
   'Released' = 'Released',
   'Archived' = 'Archived',
 }

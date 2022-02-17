@@ -90,6 +90,8 @@ export const ProjectDetailMessages = {
     ),
   formProjectStatusGoing: () =>
     _t(translations.ProjectDetailPage.form.projectStatus.going, 'Going'),
+  formProjectStatusPending: () =>
+    _t(translations.ProjectDetailPage.form.projectStatus.pending, 'Pending'),
   formProjectStatusReleased: () =>
     _t(translations.ProjectDetailPage.form.projectStatus.released, 'Released'),
   formProjectStatusArchived: () =>
