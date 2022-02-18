@@ -785,14 +785,12 @@ export const ProjectListPage: React.FC = () => {
           <CheckedButton
             size="small"
             className={`${
-              moment(todayFormat).diff(moment(record.monitored_at), 'days') > 0
-                ? ''
+              moment(todayFormat).diff(
+                moment(record.next_monitoring_at),
+                'days',
+              ) > 0
+                ? 'red'
                 : 'color-grey'
-            }`}
-            type={`${
-              moment(todayFormat).diff(moment(record.monitored_at), 'days') > 0
-                ? 'danger'
-                : 'default'
             }`}
             onClick={() => handleCheckedButton(record)}
           >
@@ -1014,6 +1012,11 @@ const CheckedButton = styled(Button)`
   width: 100%;
   &.color-grey {
     background-color: grey;
+    color: white;
+  }
+  &.red {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
     color: white;
   }
 `;

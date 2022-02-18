@@ -38,6 +38,11 @@ export const ProjectNoteMessages = {
       translations.NotesPage.modal.form.category.selectPlaceholder,
       'Select category',
     ),
+  modalCategoryEmpty: () =>
+    _t(
+      translations.NotesPage.modal.form.category.empty,
+      'Please select category',
+    ),
   modalScoreLabel: () => _t(translations.NotesPage.modal.form.score, 'Score'),
   modalSummaryLabel: () =>
     _t(translations.NotesPage.modal.form.summary.label, 'Summary'),

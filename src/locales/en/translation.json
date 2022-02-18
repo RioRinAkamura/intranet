@@ -111,7 +111,8 @@
         "category": {
           "label": "Category",
           "placeholder": "Enter category",
-          "selectPlaceholder": "Select category"
+          "selectPlaceholder": "Select category",
+          "empty": "Please select category"
         },
         "summary": {
           "label": "Summary",
