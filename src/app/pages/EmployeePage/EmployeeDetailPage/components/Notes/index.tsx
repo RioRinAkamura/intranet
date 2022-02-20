@@ -165,12 +165,10 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
   const handleSubmit = () => {
     if (isUpdate) {
       handleNoteUpdate();
+    } else if (isCreate) {
+      handleNoteCreate();
     } else {
       setIsView(false);
-      setIsUpdate(true);
-    }
-    if (isCreate) {
-      handleNoteCreate();
     }
   };
 

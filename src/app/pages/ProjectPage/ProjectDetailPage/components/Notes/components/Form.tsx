@@ -186,6 +186,12 @@ export const Form: React.FC<FormProps> = ({
             <FormAntd.Item
               name="category_id"
               label={t(ProjectNoteMessages.modalCategoryLabel())}
+              rules={[
+                {
+                  required: true,
+                  message: t(ProjectNoteMessages.modalCategoryEmpty()),
+                },
+              ]}
             >
               <StyledSelect
                 size="large"
