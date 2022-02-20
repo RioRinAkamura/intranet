@@ -144,11 +144,7 @@ export const Notes = memo(({ projectId }: NotesProps) => {
   const handleSubmit = () => {
     if (isUpdate) {
       handleNoteUpdate();
-    } else {
-      setIsView(false);
-      setIsUpdate(true);
-    }
-    if (isCreate) {
+    } else if (isCreate) {
       handleNoteCreate();
     }
   };
@@ -220,14 +216,8 @@ export const Notes = memo(({ projectId }: NotesProps) => {
         duration: 2,
       });
     }
-  }, [
-    dispatch,
-    actions,
-    notify,
-    projectNoteState.deleteIsFailure,
-    projectNoteState.deleteIsSuccess,
-    projectNoteState.isDeleteMultiple,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectNoteState.deleteIsFailure, projectNoteState.deleteIsSuccess]);
 
   const columns: ColumnProps<ProjectNote>[] = [
     {
