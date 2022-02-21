@@ -7,12 +7,14 @@ import { CardLayout } from 'app/components/CardLayout';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import { User } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
 import { api } from 'utils/api';
+import { useGetIdentity } from 'app/components/Auth/useGetIdentity';
 
 interface LocationState {
   edit: boolean;
 }
 
 export const UserManageDetailPage = props => {
+  const { identity } = useGetIdentity();
   const { setBreadCrumb } = useBreadCrumbContext();
   const { id } = useParams<Record<string, string>>();
   const location = useLocation<LocationState>();
@@ -32,6 +34,12 @@ export const UserManageDetailPage = props => {
   React.useEffect(() => {
     (async () => {
       try {
+        if (identity?.id === id) {
+          const response = await api.user.me();
+          setData(response as User | undefined);
+          setBreadCrumb(`Users / ${identity?.first_name}`);
+          return;
+        }
         const response = await api.user.getUserById(id);
         setData(response);
         setBreadCrumb(`Users / ${response.first_name}`);
@@ -39,7 +47,7 @@ export const UserManageDetailPage = props => {
         console.log(e);
       }
     })();
-  }, [id, setBreadCrumb, isEdit]);
+  }, [id, setBreadCrumb, isEdit, identity]);
 
   React.useEffect(() => {
     if (history.location.pathname.includes('create')) {

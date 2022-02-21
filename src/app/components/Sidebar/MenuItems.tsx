@@ -33,6 +33,10 @@ export const MenuItems: React.FC = () => {
             icon: <ProfileOutlined />,
           },
         ]);
+
+      if (userRoles.length === 1 && userRoles.includes('Staff')) {
+        setMenuItems([]);
+      }
     }
   }, [identity]);
 

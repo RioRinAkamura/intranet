@@ -34,9 +34,12 @@ import { TaskManagerPage } from './pages/TaskManagerPage/Loadable';
 import '../app.less';
 import { PrivatePath } from 'utils/url.const';
 import { SkillManagePage } from './pages/SkillManagePage/Loadable';
+import { useAuthState } from './components/Auth/useAuthState';
+import { UserManageDetailPage } from './pages/ManageUserPage/UserDetailPage';
 
 export function App() {
   const { i18n } = useTranslation();
+  const { identity } = useAuthState();
   return (
     <BrowserRouter>
       <Helmet
@@ -67,63 +70,83 @@ export function App() {
                 component={ResetPassword}
               />
               <AppLayout>
-                {/* Home */}
-                <PrivateRoute
-                  exact
-                  path={config.ROOT_PATH}
-                  component={HomePage}
-                />
-                {/* Dashboard */}
-                <PrivateRoute
-                  exact
-                  path={config.DASHBOARD_PATH}
-                  component={HomePage}
-                />
-                {/* Employee */}
-                <PrivateRoute
-                  path={config.USERS_PATH}
-                  component={EmployeePage}
-                />
-                {/* Project */}
-                <PrivateRoute
-                  path={PrivatePath.PROJECTS}
-                  component={ProjectPage}
-                />
+                {identity &&
+                identity?.role?.length === 1 &&
+                identity?.role[0].name === 'staff' ? (
+                  <>
+                    <PrivateRoute
+                      exact
+                      path={config.ROOT_PATH}
+                      component={HomePage}
+                    />
+                    <PrivateRoute
+                      path={PrivatePath.USERS_ID}
+                      component={UserManageDetailPage}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <PrivateRoute
+                      exact
+                      path={config.ROOT_PATH}
+                      component={HomePage}
+                    />
+                    {/* Dashboard */}
+                    <PrivateRoute
+                      exact
+                      path={config.DASHBOARD_PATH}
+                      component={HomePage}
+                    />
+                    {/* Employee */}
+                    <PrivateRoute
+                      path={config.USERS_PATH}
+                      component={EmployeePage}
+                    />
+                    {/* Project */}
+                    <PrivateRoute
+                      path={PrivatePath.PROJECTS}
+                      component={ProjectPage}
+                    />
 
-                {/* LeaveApplication */}
-                <PrivateRoute
-                  path={PrivatePath.LEAVE_APPLICATION}
-                  exact
-                  component={LeaveApplicationPage}
-                />
-                <PrivateRoute
-                  path={PrivatePath.LEAVE_APPLICATION_CREATE}
-                  component={LeaveApplicationDetailPage}
-                />
-                <PrivateRoute
-                  path={PrivatePath.LEAVE_APPLICATION_ID}
-                  component={LeaveApplicationDetailPage}
-                />
+                    {/* LeaveApplication */}
+                    <PrivateRoute
+                      path={PrivatePath.LEAVE_APPLICATION}
+                      exact
+                      component={LeaveApplicationPage}
+                    />
+                    <PrivateRoute
+                      path={PrivatePath.LEAVE_APPLICATION_CREATE}
+                      component={LeaveApplicationDetailPage}
+                    />
+                    <PrivateRoute
+                      path={PrivatePath.LEAVE_APPLICATION_ID}
+                      component={LeaveApplicationDetailPage}
+                    />
 
-                {/* User */}
-                <PrivateRoute path={PrivatePath.USERS} component={UserPage} />
+                    {/* User */}
+                    <PrivateRoute
+                      path={PrivatePath.USERS}
+                      component={UserPage}
+                    />
 
-                {/* Devices */}
-                <PrivateRoute
-                  path={PrivatePath.DEVICES}
-                  component={DeviceManagePage}
-                />
+                    {/* Devices */}
+                    <PrivateRoute
+                      path={PrivatePath.DEVICES}
+                      component={DeviceManagePage}
+                    />
 
-                {/* Task */}
-                <PrivateRoute
-                  path={PrivatePath.TASKS}
-                  component={TaskManagerPage}
-                />
-                {/* Skill */}
-                <PrivateRoute
-                  path={PrivatePath.SKILLS}
-                  component={SkillManagePage}
-                />
+                    {/* Task */}
+                    <PrivateRoute
+                      path={PrivatePath.TASKS}
+                      component={TaskManagerPage}
+                    />
+                    {/* Skill */}
+                    <PrivateRoute
+                      path={PrivatePath.SKILLS}
+                      component={SkillManagePage}
+                    />
+                  </>
+                )}
               </AppLayout>
 
               <Route component={NotFoundPage} />
