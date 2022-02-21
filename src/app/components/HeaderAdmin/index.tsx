@@ -4,6 +4,7 @@ import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components/macro';
+import { useGetIdentity } from '../Auth/useGetIdentity';
 import { BadgeList } from '../BadgeList';
 import { NavList } from '../NavList';
 import { NavItem } from '../NavList/NavItem';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
+  const { identity } = useGetIdentity();
   const { breadCrumb } = useBreadCrumbContext();
   return (
     <>
@@ -33,40 +35,56 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
               )}
             </IconToggle>
             <NavList>
-              <Active>
-                <NavItem>
-                  <NavLink exact to="/" activeClassName="active">
-                    Dashboard
-                  </NavLink>
-                </NavItem>
-              </Active>
-              <Active>
-                <NavItem>
-                  <NavLink to="/employees" activeClassName="active">
-                    Employees
-                  </NavLink>
-                </NavItem>
-              </Active>
-              <Active>
-                <NavItem>
-                  <NavLink to="/projects">Projects</NavLink>
-                </NavItem>
-              </Active>
-              <Active>
-                <NavItem>
-                  <NavLink to="/devices">Devices</NavLink>
-                </NavItem>
-              </Active>
-              <Active>
-                <NavItem>
-                  <NavLink to="/users">Users</NavLink>
-                </NavItem>
-              </Active>
-              <Active>
-                <NavItem>
-                  <NavLink to="/tasks">Tasks</NavLink>
-                </NavItem>
-              </Active>
+              {identity &&
+              identity?.role?.length === 1 &&
+              identity?.role[0].name === 'staff' ? (
+                <>
+                  <Active>
+                    <NavItem>
+                      <NavLink exact to="/dashboard" activeClassName="active">
+                        Dashboard
+                      </NavLink>
+                    </NavItem>
+                  </Active>
+                </>
+              ) : (
+                <>
+                  <Active>
+                    <NavItem>
+                      <NavLink exact to="/" activeClassName="active">
+                        Dashboard
+                      </NavLink>
+                    </NavItem>
+                  </Active>
+                  <Active>
+                    <NavItem>
+                      <NavLink to="/employees" activeClassName="active">
+                        Employees
+                      </NavLink>
+                    </NavItem>
+                  </Active>
+                  <Active>
+                    <NavItem>
+                      <NavLink to="/projects">Projects</NavLink>
+                    </NavItem>
+                  </Active>
+                  <Active>
+                    <NavItem>
+                      <NavLink to="/devices">Devices</NavLink>
+                    </NavItem>
+                  </Active>
+                  <Active>
+                    <NavItem>
+                      <NavLink to="/users">Users</NavLink>
+                    </NavItem>
+                  </Active>
+                  <Active>
+                    <NavItem>
+                      <NavLink to="/tasks">Tasks</NavLink>
+                    </NavItem>
+                  </Active>
+                </>
+              )}
             </NavList>
           </div>
           <LogoHeader>

@@ -11,7 +11,7 @@ export const authProvider: AuthProvider = {
     const me = await api.user.me();
     return Boolean(me);
   },
-  getIdentity: async (): Promise<UserIdentity> => api.user.me(),
+  getIdentity: async (): Promise<UserIdentity> => api.user.me() as UserIdentity,
 };
 
 export default authProvider;

@@ -4,13 +4,14 @@ import { Col, Form, Input, Row, InputProps, Select, SelectProps } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { User, Role } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
 import { omit } from 'lodash';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { AvatarPath } from 'app/pages/EmployeePage/EmployeeDetailPage/components/AvatarPath';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import Button from 'app/components/Button';
 import { PrivatePath } from 'utils/url.const';
 import { api } from 'utils/api';
 import { SelectValue } from 'antd/lib/select';
+import { useGetIdentity } from 'app/components/Auth/useGetIdentity';
 
 const { Option } = Select;
 
@@ -44,13 +45,19 @@ interface UserForm {
   role?: Role;
 }
 
+interface UserParams {
+  id: string;
+}
+
 export const DetailForm = memo((props: FormProps) => {
+  const { identity } = useGetIdentity();
   const [isEditPass, setEditPass] = useState(false);
   const { notify } = useNotify();
   const { isView, isEdit, user, callback, isCreate } = props;
   const [currentUserForm, setCurrentUserForm] = useState<UserForm>();
   const [userForm] = Form.useForm();
   const history = useHistory();
+  const params = useParams<UserParams>();
 
   useEffect(() => {
     if (user) {
@@ -91,7 +98,6 @@ export const DetailForm = memo((props: FormProps) => {
         let updateUser: any = isEditPass
           ? omit(value, ['password2'])
           : omit(value, ['password', 'password2']);
-
         if (currentUserForm && currentUserForm.email === value.email) {
           updateUser = omit(updateUser, ['email']);
         } else {
@@ -108,7 +114,13 @@ export const DetailForm = memo((props: FormProps) => {
         } else {
           setCurrentUserForm({ ...currentUserForm, role: value.role });
         }
-        const user = await api.user.updateUser(updateUser);
+
+        updateUser.id = updateUser.id ? updateUser.id : params.id;
+
+        const user =
+          params.id === identity?.id
+            ? await api.user.updateProfile(updateUser)
+            : await api.user.updateUser(updateUser);
         history.push(`${PrivatePath.USERS}/${user.id}`);
 
         notify({
