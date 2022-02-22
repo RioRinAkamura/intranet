@@ -10,6 +10,7 @@ import {
   DatePicker,
   DatePickerProps,
   Form,
+  FormInstance,
   Input,
   InputProps,
   Radio,
@@ -29,6 +30,7 @@ import { useHandleEmployeeDetail } from '../../../useHandleEmployeeDetail';
 interface ProfileInfoProps {
   isView?: boolean;
   isEdit?: boolean;
+  form?: FormInstance;
 }
 
 const inputProps: InputProps = {
@@ -47,10 +49,9 @@ const datePickerProps: DatePickerProps = {
 const DATE_FORMAT = config.DATE_FORMAT;
 
 export const ProfileInfoDetail = (props: ProfileInfoProps) => {
-  const { isView } = props;
+  const { isView, form } = props;
   const { t } = useTranslation();
   const { notify } = useNotify();
-  const [form] = Form.useForm();
   const { user } = useHandleEmployeeDetail();
 
   const disabledDate = (current: moment.Moment) => {
@@ -95,7 +96,7 @@ export const ProfileInfoDetail = (props: ProfileInfoProps) => {
   }, [user]);
   React.useEffect(() => {
     if (data) {
-      form.setFieldsValue({
+      form?.setFieldsValue({
         ...data,
         id: data.id,
         dob: data.dob && moment(data.dob, DATE_FORMAT),
@@ -522,7 +523,7 @@ export const ProfileInfoDetail = (props: ProfileInfoProps) => {
                   size="small"
                   icon={<CopyOutlined />}
                   onClick={() => {
-                    handleCopyEmployeeData('persional_email');
+                    handleCopyEmployeeData('personal_email');
                   }}
                 />
               </Col>

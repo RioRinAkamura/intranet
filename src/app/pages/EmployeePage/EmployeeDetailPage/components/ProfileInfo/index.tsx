@@ -63,7 +63,9 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
         isEdit={isEdit}
         isView={isView}
         leftScreenItems={<></>}
-        rightScreenItems={<ProfileInfoDetail isView={isView} isEdit={isEdit} />}
+        rightScreenItems={
+          <ProfileInfoDetail isView={isView} isEdit={isEdit} form={form} />
+        }
       />
       <WrapperButton>
         <Row gutter={[8, 8]} justify="end">
