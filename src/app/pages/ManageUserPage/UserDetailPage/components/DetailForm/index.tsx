@@ -12,6 +12,7 @@ import { PrivatePath } from 'utils/url.const';
 import { api } from 'utils/api';
 import { SelectValue } from 'antd/lib/select';
 import { useGetIdentity } from 'app/components/Auth/useGetIdentity';
+import { RoleName } from 'app/components/Auth/types';
 
 const { Option } = Select;
 
@@ -51,6 +52,10 @@ interface UserParams {
 
 export const DetailForm = memo((props: FormProps) => {
   const { identity } = useGetIdentity();
+  const arrRoles =
+    identity?.role && identity?.role.length > 0
+      ? [...identity?.role].map(role => role.role)
+      : [];
   const [isEditPass, setEditPass] = useState(false);
   const { notify } = useNotify();
   const { isView, isEdit, user, callback, isCreate } = props;
@@ -254,34 +259,38 @@ export const DetailForm = memo((props: FormProps) => {
                     />
                   </FormItem>
                 </Col>
-                <Col md={isView ? 8 : 24} xs={24}>
-                  Role
-                </Col>
-                <Col md={isView ? 16 : 24} xs={24}>
-                  <FormItem isView={isView} name="role">
-                    {isView ? (
-                      <Input {...(isView ? inputProps : {})} size="large" />
-                    ) : (
-                      <StyledSelect
-                        {...(isView ? selectProps : {})}
-                        isView={isView}
-                        size="large"
-                        placeholder={!isView && 'None'}
-                      >
-                        {Object.entries(Role).map(([label, value]) => {
-                          return (
-                            <Option key={value} value={value}>
-                              {value}
+                {!arrRoles.includes(RoleName.STAFF) && (
+                  <>
+                    <Col md={isView ? 8 : 24} xs={24}>
+                      Role
+                    </Col>
+                    <Col md={isView ? 16 : 24} xs={24}>
+                      <FormItem isView={isView} name="role">
+                        {isView ? (
+                          <Input {...(isView ? inputProps : {})} size="large" />
+                        ) : (
+                          <StyledSelect
+                            {...(isView ? selectProps : {})}
+                            isView={isView}
+                            size="large"
+                            placeholder={!isView && 'None'}
+                          >
+                            {Object.entries(Role).map(([label, value]) => {
+                              return (
+                                <Option key={value} value={value}>
+                                  {value}
+                                </Option>
+                              );
+                            })}
+                            <Option key="None" value="">
+                              None
                             </Option>
-                          );
-                        })}
-                        <Option key="None" value="">
-                          None
-                        </Option>
-                      </StyledSelect>
-                    )}
-                  </FormItem>
-                </Col>
+                          </StyledSelect>
+                        )}
+                      </FormItem>
+                    </Col>
+                  </>
+                )}
                 {!isView && (
                   <>
                     <Col md={isView ? 8 : 24} xs={24}>
