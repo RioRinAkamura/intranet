@@ -82,7 +82,7 @@ export const Form: React.FC<FormProps> = ({
     if (note) {
       form.setFieldsValue({
         ...note,
-        category_id: note.category.id,
+        category_id: note.category?.id,
         date: moment(note.date),
       });
     }
@@ -186,12 +186,6 @@ export const Form: React.FC<FormProps> = ({
             <FormAntd.Item
               name="category_id"
               label={t(ProjectNoteMessages.modalCategoryLabel())}
-              rules={[
-                {
-                  required: true,
-                  message: t(ProjectNoteMessages.modalCategoryEmpty()),
-                },
-              ]}
             >
               <StyledSelect
                 size="large"

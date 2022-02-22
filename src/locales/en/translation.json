@@ -292,6 +292,10 @@
           "nickname": {
             "label": "Nickname",
             "placeholder": "Nickname"
+          },
+          "personalEmail": {
+            "label": "Personal email",
+            "placeholder": "Personal email"
           }
         },
         "job": {

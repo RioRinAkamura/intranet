@@ -10,9 +10,10 @@ import React, { memo } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { AvatarPath } from '../AvatarPath/Loadable';
-import { BankAccounts } from '../BankAccounts/Loadable';
-import { IdCardInfo } from '../IdCardInfo/Loadable';
-import { JobInfo } from '../JobInfo/Loadable';
+import { BankAccountsDetail } from '../BankAccounts/components/BankAccountsDetail';
+import { IdCardInfoDetail } from '../IdCardInfo/components/IdCardInfoDetail';
+import { JobInfoDetail } from '../JobInfo/components/JobInfoDetail';
+import { ProfileInfoDetail } from '../ProfileInfo/components/ProfileInfoDetail';
 import { SocialNetworkDetail } from '../SocialNetwork/components/SocialNetworkDetail';
 
 type Employee = models.hr.Employee;
@@ -51,7 +52,7 @@ export const DetailForm = memo((props: FormProps) => {
             {isView && rightScreenItems}
             {!isView && (
               <>
-                <BankAccounts isView={isView} isEdit={isEdit} form={form} />
+                <BankAccountsDetail isView={isView} isEdit={isEdit} />
               </>
             )}
           </RightScreen>
@@ -67,7 +68,7 @@ export const DetailForm = memo((props: FormProps) => {
             <Form.Item hidden name="id">
               <Input hidden />
             </Form.Item>
-            <JobInfo
+            <JobInfoDetail
               form={form}
               isEdit={isEdit}
               isView={isView}
@@ -90,7 +91,7 @@ export const DetailForm = memo((props: FormProps) => {
               {isView && rightScreenItems}
               {!isView && (
                 <>
-                  <IdCardInfo isView={isView} isEdit={isEdit} form={form} />
+                  <IdCardInfoDetail isView={isView} isEdit={isEdit} />
                 </>
               )}
             </RightScreen>
@@ -120,6 +121,7 @@ export const DetailForm = memo((props: FormProps) => {
       </Wrapper>
     </Form>
   ) : (
+    //is Tab: Details
     <Form form={form} labelAlign="left">
       <Form.Item hidden name="id">
         <Input hidden />
@@ -136,7 +138,12 @@ export const DetailForm = memo((props: FormProps) => {
             {leftScreenItems}
           </LeftScreen>
           <RightScreen isView={isView} md={19}>
-            {rightScreenItems}
+            {isView && rightScreenItems}
+            {!isView && (
+              <>
+                <ProfileInfoDetail isView={isView} isEdit={isEdit} />
+              </>
+            )}
           </RightScreen>
         </Row>
       </Wrapper>

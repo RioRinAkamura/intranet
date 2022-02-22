@@ -1,284 +1,152 @@
 /**
  *
- * BankAccounts
+ * SocialNetwork
  *
  */
-import { Col, Divider, Form, FormInstance, Input, Row, Select } from 'antd';
-import React from 'react';
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { Col, Form, Row } from 'antd';
+import Button from 'app/components/Button';
+import config from 'config';
+import moment from 'moment';
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
+import { PrivatePath } from 'utils/url.const';
+import { LocationState } from '../..';
 import { UserDetailMessages } from '../../messages';
 import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
-import { TitlePath } from '../TitlePath';
-
-const banks = [
-  {
-    id: 1,
-    name: 'Vietcombank',
-  },
-  {
-    id: 2,
-    name: 'Sacombank',
-  },
-  {
-    id: 3,
-    name: 'Techcombank',
-  },
-  {
-    id: 4,
-    name: 'ACB',
-  },
-  {
-    id: 5,
-    name: 'TPBank',
-  },
-];
+import { DetailForm } from '../DetailForm';
+import { BankAccountsDetail } from './components/BankAccountsDetail';
 
 interface BankAccountsProps {
-  isView: boolean;
-  isEdit: boolean;
-  form: FormInstance;
+  employeeId: string;
 }
 
-const { Option } = Select;
-
 export const BankAccounts = (props: BankAccountsProps) => {
-  const { isView, isEdit } = props;
+  const { employeeId } = props;
   const { t } = useTranslation();
-  const { bankNames, getBankNames } = useHandleEmployeeDetail();
-  const location = useLocation();
-  const { pathname } = location;
+  const { id } = useParams<Record<string, string>>();
+  const history = useHistory();
+  const location = useLocation<LocationState>();
+  const [isEdit, setIsEdit] = React.useState(false);
+  const isView = !isEdit;
+  const [form] = Form.useForm();
+  const [data, setData] = React.useState<Employee>();
+  const { update, getDetail, user, loading } = useHandleEmployeeDetail();
+  const DATE_FORMAT = config.DATE_FORMAT;
+
   React.useEffect(() => {
-    getBankNames();
-  }, [getBankNames]);
+    if (employeeId) {
+      getDetail(employeeId);
+    }
+  }, [employeeId, getDetail]);
 
+  React.useEffect(() => {
+    if (user) {
+      setData(user);
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    if (location.state) {
+      const edit = location.state.edit;
+      if (edit) {
+        setIsEdit(true);
+        history.replace(location.pathname, {});
+      }
+    }
+  }, [history, location]);
+
+  React.useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        ...data,
+        id: data.id,
+      });
+    }
+  }, [data, form]);
+
+  const handleBankAccountEditSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      values.dob = moment(values.dob).format(DATE_FORMAT);
+      if (values.issued_date) {
+        values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
+      }
+      if (isEdit) {
+        const response = await update(values);
+        if (response) {
+          setData(response);
+          setIsEdit(false);
+          history.push(`${PrivatePath.EMPLOYEES}/${id}/bank-accounts`);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
-    <BankAccountsStyled>
-      {/* is tab: Bank Accounts */}
-      {pathname.includes('employees') && pathname.includes('bank-accounts') ? (
-        ''
-      ) : (
-        <DividerWrapper isView={isView}>
-          <Divider />
-        </DividerWrapper>
-      )}
-
-      {isView || isEdit ? (
-        <Form.List name="bank_accounts">
-          {fields =>
-            fields.map(({ key, name, fieldKey, ...restField }) => (
-              <Row gutter={[128, 0]} align="middle" key={key}>
-                <Col md={24} xs={24}>
-                  <TitlePath>
-                    <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
-                  </TitlePath>
-                  <Row gutter={[32, 0]}>
-                    <Col md={isView ? 24 : 8} xs={24}>
-                      <Row gutter={[0, 12]} align="middle">
-                        <Col md={isView ? 8 : 24} xs={24}>
-                          <span className="label">
-                            {t(UserDetailMessages.formBankNameLabel())}
-                          </span>
-                        </Col>
-                        <Col md={isView ? 16 : 24} xs={24}>
-                          <FormItem
-                            isView={isView}
-                            {...restField}
-                            name={[name, 'bank_name']}
-                            fieldKey={[fieldKey, 'bank_name']}
-                          >
-                            {isView ? (
-                              <Input
-                                bordered={false}
-                                readOnly={true}
-                                size="large"
-                              />
-                            ) : (
-                              <Select
-                                size="large"
-                                placeholder={t(
-                                  UserDetailMessages.formBankNamePlaceholder(),
-                                )}
-                              >
-                                {banks.map(item => {
-                                  return (
-                                    <Option key={item.id} value={item.name}>
-                                      {item.name}
-                                    </Option>
-                                  );
-                                })}
-                              </Select>
-                            )}
-                          </FormItem>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col md={isView ? 24 : 8} xs={24}>
-                      <Row gutter={[0, 12]} align="middle">
-                        <Col md={isView ? 8 : 24} xs={24}>
-                          <span className="label">
-                            {t(UserDetailMessages.formBankNumberLabel())}
-                          </span>
-                        </Col>
-                        <Col md={isView ? 16 : 24} xs={24}>
-                          <FormItem
-                            isView={isView}
-                            {...restField}
-                            name={[name, 'number']}
-                            fieldKey={[fieldKey, 'number']}
-                          >
-                            <Input
-                              bordered={!isView}
-                              readOnly={isView}
-                              size="large"
-                              placeholder={
-                                isView
-                                  ? ''
-                                  : t(
-                                      UserDetailMessages.formBankNumberPlaceholder(),
-                                    )
-                              }
-                            />
-                          </FormItem>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col md={isView ? 24 : 8} xs={24}>
-                      <Row gutter={[0, 12]} align="middle">
-                        <Col md={isView ? 8 : 24} xs={24}>
-                          <span className="label">
-                            {t(UserDetailMessages.formBankBranchLabel())}
-                          </span>
-                        </Col>
-                        <Col md={isView ? 16 : 24} xs={24}>
-                          <FormItem
-                            isView={isView}
-                            {...restField}
-                            name={[name, 'branch']}
-                            fieldKey={[fieldKey, 'branch']}
-                          >
-                            <Input
-                              bordered={!isView}
-                              readOnly={isView}
-                              size="large"
-                              placeholder={
-                                isView
-                                  ? ''
-                                  : t(
-                                      UserDetailMessages.formBankBranchPlaceholder(),
-                                    )
-                              }
-                            />
-                          </FormItem>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            ))
-          }
-        </Form.List>
-      ) : (
-        <>
-          <TitlePath>
-            <b>{t(UserDetailMessages.formBankAccountsTitle())}</b>
-          </TitlePath>
-          <Row gutter={[32, 0]}>
-            <Col md={8} xs={24}>
-              <Row gutter={[0, 12]} align="middle">
-                <Col md={24} xs={24}>
-                  <span className="label">
-                    {t(UserDetailMessages.formBankNameLabel())}
-                  </span>
-                </Col>
-                <Col md={24} xs={24}>
-                  <FormItem name="bank_name">
-                    <Select
-                      size="large"
-                      placeholder={t(
-                        UserDetailMessages.formBankNamePlaceholder(),
-                      )}
-                    >
-                      {bankNames?.map(item => {
-                        return (
-                          <Option key={item.value} value={item.label}>
-                            {item.label}
-                          </Option>
-                        );
-                      })}
-                    </Select>
-                  </FormItem>
-                </Col>
-              </Row>
-            </Col>
-            <Col md={8} xs={24}>
-              <Row gutter={[0, 12]} align="middle">
-                <Col md={24} xs={24}>
-                  <span className="label">
-                    {t(UserDetailMessages.formBankNumberLabel())}
-                  </span>
-                </Col>
-                <Col md={24} xs={24}>
-                  <FormItem name="number">
-                    <Input
-                      size="large"
-                      placeholder={t(
-                        UserDetailMessages.formBankNumberPlaceholder(),
-                      )}
-                    />
-                  </FormItem>
-                </Col>
-              </Row>
-            </Col>
-            <Col md={8} xs={24}>
-              <Row gutter={[0, 12]} align="middle">
-                <Col md={24} xs={24}>
-                  <span className="label">
-                    {t(UserDetailMessages.formBankBranchLabel())}
-                  </span>
-                </Col>
-                <Col md={isView ? 16 : 24} xs={24}>
-                  <FormItem name="branch">
-                    <Input
-                      size="large"
-                      placeholder={t(
-                        UserDetailMessages.formBankBranchPlaceholder(),
-                      )}
-                    />
-                  </FormItem>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </>
-      )}
-    </BankAccountsStyled>
+    <>
+      <DetailForm
+        form={form}
+        data={data}
+        isEdit={isEdit}
+        isView={isView}
+        leftScreenItems={<></>}
+        rightScreenItems={
+          <BankAccountsDetail isView={isView} isEdit={isEdit} />
+        }
+      />
+      <WrapperButton>
+        <Row gutter={[8, 8]} justify="end">
+          <Col>
+            <Button
+              block
+              onClick={() => {
+                if (isEdit) {
+                  setIsEdit(false);
+                  history.push(`${PrivatePath.EMPLOYEES}/${id}/bank-accounts`);
+                } else if (isView) {
+                  history.push(`${PrivatePath.EMPLOYEES}/${id}/bank-accounts`);
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
+              {t(UserDetailMessages.formBackButton())}
+            </Button>
+          </Col>
+          <Col>
+            <Button
+              loading={loading}
+              block
+              type="primary"
+              onClick={() => {
+                if (isView) {
+                  setIsEdit(true);
+                  history.push(
+                    `${PrivatePath.EMPLOYEES}/${id}/bank-accounts/edit`,
+                  );
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  handleBankAccountEditSubmit();
+                }
+              }}
+            >
+              {isView
+                ? t(UserDetailMessages.formEditButton())
+                : t(UserDetailMessages.formSubmitButton())}
+            </Button>
+          </Col>
+        </Row>
+      </WrapperButton>
+    </>
   );
 };
 
-interface FormItemProps {
-  isView?: boolean;
-}
-
-const BankAccountsStyled = styled.div`
-  .label {
-    font-weight: 500;
-  }
-`;
-
-const FormItem = styled(Form.Item)`
-  align-items: center;
-  margin-bottom: ${(props: FormItemProps) => (props.isView ? '0px' : '12px')};
-  div {
-    width: 100%;
-  }
-  label {
-    font-weight: 500;
-  }
-`;
-
-const DividerWrapper = styled.div`
-  margin: ${(props: FormItemProps) => (props.isView ? '15px 0 20px 0' : '0px')};
+const WrapperButton = styled.div`
+  margin-top: 3em;
+  padding: 10px;
+  height: 100%;
 `;

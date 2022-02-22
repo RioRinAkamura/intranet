@@ -1,143 +1,151 @@
 /**
  *
- * IdCardInfo
+ * SocialNetwork
  *
  */
-import React, { memo } from 'react';
-import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
-import {
-  Col,
-  DatePicker,
-  DatePickerProps,
-  Form,
-  Input,
-  InputProps,
-  Row,
-  FormInstance,
-} from 'antd';
-import { UserDetailMessages } from '../../messages';
-import { TitlePath } from '../TitlePath';
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { Col, Form, Row } from 'antd';
+import Button from 'app/components/Button';
 import config from 'config';
+import moment from 'moment';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import { PrivatePath } from 'utils/url.const';
+import { LocationState } from '../..';
+import { UserDetailMessages } from '../../messages';
+import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
+import { DetailForm } from '../DetailForm';
+import { IdCardInfoDetail } from './components/IdCardInfoDetail';
 
-const DATE_FORMAT = config.DATE_FORMAT;
-interface IdCardProps {
-  isView: boolean;
-  isEdit: boolean;
-  form: FormInstance;
+interface IdCardInfoProps {
+  employeeId: string;
 }
-const inputProps: InputProps = {
-  bordered: false,
-  readOnly: true,
-};
 
-const datePickerProps: DatePickerProps = {
-  bordered: false,
-  inputReadOnly: true,
-  allowClear: false,
-  suffixIcon: null,
-  popupStyle: { display: 'none' },
-};
-
-export const IdCardInfo = memo((props: IdCardProps) => {
-  const { isView } = props;
+export const IdCardInfo = (props: IdCardInfoProps) => {
+  const { employeeId } = props;
   const { t } = useTranslation();
+  const { id } = useParams<Record<string, string>>();
+  const history = useHistory();
+  const location = useLocation<LocationState>();
+  const [isEdit, setIsEdit] = React.useState(false);
+  const isView = !isEdit;
+  const [form] = Form.useForm();
+  const [data, setData] = React.useState<Employee>();
+  const { update, getDetail, user, loading } = useHandleEmployeeDetail();
+  const DATE_FORMAT = config.DATE_FORMAT;
+
+  React.useEffect(() => {
+    if (employeeId) {
+      getDetail(employeeId);
+    }
+  }, [employeeId, getDetail]);
+
+  React.useEffect(() => {
+    if (user) {
+      setData(user);
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    if (location.state) {
+      const edit = location.state.edit;
+      if (edit) {
+        setIsEdit(true);
+        history.replace(location.pathname, {});
+      }
+    }
+  }, [history, location]);
+
+  React.useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        ...data,
+        id: data.id,
+        issued_date: moment(data.issued_date),
+      });
+    }
+  }, [data, form]);
+
+  const handleCitizenEditSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      if (values.issued_date) {
+        values.issued_date = moment(values.issued_date).format(DATE_FORMAT);
+      }
+      if (isEdit) {
+        const response = await update(values);
+        if (response) {
+          setData(response);
+          setIsEdit(false);
+          history.push(`${PrivatePath.EMPLOYEES}/${id}/citizen-info`);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
-    <IdCardInfoStyled>
-      <TitlePath>
-        <b> {t(UserDetailMessages.formIDCardTitle())}</b>
-      </TitlePath>
-      <Row gutter={[32, 0]}>
-        <Col md={isView ? 24 : 8} xs={24}>
-          <Row gutter={[0, 12]} align="middle">
-            <Col md={isView ? 8 : 24} xs={24}>
-              <span className="label">
-                {t(UserDetailMessages.formIdNumberLabel())}
-              </span>
-            </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
-              <FormItem isView={isView} name="id_number">
-                <Input
-                  {...(isView ? inputProps : {})}
-                  size="large"
-                  placeholder={
-                    isView
-                      ? ''
-                      : t(UserDetailMessages.formIdNumberPlaceholder())
-                  }
-                />
-              </FormItem>
-            </Col>
-          </Row>
-        </Col>
-        <Col md={isView ? 24 : 8} xs={24}>
-          <Row gutter={[0, 12]} align="middle">
-            <Col md={isView ? 8 : 24} xs={24}>
-              <span className="label">
-                {t(UserDetailMessages.formIssuedDateLabel())}
-              </span>
-            </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
-              <FormItem isView={isView} name="issued_date">
-                <DatePicker
-                  {...(isView ? datePickerProps : {})}
-                  format={DATE_FORMAT}
-                  size="large"
-                  placeholder={
-                    isView
-                      ? ''
-                      : t(UserDetailMessages.formIssuedDatePlaceholder())
-                  }
-                />
-              </FormItem>
-            </Col>
-          </Row>
-        </Col>
-        <Col md={isView ? 24 : 8} xs={24}>
-          <Row gutter={[0, 12]} align="middle">
-            <Col md={isView ? 8 : 24} xs={24}>
-              <span className="label">
-                {t(UserDetailMessages.formIssuedPlaceLabel())}
-              </span>
-            </Col>
-            <Col md={isView ? 16 : 24} xs={24}>
-              <FormItem isView={isView} name="issued_place">
-                <Input
-                  {...(isView ? inputProps : {})}
-                  size="large"
-                  placeholder={
-                    isView
-                      ? ''
-                      : t(UserDetailMessages.formIssuedPlacePlaceholder())
-                  }
-                />
-              </FormItem>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </IdCardInfoStyled>
+    <>
+      <DetailForm
+        form={form}
+        data={data}
+        isEdit={isEdit}
+        isView={isView}
+        leftScreenItems={<></>}
+        rightScreenItems={<IdCardInfoDetail isView={isView} isEdit={isEdit} />}
+      />
+      <WrapperButton>
+        <Row gutter={[8, 8]} justify="end">
+          <Col>
+            <Button
+              block
+              onClick={() => {
+                if (isEdit) {
+                  setIsEdit(false);
+                  history.push(`${PrivatePath.EMPLOYEES}/${id}/citizen-info`);
+                } else if (isView) {
+                  history.push(`${PrivatePath.EMPLOYEES}/${id}/citizen-info`);
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
+              {t(UserDetailMessages.formBackButton())}
+            </Button>
+          </Col>
+          <Col>
+            <Button
+              loading={loading}
+              block
+              type="primary"
+              onClick={() => {
+                if (isView) {
+                  setIsEdit(true);
+                  history.push(
+                    `${PrivatePath.EMPLOYEES}/${id}/citizen-info/edit`,
+                  );
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  handleCitizenEditSubmit();
+                }
+              }}
+            >
+              {isView
+                ? t(UserDetailMessages.formEditButton())
+                : t(UserDetailMessages.formSubmitButton())}
+            </Button>
+          </Col>
+        </Row>
+      </WrapperButton>
+    </>
   );
-});
+};
 
-interface ScreenProps {
-  isView?: boolean;
-}
-
-const FormItem = styled(Form.Item)`
-  align-items: center;
-  margin-bottom: ${(props: ScreenProps) => (props.isView ? '0px' : '12px')};
-  div {
-    width: 100%;
-  }
-  label {
-    font-weight: 500;
-  }
-`;
-
-const IdCardInfoStyled = styled.div`
-  .label {
-    font-weight: 500;
-  }
+const WrapperButton = styled.div`
+  margin-top: 3em;
+  padding: 10px;
+  height: 100%;
 `;

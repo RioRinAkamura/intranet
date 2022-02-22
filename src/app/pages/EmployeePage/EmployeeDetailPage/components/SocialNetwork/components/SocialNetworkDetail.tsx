@@ -16,7 +16,6 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { UserDetailMessages } from '../../../messages';
-import { TitlePath } from '../../TitlePath';
 
 interface SocialNetworkProps {
   isView?: boolean;
@@ -34,9 +33,6 @@ export const SocialNetworkDetail = (props: SocialNetworkProps) => {
 
   return (
     <>
-      <TitlePath>
-        <b>{t(UserDetailMessages.formSocialNetworkTitle())}</b>
-      </TitlePath>
       <Row gutter={[16, 12]}>
         <Col lg={isView ? 24 : 12} xs={24}>
           <Row gutter={[0, 12]} align="middle">

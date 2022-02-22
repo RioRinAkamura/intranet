@@ -119,6 +119,7 @@ export const Notes = memo(({ projectId }: NotesProps) => {
         date: moment(form.getFieldValue('date')).format(DATE_FORMAT),
         project_id: projectId,
         id: note?.id,
+        category: note?.category,
       }),
     );
   };
@@ -263,7 +264,7 @@ export const Notes = memo(({ projectId }: NotesProps) => {
       width: 200,
       ...getColumnSorterProps('category', 0),
       ...getColumnSearchInputProps(['category']),
-      render: text => text.name,
+      render: text => text?.name,
     },
     {
       title: t(ProjectNoteMessages.listDate()),
