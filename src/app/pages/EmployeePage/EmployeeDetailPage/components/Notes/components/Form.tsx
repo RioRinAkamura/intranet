@@ -79,7 +79,7 @@ export const Form: React.FC<FormProps> = ({
     if (note) {
       form.setFieldsValue({
         ...note,
-        category_id: note.category.id,
+        category_id: note.category?.id,
         date: moment(note.date),
       });
     }

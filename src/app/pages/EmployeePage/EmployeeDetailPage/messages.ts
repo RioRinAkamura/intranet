@@ -233,6 +233,16 @@ export const UserDetailMessages = {
       translations.UserDetailPage.modal.form.profile.nickname.placeholder,
       'Nickname',
     ),
+  formPersionalEmailLabel: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.personalEmail.label,
+      'Personal email',
+    ),
+  formPersionalEmailPlaceholder: () =>
+    _t(
+      translations.UserDetailPage.modal.form.profile.personalEmail.placeholder,
+      'Personal email',
+    ),
   formJobTitle: () =>
     _t(translations.UserDetailPage.modal.form.job.title, 'Job infomation'),
   formJobDescription: () =>

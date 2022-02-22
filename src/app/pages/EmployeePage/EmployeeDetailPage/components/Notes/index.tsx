@@ -278,7 +278,7 @@ export const Notes = memo(({ employeeId }: NotesProps) => {
       width: 200,
       ...getColumnSorterProps('category', 0),
       ...getColumnSearchInputProps(['category']),
-      render: text => text.name,
+      render: text => text?.name,
     },
     {
       title: t(EmployeeNoteMessages.listDate()),

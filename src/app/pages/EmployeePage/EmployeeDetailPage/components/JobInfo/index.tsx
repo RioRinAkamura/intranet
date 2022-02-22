@@ -1,251 +1,144 @@
 /**
  *
- * JobInfo
+ * SocialNetwork
  *
  */
-import {
-  Col,
-  Form,
-  FormInstance,
-  Input,
-  InputProps,
-  Row,
-  Select,
-  SelectProps,
-} from 'antd';
-import { SelectValue } from 'antd/lib/select';
-import { RichEditor } from 'app/components/RichEditor';
-import { TagsInput } from 'app/components/Tags';
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+import { Col, Form, Row } from 'antd';
+import Button from 'app/components/Button';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
+import { PrivatePath } from 'utils/url.const';
+import { LocationState } from '../..';
 import { UserDetailMessages } from '../../messages';
 import { useHandleEmployeeDetail } from '../../useHandleEmployeeDetail';
-import { TitlePath } from '../TitlePath';
-
-const { Option } = Select;
+import { DetailForm } from '../DetailForm';
+import { JobInfoDetail } from './components/JobInfoDetail';
 
 interface JobInfoProps {
-  employeeId?: string;
-  isView?: boolean;
-  isEdit?: boolean;
-  form: FormInstance;
+  employeeId: string;
 }
 
-const inputProps: InputProps = {
-  bordered: false,
-  readOnly: true,
-};
-
-const selectProps: SelectProps<SelectValue> = {
-  autoClearSearchValue: false,
-  bordered: false,
-  dropdownStyle: { display: 'none' },
-  removeIcon: null,
-};
-
 export const JobInfo = (props: JobInfoProps) => {
-  const { id } = useParams<Record<string, string>>();
-  const { isView, form } = props;
+  const { employeeId } = props;
   const { t } = useTranslation();
-  const [jobDesc, setJobDesc] = React.useState<any>();
-
-  const {
-    user,
-    positions,
-    types,
-    getPositions,
-    getTypes,
-    getDetail,
-  } = useHandleEmployeeDetail();
+  const { id } = useParams<Record<string, string>>();
+  const history = useHistory();
+  const location = useLocation<LocationState>();
+  const [isEdit, setIsEdit] = React.useState(false);
+  const isView = !isEdit;
+  const [form] = Form.useForm();
+  const [data, setData] = React.useState<Employee>();
+  const { update, getDetail, user, loading } = useHandleEmployeeDetail();
 
   React.useEffect(() => {
-    getPositions();
-    getTypes();
-    getDetail(id);
-  }, [getPositions, getTypes, getDetail, id]);
+    if (employeeId) {
+      getDetail(employeeId);
+    }
+  }, [employeeId, getDetail]);
 
   React.useEffect(() => {
     if (user) {
-      setJobDesc(user.job_description);
+      setData(user);
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    if (location.state) {
+      const edit = location.state.edit;
+      if (edit) {
+        setIsEdit(true);
+        history.replace(location.pathname, {});
+      }
+    }
+  }, [history, location]);
+
+  React.useEffect(() => {
+    if (data) {
       form.setFieldsValue({
-        ...user,
-        job_description: user.job_description,
+        ...data,
+        id: data.id,
       });
     }
-  }, [form, user]);
+  }, [data, form]);
+
+  const handleContractEditSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      if (isEdit) {
+        const response = await update(values);
+        if (response) {
+          setData(response);
+          setIsEdit(false);
+          history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <>
-      <Row>
-        <Col md={12} xs={24}>
-          <Row gutter={[0, 12]} align="top">
-            <Col md={isView ? 24 : 24} xs={24}>
-              <TitlePath>
-                <b>{t(UserDetailMessages.formJobTitle())}</b>
-              </TitlePath>
-            </Col>
-            <Col md={isView ? 8 : 24} xs={24}>
-              {isView ? (
-                <LabelWrapper>
-                  {t(UserDetailMessages.formPositionLabel())}
-                </LabelWrapper>
-              ) : (
-                t(UserDetailMessages.formPositionLabel())
-              )}
-            </Col>
-            <Col md={isView ? 16 : 22} xs={24}>
-              <FormItem isView={isView} name="position">
-                {isView ? (
-                  <Input {...inputProps} size="large" />
-                ) : (
-                  <StyledSelect
-                    {...(isView ? selectProps : {})}
-                    size="large"
-                    isView={isView}
-                    placeholder={
-                      !isView && t(UserDetailMessages.formPositionPlaceholder())
-                    }
-                  >
-                    {positions?.map(value => {
-                      return (
-                        <Option key={value.value} value={value.value}>
-                          {value.label}
-                        </Option>
-                      );
-                    })}
-                  </StyledSelect>
-                )}
-              </FormItem>
-            </Col>
-            <Col md={isView ? 8 : 24} xs={24}>
-              {isView ? (
-                <LabelWrapper>
-                  {t(UserDetailMessages.formJobTitleLabel())}
-                </LabelWrapper>
-              ) : (
-                t(UserDetailMessages.formJobTitleLabel())
-              )}
-            </Col>
-            <Col md={isView ? 16 : 22} xs={24}>
-              <FormItem isView={isView} name="job_title">
-                <Input
-                  {...(isView ? inputProps : {})}
-                  size="large"
-                  placeholder={
-                    isView
-                      ? ''
-                      : t(UserDetailMessages.formJobTitlePlaceholder())
-                  }
-                />
-              </FormItem>
-            </Col>
-            <Col md={isView ? 8 : 24} xs={24}>
-              {isView ? (
-                <LabelWrapper>
-                  {t(UserDetailMessages.formTypeLabel())}
-                </LabelWrapper>
-              ) : (
-                t(UserDetailMessages.formTypeLabel())
-              )}
-            </Col>
-            <Col md={isView ? 16 : 22} xs={24}>
-              <FormItem isView={isView} name="type">
-                {isView ? (
-                  <Input {...inputProps} size="large" />
-                ) : (
-                  <Select
-                    defaultValue="Full-time"
-                    size="large"
-                    placeholder={t(UserDetailMessages.formTypePlaceholder())}
-                  >
-                    {types?.map(value => {
-                      return (
-                        <Option key={value.value} value={value.value}>
-                          {value.label}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                )}
-              </FormItem>
-            </Col>
-            <Col md={isView ? 8 : 24} xs={24}>
-              {isView ? (
-                <LabelWrapper>
-                  {t(UserDetailMessages.formJobTagsLabel())}
-                </LabelWrapper>
-              ) : (
-                t(UserDetailMessages.formJobTagsLabel())
-              )}
-            </Col>
-            <Col md={isView ? 16 : 22} xs={24}>
-              <FormItem isView={isView} name="tags">
-                <TagsInput
-                  selectProps={selectProps}
-                  isView={isView}
-                  placeholder={
-                    isView ? '' : t(UserDetailMessages.formJobTagsPlaceholder())
-                  }
-                  callback={e => {
-                    form.setFieldsValue({ tags: e });
-                  }}
-                  className="selectTags"
-                />
-              </FormItem>
-            </Col>
-          </Row>
-        </Col>
-        <Col md={12} xs={24}>
-          <Row gutter={[0, 12]} align="top">
-            <Col md={isView ? 24 : 24} xs={24}>
-              <TitlePath>
-                <b>{t(UserDetailMessages.formJobDescription())}</b>
-              </TitlePath>
-            </Col>
-            <Col md={isView ? 24 : 24} xs={24}>
-              <FormItem isView={isView} name="job_description">
-                {isView ? (
-                  jobDesc && <RichEditor data={jobDesc} isView={isView} />
-                ) : (
-                  <RichEditor
-                    width="100%"
-                    height="340px"
-                    data={jobDesc}
-                    placeholder={isView ? '' : 'Descriptions'}
-                    callback={value => {
-                      form.setFieldsValue({ job_description: value });
-                    }}
-                  />
-                )}
-              </FormItem>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+      <DetailForm
+        form={form}
+        data={data}
+        isEdit={isEdit}
+        isView={isView}
+        leftScreenItems={<></>}
+        rightScreenItems={
+          <JobInfoDetail isView={isView} isEdit={isEdit} form={form} />
+        }
+      />
+      <WrapperButton>
+        <Row gutter={[8, 8]} justify="end">
+          <Col>
+            <Button
+              block
+              onClick={() => {
+                if (isEdit) {
+                  setIsEdit(false);
+                  history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
+                } else if (isView) {
+                  history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
+              {t(UserDetailMessages.formBackButton())}
+            </Button>
+          </Col>
+          <Col>
+            <Button
+              loading={loading}
+              block
+              type="primary"
+              onClick={() => {
+                if (isView) {
+                  setIsEdit(true);
+                  history.push(`${PrivatePath.EMPLOYEES}/${id}/contract/edit`);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  handleContractEditSubmit();
+                }
+              }}
+            >
+              {isView
+                ? t(UserDetailMessages.formEditButton())
+                : t(UserDetailMessages.formSubmitButton())}
+            </Button>
+          </Col>
+        </Row>
+      </WrapperButton>
     </>
   );
 };
-interface ScreenProps {
-  isView?: boolean;
-}
 
-const FormItem = styled(Form.Item)`
-  margin-bottom: ${(props: ScreenProps) => (props.isView ? '0' : '24px')};
-
-  label {
-    font-weight: 500;
-  }
-`;
-
-const LabelWrapper = styled.div`
-  margin: 7px 0;
-  font-weight: 500;
-`;
-
-const StyledSelect = styled(Select)`
-  .ant-select-selection-item {
-    font-weight: ${({ isView }: ScreenProps) => (isView ? 500 : 400)};
-  }
+const WrapperButton = styled.div`
+  margin-top: 3em;
+  padding: 10px;
+  height: 100%;
 `;
