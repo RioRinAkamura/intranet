@@ -1,4 +1,4 @@
-export declare enum RoleName {
+export enum RoleName {
   ADMIN = 'Admin',
   HUMAN_RESOURCE = 'Human Resource',
   PROJECT_MANAGER = 'Project Manager',
