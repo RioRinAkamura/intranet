@@ -96,24 +96,26 @@ export const SocialNetwork = (props: SocialNetworkProps) => {
       <WrapperButton>
         <Row gutter={[8, 8]} justify="end">
           <Col>
-            <Button
-              block
-              onClick={() => {
-                if (isEdit) {
-                  setIsEdit(false);
-                  history.push(
-                    `${PrivatePath.EMPLOYEES}/${id}/social-accounts`,
-                  );
-                } else if (isView) {
-                  history.push(
-                    `${PrivatePath.EMPLOYEES}/${id}/social-accounts`,
-                  );
-                }
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              {t(UserDetailMessages.formBackButton())}
-            </Button>
+            {isEdit && (
+              <Button
+                block
+                onClick={() => {
+                  if (isEdit) {
+                    setIsEdit(false);
+                    history.push(
+                      `${PrivatePath.EMPLOYEES}/${id}/social-accounts`,
+                    );
+                  } else if (isView) {
+                    history.push(
+                      `${PrivatePath.EMPLOYEES}/${id}/social-accounts`,
+                    );
+                  }
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                {t(UserDetailMessages.formBackButton())}
+              </Button>
+            )}
           </Col>
           <Col>
             <Button
