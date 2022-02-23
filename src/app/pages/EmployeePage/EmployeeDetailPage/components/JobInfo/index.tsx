@@ -96,20 +96,22 @@ export const JobInfo = (props: JobInfoProps) => {
       <WrapperButton>
         <Row gutter={[8, 8]} justify="end">
           <Col>
-            <Button
-              block
-              onClick={() => {
-                if (isEdit) {
-                  setIsEdit(false);
-                  history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
-                } else if (isView) {
-                  history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
-                }
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              {t(UserDetailMessages.formBackButton())}
-            </Button>
+            {isEdit && (
+              <Button
+                block
+                onClick={() => {
+                  if (isEdit) {
+                    setIsEdit(false);
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
+                  } else if (isView) {
+                    history.push(`${PrivatePath.EMPLOYEES}/${id}/contract`);
+                  }
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                {t(UserDetailMessages.formBackButton())}
+              </Button>
+            )}
           </Col>
           <Col>
             <Button
