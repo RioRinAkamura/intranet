@@ -104,6 +104,10 @@ export const Form: React.FC<FormProps> = ({
     setCategoryId(id);
   };
 
+  const handleCategoryChange = value => {
+    setCategoryId(value);
+  };
+
   React.useEffect(() => {
     if (!isView) getCategories();
   }, [isView]);
@@ -161,9 +165,11 @@ export const Form: React.FC<FormProps> = ({
             <StyledSelect
               size="large"
               disabled={isView}
+              allowClear={true}
               placeholder={t(
                 EmployeeNoteMessages.modalCategorySelectPlaceholder(),
               )}
+              onChange={value => handleCategoryChange(value)}
             >
               {categoryList.map(category => (
                 <Option key={category.id} value={category.id}>

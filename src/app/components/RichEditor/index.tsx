@@ -46,6 +46,9 @@ import styled, { css } from 'styled-components/macro';
 import { api } from 'utils/api';
 import { EntryMention } from './components/EntryMention';
 import { MentionContent } from './components/MentionContent';
+import createLinkifyPlugin from '@draft-js-plugins/linkify';
+import linkifyIt from 'linkify-it';
+import tlds from 'tlds';
 
 const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
@@ -89,6 +92,25 @@ const toolbarPlugin = createToolbarPlugin({
 });
 const linkPlugin = createLinkPlugin();
 const { Toolbar } = toolbarPlugin;
+
+const linkifyPlugin = createLinkifyPlugin({
+  component(props) {
+    return (
+      // eslint-disable-next-line no-alert, jsx-a11y/anchor-has-content
+      <a
+        {...props}
+        onClick={() => {
+          const win = window.open(props.href, '_blank', 'noopener,noreferrer');
+          if (win) {
+            win.focus();
+          }
+        }}
+      />
+    );
+  },
+  customExtractLinks: text =>
+    linkifyIt().tlds(tlds).set({ fuzzyEmail: false }).match(text),
+});
 
 export const RichEditor = memo((props: Props) => {
   const { width, height, data, isView, placeholder, callback } = props;
@@ -216,6 +238,7 @@ export const RichEditor = memo((props: Props) => {
               toolbarPlugin,
               inlineToolbarPlugin,
               linkPlugin,
+              linkifyPlugin,
             ]}
             ref={ref}
           />

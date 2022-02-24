@@ -119,7 +119,7 @@ export const Notes = memo(({ projectId }: NotesProps) => {
         date: moment(form.getFieldValue('date')).format(DATE_FORMAT),
         project_id: projectId,
         id: note?.id,
-        category: note?.category,
+        category_id: !categoryId ? null : categoryId,
       }),
     );
   };
