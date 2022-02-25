@@ -11,9 +11,27 @@ export interface UsersManagePageState {
   params: QueryParams;
   deleteSuccess?: boolean;
   deleteFailed?: boolean;
-  filterColumns?: object;
+  filterColumns?: FilterColumns;
   selectedRows?: User[];
   errorMessage?: string;
+  isFilter?: boolean;
+}
+
+export interface FilterColumns {
+  first_name?: string;
+  last_name?: string;
+  code?: string;
+  allocable?: string;
+  email?: string;
+  phoneNumber?: string;
+  monitoring?: string;
+  tags?: string;
+  skills?: string;
+  from?: string;
+  to?: string;
+  exact?: string;
+  same_projects?: string;
+  [key: string]: string | undefined;
 }
 
 export interface UserManageResponse {
