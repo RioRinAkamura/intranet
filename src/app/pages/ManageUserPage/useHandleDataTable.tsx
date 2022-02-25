@@ -27,7 +27,7 @@ export interface TablePagination {
 }
 
 interface Params {
-  [key: string]: string | number | undefined;
+  [key: string]: string | number | boolean | undefined;
   ordering?: string;
   search?: string;
 }
@@ -82,20 +82,25 @@ export const useHandleDataTable = (
   };
 
   const setSearchText = (text: string): void => {
-    console.log('setSearchText', text);
     if (urlParams.limit || urlParams.page) {
       history.replace({
         search: stringify({ search: text }),
       });
     } else if (text) {
       history.replace({
-        search: stringify({ ...urlParams, search: text }),
+        search: stringify({
+          search: text,
+        }),
       });
     } else {
       history.replace({
-        search: stringify({ ...urlParams, search: undefined }),
+        search: stringify({
+          ...urlParams,
+          search: undefined,
+        }),
       });
     }
+
     dispatch(actions.setSearchText({ text }));
   };
 

@@ -1,50 +1,42 @@
-import React, { useCallback, useEffect, useState, Key } from 'react';
-import { parse, stringify } from 'query-string';
-import { Col, Row, Table, Tooltip, Popover, Switch, Form } from 'antd';
-
-import styled from 'styled-components/macro';
-import { HeaderButtons } from './HeaderButtons/HeaderButtons';
-import { models } from '@hdwebsoft/intranet-api-sdk';
-import { ColumnProps } from 'antd/lib/table';
-import { useUsersManagePageSlice } from './slice';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectManageUserState, selectParams } from './slice/selectors';
-import { Avatar } from 'app/components/Avatar/Loadable';
-import { useNotify, ToastMessageType } from 'app/components/ToastNotification';
-import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
-import { DeleteModal } from 'app/components/DeleteModal';
-import { api } from 'utils/api';
 import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
-import { useHistory, useLocation } from 'react-router';
-import { RootState } from 'types';
-import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
-import PageTitle from 'app/components/PageTitle';
-import { CardLayout } from 'app/components/CardLayout';
-import Button, { IconButton } from 'app/components/Button';
-import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
-import { PrivateRoute } from 'app/components/Auth/Route';
-import { Switch as SwitchRoute } from 'react-router-dom';
-import { PrivatePath } from 'utils/url.const';
-import { UserManageDetailPage } from './UserDetailPage/Loadable';
-import { phoneFormat } from 'utils/phoneFormat';
-import { getQueryParam } from 'utils/query';
+import { models } from '@hdwebsoft/intranet-api-sdk';
+import { Col, Form, Popover, Row, Switch, Table, Tooltip } from 'antd';
+import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';
+import { PrivateRoute } from 'app/components/Auth/Route';
+import { Avatar } from 'app/components/Avatar/Loadable';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import Button, { IconButton } from 'app/components/Button';
+import { CardLayout } from 'app/components/CardLayout';
+import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
+import { DeleteModal } from 'app/components/DeleteModal';
+import PageTitle from 'app/components/PageTitle';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import { TotalSearchForm } from 'app/components/TotalSearchForm/Loadable';
+import { parse, stringify } from 'query-string';
+import React, { Key, useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
+import { Switch as SwitchRoute } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import { RootState } from 'types';
+import { api } from 'utils/api';
+import { phoneFormat } from 'utils/phoneFormat';
+import { PrivatePath } from 'utils/url.const';
+import { HeaderButtons } from './HeaderButtons/HeaderButtons';
+import { UsersMessages } from './message';
+import { useUsersManagePageSlice } from './slice';
+import { selectManageUserState, selectParams } from './slice/selectors';
+import { TablePagination, useHandleDataTable } from './useHandleDataTable';
+import { UserManageDetailPage } from './UserDetailPage/Loadable';
 
 type User = models.user.User;
 
-interface TablePagination {
-  current?: number;
-  pageSize?: number;
-  total?: number;
-}
-interface ParamsProps {
-  search: string;
-}
 const ManageUserPage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
   useEffect(() => {
@@ -61,7 +53,6 @@ const ManageUserPage: React.FC = () => {
   const [deleteUser, setDeleteUser] = useState<User>();
   const [textCopy, setTextCopy] = useState(false);
   const [searchForm] = Form.useForm();
-  const queryParam = getQueryParam<ParamsProps>();
   const deleteModalState = useSelector(
     (state: RootState) => state.usersmanagepage,
   );
@@ -76,9 +67,14 @@ const ManageUserPage: React.FC = () => {
     sort: false,
   });
 
+  const { setSearchText, resetSearch } = useHandleDataTable(
+    userListState,
+    actions,
+  );
+
   const fetchUsers = useCallback(() => {
     dispatch(actions.fetchUsers({ params: params }));
-  }, [dispatch, actions, params]);
+  }, [actions, dispatch, params]);
 
   useEffect(() => {
     fetchUsers();
@@ -129,33 +125,6 @@ const ManageUserPage: React.FC = () => {
   const resetTotalSearch = () => {
     searchForm.setFieldsValue({ search: undefined });
     resetSearch();
-  };
-
-  const setSearchText = useCallback(
-    (text: string): void => {
-      if (urlParams.limit || urlParams.page) {
-        history.replace({
-          search: stringify({ search: text }),
-        });
-      } else if (text) {
-        history.replace({
-          search: stringify({ ...urlParams, search: text }),
-        });
-      } else {
-        history.replace({
-          search: stringify({ ...urlParams, search: undefined }),
-        });
-      }
-      dispatch(actions.setSearchText({ text }));
-    },
-    [dispatch, actions, history, urlParams],
-  );
-
-  const resetSearch = () => {
-    history.replace({
-      search: '',
-    });
-    dispatch(actions.resetSearch());
   };
 
   const descriptionDelete = (
@@ -330,7 +299,6 @@ const ManageUserPage: React.FC = () => {
       id: record.id,
       is_active: checked,
     };
-    // TODO handler event update user
     dispatch(actions.updateUser({ user: updatedUser }));
   };
 
@@ -353,17 +321,7 @@ const ManageUserPage: React.FC = () => {
       fetchUsers();
     }
   };
-  // when reload check and update key
-  useEffect(() => {
-    // check key: "search" exists
-    if (JSON.stringify(queryParam).includes('search')) {
-      const { search } = queryParam;
-      if (search && search !== '') {
-        // set key search into input
-        setSearchText(search);
-      }
-    }
-  }, [queryParam, setSearchText]);
+
   return (
     <>
       <PageTitle title="User List">
@@ -371,7 +329,7 @@ const ManageUserPage: React.FC = () => {
           form={searchForm}
           value={userListState.params.search}
           loading={userListState.loading ? true : false}
-          messageTrans={{ searchPlaceholder: () => 'Search Users' }}
+          messageTrans={UsersMessages}
           onSearch={totalSearch}
           onReset={resetTotalSearch}
         />
