@@ -5,6 +5,7 @@ import {
   UsersManagePageState,
   UserManageResponse,
   TablePagination,
+  QueryParams,
 } from './types';
 import { usersManagePageSaga } from './saga';
 import { Key } from 'react';
@@ -48,6 +49,27 @@ const slice = createSlice({
     fetchUsersError(state, action: PayloadAction<UsersManagePageState>) {
       state.loading = false;
     },
+
+    changeState(state, action: PayloadAction<QueryParams>) {
+      state.params = { ...state.params, ...action.payload };
+      state.filterColumns = {
+        ...state.filterColumns,
+        first_name: action.payload.first_name,
+        last_name: action.payload.last_name,
+        email: action.payload.email,
+        phoneNumber: action.payload.phoneNumber,
+      };
+      state.pagination = {
+        ...state.pagination,
+        current: action.payload.page,
+        pageSize: action.payload.limit,
+      };
+      state.isFilter = false;
+    },
+    notQuery(state) {
+      state.isFilter = false;
+    },
+
     setSelectedRows<T>(
       state,
       action: PayloadAction<{
@@ -67,6 +89,7 @@ const slice = createSlice({
     resetSearch(state) {
       state.filterColumns = {};
       state.params = {
+        status: 'active',
         limit: 20,
         page: 1,
         ordering: '',
