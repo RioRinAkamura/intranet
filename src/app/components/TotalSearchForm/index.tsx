@@ -19,7 +19,7 @@ interface Props {
   searchDeleted?: boolean;
   searchNextMonitoring?: boolean;
   searchNextMonitoringAt?: (value) => void;
-  searchEmployeeProjects?: boolean;
+  searchEmployeeProjects?: string | string[];
   searchEmployeeProjectList?: (value) => void;
   messageTrans?: MessageTranslate;
   form: FormInstance;
@@ -105,7 +105,7 @@ export const TotalSearchForm = memo((props: Props) => {
             </FormItem>
           </Col>
         )}
-        {searchNextMonitoring && (
+        {Boolean(searchNextMonitoring) && (
           <Col xl={6} lg={12} md={12} sm={12} xs={12}>
             <FormItem name="next-monitoring-at">
               <SelectNextMonitoredAt
@@ -119,13 +119,13 @@ export const TotalSearchForm = memo((props: Props) => {
             </FormItem>
           </Col>
         )}
-
         {searchEmployeeProjects && (
           <Col xl={6} lg={12} md={12} sm={12} xs={12}>
             <FormItem name="same_projects">
               <SelectProjectList
                 size="large"
-                defaultValue="all"
+                defaultValue={searchEmployeeProjects}
+                value={searchEmployeeProjects}
                 onChange={value => handleSearchEmployeeProjectList(value)}
               >
                 <Option value="all">All Projects</Option>

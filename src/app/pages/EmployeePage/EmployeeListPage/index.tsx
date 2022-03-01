@@ -44,13 +44,14 @@ import { ProjectsMessages } from 'app/pages/ProjectPage/ProjectListPage/messages
 import { useSkillDetails } from 'app/pages/SkillManagePage/useSkillDetails';
 import config from 'config';
 import moment from 'moment';
+import { parse } from 'query-string';
 import { stringify } from 'querystring';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import styled from 'styled-components/macro';
 import { StyledLink } from 'styles/StyledCommon';
 import { RootState } from 'types';
@@ -77,6 +78,10 @@ const { Option } = Select;
 export const EmployeeListPage: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
+  const location = useLocation();
+  const urlParams = parse(location.search, {
+    sort: false,
+  });
   const { setBreadCrumb } = useBreadCrumbContext();
   useEffect(() => {
     setBreadCrumb('Employees');
@@ -93,6 +98,9 @@ export const EmployeeListPage: React.FC = () => {
     false,
   );
   const [selectEmployee, setSelectEmployee] = useState<Employee>();
+  const [selectEmployeeProject, setSelectEmployeeProject] = useState(
+    urlParams.same_project ? urlParams.same_project : 'all',
+  );
   const deleteModalState = useSelector(
     (state: RootState) => state.employeespage,
   );
@@ -269,6 +277,7 @@ export const EmployeeListPage: React.FC = () => {
   };
 
   const handleSearchEmployeeProjectList = value => {
+    setSelectEmployeeProject(value);
     if (value === 'all') {
       history.push(`${PrivatePath.EMPLOYEES}`);
       dispatch(actions.changeState({ ...params, same_projects: undefined }));
@@ -276,6 +285,7 @@ export const EmployeeListPage: React.FC = () => {
       history.replace({
         search: stringify({
           same_project: 'active_projects',
+          ...urlParams,
         }),
       });
       dispatch(
@@ -285,6 +295,7 @@ export const EmployeeListPage: React.FC = () => {
       history.replace({
         search: stringify({
           same_project: 'achieved_projects',
+          ...urlParams,
         }),
       });
       dispatch(
@@ -895,7 +906,7 @@ export const EmployeeListPage: React.FC = () => {
           onSearch={totalSearch}
           onReset={resetTotalSearch}
           searchDeleted={true}
-          searchEmployeeProjects={true}
+          searchEmployeeProjects={selectEmployeeProject}
           searchEmployeeProjectList={handleSearchEmployeeProjectList}
         />
       </PageTitle>
