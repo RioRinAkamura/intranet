@@ -21,6 +21,7 @@ function* fetchUsers(action) {
       is_deleted: params.is_deleted,
       skills: params.skills,
       same_projects: params.same_projects,
+      timesheets: params.timesheets,
     };
     if (Boolean(params.is_deleted) === false) {
       delete queryParams.is_deleted;

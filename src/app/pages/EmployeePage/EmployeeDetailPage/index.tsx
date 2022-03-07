@@ -28,6 +28,8 @@ import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { Projects } from './components/Projects/Loadable';
 import { Skills } from './components/Skills/Loadable';
 import { SocialNetwork } from './components/SocialNetwork';
+import { TimeSheet } from './components/TimeSheet';
+import Report from './components/TimeSheet/components/Report';
 import { useUserDetailsSlice } from './slice';
 import { useHandleEmployeeDetail } from './useHandleEmployeeDetail';
 
@@ -106,7 +108,7 @@ export function EmployeeDetailPage(props: Props) {
     } else if (key === TabKeys.projects) {
       history.push(`${PrivatePath.EMPLOYEES}/${id}/projects`);
     } else if (key === TabKeys.timeSheet) {
-      history.push(`${PrivatePath.EMPLOYEES}/${id}/time-sheet`);
+      history.push(`${PrivatePath.EMPLOYEES}/${id}/timesheets`);
     } else if (key === TabKeys.notes) {
       history.push(`${PrivatePath.EMPLOYEES}/${id}/notes`);
     } else if (key === TabKeys.devices) {
@@ -235,7 +237,7 @@ export function EmployeeDetailPage(props: Props) {
           <TabPane tab="Skills" key={TabKeys.skills} />
           <TabPane tab="Social Accounts" key={TabKeys.socialAccounts} />
           <TabPane tab="Projects" key={TabKeys.projects} />
-          <TabPane tab="Time Sheet" key={TabKeys.timeSheet} />
+          <TabPane tab="Timesheets" key={TabKeys.timeSheet} />
           <TabPane tab="Notes" key={TabKeys.notes} />
           <TabPane tab="Devices" key={TabKeys.devices} />
           <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
@@ -255,7 +257,10 @@ export function EmployeeDetailPage(props: Props) {
             <Projects employeeId={id} />
           </Route>
           <Route path={PrivatePath.EMPLOYEES_ID_TIMESHEET}>
-            time sheet here
+            <TimeSheet employeeId={id} />
+          </Route>
+          <Route path={PrivatePath.EMPLOYEES_ID_REPORT}>
+            <Report employeeId={id} />
           </Route>
           <Route path={PrivatePath.EMPLOYEES_ID_SOCIAL_ACCOUNTS}>
             <SocialNetwork employeeId={id} />
