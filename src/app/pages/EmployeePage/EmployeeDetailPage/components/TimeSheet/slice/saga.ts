@@ -24,18 +24,21 @@ function* fetchEmployeeTimesheet(action) {
   }
 }
 
-// function* addTimesheet(action: PayloadAction<EmployeeTimesheet>) {
-//   try {
-//     const timesheet = cloneDeep(action.payload);
-//     yield api.hr.employee.timesheet.create(timesheet.employeeId, timesheet.data);
+function* addTimesheet(action: PayloadAction<EmployeeTimesheet>) {
+  try {
+    const timesheet = cloneDeep(action.payload);
+    yield api.hr.employee.timesheet.create(
+      timesheet.employeeId,
+      timesheet.data,
+    );
 
-//     yield put(actions.addTimesheetSuccess());
-//   } catch (err) {
-//     yield put(actions.addTimesheetFailure());
-//   } finally {
-//     yield put(actions.resetStateAddModal());
-//   }
-// }
+    yield put(actions.addTimesheetSuccess());
+  } catch (err) {
+    yield put(actions.addTimesheetFailure());
+  } finally {
+    yield put(actions.resetStateAddModal());
+  }
+}
 
 // function* editTimesheet(action: PayloadAction<EmployeeTimesheet>) {
 //   try {

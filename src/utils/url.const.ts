@@ -14,8 +14,6 @@ export enum PrivatePath {
   EMPLOYEES_ID_EDIT = '/employees/:id/edit',
   EMPLOYEES_ID_NOTES = '/employees/:id/notes',
   EMPLOYEES_ID_PROJECTS = '/employees/:id/projects',
-  EMPLOYEES_ID_TIMESHEET = '/employees/:id/timesheets',
-  EMPLOYEES_ID_REPORT = '/employees/:id/reports',
   EMPLOYEES_ID_DEVICES = '/employees/:id/devices',
   EMPLOYEES_ID_CHANGELOGS = '/employees/:id/change-logs',
   EMPLOYEES_ID_CONTRACT = '/employees/:id/contract',
@@ -28,6 +26,9 @@ export enum PrivatePath {
   EMPLOYEES_ID_SOCIAL_ACCOUNTS_EDIT = '/employees/:id/social-accounts/edit',
   EMPLOYEES_ID_SKILLS = '/employees/:id/skills',
 
+  EMPLOYEES_ID_TIMESHEET = '/employees/:id/timesheets',
+  EMPLOYEES_ID_TIMESHEET_DETAIL = '/employees/:id/timesheets/:id',
+  EMPLOYEES_ID_REPORT = '/employees/:id/reports',
 
   DEVICES = '/devices',
   DEVICES_CREATE = '/devices/create',

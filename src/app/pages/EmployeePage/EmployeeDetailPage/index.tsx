@@ -28,8 +28,8 @@ import { ProfileInfo } from './components/ProfileInfo/Loadable';
 import { Projects } from './components/Projects/Loadable';
 import { Skills } from './components/Skills/Loadable';
 import { SocialNetwork } from './components/SocialNetwork';
-import { TimeSheet } from './components/TimeSheet';
 import Report from './components/TimeSheet/components/Report';
+import { Timesheet } from './components/TimeSheet';
 import { useUserDetailsSlice } from './slice';
 import { useHandleEmployeeDetail } from './useHandleEmployeeDetail';
 
@@ -256,8 +256,8 @@ export function EmployeeDetailPage(props: Props) {
           <Route path={PrivatePath.EMPLOYEES_ID_PROJECTS}>
             <Projects employeeId={id} />
           </Route>
-          <Route path={PrivatePath.EMPLOYEES_ID_TIMESHEET}>
-            <TimeSheet employeeId={id} />
+          <Route exact path={PrivatePath.EMPLOYEES_ID_TIMESHEET}>
+            <Timesheet employeeId={id} />
           </Route>
           <Route path={PrivatePath.EMPLOYEES_ID_REPORT}>
             <Report employeeId={id} />

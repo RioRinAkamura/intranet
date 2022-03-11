@@ -6,7 +6,7 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { api } from 'utils/api';
-import { useHandleEmployeeTimesheets } from '../useHandleTimesheet';
+import { useHandleEmployeeTimesheets } from '../useHandleEmployeeTimesheets';
 
 const { Option } = Select;
 const { TextArea } = Input;

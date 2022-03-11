@@ -10,7 +10,6 @@ import {
   Button,
   DatePicker,
   Form,
-  FormInstance,
   Popover,
   Select,
   Table,
@@ -30,31 +29,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { Wrapper } from 'styles/StyledCommon';
-import { PrivatePath } from 'utils/url.const';
 import Report from './components/Report';
-import TimeSheetModal from './components/TimeSheetModal';
 import { useEmployeeTimesheetSlice } from './slice';
 import { selectEmployeeTimesheetParams } from './slice/selectors';
-import { useHandleEmployeeTimesheets } from './useHandleTimesheet';
+import { useHandleEmployeeTimesheets } from './useHandleEmployeeTimesheets';
 
 const { Option } = Select;
 
-interface FormProps {
-  form: FormInstance;
-  devices?: any;
-}
-
-interface TimeSheetProps {
+interface TimesheetProps {
   employeeId: string;
 }
 
-export const TimeSheet = memo((props: TimeSheetProps) => {
+export const Timesheet = memo((props: TimesheetProps) => {
   const { employeeId } = props;
   const [form] = Form.useForm();
 
   const [isView, setIsView] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<any>();
@@ -78,6 +71,7 @@ export const TimeSheet = memo((props: TimeSheetProps) => {
     employeeTimesheets,
     fetchEmployeeTimesheets,
     loading,
+    addEmployeeReport,
     addEmployeeTimesheet,
     editEmployeeTimesheet,
     deleteEmployeeTimesheet,
@@ -85,13 +79,13 @@ export const TimeSheet = memo((props: TimeSheetProps) => {
 
   useEffect(() => {
     fetchEmployeeTimesheets(employeeId);
-  }, [fetchEmployeeTimesheets]);
+  }, [fetchEmployeeTimesheets, employeeId]);
 
   const showDeleteModal = () => {
     setIsDelete(true);
   };
 
-  const moreButton = (value: any, record) => {
+  const moreButton = (text, record: EmployeeTimesheet) => {
     return (
       <>
         <Tooltip title={t(UsersMessages.listViewTooltip())}>
@@ -102,6 +96,8 @@ export const TimeSheet = memo((props: TimeSheetProps) => {
             icon={<EyeOutlined />}
             onClick={() => {
               setIsView(true);
+              // history.push(`${PrivatePath.EMPLOYEES}/${id}/timesheets/${text}`);
+              setSelectedTimesheet(record);
             }}
           />
         </Tooltip>
@@ -124,7 +120,7 @@ export const TimeSheet = memo((props: TimeSheetProps) => {
             icon={<DeleteOutlined />}
             onClick={() => {
               showDeleteModal();
-              setSelectedTimesheet(record.timessheet);
+              setSelectedTimesheet(record);
             }}
           />
         </Tooltip>
@@ -143,7 +139,7 @@ export const TimeSheet = memo((props: TimeSheetProps) => {
       title: 'Work status',
       dataIndex: 'status',
       width: 130,
-      render: text => text,
+      render: text => (text === '1' ? 'ON_TRACK' : 'OFF_TRACK'),
     },
     {
       title: 'Total hours',
@@ -155,13 +151,13 @@ export const TimeSheet = memo((props: TimeSheetProps) => {
       title: 'Creator',
       dataIndex: 'creator',
       width: 130,
-      render: text => text.name,
+      render: text => (text ? text.name : ''),
     },
     {
       title: 'Approver',
       dataIndex: 'approver',
       width: 130,
-      render: text => text.name,
+      render: text => (text ? text.name : ''),
     },
     {
       title: <ActionIcon />,
@@ -234,6 +230,7 @@ export const TimeSheet = memo((props: TimeSheetProps) => {
           icon={<PlusCircleOutlined />}
           onClick={() => {
             setIsCreate(true);
+            // history.push(`${PrivatePath.EMPLOYEES}/${id}/timesheets/create`);
             form.resetFields();
           }}
           size="middle"
@@ -250,7 +247,7 @@ export const TimeSheet = memo((props: TimeSheetProps) => {
         scroll={{ x: 1100 }}
       />
       <DialogModal
-        isOpen={isCreate || isEdit || isView}
+        isOpen={isCreate || isEdit || isView || isOpen}
         title={
           isView
             ? 'Employee Timesheet'
@@ -270,12 +267,13 @@ export const TimeSheet = memo((props: TimeSheetProps) => {
           isEdit={isEdit}
           isView={isView}
         /> */}
-
         <Report
           employeeId={id}
+          isView={isView}
           isCreate={isCreate}
           isEdit={isEdit}
           form={form}
+          selectedTimesheet={selectedTimesheet}
         />
       </DialogModal>
       <DeleteModal

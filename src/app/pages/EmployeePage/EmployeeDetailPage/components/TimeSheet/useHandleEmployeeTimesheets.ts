@@ -1,8 +1,10 @@
 import {
+  CreateReportQueryParams,
   EmployeeTimesheet,
   EmployeeTimesheetQueryParams,
   Report,
   ReportQueryParams,
+  UpdateReportQueryParams,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
 import { Pagination } from '@hdwebsoft/intranet-api-sdk/libs/type';
 import { useCallback, useState } from 'react';
@@ -38,9 +40,7 @@ export const useHandleEmployeeTimesheets = (): {
     previous: '',
   });
 
-  const [employeeReports, setEmployeeReports] = useState<
-    Pagination<EmployeeTimesheet>
-  >({
+  const [employeeReports, setEmployeeReports] = useState<Pagination<Report>>({
     count: 0,
     results: [],
     next: '',
@@ -109,7 +109,7 @@ export const useHandleEmployeeTimesheets = (): {
   const fetchEmployeeReport = useCallback(async (employeeId: string) => {
     try {
       const response = await api.hr.employee.report.list(employeeId);
-      if(response){
+      if (response) {
         setEmployeeReports(response);
       }
     } catch (error) {
@@ -122,11 +122,11 @@ export const useHandleEmployeeTimesheets = (): {
 
   const addEmployeeReport = async (
     employeeId: string,
-    data: EmployeeTimesheetQueryParams,
+    data: CreateReportQueryParams,
   ) => {
     setLoading(true);
     try {
-      await api.hr.employee.timesheet.create(employeeId, data);
+      await api.hr.employee.report.create(employeeId, data);
     } catch (e) {
       console.log(e);
     } finally {
@@ -136,11 +136,11 @@ export const useHandleEmployeeTimesheets = (): {
 
   const editEmployeeReport = async (
     employeeId: string,
-    data: EmployeeTimesheetQueryParams,
+    data: UpdateReportQueryParams,
   ) => {
     setLoading(true);
     try {
-      // await api.hr.employee.timesheet.update(employeeId, data);
+      await api.hr.employee.report.update(employeeId, data);
     } catch (e) {
       console.log(e);
     } finally {
@@ -154,7 +154,7 @@ export const useHandleEmployeeTimesheets = (): {
   ) => {
     setLoading(true);
     try {
-      await api.hr.employee.timesheet.delete(employeeId, timesheetId);
+      await api.hr.employee.report.delete(employeeId, timesheetId);
     } catch (error) {
       console.log(error);
     } finally {
@@ -166,11 +166,11 @@ export const useHandleEmployeeTimesheets = (): {
     loading,
     error,
     employeeTimesheets,
+    employeeReports,
     fetchEmployeeTimesheets,
     addEmployeeTimesheet,
     editEmployeeTimesheet,
     deleteEmployeeTimesheet,
-    employeeReports,
     fetchEmployeeReport,
     addEmployeeReport,
     editEmployeeReport,
