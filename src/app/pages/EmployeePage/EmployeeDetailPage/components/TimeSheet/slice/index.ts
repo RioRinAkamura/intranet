@@ -36,7 +36,10 @@ const slice = createSlice({
   name: 'employeeTimesheet',
   initialState,
   reducers: {
-    fetchEmployeeTimesheet(state, action: PayloadAction<EmployeeTimesheetState>) {
+    fetchEmployeeTimesheet(
+      state,
+      action: PayloadAction<EmployeeTimesheetState>,
+    ) {
       state.loading = true;
     },
     fetchEmployeeTimesheetSuccess(state, action: PayloadAction<any>) {
@@ -143,7 +146,10 @@ const slice = createSlice({
       state.editSuccess = false;
       state.editFailed = false;
     },
-    deleteTimesheet(state, action: PayloadAction<DeleteEmployeeTimesheetParams>) {
+    deleteTimesheet(
+      state,
+      action: PayloadAction<DeleteEmployeeTimesheetParams>,
+    ) {
       state.isFilter = true;
       state.deleteSuccess = false;
       state.deleteFailed = false;

@@ -1,9 +1,8 @@
+import { PayloadAction } from '@reduxjs/toolkit';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { api } from 'utils/api';
 import { employeeTimesheetActions as actions } from '.';
-import { PayloadAction } from '@reduxjs/toolkit';
-import { cloneDeep } from 'lodash';
-import { DeleteEmployeeTimesheetParams, EmployeeTimesheet } from './types';
+import { DeleteEmployeeTimesheetParams } from './types';
 
 function* fetchEmployeeTimesheet(action) {
   try {
@@ -24,21 +23,21 @@ function* fetchEmployeeTimesheet(action) {
   }
 }
 
-function* addTimesheet(action: PayloadAction<EmployeeTimesheet>) {
-  try {
-    const timesheet = cloneDeep(action.payload);
-    yield api.hr.employee.timesheet.create(
-      timesheet.employeeId,
-      timesheet.data,
-    );
+// function* addTimesheet(action: PayloadAction<EmployeeTimesheet>) {
+//   try {
+//     const timesheet = cloneDeep(action.payload);
+//     yield api.hr.employee.timesheet.create(
+//       timesheet.employeeId,
+//       timesheet.data,
+//     );
 
-    yield put(actions.addTimesheetSuccess());
-  } catch (err) {
-    yield put(actions.addTimesheetFailure());
-  } finally {
-    yield put(actions.resetStateAddModal());
-  }
-}
+//     yield put(actions.addTimesheetSuccess());
+//   } catch (err) {
+//     yield put(actions.addTimesheetFailure());
+//   } finally {
+//     yield put(actions.resetStateAddModal());
+//   }
+// }
 
 // function* editTimesheet(action: PayloadAction<EmployeeTimesheet>) {
 //   try {

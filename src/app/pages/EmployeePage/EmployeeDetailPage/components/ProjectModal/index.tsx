@@ -275,7 +275,7 @@ export const ProjectModal = memo((props: Props) => {
           >
             <Switch checked={checked} onChange={setChecked} />
           </FormSearchItem>
-          
+
           <ModalButton>
             <Button
               key="back"
@@ -302,10 +302,6 @@ export const ProjectModal = memo((props: Props) => {
 });
 
 const FormSearchItem = styled(Form.Item)``;
-
-const ffff = styled.div`
-  width: 100%;
-`
 
 const StyledDialogModal = styled(DialogModal)`
   .ant-modal-body {

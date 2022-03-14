@@ -1,28 +1,27 @@
 import { MinusSquareFilled, QuestionCircleFilled } from '@ant-design/icons';
 import {
+  EmployeeTimesheet,
+  ReportQueryParams,
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
+import {
   Button,
   DatePicker,
+  Divider,
   Form,
   FormInstance,
   Input,
   InputProps,
   Select,
-  Divider,
 } from 'antd';
 import config from 'config';
 import moment from 'moment';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { api } from 'utils/api';
 import { datePickerViewProps } from 'utils/types';
-import {
-  CreateReportQueryParams,
-  ReportQueryParams,
-} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
-import { boolean } from 'yup';
+import { array } from 'yup';
 import { useHandleEmployeeTimesheets } from '../../useHandleEmployeeTimesheets';
-import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
+import { uniq } from 'lodash';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -38,6 +37,7 @@ interface TimeSheetProps {
   isView?: boolean;
   form?: FormInstance;
   selectedTimesheet?: EmployeeTimesheet;
+  loading?: boolean;
 }
 
 const Report = memo(
@@ -48,9 +48,13 @@ const Report = memo(
     form,
     isView,
     selectedTimesheet,
+    loading,
   }: TimeSheetProps) => {
     const [projectList, setProjectList] = useState<any[]>([]);
     const [reportList, setReportList] = useState<any[]>([]);
+
+    const [reportItems, setReportItems] = useState<any[]>([]);
+    const [timesheetItems, setTimesheetItems] = useState<any[]>([]);
 
     const DATE_FORMAT = config.DATE_FORMAT;
     const disabledDate = (current: moment.Moment) => {
@@ -67,18 +71,11 @@ const Report = memo(
 
     const handleToggle = () => {};
 
-    const handleSyncClick = () => {
-      console.log('sync');
-    };
-
     const {
       employeeReports,
       fetchEmployeeReport,
       fetchEmployeeTimesheets,
-      loading,
       addEmployeeReport,
-      editEmployeeReport,
-      deleteEmployeeReport,
     } = useHandleEmployeeTimesheets();
 
     const fetchEmployeeProject = useCallback(async () => {
@@ -109,45 +106,6 @@ const Report = memo(
       tomorrow_progress: 0,
     };
 
-    // const [listDone, setListDone] = useState<any[]>(['']);
-    // const [listGoing, setListGoing] = useState<any[]>(['']);
-    // const [listBlocker, setListBlocker] = useState<any[]>(['']);
-    // const [listIssue, setListIssue] = useState<any[]>(['']);
-    // const [listTodo, setListTodo] = useState<any[]>(['']);
-    // const [listOther, setListOther] = useState<any[]>(['']);
-    // const [listTimesheet, setListTimesheet] = useState<any[]>(['']);
-
-    // const onAddDoneClick = () => {
-    //   let listDoneCopy = [...listDone];
-    //   listDoneCopy.push(defaultReportValue);
-    //   setListDone(listDoneCopy);
-    //   console.log('listDone', listDone);
-    // };
-
-    // useEffect(() => {
-    //   setListDone(
-    //     employeeReports.results.filter(report => report.type === '2'),
-    //   );
-    //   setListGoing(
-    //     employeeReports.results.filter(report => report.type === '3'),
-    //   );
-    //   setListBlocker(
-    //     employeeReports.results.filter(report => report.type === '5'),
-    //   );
-    //   setListIssue(
-    //     employeeReports.results.filter(report => report.type === '4'),
-    //   );
-    //   setListTodo(
-    //     employeeReports.results.filter(report => report.type === '6'),
-    //   );
-    //   setListOther(
-    //     employeeReports.results.filter(report => report.type === '7'),
-    //   );
-    //   setListTimesheet(
-    //     employeeReports.results.filter(report => report.type === '1'),
-    //   );
-    // }, [employeeReports]);
-
     const handleTaskClick = taskLink => {
       const win = window.open(`${taskLink}`, '_blank');
       if (win) {
@@ -161,11 +119,6 @@ const Report = memo(
       setNewDate(moment(date).format(DATE_FORMAT));
     };
 
-    const [progressValue, setProgressValue] = useState<number>(0);
-    const handleProgressChange = e => {
-      setProgressValue(e.target.value);
-    };
-
     const doneArr = reportList.filter(report => report.type === '2');
     const goingArr = reportList.filter(report => report.type === '3');
     const blockerArr = reportList.filter(report => report.type === '5');
@@ -175,7 +128,8 @@ const Report = memo(
     const timesheetArr = reportList.filter(report => report.type === '1');
 
     const onFinish = values => {
-      console.log('VALUES:', values);
+      console.log('values', values);
+
       const doneList = values.done ? values.done : undefined;
       const goingList = values.going ? values.going : undefined;
       const blockerList = values.blockers ? values.blockers : undefined;
@@ -183,7 +137,6 @@ const Report = memo(
       const todoList = values.todo ? values.todo : undefined;
       const otherList = values.others ? values.others : undefined;
       const timesheetList = values.timesheets ? values.timesheets : undefined;
-
       let newDataArr: any[] = [];
 
       if (doneList) {
@@ -216,8 +169,8 @@ const Report = memo(
             description: value.description,
             today_hour: 0,
             tomorrow_hour: 0,
-            today_progress: value.today_progress,
-            tomorrow_progress: value.tomorrow_progress,
+            today_progress: Number(value.today_progress),
+            tomorrow_progress: Number(value.tomorrow_progress),
           };
         });
         newDataArr = [...newDataArr, goingData];
@@ -225,7 +178,7 @@ const Report = memo(
       if (blockerList) {
         const blockerData = blockerList.map(value => {
           return {
-            id: null,
+            id: value.id ? value.id : null,
             employee_id: employeeId,
             project_id: value.project_id ? value.project_id : null,
             reference: value.reference,
@@ -243,7 +196,7 @@ const Report = memo(
       if (issueList) {
         const issueData = issueList.map(value => {
           return {
-            id: null,
+            id: value.id ? value.id : null,
             employee_id: employeeId,
             project_id: value.project_id ? value.project_id : null,
             reference: value.reference,
@@ -261,7 +214,7 @@ const Report = memo(
       if (todoList) {
         const todoData = todoList.map(value => {
           return {
-            id: null,
+            id: value.id ? value.id : null,
             employee_id: employeeId,
             project_id: value.project_id ? value.project_id : null,
 
@@ -280,7 +233,7 @@ const Report = memo(
       if (otherList) {
         const otherData = otherList.map(value => {
           return {
-            id: null,
+            id: value.id ? value.id : null,
             employee_id: employeeId,
             project_id: value.project_id ? value.project_id : null,
             reference: value.reference,
@@ -296,11 +249,9 @@ const Report = memo(
         newDataArr = [...newDataArr, otherData];
       }
       if (timesheetList) {
-        console.log('7');
-
         const timesheetData = timesheetList.map(value => {
           return {
-            id: null,
+            id: value.id ? value.id : null,
             employee_id: employeeId,
             project_id: value.project_id ? value.project_id : null,
 
@@ -308,8 +259,8 @@ const Report = memo(
             date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
             type: '1',
             description: value.description,
-            today_hour: value.today_hour,
-            tomorrow_hour: value.tomorrow_hour,
+            today_hour: Number(value.today_hour),
+            tomorrow_hour: Number(value.tomorrow_hour),
             today_progress: 0,
             tomorrow_progress: 0,
           };
@@ -322,12 +273,58 @@ const Report = memo(
 
       // addEmployeeReport(employeeId, reportArr as ReportQueryParams);
 
-      // for (let i = 0; i < reportArr.length; i++) {
-      //   addEmployeeReport(employeeId, reportArr[i]);
-      // }
-      // addEmployeeReport(employeeId, reportArr[0]);
+      for (let i = 0; i < reportArr.length; i++) {
+        addEmployeeReport(employeeId, reportArr[i]);
+      }
+      addEmployeeReport(employeeId, reportArr[0]);
+      fetchEmployeeTimesheets(employeeId);
+      // fetchEmployeeReport(employeeId);
+    };
 
-      // fetchEmployeeTimesheets(employeeId);
+    const handleSyncClick = () => {
+      const values = form?.getFieldsValue();
+      console.log('formValue', values);
+      console.log('formValue GOING', values.going);
+
+      const doneList: any[] = values.done ? values.done : undefined;
+      const goingList = values.going ? values.going : undefined;
+      const blockerList = values.blockers ? values.blockers : undefined;
+      const issueList = values.issues ? values.issues : undefined;
+      const todoList = values.todo ? values.todo : undefined;
+      const otherList = values.others ? values.others : undefined;
+      const timesheetList = values.timesheets ? values.timesheets : undefined;
+
+      let timesheetArr: any[] = [];
+
+      // const uniqueArr = [...new Set(doneList.map(done => done.reference))];
+      if (doneList) {
+        timesheetArr = [...timesheetArr, doneList];
+      }
+      if (goingList) {
+        timesheetArr = [...timesheetArr, goingList];
+      }
+      if (blockerList) {
+        timesheetArr = [...timesheetArr, blockerList];
+      }
+      if (issueList) {
+        timesheetArr = [...timesheetArr, issueList];
+      }
+      if (todoList) {
+        timesheetArr = [...timesheetArr, todoList];
+      }
+      if (otherList) {
+        timesheetArr = [...timesheetArr, otherList];
+      }
+
+      let reportArr = Array.prototype.concat.apply([], timesheetArr);
+
+      const arrayUnique = [
+        ...new Map(
+          reportArr.map((item: any) => [item['reference'], item]),
+        ).values(),
+      ];
+      setTimesheetItems(arrayUnique);
+      console.log('arrayUnique', arrayUnique);
     };
 
     return (
@@ -583,7 +580,7 @@ const Report = memo(
                     {employeeReports.results &&
                       employeeReports.results.map(report => (
                         <div key={report.id}>
-                          {fields.map(({ key, name, ...restField }) => (
+                          {fields.map(({ key, name, ...restField }, index) => (
                             <WrapperItem key={key}>
                               <Wrapper>
                                 <FormItemStyled
@@ -666,6 +663,7 @@ const Report = memo(
                                   />
                                 </IconWrapper>
                               </Wrapper>
+
                               <Wrapper>
                                 <FormItemStyled
                                   label="Note"
@@ -710,14 +708,11 @@ const Report = memo(
                                   />
                                 </IconWrapper>
                               </Wrapper>
+
                               <Wrapper>
                                 <FormItemStyled
-                                  {...restField}
                                   label="Progress"
-                                  style={{
-                                    marginTop: isCreate || isEdit ? 40 : 0,
-                                    width: '55%',
-                                  }}
+                                  {...restField}
                                   name={[name, 'today_progress']}
                                   rules={[
                                     {
@@ -725,6 +720,10 @@ const Report = memo(
                                       message: '',
                                     },
                                   ]}
+                                  style={{
+                                    marginTop: isCreate || isEdit ? 40 : 0,
+                                    width: '40%',
+                                  }}
                                 >
                                   <StyledInputProgress
                                     {...(isView ? inputProps : {})}
@@ -737,18 +736,19 @@ const Report = memo(
                                         ? report.today_progress
                                         : ''
                                     }
-                                    // value={progressValue}
-                                    // onChange={e => handleProgressChange(e)}
                                   />
-                                  % today
                                 </FormItemStyled>
+                                <span
+                                  style={{
+                                    marginTop: isCreate || isEdit ? 44 : 0,
+                                    width: '16%',
+                                  }}
+                                >
+                                  % today
+                                </span>
 
                                 <FormItemStyled
                                   {...restField}
-                                  style={{
-                                    marginTop: isCreate || isEdit ? 40 : 0,
-                                    width: '45%',
-                                  }}
                                   name={[name, 'tomorrow_progress']}
                                   rules={[
                                     {
@@ -756,6 +756,10 @@ const Report = memo(
                                       message: '',
                                     },
                                   ]}
+                                  style={{
+                                    marginTop: isCreate || isEdit ? 40 : 0,
+                                    width: '16%',
+                                  }}
                                 >
                                   <StyledInputProgress
                                     {...(isView ? inputProps : {})}
@@ -769,8 +773,15 @@ const Report = memo(
                                         : ''
                                     }
                                   />
-                                  % tomorrow
                                 </FormItemStyled>
+                                <span
+                                  style={{
+                                    marginTop: isCreate || isEdit ? 44 : 0,
+                                    width: '28%',
+                                  }}
+                                >
+                                  % tomorrow
+                                </span>
                               </Wrapper>
                               <div style={{ textAlign: 'right' }}>
                                 {isCreate || isEdit ? (
@@ -1648,20 +1659,21 @@ const Report = memo(
                                   {...restField}
                                   style={{
                                     marginTop: isCreate || isEdit ? 40 : 0,
+                                    width: '44%',
                                   }}
                                   name={[name, 'today_hour']}
-                                  // rules={[
-                                  //   {
-                                  //     required: true,
-                                  //     message: '',
-                                  //   },
-                                  // ]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: '',
+                                    },
+                                  ]}
                                 >
                                   <StyledInputProgress
                                     {...(isView ? inputProps : {})}
                                     size="small"
                                     type="number"
-                                    max={100}
+                                    max={24}
                                     min={0}
                                     defaultValue={
                                       !isCreate && report.type === '1'
@@ -1669,27 +1681,34 @@ const Report = memo(
                                         : 0
                                     }
                                   />
-                                  h today
                                 </FormItemStyled>
-
+                                <span
+                                  style={{
+                                    marginTop: isCreate || isEdit ? 44 : 0,
+                                    width: '18%',
+                                  }}
+                                >
+                                  h today
+                                </span>
                                 <FormItemStyled
                                   {...restField}
                                   style={{
                                     marginTop: isCreate || isEdit ? 40 : 0,
+                                    width: '18%',
                                   }}
                                   name={[name, 'tomorrow_hour']}
-                                  // rules={[
-                                  //   {
-                                  //     required: true,
-                                  //     message: '',
-                                  //   },
-                                  // ]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: '',
+                                    },
+                                  ]}
                                 >
                                   <StyledInputProgress
                                     {...(isView ? inputProps : {})}
                                     size="small"
                                     type="number"
-                                    max={100}
+                                    max={24}
                                     min={0}
                                     defaultValue={
                                       !isCreate && report.type === '1'
@@ -1697,8 +1716,15 @@ const Report = memo(
                                         : 0
                                     }
                                   />
-                                  h tomorrow
                                 </FormItemStyled>
+                                <span
+                                  style={{
+                                    marginTop: isCreate || isEdit ? 44 : 0,
+                                    width: '30%',
+                                  }}
+                                >
+                                  h tomorrow
+                                </span>
                               </Wrapper>
                               <div style={{ textAlign: 'right' }}>
                                 {isCreate || isEdit ? (
@@ -1758,14 +1784,6 @@ const Wrapper = styled.div`
   height: 40px;
 `;
 
-const WrapperProgress = styled.div`
-  display: flex;
-  width: 100%;
-  align-items: center;
-  height: 40px;
-  margin-top: 36px;
-`;
-
 const WrapperReportItem = styled.div`
   width: 420px;
   border: 1px solid rgba(0, 0, 0, 0.15);
@@ -1793,12 +1811,6 @@ const ModalContentWrapper = styled.div`
 
 const StyledDatePicker = styled(DatePicker)`
   margin-bottom: 12px;
-`;
-
-const Label = styled.span`
-  display: block;
-  width: 20%;
-  margin-left: 8px;
 `;
 
 const WrapperItem = styled.div`
