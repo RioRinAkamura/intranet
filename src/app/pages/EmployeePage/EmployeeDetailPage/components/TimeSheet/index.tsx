@@ -186,16 +186,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
     form.resetFields();
   };
 
-  // const handleSubmit = () => {
-  //   form.validateFields().then(async values => {
-  //     const mapValue = {
-  //       ...values,
-  //       date: moment(values.date).format('YYYY-MM-DD'),
-  //     };
-  //     console.log('mapValue', mapValue);
-  //   });
-  // };
-
   return (
     <Wrapper>
       <Header>
@@ -240,7 +230,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
           isView={isView}
           isCreate={isCreate}
           isEdit={isEdit}
-          form={form}
+          // form={form}
           selectedTimesheet={selectedTimesheet}
           loading={loading}
         />

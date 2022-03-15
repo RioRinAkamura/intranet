@@ -52,7 +52,7 @@ enum TabKeys {
   'citizenInfo' = 'citizenInfo',
   'skills' = 'skills',
   'socialAccounts' = 'socialAccounts',
-  'timeSheet' = 'timeSheet',
+  'timesheet' = 'timesheet',
 }
 
 export function EmployeeDetailPage(props: Props) {
@@ -107,7 +107,7 @@ export function EmployeeDetailPage(props: Props) {
       history.push(`${PrivatePath.EMPLOYEES}/${id}/social-accounts`);
     } else if (key === TabKeys.projects) {
       history.push(`${PrivatePath.EMPLOYEES}/${id}/projects`);
-    } else if (key === TabKeys.timeSheet) {
+    } else if (key === TabKeys.timesheet) {
       history.push(`${PrivatePath.EMPLOYEES}/${id}/timesheets`);
     } else if (key === TabKeys.notes) {
       history.push(`${PrivatePath.EMPLOYEES}/${id}/notes`);
@@ -127,8 +127,8 @@ export function EmployeeDetailPage(props: Props) {
     if (history.location.pathname.includes('projects')) {
       return `${TabKeys.projects}`;
     }
-    if (history.location.pathname.includes('timeSheet')) {
-      return `${TabKeys.timeSheet}`;
+    if (history.location.pathname.includes('timesheet')) {
+      return `${TabKeys.timesheet}`;
     }
     if (history.location.pathname.includes('devices')) {
       return `${TabKeys.devices}`;
@@ -237,7 +237,7 @@ export function EmployeeDetailPage(props: Props) {
           <TabPane tab="Skills" key={TabKeys.skills} />
           <TabPane tab="Social Accounts" key={TabKeys.socialAccounts} />
           <TabPane tab="Projects" key={TabKeys.projects} />
-          <TabPane tab="Timesheets" key={TabKeys.timeSheet} />
+          <TabPane tab="Timesheets" key={TabKeys.timesheet} />
           <TabPane tab="Notes" key={TabKeys.notes} />
           <TabPane tab="Devices" key={TabKeys.devices} />
           <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
@@ -256,7 +256,7 @@ export function EmployeeDetailPage(props: Props) {
           <Route path={PrivatePath.EMPLOYEES_ID_PROJECTS}>
             <Projects employeeId={id} />
           </Route>
-          <Route exact path={PrivatePath.EMPLOYEES_ID_TIMESHEET}>
+          <Route path={PrivatePath.EMPLOYEES_ID_TIMESHEET}>
             <Timesheet employeeId={id} />
           </Route>
           <Route path={PrivatePath.EMPLOYEES_ID_REPORT}>
