@@ -68,7 +68,7 @@ export const useHandleEmployeeTimesheets = (): {
   ) => {
     setLoading(true);
     try {
-      // await api.hr.employee.timesheet.create(employeeId, data);
+      await api.hr.employee.timesheet.create(employeeId, data);
     } catch (e) {
       console.log(e);
     } finally {

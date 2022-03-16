@@ -1,9 +1,10 @@
 import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
-import { Button, DatePicker, Divider, Form } from 'antd';
+import { Button, DatePicker, Divider, Form, FormInstance } from 'antd';
 import config from 'config';
 import moment from 'moment';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { api } from 'utils/api';
 import { datePickerViewProps } from 'utils/types';
 import { useHandleEmployeeTimesheets } from '../../useHandleEmployeeTimesheets';
 import Blockers from './components/Blockers';
@@ -19,7 +20,7 @@ interface TimeSheetProps {
   isCreate?: boolean;
   isEdit?: boolean;
   isView?: boolean;
-  // form?: FormInstance;
+  form?: FormInstance;
   selectedTimesheet?: EmployeeTimesheet;
   loading?: boolean;
 }
@@ -32,15 +33,15 @@ const Report = memo(
     isView,
     selectedTimesheet,
     loading,
+    form,
   }: TimeSheetProps) => {
-    // const [projectList, setProjectList] = useState<any[]>([]);
+    const [projectList, setProjectList] = useState<any[]>([]);
     const [reportList, setReportList] = useState<any[]>([]);
-
-    const [form] = Form.useForm();
-
-    // const [reportItems, setReportItems] = useState<any[]>([]);
     const [timesheetItems, setTimesheetItems] = useState<any[]>([]);
-    const inputRef = useRef<any>(null);
+
+    // const [form] = Form.useForm();
+    // const [reportItems, setReportItems] = useState<any[]>([]);
+    // const inputRef = useRef<any>(null);
 
     const DATE_FORMAT = config.DATE_FORMAT;
     const disabledDate = (current: moment.Moment) => {
@@ -55,6 +56,20 @@ const Report = memo(
       console.log('approve');
     };
 
+    // const defaultReportValue = {
+    //   id: null,
+    //   employee_id: employeeId,
+    //   project_id: null,
+    //   reference: null,
+    //   date: null,
+    //   type: null,
+    //   description: null,
+    //   today_hour: 0,
+    //   tomorrow_hour: 0,
+    //   today_progress: 0,
+    //   tomorrow_progress: 0,
+    // };
+
     const handleToggle = () => {};
 
     const {
@@ -64,14 +79,15 @@ const Report = memo(
       addEmployeeReport,
     } = useHandleEmployeeTimesheets();
 
-    // const fetchEmployeeProject = useCallback(async () => {
-    //   const response = await api.hr.employee.project.list(employeeId);
-    //   setProjectList(response.results);
-    // }, [employeeId]);
+    const fetchEmployeeProject = useCallback(async () => {
+      const response = await api.hr.employee.project.list(employeeId);
+      setProjectList(response.results);
+    }, [employeeId]);
 
     useEffect(() => {
       fetchEmployeeReport(employeeId);
-    }, [fetchEmployeeReport, employeeId]);
+      fetchEmployeeProject();
+    }, [fetchEmployeeReport, employeeId, fetchEmployeeProject]);
 
     useEffect(() => {
       setReportList(employeeReports.results.map(report => report));
@@ -239,16 +255,15 @@ const Report = memo(
       for (let i = 0; i < reportArr.length; i++) {
         addEmployeeReport(employeeId, reportArr[i]);
       }
-      addEmployeeReport(employeeId, reportArr[0]);
       fetchEmployeeTimesheets(employeeId);
-      // fetchEmployeeReport(employeeId);
+      fetchEmployeeReport(employeeId);
     };
 
     const handleSyncClick = () => {
       const values = form?.getFieldsValue();
       console.log('formValue', values);
 
-      const doneList: any[] = values.done ? values.done : undefined;
+      const doneList = values.done ? values.done : undefined;
       const goingList = values.going ? values.going : undefined;
       const blockerList = values.blockers ? values.blockers : undefined;
       const issueList = values.issues ? values.issues : undefined;
@@ -376,36 +391,15 @@ const Report = memo(
       console.log('arrayUnique', arrayUnique);
 
       setTimesheetItems(arrayUnique);
+
+      // form?.setFieldsValue(values => ({
+      //   ...values,
+      //   timesheets: timesheetItems,
+      // }));
     };
 
-    useEffect(() => {
-      inputRef.current = timesheetItems.map(item => item.reference);
-    }, [inputRef, timesheetItems]);
-
     return (
-      <Form
-        name="dynamic_form_nest_item"
-        onFinish={onFinish}
-        autoComplete="off"
-        form={form}
-        // hideRequiredMark={true}
-        initialValues={
-          isCreate
-            ? // ? undefined
-              { timesheets: timesheetItems ? [''] : undefined }
-            : isView || isEdit
-            ? {
-                done: doneArr ? [''] : undefined,
-                going: goingArr ? [''] : undefined,
-                blockers: blockerArr ? [''] : undefined,
-                issues: issuesArr ? [''] : undefined,
-                todo: todoArr ? [''] : undefined,
-                others: othersArr ? [''] : undefined,
-                timesheets: timesheetArr ? [''] : undefined,
-              }
-            : undefined
-        }
-      >
+      <>
         <Form.Item name="date">
           <ModalContentWrapper>
             <div>
@@ -461,10 +455,11 @@ const Report = memo(
               <h3>DONE</h3>
               <Done
                 employeeId={employeeId}
-                form={form}
                 isCreate={isCreate}
                 isView={isView}
                 isEdit={isEdit}
+                projectList={projectList}
+                doneArr={doneArr}
               />
             </>
             <Divider />
@@ -472,10 +467,11 @@ const Report = memo(
               <h3>GOING</h3>
               <Going
                 employeeId={employeeId}
-                form={form}
                 isCreate={isCreate}
                 isView={isView}
                 isEdit={isEdit}
+                projectList={projectList}
+                goingArr={goingArr}
               />
             </>
             <Divider />
@@ -483,10 +479,11 @@ const Report = memo(
               <h3>BLOCKERS</h3>
               <Blockers
                 employeeId={employeeId}
-                form={form}
                 isCreate={isCreate}
                 isView={isView}
                 isEdit={isEdit}
+                projectList={projectList}
+                blockerArr={blockerArr}
               />
             </>
             <Divider />
@@ -494,10 +491,11 @@ const Report = memo(
               <h3>ISSUES</h3>
               <Issues
                 employeeId={employeeId}
-                form={form}
                 isCreate={isCreate}
                 isView={isView}
                 isEdit={isEdit}
+                projectList={projectList}
+                issuesArr={issuesArr}
               />
             </>
             <Divider />
@@ -505,10 +503,11 @@ const Report = memo(
               <h3>TODO</h3>
               <Todo
                 employeeId={employeeId}
-                form={form}
                 isCreate={isCreate}
                 isView={isView}
                 isEdit={isEdit}
+                projectList={projectList}
+                todoArr={todoArr}
               />
             </>
             <Divider />
@@ -516,10 +515,11 @@ const Report = memo(
               <h3>OTHERS</h3>
               <Others
                 employeeId={employeeId}
-                form={form}
                 isCreate={isCreate}
                 isView={isView}
                 isEdit={isEdit}
+                projectList={projectList}
+                othersArr={othersArr}
               />
             </>
           </WrapperReportItem>
@@ -537,16 +537,17 @@ const Report = memo(
               </div>
               <Timesheets
                 employeeId={employeeId}
-                form={form}
                 isCreate={isCreate}
                 isView={isView}
                 isEdit={isEdit}
                 timesheetItems={timesheetItems}
+                projectList={projectList}
+                timesheetArr={timesheetArr}
               />
             </>
           </WrapperReportItem>
         </ModalContentWrapper>
-      </Form>
+      </>
     );
   },
 );

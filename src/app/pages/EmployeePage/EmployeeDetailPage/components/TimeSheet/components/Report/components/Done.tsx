@@ -1,15 +1,12 @@
 import { MinusSquareFilled, QuestionCircleFilled } from '@ant-design/icons';
-import { Button, Form, FormInstance, Input, InputProps, Select } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Button, Form, Input, InputProps, Select } from 'antd';
+import React from 'react';
 import styled from 'styled-components';
-import { api } from 'utils/api';
-import { useHandleEmployeeTimesheets } from '../../../useHandleEmployeeTimesheets';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 interface ReportItemProps {
-  form: FormInstance;
   isCreate?: boolean;
   isEdit?: boolean;
   isView?: boolean;
@@ -17,6 +14,8 @@ interface ReportItemProps {
   fields?: any;
   name?: any;
   remove?: any;
+  projectList?: any[];
+  doneArr?: any[];
 }
 
 const inputProps: InputProps = {
@@ -25,7 +24,6 @@ const inputProps: InputProps = {
 };
 
 const Done = ({
-  form,
   isCreate,
   isView,
   isEdit,
@@ -33,17 +31,9 @@ const Done = ({
   fields,
   name,
   remove,
+  projectList,
+  doneArr,
 }: ReportItemProps) => {
-  const {
-    employeeReports,
-    fetchEmployeeReport,
-  } = useHandleEmployeeTimesheets();
-  const [projectList, setProjectList] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetchEmployeeReport(employeeId);
-  }, [fetchEmployeeReport, employeeId]);
-
   const defaultReportValue = {
     id: null,
     employee_id: employeeId,
@@ -58,15 +48,6 @@ const Done = ({
     tomorrow_progress: 0,
   };
 
-  const fetchEmployeeProject = useCallback(async () => {
-    const response = await api.hr.employee.project.list(employeeId);
-    setProjectList(response.results);
-  }, [employeeId]);
-
-  useEffect(() => {
-    fetchEmployeeProject();
-  }, [fetchEmployeeProject]);
-
   const handleTaskClick = taskLink => {
     const win = window.open(`${taskLink}`, '_blank');
     if (win) {
@@ -75,293 +56,281 @@ const Done = ({
   };
 
   return (
-    <Form form={form}>
-      <Form.List name="done">
-        {(fields, { add, remove }) => (
-          <>
-            {isCreate ? (
-              <div>
-                {fields.map(({ key, name, ...restField }) => (
-                  <WrapperItem key={key}>
-                    <Wrapper>
-                      <FormItemStyled
-                        label="Task"
-                        {...restField}
-                        name={[name, 'reference']}
-                        rules={[
-                          {
-                            required: true,
-                            message: '',
-                          },
-                        ]}
-                      >
-                        <Input
-                          {...(isView ? inputProps : {})}
-                          type="text"
-                          size="small"
-                          placeholder="Task link..."
-                        />
-                      </FormItemStyled>
-                      <IconWrapper>
-                        <QuestionCircleFilled
-                          style={{
-                            fontSize: 18,
-                            paddingTop: 4,
-                            margin: 6,
-                          }}
-                        />
-                      </IconWrapper>
-                    </Wrapper>
+    <Form.List name="done">
+      {(fields, { add, remove }) => (
+        <>
+          {isCreate ? (
+            <div>
+              {fields.map(({ key, name, ...restField }) => (
+                <WrapperItem key={key}>
+                  <Wrapper>
+                    <FormItemStyled
+                      label="Task"
+                      {...restField}
+                      name={[name, 'reference']}
+                      rules={[
+                        {
+                          required: true,
+                          message: '',
+                        },
+                      ]}
+                    >
+                      <Input
+                        {...(isView ? inputProps : {})}
+                        type="text"
+                        size="small"
+                        placeholder="Task link..."
+                      />
+                    </FormItemStyled>
+                    <IconWrapper>
+                      <QuestionCircleFilled
+                        style={{
+                          fontSize: 18,
+                          paddingTop: 4,
+                          margin: 6,
+                        }}
+                      />
+                    </IconWrapper>
+                  </Wrapper>
 
-                    <Wrapper>
-                      <FormItemStyled
-                        label="Project"
-                        {...restField}
-                        name={[name, 'project_id']}
-                      >
-                        {isView ? (
-                          <Input {...inputProps} />
-                        ) : (
-                          <StyledSelect
-                            size="small"
-                            placeholder="Select project"
-                          >
-                            {projectList &&
-                              projectList.map(project => (
-                                <Option
-                                  key={project.project.id}
-                                  value={project.project.id}
-                                >
-                                  {project.project.name}
-                                </Option>
-                              ))}
-                          </StyledSelect>
-                        )}
-                      </FormItemStyled>
-                      <IconWrapper>
-                        <QuestionCircleFilled
-                          style={{
-                            fontSize: 18,
-                            paddingTop: 4,
-                            margin: 6,
-                          }}
-                        />
-                      </IconWrapper>
-                    </Wrapper>
-                    <Wrapper>
-                      <FormItemStyled
-                        label="Note"
-                        {...restField}
-                        name={[name, 'description']}
-                        rules={[
-                          {
-                            required: true,
-                            message: '',
-                          },
-                        ]}
-                      >
-                        {isView ? (
-                          <Input {...inputProps} />
-                        ) : (
-                          <TextArea
-                            size="small"
-                            rows={3}
-                            placeholder="Description..."
-                          />
-                        )}
-                      </FormItemStyled>
-                      <IconWrapper>
-                        <QuestionCircleFilled
-                          style={{
-                            fontSize: 18,
-                            margin: 6,
-                          }}
-                        />
-                      </IconWrapper>
-                    </Wrapper>
-                    <div style={{ textAlign: 'right' }}>
-                      {isCreate || isEdit ? (
-                        <IconWrapper>
-                          <MinusSquareFilled
-                            style={{
-                              color: 'red',
-                              paddingTop: 30,
-                              fontSize: 24,
-                              textAlign: 'right',
-                            }}
-                            onClick={() => remove(name)}
-                          />
-                        </IconWrapper>
+                  <Wrapper>
+                    <FormItemStyled
+                      label="Project"
+                      {...restField}
+                      name={[name, 'project_id']}
+                    >
+                      {isView ? (
+                        <Input {...inputProps} />
                       ) : (
-                        ''
+                        <StyledSelect size="small" placeholder="Select project">
+                          {projectList &&
+                            projectList.map(project => (
+                              <Option
+                                key={project.project.id}
+                                value={project.project.id}
+                              >
+                                {project.project.name}
+                              </Option>
+                            ))}
+                        </StyledSelect>
                       )}
-                    </div>
-                  </WrapperItem>
-                ))}
-              </div>
-            ) : (
-              <>
-                {employeeReports.results &&
-                  employeeReports.results.map(report => (
-                    <div>
-                      {fields.map(({ key, name, ...restField }) => (
-                        <WrapperItem key={key}>
-                          <Wrapper>
-                            <FormItemStyled
-                              label="Task"
-                              {...restField}
-                              name={[name, 'reference']}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: '',
-                                },
-                              ]}
-                            >
+                    </FormItemStyled>
+                    <IconWrapper>
+                      <QuestionCircleFilled
+                        style={{
+                          fontSize: 18,
+                          paddingTop: 4,
+                          margin: 6,
+                        }}
+                      />
+                    </IconWrapper>
+                  </Wrapper>
+                  <Wrapper>
+                    <FormItemStyled
+                      label="Note"
+                      {...restField}
+                      name={[name, 'description']}
+                      rules={[
+                        {
+                          required: true,
+                          message: '',
+                        },
+                      ]}
+                    >
+                      {isView ? (
+                        <Input {...inputProps} />
+                      ) : (
+                        <TextArea
+                          size="small"
+                          rows={3}
+                          placeholder="Description..."
+                        />
+                      )}
+                    </FormItemStyled>
+                    <IconWrapper>
+                      <QuestionCircleFilled
+                        style={{
+                          fontSize: 18,
+                          margin: 6,
+                        }}
+                      />
+                    </IconWrapper>
+                  </Wrapper>
+                  <div style={{ textAlign: 'right' }}>
+                    {isCreate || isEdit ? (
+                      <IconWrapper>
+                        <MinusSquareFilled
+                          style={{
+                            color: 'red',
+                            paddingTop: 30,
+                            fontSize: 24,
+                            textAlign: 'right',
+                          }}
+                          onClick={() => remove(name)}
+                        />
+                      </IconWrapper>
+                    ) : (
+                      ''
+                    )}
+                  </div>
+                </WrapperItem>
+              ))}
+            </div>
+          ) : (
+            <>
+              {doneArr &&
+                doneArr.map(report => (
+                  <div>
+                    {fields.map(({ key, name, ...restField }) => (
+                      <WrapperItem key={key}>
+                        <Wrapper>
+                          <FormItemStyled
+                            label="Task"
+                            {...restField}
+                            name={[name, 'reference']}
+                            rules={[
+                              {
+                                required: true,
+                                message: '',
+                              },
+                            ]}
+                          >
+                            <Input
+                              {...(isView ? inputProps : {})}
+                              type="text"
+                              size="small"
+                              placeholder="Task link..."
+                              defaultValue={!isCreate ? report.reference : ''}
+                            />
+                          </FormItemStyled>
+                          <IconWrapper>
+                            <QuestionCircleFilled
+                              style={{
+                                fontSize: 18,
+                                paddingTop: 4,
+                                margin: 6,
+                              }}
+                              onClick={() => handleTaskClick(report.reference)}
+                            />
+                          </IconWrapper>
+                        </Wrapper>
+
+                        <Wrapper>
+                          <FormItemStyled
+                            label="Project"
+                            {...restField}
+                            name={[name, 'project_id']}
+                          >
+                            {isView ? (
                               <Input
-                                {...(isView ? inputProps : {})}
-                                type="text"
-                                size="small"
-                                placeholder="Task link..."
+                                {...inputProps}
                                 defaultValue={
-                                  !isCreate && report.type === '2'
-                                    ? report.reference
+                                  report.type === '2'
+                                    ? report?.project?.name
                                     : ''
                                 }
                               />
-                            </FormItemStyled>
-                            <IconWrapper>
-                              <QuestionCircleFilled
-                                style={{
-                                  fontSize: 18,
-                                  paddingTop: 4,
-                                  margin: 6,
-                                }}
-                              />
-                            </IconWrapper>
-                          </Wrapper>
-
-                          <Wrapper>
-                            <FormItemStyled
-                              label="Project"
-                              {...restField}
-                              name={[name, 'project_id']}
-                            >
-                              {isView ? (
-                                <Input
-                                  {...inputProps}
-                                  defaultValue={
-                                    report.type === '2'
-                                      ? report?.project?.name
-                                      : ''
-                                  }
-                                />
-                              ) : (
-                                <StyledSelect
-                                  size="small"
-                                  placeholder="Select project"
-                                >
-                                  {projectList &&
-                                    projectList.map(project => (
-                                      <Option
-                                        key={project.project.id}
-                                        value={project.project.id}
-                                      >
-                                        {project.project.name}
-                                      </Option>
-                                    ))}
-                                </StyledSelect>
-                              )}
-                            </FormItemStyled>
-                            <IconWrapper>
-                              <QuestionCircleFilled
-                                style={{
-                                  fontSize: 18,
-                                  paddingTop: 4,
-                                  margin: 6,
-                                }}
-                              />
-                            </IconWrapper>
-                          </Wrapper>
-                          <Wrapper>
-                            <FormItemStyled
-                              label="Note"
-                              {...restField}
-                              name={[name, 'description']}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: '',
-                                },
-                              ]}
-                            >
-                              {isView ? (
-                                <Input
-                                  {...inputProps}
-                                  defaultValue={
-                                    report.type === '2'
-                                      ? report.description
-                                      : ''
-                                  }
-                                />
-                              ) : (
-                                <TextArea
-                                  size="small"
-                                  rows={3}
-                                  placeholder="Description..."
-                                  defaultValue={
-                                    !isCreate && report.type === '2'
-                                      ? report.description
-                                      : ''
-                                  }
-                                />
-                              )}
-                            </FormItemStyled>
-                            <IconWrapper>
-                              <QuestionCircleFilled
-                                style={{
-                                  fontSize: 18,
-                                  margin: 6,
-                                }}
-                              />
-                            </IconWrapper>
-                          </Wrapper>
-                          <div style={{ textAlign: 'right' }}>
-                            {isCreate || isEdit ? (
-                              <IconWrapper>
-                                <MinusSquareFilled
-                                  style={{
-                                    color: 'red',
-                                    paddingTop: 30,
-                                    fontSize: 24,
-                                    textAlign: 'right',
-                                  }}
-                                  onClick={() => remove(name)}
-                                />
-                              </IconWrapper>
                             ) : (
-                              ''
+                              <StyledSelect
+                                size="small"
+                                placeholder="Select project"
+                              >
+                                {projectList &&
+                                  projectList.map(project => (
+                                    <Option
+                                      key={project.project.id}
+                                      value={project.project.id}
+                                    >
+                                      {project.project.name}
+                                    </Option>
+                                  ))}
+                              </StyledSelect>
                             )}
-                          </div>
-                        </WrapperItem>
-                      ))}
-                    </div>
-                  ))}{' '}
-              </>
+                          </FormItemStyled>
+                          <IconWrapper>
+                            <QuestionCircleFilled
+                              style={{
+                                fontSize: 18,
+                                paddingTop: 4,
+                                margin: 6,
+                              }}
+                            />
+                          </IconWrapper>
+                        </Wrapper>
+                        <Wrapper>
+                          <FormItemStyled
+                            label="Note"
+                            {...restField}
+                            name={[name, 'description']}
+                            rules={[
+                              {
+                                required: true,
+                                message: '',
+                              },
+                            ]}
+                          >
+                            {isView ? (
+                              <Input
+                                {...inputProps}
+                                defaultValue={
+                                  report.type === '2' ? report.description : ''
+                                }
+                              />
+                            ) : (
+                              <TextArea
+                                size="small"
+                                rows={3}
+                                placeholder="Description..."
+                                defaultValue={
+                                  !isCreate ? report.description : ''
+                                }
+                              />
+                            )}
+                          </FormItemStyled>
+                          <IconWrapper>
+                            <QuestionCircleFilled
+                              style={{
+                                fontSize: 18,
+                                margin: 6,
+                              }}
+                            />
+                          </IconWrapper>
+                        </Wrapper>
+                        <div style={{ textAlign: 'right' }}>
+                          {isCreate || isEdit ? (
+                            <IconWrapper>
+                              <MinusSquareFilled
+                                style={{
+                                  color: 'red',
+                                  paddingTop: 30,
+                                  fontSize: 24,
+                                  textAlign: 'right',
+                                }}
+                                onClick={() => remove(name)}
+                              />
+                            </IconWrapper>
+                          ) : (
+                            ''
+                          )}
+                        </div>
+                      </WrapperItem>
+                    ))}
+                  </div>
+                ))}{' '}
+            </>
+          )}
+          <div style={{ textAlign: 'right' }}>
+            {isCreate || isEdit ? (
+              <Button type="primary" onClick={() => add(defaultReportValue)}>
+                + Add
+              </Button>
+            ) : (
+              ''
             )}
-            <div style={{ textAlign: 'right' }}>
-              {isCreate || isEdit ? (
-                <Button type="primary" onClick={() => add(defaultReportValue)}>
-                  + Add
-                </Button>
-              ) : (
-                ''
-              )}
-            </div>
-          </>
-        )}
-      </Form.List>
-    </Form>
+          </div>
+        </>
+      )}
+    </Form.List>
   );
 };
 
