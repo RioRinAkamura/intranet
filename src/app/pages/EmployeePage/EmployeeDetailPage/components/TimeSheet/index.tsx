@@ -5,11 +5,8 @@ import {
   MoreOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
-import {
-  EmployeeTimesheet,
-  ReportQueryParams,
-} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
-import { Button, Form, Popover, Table, Tooltip } from 'antd';
+import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
+import { Button, DatePicker, Form, Popover, Table, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';
 import { IconButton } from 'app/components/Button';
@@ -19,12 +16,12 @@ import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { UsersMessages } from 'app/pages/EmployeePage/EmployeeListPage/messages';
 import config from 'config';
 import moment from 'moment';
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { Wrapper } from 'styles/StyledCommon';
-import { api } from 'utils/api';
+import { datePickerViewProps } from 'utils/types';
 import Report from './components/Report';
 import { useHandleEmployeeTimesheets } from './useHandleEmployeeTimesheets';
 
@@ -39,10 +36,12 @@ export const Timesheet = memo((props: TimesheetProps) => {
   const [isView, setIsView] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<any>();
+  const [timesheetDate, setTimesheetDate] = useState<string>('');
+  const [reportList, setReportList] = useState<any[]>([]);
+
   const { notify } = useNotify();
 
   const { id } = useParams<Record<string, string>>();
@@ -59,7 +58,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
     employeeTimesheets,
     employeeReports,
     addEmployeeReport,
-    addEmployeeTimesheet,
     fetchEmployeeTimesheets,
     loading,
     deleteEmployeeTimesheet,
@@ -87,6 +85,8 @@ export const Timesheet = memo((props: TimesheetProps) => {
               setIsView(true);
               // history.push(`${PrivatePath.EMPLOYEES}/${id}/timesheets/${text}`);
               setSelectedTimesheet(record);
+              setTimesheetDate(record.date);
+              console.log('selectedTimesheet', selectedTimesheet);
             }}
           />
         </Tooltip>
@@ -98,6 +98,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
             onClick={() => {
               setIsEdit(true);
               setSelectedTimesheet(record);
+              setTimesheetDate(record.date);
             }}
           />
         </Tooltip>
@@ -199,24 +200,16 @@ export const Timesheet = memo((props: TimesheetProps) => {
     setIsView(false);
     setIsCreate(false);
     setIsEdit(false);
-    setIsOpen(false);
   };
 
-  const handleToggle = () => {};
-
-  const [projectList, setProjectList] = useState<any[]>([]);
-  const [reportList, setReportList] = useState<any[]>([]);
-  const [timesheetItems, setTimesheetItems] = useState<any[]>([]);
-
-  const fetchEmployeeProject = useCallback(async () => {
-    const response = await api.hr.employee.project.list(employeeId);
-    setProjectList(response.results);
-  }, [employeeId]);
+  const handleToggle = () => {
+    setIsEdit(!isEdit);
+    setIsView(!isView);
+  };
 
   useEffect(() => {
     fetchEmployeeReport(employeeId);
-    fetchEmployeeProject();
-  }, [fetchEmployeeReport, employeeId, fetchEmployeeProject]);
+  }, [fetchEmployeeReport, employeeId]);
 
   useEffect(() => {
     setReportList(employeeReports.results.map(report => report));
@@ -226,6 +219,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
 
   const handleDateChange = date => {
     setNewDate(moment(date).format(DATE_FORMAT));
+    console.log('newDate', newDate);
   };
 
   const doneArr = reportList.filter(report => report.type === '2');
@@ -379,7 +373,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
 
     let reportArr = Array.prototype.concat.apply([], newDataArr);
     console.log('reportArr', reportArr);
-    // addEmployeeReport(employeeId, reportArr as ReportQueryParams);
 
     try {
       for (let i = 0; i < reportArr.length; i++) {
@@ -401,12 +394,17 @@ export const Timesheet = memo((props: TimesheetProps) => {
       });
     }
 
-    // addEmployeeReport(employeeId, reportArr as ReportQueryParams);
-
     setIsCreate(false);
     form.resetFields();
     fetchEmployeeTimesheets(employeeId);
     fetchEmployeeReport(employeeId);
+  };
+
+  const handleDecline = () => {
+    console.log('decline');
+  };
+  const handleApprove = () => {
+    console.log('approve');
   };
 
   return (
@@ -456,7 +454,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
           initialValues={
             isCreate
               ? {
-                  timesheets: timesheetItems ? [''] : undefined,
+                  timesheets: [{}],
                 }
               : isView || isEdit
               ? {
@@ -471,6 +469,55 @@ export const Timesheet = memo((props: TimesheetProps) => {
               : undefined
           }
         >
+          <Form.Item name="date">
+            <ModalContentWrapper>
+              <div>
+                Date:
+                <StyledDatePicker
+                  {...(isView ? datePickerViewProps : {})}
+                  format={DATE_FORMAT}
+                  disabledDate={disabledDate}
+                  defaultValue={
+                    isCreate
+                      ? moment(today, DATE_FORMAT)
+                      : moment(selectedTimesheet?.date)
+                  }
+                  onChange={date => handleDateChange(date)}
+                  style={{ marginLeft: 12 }}
+                  allowClear={false}
+                />
+              </div>
+              <div>
+                {!isCreate && (
+                  <Button
+                    type="default"
+                    style={{ marginRight: '12px' }}
+                    onClick={handleToggle}
+                  >
+                    {isView ? 'Edit' : 'Preview'}
+                  </Button>
+                )}
+                <ButtonStyled type="submit">Submit</ButtonStyled>
+                <Button
+                  disabled={isCreate}
+                  danger
+                  type="primary"
+                  style={{ margin: '0px 12px' }}
+                  onClick={handleDecline}
+                >
+                  Decline
+                </Button>
+                <Button
+                  disabled={isCreate}
+                  type="primary"
+                  onClick={handleApprove}
+                >
+                  Approve
+                </Button>
+              </div>
+            </ModalContentWrapper>
+          </Form.Item>
+
           <Report
             employeeId={id}
             isView={isView}
@@ -479,6 +526,8 @@ export const Timesheet = memo((props: TimesheetProps) => {
             form={form}
             selectedTimesheet={selectedTimesheet}
             loading={loading}
+            timesheetDate={timesheetDate}
+            newDate={newDate}
           />
         </Form>
       </DialogModal>
@@ -501,5 +550,27 @@ const Header = styled.div`
 const StyledButton = styled(Button)`
   svg {
     vertical-align: baseline;
+  }
+`;
+
+const ModalContentWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const StyledDatePicker = styled(DatePicker)`
+  margin-bottom: 12px;
+`;
+
+const ButtonStyled = styled.button`
+  background-color: #1c91ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  height: 72%;
+  width: 80px;
+  cursor: pointer;
+  :hover {
+    background-color: #188fffcc;
   }
 `;

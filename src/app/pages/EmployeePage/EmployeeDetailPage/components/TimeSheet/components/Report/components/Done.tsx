@@ -16,6 +16,7 @@ interface ReportItemProps {
   remove?: any;
   projectList?: any[];
   doneArr?: any[];
+  timesheetDate?: any;
 }
 
 const inputProps: InputProps = {
@@ -33,6 +34,7 @@ const Done = ({
   remove,
   projectList,
   doneArr,
+  timesheetDate,
 }: ReportItemProps) => {
   const defaultReportValue = {
     id: null,
@@ -200,7 +202,7 @@ const Done = ({
                               type="text"
                               size="small"
                               placeholder="Task link..."
-                              defaultValue={!isCreate ? report.reference : ''}
+                              defaultValue={report.reference}
                             />
                           </FormItemStyled>
                           <IconWrapper>

@@ -2,6 +2,7 @@ import { MinusSquareFilled, QuestionCircleFilled } from '@ant-design/icons';
 import { Button, Form, Input, InputProps, Select } from 'antd';
 import React, { useRef } from 'react';
 import styled from 'styled-components';
+import { string } from 'yup';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -17,6 +18,7 @@ interface ReportItemProps {
   timesheetItems?: any;
   projectList?: any[];
   timesheetArr?: any[];
+  timesheetDate?: string;
 }
 
 const inputProps: InputProps = {
@@ -35,6 +37,7 @@ const Timesheets = ({
   timesheetItems,
   projectList,
   timesheetArr,
+  timesheetDate,
 }: ReportItemProps) => {
   const inputRef = useRef<any>(null);
 
@@ -183,7 +186,7 @@ const Timesheets = ({
                           </FormItemStyled>
                           <span
                             style={{
-                              marginTop: isCreate || isEdit ? 44 : 0,
+                              marginTop: isCreate || isEdit ? 44 : 4,
                               width: '18%',
                             }}
                           >
@@ -212,7 +215,7 @@ const Timesheets = ({
                           </FormItemStyled>
                           <span
                             style={{
-                              marginTop: isCreate || isEdit ? 44 : 0,
+                              marginTop: isCreate || isEdit ? 44 : 4,
                               width: '30%',
                             }}
                           >
@@ -399,7 +402,7 @@ const Timesheets = ({
                           </FormItemStyled>
                           <span
                             style={{
-                              marginTop: isCreate || isEdit ? 44 : 0,
+                              marginTop: isCreate || isEdit ? 44 : 4,
                               width: '18%',
                             }}
                           >
@@ -432,7 +435,7 @@ const Timesheets = ({
                           </FormItemStyled>
                           <span
                             style={{
-                              marginTop: isCreate || isEdit ? 44 : 0,
+                              marginTop: isCreate || isEdit ? 44 : 4,
                               width: '30%',
                             }}
                           >

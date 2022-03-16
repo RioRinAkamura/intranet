@@ -16,6 +16,7 @@ interface ReportItemProps {
   remove?: any;
   projectList?: any[];
   blockerArr?: any[];
+  timesheetDate?: string;
 }
 
 const inputProps: InputProps = {
@@ -33,6 +34,7 @@ const Blockers = ({
   remove,
   projectList,
   blockerArr,
+  timesheetDate,
 }: ReportItemProps) => {
   const defaultReportValue = {
     id: null,

@@ -16,6 +16,7 @@ interface ReportItemProps {
   remove?: any;
   projectList?: any[];
   issuesArr?: any[];
+  timesheetDate?: string;
 }
 
 const inputProps: InputProps = {
@@ -33,6 +34,7 @@ const Issues = ({
   remove,
   projectList,
   issuesArr,
+  timesheetDate,
 }: ReportItemProps) => {
   const defaultReportValue = {
     id: null,

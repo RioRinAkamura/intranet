@@ -16,6 +16,7 @@ interface ReportItemProps {
   remove?: any;
   projectList: any[];
   goingArr?: any[];
+  timesheetDate?: string;
 }
 
 const inputProps: InputProps = {
@@ -33,6 +34,7 @@ const Going = ({
   remove,
   projectList,
   goingArr,
+  timesheetDate,
 }: ReportItemProps) => {
   const defaultReportValue = {
     id: null,
@@ -396,7 +398,7 @@ const Going = ({
                           </FormItemStyled>
                           <span
                             style={{
-                              marginTop: isCreate || isEdit ? 44 : 0,
+                              marginTop: isCreate || isEdit ? 44 : 4,
                               width: '16%',
                             }}
                           >
@@ -430,7 +432,7 @@ const Going = ({
                           </FormItemStyled>
                           <span
                             style={{
-                              marginTop: isCreate || isEdit ? 44 : 0,
+                              marginTop: isCreate || isEdit ? 44 : 4,
                               width: '28%',
                             }}
                           >
