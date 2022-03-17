@@ -1,5 +1,6 @@
 import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
-import { Button, Divider, FormInstance } from 'antd';
+import { Divider, FormInstance } from 'antd';
+import Button from 'app/components/Button';
 import config from 'config';
 import moment from 'moment';
 import React, { memo, useCallback, useEffect, useState } from 'react';
@@ -22,7 +23,6 @@ interface TimeSheetProps {
   form?: FormInstance;
   selectedTimesheet?: EmployeeTimesheet;
   loading?: boolean;
-  timesheetDate?: string;
   newDate?: any;
 }
 
@@ -32,22 +32,15 @@ const Report = memo(
     isCreate,
     isEdit,
     isView,
-    selectedTimesheet,
-    loading,
     form,
-    timesheetDate,
     newDate,
+    loading,
   }: TimeSheetProps) => {
     const [projectList, setProjectList] = useState<any[]>([]);
-    const [reportList, setReportList] = useState<any[]>([]);
-    const [timesheetItems, setTimesheetItems] = useState<any[]>([]);
 
     const DATE_FORMAT = config.DATE_FORMAT;
 
-    const {
-      employeeReports,
-      fetchEmployeeReport,
-    } = useHandleEmployeeTimesheets();
+    const { fetchEmployeeReport } = useHandleEmployeeTimesheets();
 
     const fetchEmployeeProject = useCallback(async () => {
       const response = await api.hr.employee.project.list(employeeId);
@@ -59,18 +52,6 @@ const Report = memo(
       fetchEmployeeProject();
     }, [fetchEmployeeReport, employeeId, fetchEmployeeProject]);
 
-    useEffect(() => {
-      setReportList(employeeReports.results.map(report => report));
-    }, [employeeReports]);
-
-    const doneArr = reportList.filter(report => report.type === '2');
-    const goingArr = reportList.filter(report => report.type === '3');
-    const blockerArr = reportList.filter(report => report.type === '5');
-    const issuesArr = reportList.filter(report => report.type === '4');
-    const todoArr = reportList.filter(report => report.type === '6');
-    const othersArr = reportList.filter(report => report.type === '7');
-    const timesheetArr = reportList.filter(report => report.type === '1');
-
     const handleSyncClick = () => {
       const values = form?.getFieldsValue();
       console.log('formValue', values);
@@ -81,6 +62,7 @@ const Report = memo(
       const issueList = values.issues ? values.issues : undefined;
       const todoList = values.todo ? values.todo : undefined;
       const otherList = values.others ? values.others : undefined;
+      const timesheetList = values.timesheets ? values.timesheets : undefined;
 
       let timesheetArr: any[] = [];
 
@@ -192,6 +174,24 @@ const Report = memo(
         });
         timesheetArr = [...timesheetArr, otherData];
       }
+      if (timesheetList) {
+        const timesheetData = timesheetList.map(value => {
+          return {
+            id: value.id ? value.id : null,
+            employee_id: employeeId,
+            project_id: value.project_id ? value.project_id : null,
+            reference: value.reference,
+            date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+            type: '1',
+            description: value.description,
+            today_hour: 0,
+            tomorrow_hour: 0,
+            today_progress: 0,
+            tomorrow_progress: 0,
+          };
+        });
+        timesheetArr = [...timesheetArr, timesheetData];
+      }
 
       let reportArr = Array.prototype.concat.apply([], timesheetArr);
 
@@ -202,12 +202,9 @@ const Report = memo(
       ];
       console.log('arrayUnique', arrayUnique);
 
-      setTimesheetItems(arrayUnique);
-
-      // form?.setFieldsValue(values => ({
-      //   ...values,
-      //   timesheets: timesheetItems,
-      // }));
+      form?.setFieldsValue({
+        timesheets: arrayUnique,
+      });
     };
 
     return (
@@ -223,8 +220,6 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
-                doneArr={doneArr}
-                timesheetDate={timesheetDate}
               />
             </>
             <Divider />
@@ -236,8 +231,6 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
-                goingArr={goingArr}
-                timesheetDate={timesheetDate}
               />
             </>
             <Divider />
@@ -249,8 +242,6 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
-                blockerArr={blockerArr}
-                timesheetDate={timesheetDate}
               />
             </>
             <Divider />
@@ -262,8 +253,6 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
-                issuesArr={issuesArr}
-                timesheetDate={timesheetDate}
               />
             </>
             <Divider />
@@ -275,8 +264,6 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
-                todoArr={todoArr}
-                timesheetDate={timesheetDate}
               />
             </>
             <Divider />
@@ -288,8 +275,6 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
-                othersArr={othersArr}
-                timesheetDate={timesheetDate}
               />
             </>
           </WrapperReportItem>
@@ -298,6 +283,7 @@ const Report = memo(
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <h3>Timesheet</h3>
                 <Button
+                  size="normal"
                   type="primary"
                   style={{ marginBottom: 12 }}
                   onClick={handleSyncClick}
@@ -310,10 +296,7 @@ const Report = memo(
                 isCreate={isCreate}
                 isView={isView}
                 isEdit={isEdit}
-                timesheetItems={timesheetItems}
                 projectList={projectList}
-                timesheetArr={timesheetArr}
-                timesheetDate={timesheetDate}
               />
             </>
           </WrapperReportItem>

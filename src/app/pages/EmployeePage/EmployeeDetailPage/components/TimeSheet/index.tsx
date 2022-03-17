@@ -5,8 +5,11 @@ import {
   MoreOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
-import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
-import { Button, DatePicker, Form, Popover, Table, Tooltip } from 'antd';
+import {
+  EmployeeTimesheet,
+  EmployeeTimesheetQueryParams,
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
+import { DatePicker, Form, Popover, Table, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';
 import { IconButton } from 'app/components/Button';
@@ -22,6 +25,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { Wrapper } from 'styles/StyledCommon';
 import { datePickerViewProps } from 'utils/types';
+import Button from '../../../../../components/Button';
 import Report from './components/Report';
 import { useHandleEmployeeTimesheets } from './useHandleEmployeeTimesheets';
 
@@ -39,7 +43,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
 
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<any>();
-  const [timesheetDate, setTimesheetDate] = useState<string>('');
   const [reportList, setReportList] = useState<any[]>([]);
 
   const { notify } = useNotify();
@@ -56,6 +59,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
 
   const {
     employeeTimesheets,
+    editEmployeeTimesheet,
     employeeReports,
     addEmployeeReport,
     fetchEmployeeTimesheets,
@@ -82,11 +86,10 @@ export const Timesheet = memo((props: TimesheetProps) => {
             size="small"
             icon={<EyeOutlined />}
             onClick={() => {
-              setIsView(true);
-              // history.push(`${PrivatePath.EMPLOYEES}/${id}/timesheets/${text}`);
               setSelectedTimesheet(record);
-              setTimesheetDate(record.date);
-              console.log('selectedTimesheet', selectedTimesheet);
+              setIsView(true);
+              getReportByDate(record);
+              console.log('SelectedTimesheet', selectedTimesheet);
             }}
           />
         </Tooltip>
@@ -96,9 +99,9 @@ export const Timesheet = memo((props: TimesheetProps) => {
             icon={<EditOutlined />}
             size="small"
             onClick={() => {
-              setIsEdit(true);
               setSelectedTimesheet(record);
-              setTimesheetDate(record.date);
+              setIsEdit(true);
+              getReportByDate(record);
             }}
           />
         </Tooltip>
@@ -129,7 +132,12 @@ export const Timesheet = memo((props: TimesheetProps) => {
       title: 'Work status',
       dataIndex: 'status',
       width: 130,
-      render: text => (text === '1' ? 'ON_TRACK' : 'OFF_TRACK'),
+      render: text =>
+        text === '1' ? (
+          'ON_TRACK'
+        ) : (
+          <span style={{ color: 'red' }}>OFF_TRACK</span>
+        ),
     },
     {
       title: 'Total hours',
@@ -148,6 +156,19 @@ export const Timesheet = memo((props: TimesheetProps) => {
       dataIndex: 'approver',
       width: 130,
       render: text => (text ? text.name : ''),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      width: 130,
+      render: text =>
+        text === '1 '
+          ? 'Submitted'
+          : text === '2'
+          ? 'Declined'
+          : text === '3'
+          ? 'Approved'
+          : '',
     },
     {
       title: <ActionIcon />,
@@ -219,7 +240,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
 
   const handleDateChange = date => {
     setNewDate(moment(date).format(DATE_FORMAT));
-    console.log('newDate', newDate);
   };
 
   const doneArr = reportList.filter(report => report.type === '2');
@@ -229,6 +249,61 @@ export const Timesheet = memo((props: TimesheetProps) => {
   const todoArr = reportList.filter(report => report.type === '6');
   const othersArr = reportList.filter(report => report.type === '7');
   const timesheetArr = reportList.filter(report => report.type === '1');
+
+  const [doneDateSelect, setDoneDateSelect] = useState<any[]>([]);
+  const [goingDateSelect, setGoingDateSelect] = useState<any[]>([]);
+  const [blockerDateSelect, setBlockerDateSelect] = useState<any[]>([]);
+  const [issuesDateSelect, setIssuesDateSelect] = useState<any[]>([]);
+  const [todoDateSelect, setTodoDateSelect] = useState<any[]>([]);
+  const [otherDateSelect, setOtherDateSelect] = useState<any[]>([]);
+  const [timesheetDateSelect, setTimesheetDateSelect] = useState<any[]>([]);
+
+  const getReportByDate = record => {
+    const doneByDate = doneArr.filter(
+      report => report?.timesheet?.date === record?.date,
+    );
+    setDoneDateSelect(doneByDate);
+
+    const goingByDate = goingArr.filter(
+      report => report?.timesheet?.date === record?.date,
+    );
+    setGoingDateSelect(goingByDate);
+
+    const blockerByDate = blockerArr.filter(
+      report => report?.timesheet?.date === record?.date,
+    );
+    setBlockerDateSelect(blockerByDate);
+
+    const issuesByDate = issuesArr.filter(
+      report => report?.timesheet?.date === record?.date,
+    );
+    setIssuesDateSelect(issuesByDate);
+
+    const todoByDate = todoArr.filter(
+      report => report?.timesheet?.date === record?.date,
+    );
+    setTodoDateSelect(todoByDate);
+
+    const otherByDate = othersArr.filter(
+      report => report?.timesheet?.date === record?.date,
+    );
+    setOtherDateSelect(otherByDate);
+
+    const timesheetByDate = timesheetArr.filter(
+      report => report?.timesheet?.date === record?.date,
+    );
+    setTimesheetDateSelect(timesheetByDate);
+  };
+
+  const initialValuesForm = {
+    done: isCreate ? undefined : doneDateSelect,
+    going: isCreate ? undefined : goingDateSelect,
+    blockers: isCreate ? undefined : blockerDateSelect,
+    issues: isCreate ? undefined : issuesDateSelect,
+    todo: isCreate ? undefined : todoDateSelect,
+    others: isCreate ? undefined : otherDateSelect,
+    timesheets: isCreate ? undefined : timesheetDateSelect,
+  };
 
   const onFinish = async values => {
     console.log('values', values);
@@ -377,34 +452,69 @@ export const Timesheet = memo((props: TimesheetProps) => {
     try {
       for (let i = 0; i < reportArr.length; i++) {
         await addEmployeeReport(employeeId, reportArr[i]);
-        // await addEmployeeTimesheet(employeeId, reportArr[i]);
       }
+      // addEmployeeReport(employeeId, reportArr as ReportQueryParams);
       fetchEmployeeTimesheets(employeeId);
       notify({
         type: ToastMessageType.Info,
         duration: 2,
-        message: 'Create Success',
+        message: isCreate ? 'Create Success' : isEdit ? 'Updated' : '',
       });
     } catch (e) {
       console.log(e);
       notify({
         type: ToastMessageType.Error,
         duration: 2,
-        message: 'Create Failed',
+        message: 'Failed',
       });
     }
 
     setIsCreate(false);
+    setIsEdit(false);
+    setIsView(false);
     form.resetFields();
     fetchEmployeeTimesheets(employeeId);
     fetchEmployeeReport(employeeId);
   };
 
-  const handleDecline = () => {
-    console.log('decline');
+  const handleDecline = async () => {
+    const declinedTimesheet = { ...selectedTimesheet, status: '2' };
+    try {
+      await editEmployeeTimesheet(employeeId, declinedTimesheet);
+      fetchEmployeeTimesheets(employeeId);
+      notify({
+        type: ToastMessageType.Info,
+        duration: 2,
+        message: 'Declined',
+      });
+    } catch (e) {
+      console.log(e);
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: 'Failed',
+      });
+    }
   };
-  const handleApprove = () => {
-    console.log('approve');
+
+  const handleApprove = async () => {
+    const approvedTimesheet = { ...selectedTimesheet, status: '3' };
+    try {
+      await editEmployeeTimesheet(employeeId, approvedTimesheet);
+      fetchEmployeeTimesheets(employeeId);
+      notify({
+        type: ToastMessageType.Info,
+        duration: 2,
+        message: 'Approved',
+      });
+    } catch (e) {
+      console.log(e);
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: 'Failed',
+      });
+    }
   };
 
   return (
@@ -415,7 +525,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
           icon={<PlusCircleOutlined />}
           onClick={() => {
             setIsCreate(true);
-            // history.push(`${PrivatePath.EMPLOYEES}/${id}/timesheets/create`);
             form.resetFields();
           }}
           size="middle"
@@ -451,23 +560,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
           form={form}
           onFinish={onFinish}
           autoComplete="off"
-          initialValues={
-            isCreate
-              ? {
-                  timesheets: [{}],
-                }
-              : isView || isEdit
-              ? {
-                  done: doneArr ? [''] : undefined,
-                  going: goingArr ? [''] : undefined,
-                  blockers: blockerArr ? [''] : undefined,
-                  issues: issuesArr ? [''] : undefined,
-                  todo: todoArr ? [''] : undefined,
-                  others: othersArr ? [''] : undefined,
-                  timesheets: timesheetArr ? [''] : undefined,
-                }
-              : undefined
-          }
+          initialValues={initialValuesForm}
         >
           <Form.Item name="date">
             <ModalContentWrapper>
@@ -487,9 +580,10 @@ export const Timesheet = memo((props: TimesheetProps) => {
                   allowClear={false}
                 />
               </div>
-              <div>
+              <div style={{ display: 'flex' }}>
                 {!isCreate && (
                   <Button
+                    size="normal"
                     type="default"
                     style={{ marginRight: '12px' }}
                     onClick={handleToggle}
@@ -497,8 +591,11 @@ export const Timesheet = memo((props: TimesheetProps) => {
                     {isView ? 'Edit' : 'Preview'}
                   </Button>
                 )}
-                <ButtonStyled type="submit">Submit</ButtonStyled>
+                <ButtonStyled disabled={isView} type="submit">
+                  Submit
+                </ButtonStyled>
                 <Button
+                  size="normal"
                   disabled={isCreate}
                   danger
                   type="primary"
@@ -508,6 +605,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
                   Decline
                 </Button>
                 <Button
+                  size="normal"
                   disabled={isCreate}
                   type="primary"
                   onClick={handleApprove}
@@ -524,10 +622,8 @@ export const Timesheet = memo((props: TimesheetProps) => {
             isCreate={isCreate}
             isEdit={isEdit}
             form={form}
-            selectedTimesheet={selectedTimesheet}
-            loading={loading}
-            timesheetDate={timesheetDate}
             newDate={newDate}
+            loading={loading}
           />
         </Form>
       </DialogModal>
@@ -566,7 +662,7 @@ const ButtonStyled = styled.button`
   background-color: #1c91ff;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 16px;
   height: 72%;
   width: 80px;
   cursor: pointer;

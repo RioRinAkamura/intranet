@@ -4,6 +4,7 @@ import {
   EmployeeTimesheetQueryParams,
   Report,
   ReportQueryParams,
+  UpdateEmployeeTimesheetQueryParams,
   UpdateReportQueryParams,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
 import { Pagination } from '@hdwebsoft/intranet-api-sdk/libs/type';
@@ -22,7 +23,7 @@ export const useHandleEmployeeTimesheets = (): {
   ) => void;
   editEmployeeTimesheet: (
     employeeId: string,
-    data: EmployeeTimesheetQueryParams,
+    data: UpdateEmployeeTimesheetQueryParams,
   ) => void;
   deleteEmployeeTimesheet: (employeeId: string, timesheetId: string) => void;
   //REPORT
@@ -78,11 +79,11 @@ export const useHandleEmployeeTimesheets = (): {
 
   const editEmployeeTimesheet = async (
     employeeId: string,
-    data: EmployeeTimesheetQueryParams,
+    data: UpdateEmployeeTimesheetQueryParams,
   ) => {
     setLoading(true);
     try {
-      // await api.hr.employee.timesheet.update(employeeId, data);
+      await api.hr.employee.timesheet.update(employeeId, data);
     } catch (e) {
       console.log(e);
     } finally {

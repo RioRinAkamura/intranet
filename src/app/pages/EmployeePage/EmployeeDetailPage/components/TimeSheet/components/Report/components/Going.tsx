@@ -1,5 +1,6 @@
 import { MinusSquareFilled, QuestionCircleFilled } from '@ant-design/icons';
-import { Button, Form, Input, InputProps, Select } from 'antd';
+import { Form, Input, InputProps, Select } from 'antd';
+import Button from 'app/components/Button';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -29,12 +30,7 @@ const Going = ({
   isView,
   isEdit,
   employeeId,
-  fields,
-  name,
-  remove,
   projectList,
-  goingArr,
-  timesheetDate,
 }: ReportItemProps) => {
   const defaultReportValue = {
     id: null,
@@ -61,411 +57,195 @@ const Going = ({
     <Form.List name="going">
       {(fields, { add, remove }) => (
         <>
-          {isCreate ? (
-            <div>
-              {fields.map(({ key, name, ...restField }) => (
-                <WrapperItem key={key}>
-                  <Wrapper>
-                    <FormItemStyled
-                      label="Task"
-                      {...restField}
-                      name={[name, 'reference']}
-                      rules={[
-                        {
-                          required: true,
-                          message: '',
-                        },
-                      ]}
-                    >
-                      <Input
-                        {...(isView ? inputProps : {})}
-                        size="small"
-                        placeholder="Enter task link"
-                      />
-                    </FormItemStyled>
-                    <IconWrapper>
-                      <QuestionCircleFilled
-                        style={{
-                          fontSize: 18,
-                          paddingTop: 4,
-                          margin: 6,
-                        }}
-                      />
-                    </IconWrapper>
-                  </Wrapper>
-
-                  <Wrapper>
-                    <FormItemStyled
-                      label="Project"
-                      {...restField}
-                      name={[name, 'project_id']}
-                    >
-                      {isView ? (
-                        <Input {...inputProps} />
-                      ) : (
-                        <StyledSelect size="small" placeholder="Select project">
-                          {projectList &&
-                            projectList.map(project => (
-                              <Option
-                                key={project.project.id}
-                                value={project.project.id}
-                              >
-                                {project.project.name}
-                              </Option>
-                            ))}
-                        </StyledSelect>
-                      )}
-                    </FormItemStyled>
-                    <IconWrapper>
-                      <QuestionCircleFilled
-                        style={{
-                          fontSize: 18,
-                          paddingTop: 4,
-                          margin: 6,
-                        }}
-                      />
-                    </IconWrapper>
-                  </Wrapper>
-
-                  <Wrapper>
-                    <FormItemStyled
-                      label="Note"
-                      {...restField}
-                      name={[name, 'description']}
-                      rules={[
-                        {
-                          required: true,
-                          message: '',
-                        },
-                      ]}
-                    >
-                      {isView ? (
-                        <Input {...inputProps} />
-                      ) : (
-                        <TextArea
-                          size="small"
-                          rows={3}
-                          placeholder="Description..."
-                        />
-                      )}
-                    </FormItemStyled>
-
-                    <IconWrapper>
-                      <QuestionCircleFilled
-                        style={{
-                          fontSize: 18,
-                          margin: 6,
-                        }}
-                      />
-                    </IconWrapper>
-                  </Wrapper>
-
-                  <Wrapper>
-                    <FormItemStyled
-                      label="Progress"
-                      {...restField}
-                      name={[name, 'today_progress']}
-                      rules={[
-                        {
-                          required: true,
-                          message: '',
-                        },
-                      ]}
+          <div>
+            {fields.map(({ key, name, ...restField }) => (
+              <WrapperItem key={key}>
+                <Wrapper>
+                  <FormItemStyled
+                    label="Task"
+                    {...restField}
+                    name={[name, 'reference']}
+                    rules={[
+                      {
+                        required: true,
+                        message: '',
+                      },
+                    ]}
+                  >
+                    <Input
+                      {...(isView ? inputProps : {})}
+                      size="small"
+                      placeholder="Enter task link"
+                    />
+                  </FormItemStyled>
+                  <IconWrapper>
+                    <QuestionCircleFilled
                       style={{
-                        marginTop: isCreate || isEdit ? 40 : 0,
-                        width: '40%',
+                        fontSize: 18,
+                        paddingTop: 4,
+                        margin: 6,
                       }}
-                    >
-                      <StyledInputProgress
-                        {...(isView ? inputProps : {})}
-                        size="small"
-                        type="number"
-                        min={0}
-                        max={100}
-                      />
-                    </FormItemStyled>
-                    <span
-                      style={{
-                        marginTop: isCreate || isEdit ? 44 : 0,
-                        width: '16%',
-                      }}
-                    >
-                      % today
-                    </span>
+                    />
+                  </IconWrapper>
+                </Wrapper>
 
-                    <FormItemStyled
-                      {...restField}
-                      name={[name, 'tomorrow_progress']}
-                      rules={[
-                        {
-                          required: true,
-                          message: '',
-                        },
-                      ]}
-                      style={{
-                        marginTop: isCreate || isEdit ? 40 : 0,
-                        width: '16%',
-                      }}
-                    >
-                      <StyledInputProgress
-                        {...(isView ? inputProps : {})}
-                        size="small"
-                        type="number"
-                        min={0}
-                        max={100}
-                      />
-                    </FormItemStyled>
-                    <span
-                      style={{
-                        marginTop: isCreate || isEdit ? 44 : 0,
-                        width: '28%',
-                      }}
-                    >
-                      % tomorrow
-                    </span>
-                  </Wrapper>
-                  <div style={{ textAlign: 'right' }}>
-                    {isCreate || isEdit ? (
-                      <IconWrapper>
-                        <MinusSquareFilled
-                          style={{
-                            color: 'red',
-                            paddingTop: 30,
-                            fontSize: 24,
-                            textAlign: 'right',
-                          }}
-                          onClick={() => remove(name)}
-                        />
-                      </IconWrapper>
+                <Wrapper>
+                  <FormItemStyled
+                    label="Project"
+                    {...restField}
+                    name={[name, 'project_id']}
+                  >
+                    {isView ? (
+                      <Input {...inputProps} />
                     ) : (
-                      ''
+                      <StyledSelect size="small" placeholder="Select project">
+                        {projectList &&
+                          projectList.map(project => (
+                            <Option
+                              key={project.project.id}
+                              value={project.project.id}
+                            >
+                              {project.project.name}
+                            </Option>
+                          ))}
+                      </StyledSelect>
                     )}
-                  </div>
-                </WrapperItem>
-              ))}
-            </div>
-          ) : (
-            <>
-              {goingArr &&
-                goingArr.map(report => (
-                  <div key={report.id}>
-                    {fields.map(({ key, name, ...restField }) => (
-                      <WrapperItem key={key}>
-                        <Wrapper>
-                          <FormItemStyled
-                            label="Task"
-                            {...restField}
-                            name={[name, 'reference']}
-                            rules={[
-                              {
-                                required: true,
-                                message: '',
-                              },
-                            ]}
-                          >
-                            <Input
-                              {...(isView ? inputProps : {})}
-                              size="small"
-                              placeholder="Enter task link"
-                              defaultValue={!isCreate ? report.reference : ''}
-                            />
-                          </FormItemStyled>
-                          <IconWrapper>
-                            <QuestionCircleFilled
-                              style={{
-                                fontSize: 18,
-                                paddingTop: 4,
-                                margin: 6,
-                              }}
-                              onClick={() => handleTaskClick(report.reference)}
-                            />
-                          </IconWrapper>
-                        </Wrapper>
+                  </FormItemStyled>
+                  <IconWrapper>
+                    <QuestionCircleFilled
+                      style={{
+                        fontSize: 18,
+                        paddingTop: 4,
+                        margin: 6,
+                      }}
+                    />
+                  </IconWrapper>
+                </Wrapper>
 
-                        <Wrapper>
-                          <FormItemStyled
-                            label="Project"
-                            {...restField}
-                            name={[name, 'project_id']}
-                          >
-                            {isView ? (
-                              <Input
-                                {...inputProps}
-                                defaultValue={
-                                  report.type === '3'
-                                    ? report?.project?.name
-                                    : ''
-                                }
-                              />
-                            ) : (
-                              <StyledSelect
-                                size="small"
-                                placeholder="Select project"
-                                defaultValue={
-                                  !isCreate ? report?.project?.name : ''
-                                }
-                              >
-                                {projectList &&
-                                  projectList.map(project => (
-                                    <Option
-                                      key={project.project.id}
-                                      value={project.project.id}
-                                    >
-                                      {project.project.name}
-                                    </Option>
-                                  ))}
-                              </StyledSelect>
-                            )}
-                          </FormItemStyled>
-                          <IconWrapper>
-                            <QuestionCircleFilled
-                              style={{
-                                fontSize: 18,
-                                paddingTop: 4,
-                                margin: 6,
-                              }}
-                            />
-                          </IconWrapper>
-                        </Wrapper>
+                <Wrapper>
+                  <FormItemStyled
+                    label="Note"
+                    {...restField}
+                    name={[name, 'description']}
+                    rules={[
+                      {
+                        required: true,
+                        message: '',
+                      },
+                    ]}
+                  >
+                    {isView ? (
+                      <Input {...inputProps} />
+                    ) : (
+                      <TextArea
+                        size="small"
+                        rows={3}
+                        placeholder="Description..."
+                      />
+                    )}
+                  </FormItemStyled>
 
-                        <Wrapper>
-                          <FormItemStyled
-                            label="Note"
-                            {...restField}
-                            name={[name, 'description']}
-                            rules={[
-                              {
-                                required: true,
-                                message: '',
-                              },
-                            ]}
-                          >
-                            {isView ? (
-                              <Input
-                                {...inputProps}
-                                defaultValue={
-                                  report.type === '3' ? report.description : ''
-                                }
-                              />
-                            ) : (
-                              <TextArea
-                                size="small"
-                                rows={3}
-                                placeholder="Description..."
-                                defaultValue={
-                                  !isCreate ? report.description : ''
-                                }
-                              />
-                            )}
-                          </FormItemStyled>
+                  <IconWrapper>
+                    <QuestionCircleFilled
+                      style={{
+                        fontSize: 18,
+                        margin: 6,
+                      }}
+                    />
+                  </IconWrapper>
+                </Wrapper>
 
-                          <IconWrapper>
-                            <QuestionCircleFilled
-                              style={{
-                                fontSize: 18,
-                                margin: 6,
-                              }}
-                            />
-                          </IconWrapper>
-                        </Wrapper>
+                <Wrapper>
+                  <FormItemStyled
+                    label="Progress"
+                    {...restField}
+                    name={[name, 'today_progress']}
+                    rules={[
+                      {
+                        required: true,
+                        message: '',
+                      },
+                    ]}
+                    style={{
+                      marginTop: isCreate || isEdit ? 40 : 0,
+                      width: '40%',
+                    }}
+                  >
+                    <StyledInputProgress
+                      {...(isView ? inputProps : {})}
+                      size="small"
+                      type="number"
+                      min={0}
+                      max={100}
+                    />
+                  </FormItemStyled>
+                  <span
+                    style={{
+                      marginTop: isCreate || isEdit ? 44 : 0,
+                      width: '16%',
+                    }}
+                  >
+                    % today
+                  </span>
 
-                        <Wrapper>
-                          <FormItemStyled
-                            label="Progress"
-                            {...restField}
-                            name={[name, 'today_progress']}
-                            rules={[
-                              {
-                                required: true,
-                                message: '',
-                              },
-                            ]}
-                            style={{
-                              marginTop: isCreate || isEdit ? 40 : 0,
-                              width: '40%',
-                            }}
-                          >
-                            <StyledInputProgress
-                              {...(isView ? inputProps : {})}
-                              size="small"
-                              type="number"
-                              min={0}
-                              max={100}
-                              defaultValue={
-                                !isCreate ? report.today_progress : ''
-                              }
-                            />
-                          </FormItemStyled>
-                          <span
-                            style={{
-                              marginTop: isCreate || isEdit ? 44 : 4,
-                              width: '16%',
-                            }}
-                          >
-                            % today
-                          </span>
-
-                          <FormItemStyled
-                            {...restField}
-                            name={[name, 'tomorrow_progress']}
-                            rules={[
-                              {
-                                required: true,
-                                message: '',
-                              },
-                            ]}
-                            style={{
-                              marginTop: isCreate || isEdit ? 40 : 0,
-                              width: '16%',
-                            }}
-                          >
-                            <StyledInputProgress
-                              {...(isView ? inputProps : {})}
-                              size="small"
-                              type="number"
-                              min={0}
-                              max={100}
-                              defaultValue={
-                                !isCreate ? report.tomorrow_progress : ''
-                              }
-                            />
-                          </FormItemStyled>
-                          <span
-                            style={{
-                              marginTop: isCreate || isEdit ? 44 : 4,
-                              width: '28%',
-                            }}
-                          >
-                            % tomorrow
-                          </span>
-                        </Wrapper>
-                        <div style={{ textAlign: 'right' }}>
-                          {isCreate || isEdit ? (
-                            <IconWrapper>
-                              <MinusSquareFilled
-                                style={{
-                                  color: 'red',
-                                  paddingTop: 30,
-                                  fontSize: 24,
-                                  textAlign: 'right',
-                                }}
-                                onClick={() => remove(name)}
-                              />
-                            </IconWrapper>
-                          ) : (
-                            ''
-                          )}
-                        </div>
-                      </WrapperItem>
-                    ))}
-                  </div>
-                ))}
-            </>
-          )}
-
-          <div style={{ textAlign: 'right' }}>
+                  <FormItemStyled
+                    {...restField}
+                    name={[name, 'tomorrow_progress']}
+                    rules={[
+                      {
+                        required: true,
+                        message: '',
+                      },
+                    ]}
+                    style={{
+                      marginTop: isCreate || isEdit ? 40 : 0,
+                      width: '16%',
+                    }}
+                  >
+                    <StyledInputProgress
+                      {...(isView ? inputProps : {})}
+                      size="small"
+                      type="number"
+                      min={0}
+                      max={100}
+                    />
+                  </FormItemStyled>
+                  <span
+                    style={{
+                      marginTop: isCreate || isEdit ? 44 : 0,
+                      width: '28%',
+                    }}
+                  >
+                    % tomorrow
+                  </span>
+                </Wrapper>
+                <div style={{ textAlign: 'right' }}>
+                  {isCreate || isEdit ? (
+                    <IconWrapper>
+                      <MinusSquareFilled
+                        style={{
+                          color: 'red',
+                          paddingTop: 30,
+                          fontSize: 24,
+                          textAlign: 'right',
+                        }}
+                        onClick={() => remove(name)}
+                      />
+                    </IconWrapper>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              </WrapperItem>
+            ))}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             {isCreate || isEdit ? (
-              <Button type="primary" onClick={() => add(defaultReportValue)}>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => add(defaultReportValue)}
+              >
                 + Add
               </Button>
             ) : (
