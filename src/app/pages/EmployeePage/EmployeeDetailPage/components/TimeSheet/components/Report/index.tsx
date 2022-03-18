@@ -1,4 +1,4 @@
-import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
+import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Divider, FormInstance } from 'antd';
 import Button from 'app/components/Button';
 import config from 'config';

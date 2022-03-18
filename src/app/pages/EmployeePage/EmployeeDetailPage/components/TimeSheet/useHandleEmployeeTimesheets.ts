@@ -6,7 +6,7 @@ import {
   ReportQueryParams,
   UpdateEmployeeTimesheetQueryParams,
   UpdateReportQueryParams,
-} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
+} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Pagination } from '@hdwebsoft/intranet-api-sdk/libs/type';
 import { useCallback, useState } from 'react';
 import { api } from 'utils/api';

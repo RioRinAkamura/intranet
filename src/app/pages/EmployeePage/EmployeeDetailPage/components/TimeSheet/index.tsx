@@ -5,7 +5,7 @@ import {
   MoreOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
-import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
+import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { DatePicker, Form, Popover, Table, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';

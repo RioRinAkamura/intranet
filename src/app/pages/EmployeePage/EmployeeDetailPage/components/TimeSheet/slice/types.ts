@@ -1,4 +1,4 @@
-import { EmployeeTimesheetQueryParams } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
+import { EmployeeTimesheetQueryParams } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Key } from 'react';
 
 export interface EmployeeTimesheetState {
