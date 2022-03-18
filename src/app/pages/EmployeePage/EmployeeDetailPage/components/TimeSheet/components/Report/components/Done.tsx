@@ -1,7 +1,7 @@
 import { MinusSquareFilled, QuestionCircleFilled } from '@ant-design/icons';
-import { Form, Input, InputProps, Select } from 'antd';
+import { Form, FormInstance, Input, InputProps, Select } from 'antd';
 import Button from 'app/components/Button';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const { Option } = Select;
@@ -12,12 +12,8 @@ interface ReportItemProps {
   isEdit?: boolean;
   isView?: boolean;
   employeeId: string;
-  fields?: any;
-  name?: any;
-  remove?: any;
   projectList?: any[];
-  doneArr?: any[];
-  timesheetDate?: any;
+  form?: FormInstance;
 }
 
 const inputProps: InputProps = {
@@ -31,6 +27,7 @@ const Done = ({
   isEdit,
   employeeId,
   projectList,
+  form,
 }: ReportItemProps) => {
   const defaultReportValue = {
     id: null,
@@ -46,14 +43,24 @@ const Done = ({
     tomorrow_progress: 0,
   };
 
-  const handleTaskClick = (taskLink, restField) => {
-    console.log('taskLink', taskLink);
-    console.log('restField', restField);
-    // const win = window.open(`${taskLink}`, '_blank');
-    // if (win) {
-    //   win.focus();
-    // }
+  const [projectName, setProjectName] = useState<any[]>([]);
+
+  const handleTaskClick = key => {
+    const values = form?.getFieldValue('done');
+    const link = values.map(value => value.reference);
+    const win = window.open(`${link[key]}`, '_blank');
+    if (win) {
+      win.focus();
+    }
   };
+
+  useEffect(() => {
+    const values = form?.getFieldValue('done');
+    if (values) {
+      const projects = values.map(value => value?.project?.name);
+      setProjectName(projects);
+    }
+  }, [form]);
 
   return (
     <Form.List name="done">
@@ -88,7 +95,7 @@ const Done = ({
                         paddingTop: 4,
                         margin: 6,
                       }}
-                      onClick={() => handleTaskClick(name, restField)}
+                      onClick={() => handleTaskClick(key)}
                     />
                   </IconWrapper>
                 </Wrapper>
@@ -100,9 +107,20 @@ const Done = ({
                     name={[name, 'project_id']}
                   >
                     {isView ? (
-                      <Input {...inputProps} />
+                      <Input
+                        {...inputProps}
+                        defaultValue={
+                          projectName ? projectName[key] : undefined
+                        }
+                      />
                     ) : (
-                      <StyledSelect size="small" placeholder="Select project">
+                      <StyledSelect
+                        size="small"
+                        placeholder="Select project"
+                        defaultValue={
+                          projectName ? projectName[key] : undefined
+                        }
+                      >
                         {projectList &&
                           projectList.map(project => (
                             <Option

@@ -5,10 +5,7 @@ import {
   MoreOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
-import {
-  EmployeeTimesheet,
-  EmployeeTimesheetQueryParams,
-} from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
+import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timeSheet/models';
 import { DatePicker, Form, Popover, Table, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';
@@ -19,11 +16,12 @@ import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { UsersMessages } from 'app/pages/EmployeePage/EmployeeListPage/messages';
 import config from 'config';
 import moment from 'moment';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { Wrapper } from 'styles/StyledCommon';
+import { api } from 'utils/api';
 import { datePickerViewProps } from 'utils/types';
 import Button from '../../../../../components/Button';
 import Report from './components/Report';
@@ -44,6 +42,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<any>();
   const [reportList, setReportList] = useState<any[]>([]);
+  const [employee, setEmployee] = useState<any>();
 
   const { notify } = useNotify();
 
@@ -72,6 +71,20 @@ export const Timesheet = memo((props: TimesheetProps) => {
     fetchEmployeeTimesheets(employeeId);
   }, [fetchEmployeeTimesheets, employeeId]);
 
+  const fetchEmployee = useCallback(async () => {
+    const response = await api.hr.employee.get(employeeId);
+    const employeeInfo = {
+      id: response.id,
+      avatar: response.avatar,
+      name: response.first_name + ' ' + response.last_name,
+    };
+    setEmployee(employeeInfo);
+  }, [employeeId]);
+
+  useEffect(() => {
+    fetchEmployee();
+  }, [fetchEmployee]);
+
   const showDeleteModal = () => {
     setIsDelete(true);
   };
@@ -89,7 +102,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
               setSelectedTimesheet(record);
               setIsView(true);
               getReportByDate(record);
-              console.log('SelectedTimesheet', selectedTimesheet);
             }}
           />
         </Tooltip>
@@ -306,8 +318,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
   };
 
   const onFinish = async values => {
-    console.log('values', values);
-
     const doneList = values.done ? values.done : undefined;
     const goingList = values.going ? values.going : undefined;
     const blockerList = values.blockers ? values.blockers : undefined;
@@ -478,7 +488,8 @@ export const Timesheet = memo((props: TimesheetProps) => {
   };
 
   const handleDecline = async () => {
-    const declinedTimesheet = { ...selectedTimesheet, status: '2' };
+    let declinedTimesheet = { ...selectedTimesheet, status: '2' };
+    declinedTimesheet = { ...declinedTimesheet, approver: employee };
     try {
       await editEmployeeTimesheet(employeeId, declinedTimesheet);
       fetchEmployeeTimesheets(employeeId);
@@ -495,10 +506,14 @@ export const Timesheet = memo((props: TimesheetProps) => {
         message: 'Failed',
       });
     }
+    setIsView(false);
+    setIsEdit(false);
+    setIsCreate(false);
   };
 
   const handleApprove = async () => {
-    const approvedTimesheet = { ...selectedTimesheet, status: '3' };
+    let approvedTimesheet = { ...selectedTimesheet, status: '3' };
+    approvedTimesheet = { ...approvedTimesheet, approver: employee };
     try {
       await editEmployeeTimesheet(employeeId, approvedTimesheet);
       fetchEmployeeTimesheets(employeeId);
@@ -515,6 +530,9 @@ export const Timesheet = memo((props: TimesheetProps) => {
         message: 'Failed',
       });
     }
+    setIsView(false);
+    setIsEdit(false);
+    setIsCreate(false);
   };
 
   return (
@@ -591,9 +609,15 @@ export const Timesheet = memo((props: TimesheetProps) => {
                     {isView ? 'Edit' : 'Preview'}
                   </Button>
                 )}
-                <ButtonStyled disabled={isView} type="submit">
+                <Button
+                  disabled={isView}
+                  type="primary"
+                  htmlType="submit"
+                  size="normal"
+                  loading={loading}
+                >
                   Submit
-                </ButtonStyled>
+                </Button>
                 <Button
                   size="normal"
                   disabled={isCreate}
@@ -601,6 +625,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
                   type="primary"
                   style={{ margin: '0px 12px' }}
                   onClick={handleDecline}
+                  // loading={loading}
                 >
                   Decline
                 </Button>
@@ -609,6 +634,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
                   disabled={isCreate}
                   type="primary"
                   onClick={handleApprove}
+                  // loading={loading}
                 >
                   Approve
                 </Button>
@@ -658,15 +684,15 @@ const StyledDatePicker = styled(DatePicker)`
   margin-bottom: 12px;
 `;
 
-const ButtonStyled = styled.button`
-  background-color: #1c91ff;
-  color: #fff;
-  border: none;
-  border-radius: 16px;
-  height: 72%;
-  width: 80px;
-  cursor: pointer;
-  :hover {
-    background-color: #188fffcc;
-  }
-`;
+// const ButtonStyled = styled.button`
+//   background-color: #1c91ff;
+//   color: #fff;
+//   border: none;
+//   border-radius: 16px;
+//   height: 72%;
+//   width: 80px;
+//   cursor: pointer;
+//   :hover {
+//     background-color: #188fffcc;
+//   }
+// `;

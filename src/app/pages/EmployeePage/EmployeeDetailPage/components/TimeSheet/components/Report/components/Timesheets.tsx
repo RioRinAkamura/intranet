@@ -1,7 +1,7 @@
 import { MinusSquareFilled, QuestionCircleFilled } from '@ant-design/icons';
-import { Form, Input, InputProps, Select } from 'antd';
+import { Form, FormInstance, Input, InputProps, Select } from 'antd';
 import Button from 'app/components/Button';
-import React, { useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const { Option } = Select;
@@ -12,13 +12,8 @@ interface ReportItemProps {
   isEdit?: boolean;
   isView?: boolean;
   employeeId: string;
-  fields?: any;
-  name?: any;
-  remove?: any;
-  timesheetItems?: any;
   projectList?: any[];
-  timesheetArr?: any[];
-  timesheetDate?: string;
+  form?: FormInstance;
 }
 
 const inputProps: InputProps = {
@@ -32,9 +27,8 @@ const Timesheets = ({
   isEdit,
   employeeId,
   projectList,
+  form,
 }: ReportItemProps) => {
-  const inputRef = useRef<any>(null);
-
   const defaultReportValue = {
     id: null,
     employee_id: employeeId,
@@ -49,12 +43,24 @@ const Timesheets = ({
     tomorrow_progress: 0,
   };
 
-  const handleTaskClick = taskLink => {
-    const win = window.open(`${taskLink}`, '_blank');
+  const [projectName, setProjectName] = useState<any[]>([]);
+
+  const handleTaskClick = key => {
+    const values = form?.getFieldValue('timesheets');
+    const link = values.map(value => value.reference);
+    const win = window.open(`${link[key]}`, '_blank');
     if (win) {
       win.focus();
     }
   };
+
+  useEffect(() => {
+    const values = form?.getFieldValue('timesheets');
+    if (values) {
+      const projects = values.map(value => value?.project?.name);
+      setProjectName(projects);
+    }
+  }, [form]);
 
   return (
     <Form.List name="timesheets">
@@ -88,6 +94,7 @@ const Timesheets = ({
                         paddingTop: 4,
                         margin: 6,
                       }}
+                      onClick={() => handleTaskClick(key)}
                     />
                   </IconWrapper>
                 </Wrapper>
@@ -99,9 +106,20 @@ const Timesheets = ({
                     name={[name, 'project_id']}
                   >
                     {isView ? (
-                      <Input {...inputProps} />
+                      <Input
+                        {...inputProps}
+                        defaultValue={
+                          projectName ? projectName[key] : undefined
+                        }
+                      />
                     ) : (
-                      <StyledSelect size="small" placeholder="Select project">
+                      <StyledSelect
+                        size="small"
+                        placeholder="Select project"
+                        defaultValue={
+                          projectName ? projectName[key] : undefined
+                        }
+                      >
                         {projectList &&
                           projectList.map(project => (
                             <Option

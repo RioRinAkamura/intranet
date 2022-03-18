@@ -220,6 +220,7 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
+                form={form}
               />
             </>
             <Divider />
@@ -231,6 +232,7 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
+                form={form}
               />
             </>
             <Divider />
@@ -242,6 +244,7 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
+                form={form}
               />
             </>
             <Divider />
@@ -253,6 +256,7 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
+                form={form}
               />
             </>
             <Divider />
@@ -264,6 +268,7 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
+                form={form}
               />
             </>
             <Divider />
@@ -275,6 +280,7 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
+                form={form}
               />
             </>
           </WrapperReportItem>
@@ -297,6 +303,7 @@ const Report = memo(
                 isView={isView}
                 isEdit={isEdit}
                 projectList={projectList}
+                form={form}
               />
             </>
           </WrapperReportItem>
