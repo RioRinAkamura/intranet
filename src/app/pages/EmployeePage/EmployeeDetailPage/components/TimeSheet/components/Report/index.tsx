@@ -54,7 +54,6 @@ const Report = memo(
 
     const handleSyncClick = () => {
       const values = form?.getFieldsValue();
-      console.log('formValue', values);
 
       const doneList = values.done ? values.done : undefined;
       const goingList = values.going ? values.going : undefined;
@@ -200,7 +199,6 @@ const Report = memo(
           reportArr.map((item: any) => [item['reference'], item]),
         ).values(),
       ];
-      console.log('arrayUnique', arrayUnique);
 
       form?.setFieldsValue({
         timesheets: arrayUnique,

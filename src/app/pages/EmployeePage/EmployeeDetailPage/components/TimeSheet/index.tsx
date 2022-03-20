@@ -457,7 +457,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
     }
 
     let reportArr = Array.prototype.concat.apply([], newDataArr);
-    console.log('reportArr', reportArr);
 
     try {
       for (let i = 0; i < reportArr.length; i++) {
