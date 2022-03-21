@@ -6,7 +6,7 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
-import { DatePicker, Form, Popover, Table, Tooltip } from 'antd';
+import { DatePicker, Form, Popover, Select, Table, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';
 import { IconButton } from 'app/components/Button';
@@ -24,14 +24,16 @@ import { Wrapper } from 'styles/StyledCommon';
 import { api } from 'utils/api';
 import { datePickerViewProps } from 'utils/types';
 import Button from '../../../../../components/Button';
-import Report from './components/Report';
+import { Report } from './components/Report/Loadable';
 import { useHandleEmployeeTimesheets } from './useHandleEmployeeTimesheets';
+
+const { Option } = Select;
 
 interface TimesheetProps {
   employeeId: string;
 }
 
-export const Timesheet = memo((props: TimesheetProps) => {
+export const TimeSheet = memo((props: TimesheetProps) => {
   const { employeeId } = props;
   const [form] = Form.useForm();
 
@@ -43,6 +45,13 @@ export const Timesheet = memo((props: TimesheetProps) => {
   const [selectedTimesheet, setSelectedTimesheet] = useState<any>();
   const [reportList, setReportList] = useState<any[]>([]);
   const [employee, setEmployee] = useState<any>();
+  const [doneDateSelect, setDoneDateSelect] = useState<any[]>([]);
+  const [goingDateSelect, setGoingDateSelect] = useState<any[]>([]);
+  const [blockerDateSelect, setBlockerDateSelect] = useState<any[]>([]);
+  const [issuesDateSelect, setIssuesDateSelect] = useState<any[]>([]);
+  const [todoDateSelect, setTodoDateSelect] = useState<any[]>([]);
+  const [otherDateSelect, setOtherDateSelect] = useState<any[]>([]);
+  const [timesheetDateSelect, setTimesheetDateSelect] = useState<any[]>([]);
 
   const { notify } = useNotify();
 
@@ -89,7 +98,19 @@ export const Timesheet = memo((props: TimesheetProps) => {
     setIsDelete(true);
   };
 
-  const moreButton = (text, record: EmployeeTimesheet) => {
+  const onViewClick = record => {
+    setSelectedTimesheet(record);
+    getReportByDate(record);
+    setIsView(true);
+  };
+
+  const onEditClick = record => {
+    setSelectedTimesheet(record);
+    getReportByDate(record);
+    setIsEdit(true);
+  };
+
+  const moreButton = (record: EmployeeTimesheet) => {
     return (
       <>
         <Tooltip title={t(UsersMessages.listViewTooltip())}>
@@ -98,11 +119,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
             shape="circle"
             size="small"
             icon={<EyeOutlined />}
-            onClick={() => {
-              setSelectedTimesheet(record);
-              setIsView(true);
-              getReportByDate(record);
-            }}
+            onClick={() => onViewClick(record)}
           />
         </Tooltip>
         <Tooltip title={t(UsersMessages.listEditTooltip())}>
@@ -110,11 +127,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
             shape="circle"
             icon={<EditOutlined />}
             size="small"
-            onClick={() => {
-              setSelectedTimesheet(record);
-              setIsEdit(true);
-              getReportByDate(record);
-            }}
+            onClick={() => onEditClick(record)}
           />
         </Tooltip>
         <Tooltip title={t(UsersMessages.listDeleteTooltip())}>
@@ -142,14 +155,26 @@ export const Timesheet = memo((props: TimesheetProps) => {
     },
     {
       title: 'Work status',
-      dataIndex: 'status',
+      dataIndex: 'work_status',
       width: 130,
-      render: text =>
-        text === '1' ? (
-          'ON_TRACK'
-        ) : (
-          <span style={{ color: 'red' }}>OFF_TRACK</span>
-        ),
+      render: text => {
+        return (
+          <Select
+            defaultValue={text}
+            style={{
+              color: text === '1' ? 'green' : text === '2' ? 'red' : '',
+              width: '100%',
+            }}
+          >
+            <Option style={{ color: 'green' }} value="1">
+              ON TRACK
+            </Option>
+            <Option style={{ color: 'red' }} value="2">
+              OFF TRACK
+            </Option>
+          </Select>
+        );
+      },
     },
     {
       title: 'Total hours',
@@ -174,13 +199,15 @@ export const Timesheet = memo((props: TimesheetProps) => {
       dataIndex: 'status',
       width: 130,
       render: text =>
-        text === '1 '
-          ? 'Submitted'
-          : text === '2'
-          ? 'Declined'
-          : text === '3'
-          ? 'Approved'
-          : '',
+        text === '1' ? (
+          <span style={{ color: 'green' }}>Submitted</span>
+        ) : text === '2' ? (
+          <span style={{ color: 'red' }}>Declined</span>
+        ) : text === '3' ? (
+          <span style={{ color: 'green' }}>Approved</span>
+        ) : (
+          ''
+        ),
     },
     {
       title: <ActionIcon />,
@@ -190,10 +217,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
       render: (text: string, record: EmployeeTimesheet, index: number) => {
         return (
           <>
-            <Popover
-              content={() => moreButton(text, record)}
-              placement="bottom"
-            >
+            <Popover content={() => moreButton(record)} placement="bottom">
               <IconButton shape="circle" size="small" icon={<MoreOutlined />} />
             </Popover>
           </>
@@ -229,11 +253,10 @@ export const Timesheet = memo((props: TimesheetProps) => {
   };
 
   const handleCancel = () => {
-    form.resetFields();
-    fetchEmployeeReport(employeeId);
     setIsView(false);
     setIsCreate(false);
     setIsEdit(false);
+    form.resetFields();
   };
 
   const handleToggle = () => {
@@ -263,18 +286,14 @@ export const Timesheet = memo((props: TimesheetProps) => {
   const othersArr = reportList.filter(report => report.type === '7');
   const timesheetArr = reportList.filter(report => report.type === '1');
 
-  const [doneDateSelect, setDoneDateSelect] = useState<any[]>([]);
-  const [goingDateSelect, setGoingDateSelect] = useState<any[]>([]);
-  const [blockerDateSelect, setBlockerDateSelect] = useState<any[]>([]);
-  const [issuesDateSelect, setIssuesDateSelect] = useState<any[]>([]);
-  const [todoDateSelect, setTodoDateSelect] = useState<any[]>([]);
-  const [otherDateSelect, setOtherDateSelect] = useState<any[]>([]);
-  const [timesheetDateSelect, setTimesheetDateSelect] = useState<any[]>([]);
-
   const getReportByDate = record => {
     const doneByDate = doneArr.filter(
       report => report?.timesheet?.date === record?.date,
     );
+    // const doneByProject = doneByDate.map(done => {
+    //   return (done = { ...done, project_id: done?.project?.name });
+    // });
+    // console.log('doneByProject', doneByProject);
     setDoneDateSelect(doneByDate);
 
     const goingByDate = goingArr.filter(
@@ -333,9 +352,17 @@ export const Timesheet = memo((props: TimesheetProps) => {
         return {
           id: value.id ? value.id : null,
           employee_id: employeeId,
-          project_id: value.project_id ? value.project_id : null,
+          project_id: value.project_id
+            ? value.project_id
+            : value.project
+            ? value.project.id
+            : null,
           reference: value.reference,
-          date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+          date: selectedTimesheet?.date
+            ? selectedTimesheet?.date
+            : newDate
+            ? newDate
+            : moment(values.date).format(DATE_FORMAT),
           type: '2',
           description: value.description,
           today_hour: 0,
@@ -351,9 +378,17 @@ export const Timesheet = memo((props: TimesheetProps) => {
         return {
           id: value.id ? value.id : null,
           employee_id: employeeId,
-          project_id: value.project_id ? value.project_id : null,
+          project_id: value.project_id
+            ? value.project_id
+            : value.project
+            ? value.project.id
+            : null,
           reference: value.reference,
-          date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+          date: selectedTimesheet?.date
+            ? selectedTimesheet?.date
+            : newDate
+            ? newDate
+            : moment(values.date).format(DATE_FORMAT),
           type: '3',
           description: value.description,
           today_hour: 0,
@@ -369,9 +404,17 @@ export const Timesheet = memo((props: TimesheetProps) => {
         return {
           id: value.id ? value.id : null,
           employee_id: employeeId,
-          project_id: value.project_id ? value.project_id : null,
+          project_id: value.project_id
+            ? value.project_id
+            : value.project
+            ? value.project.id
+            : null,
           reference: value.reference,
-          date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+          date: selectedTimesheet?.date
+            ? selectedTimesheet?.date
+            : newDate
+            ? newDate
+            : moment(values.date).format(DATE_FORMAT),
           type: '5',
           description: value.description,
           today_hour: 0,
@@ -387,9 +430,17 @@ export const Timesheet = memo((props: TimesheetProps) => {
         return {
           id: value.id ? value.id : null,
           employee_id: employeeId,
-          project_id: value.project_id ? value.project_id : null,
+          project_id: value.project_id
+            ? value.project_id
+            : value.project
+            ? value.project.id
+            : null,
           reference: value.reference,
-          date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+          date: selectedTimesheet?.date
+            ? selectedTimesheet?.date
+            : newDate
+            ? newDate
+            : moment(values.date).format(DATE_FORMAT),
           type: '4',
           description: value.description,
           today_hour: 0,
@@ -405,10 +456,18 @@ export const Timesheet = memo((props: TimesheetProps) => {
         return {
           id: value.id ? value.id : null,
           employee_id: employeeId,
-          project_id: value.project_id ? value.project_id : null,
+          project_id: value.project_id
+            ? value.project_id
+            : value.project
+            ? value.project.id
+            : null,
 
           reference: value.reference,
-          date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+          date: selectedTimesheet?.date
+            ? selectedTimesheet?.date
+            : newDate
+            ? newDate
+            : moment(values.date).format(DATE_FORMAT),
           type: '6',
           description: value.description,
           today_hour: 0,
@@ -424,9 +483,17 @@ export const Timesheet = memo((props: TimesheetProps) => {
         return {
           id: value.id ? value.id : null,
           employee_id: employeeId,
-          project_id: value.project_id ? value.project_id : null,
+          project_id: value.project_id
+            ? value.project_id
+            : value.project
+            ? value.project.id
+            : null,
           reference: value.reference,
-          date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+          date: selectedTimesheet?.date
+            ? selectedTimesheet?.date
+            : newDate
+            ? newDate
+            : moment(values.date).format(DATE_FORMAT),
           type: '7',
           description: value.description,
           today_hour: 0,
@@ -442,10 +509,17 @@ export const Timesheet = memo((props: TimesheetProps) => {
         return {
           id: value.id ? value.id : null,
           employee_id: employeeId,
-          project_id: value.project_id ? value.project_id : null,
-
+          project_id: value.project_id
+            ? value.project_id
+            : value.project
+            ? value.project.id
+            : null,
           reference: value.reference,
-          date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+          date: selectedTimesheet?.date
+            ? selectedTimesheet?.date
+            : newDate
+            ? newDate
+            : moment(values.date).format(DATE_FORMAT),
           type: '1',
           description: value.description,
           today_hour: Number(value.today_hour),
@@ -458,12 +532,12 @@ export const Timesheet = memo((props: TimesheetProps) => {
     }
 
     let reportArr = Array.prototype.concat.apply([], newDataArr);
+    console.log('reportArr', reportArr);
 
     try {
       for (let i = 0; i < reportArr.length; i++) {
         await addEmployeeReport(employeeId, reportArr[i]);
       }
-      // addEmployeeReport(employeeId, reportArr as ReportQueryParams);
       fetchEmployeeTimesheets(employeeId);
       notify({
         type: ToastMessageType.Info,
@@ -483,7 +557,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
     setIsEdit(false);
     setIsView(false);
     form.resetFields();
-    fetchEmployeeTimesheets(employeeId);
     fetchEmployeeReport(employeeId);
   };
 
@@ -585,13 +658,13 @@ export const Timesheet = memo((props: TimesheetProps) => {
               <div>
                 Date:
                 <StyledDatePicker
-                  {...(isView ? datePickerViewProps : {})}
+                  {...(isView || isEdit ? datePickerViewProps : {})}
                   format={DATE_FORMAT}
                   disabledDate={disabledDate}
                   defaultValue={
-                    isCreate
-                      ? moment(today, DATE_FORMAT)
-                      : moment(selectedTimesheet?.date)
+                    isView || isEdit
+                      ? moment(selectedTimesheet?.date)
+                      : moment(today, DATE_FORMAT)
                   }
                   onChange={date => handleDateChange(date)}
                   style={{ marginLeft: 12 }}
@@ -650,6 +723,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
             form={form}
             newDate={newDate}
             loading={loading}
+            reportList={reportList}
           />
         </Form>
       </DialogModal>

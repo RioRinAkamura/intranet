@@ -6,7 +6,6 @@ import moment from 'moment';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { api } from 'utils/api';
-import { useHandleEmployeeTimesheets } from '../../useHandleEmployeeTimesheets';
 import Blockers from './components/Blockers';
 import Done from './components/Done';
 import Going from './components/Going';
@@ -24,9 +23,10 @@ interface TimeSheetProps {
   selectedTimesheet?: EmployeeTimesheet;
   loading?: boolean;
   newDate?: any;
+  reportList?: any[];
 }
 
-const Report = memo(
+export const Report = memo(
   ({
     employeeId,
     isCreate,
@@ -35,16 +35,11 @@ const Report = memo(
     form,
     newDate,
     loading,
+    reportList,
   }: TimeSheetProps) => {
     const [projectList, setProjectList] = useState<any[]>([]);
-    const [reportList, setReportList] = useState<any[]>([]);
 
     const DATE_FORMAT = config.DATE_FORMAT;
-
-    const {
-      fetchEmployeeReport,
-      employeeReports,
-    } = useHandleEmployeeTimesheets();
 
     const fetchEmployeeProject = useCallback(async () => {
       const response = await api.hr.employee.project.list(employeeId);
@@ -53,12 +48,7 @@ const Report = memo(
 
     useEffect(() => {
       fetchEmployeeProject();
-      fetchEmployeeReport(employeeId);
-    }, [fetchEmployeeProject, fetchEmployeeReport, employeeId]);
-
-    useEffect(() => {
-      setReportList(employeeReports.results);
-    }, [employeeReports]);
+    }, [fetchEmployeeProject]);
 
     const handleSyncClick = () => {
       const values = form?.getFieldsValue();
@@ -337,5 +327,3 @@ const ModalContentWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-
-export default Report;
