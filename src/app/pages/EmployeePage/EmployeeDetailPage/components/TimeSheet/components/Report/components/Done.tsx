@@ -61,15 +61,13 @@ const Done = ({
     }
   };
 
-  const values = form?.getFieldValue('done');
-  console.log('values', values);
-
   useEffect(() => {
+    const values = form?.getFieldValue('done');
     if (values) {
       const projects = values.map(value => value?.project?.name);
       setProjectName(projects);
     }
-  }, [values]);
+  }, [form]);
 
   useEffect(() => {
     if (reportList) {
@@ -114,7 +112,6 @@ const Done = ({
                     <QuestionCircleFilled
                       style={{
                         fontSize: 18,
-                        paddingTop: 4,
                         margin: 6,
                       }}
                       onClick={() => handleTaskClick(key)}
@@ -159,7 +156,6 @@ const Done = ({
                     <QuestionCircleFilled
                       style={{
                         fontSize: 18,
-                        paddingTop: 4,
                         margin: 6,
                       }}
                     />

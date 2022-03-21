@@ -307,12 +307,18 @@ export const TimeSheet = memo((props: TimesheetProps) => {
   const othersArr = reportList.filter(report => report.type === '7');
   const timesheetArr = reportList.filter(report => report.type === '1');
 
-  const getReportByDate = record => {
+  const getReportByDate = async record => {
+    const formVal = await form.getFieldsValue();
+    console.log('formVal', formVal);
+
     const doneByDate = doneArr.filter(
       report => report?.timesheet?.date === record?.date,
     );
     // const doneByProject = doneByDate.map(done => {
-    //   return (done = { ...done, project_id: done?.project?.name });
+    //   return (done = {
+    //     ...done,
+    //     project_id: isView ? done?.project?.name : done?.project?.id,
+    //   });
     // });
     // console.log('doneByProject', doneByProject);
     setDoneDateSelect(doneByDate);

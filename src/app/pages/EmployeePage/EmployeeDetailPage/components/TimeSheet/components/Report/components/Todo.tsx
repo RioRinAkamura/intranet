@@ -111,7 +111,7 @@ const Todo = ({
                     <QuestionCircleFilled
                       style={{
                         fontSize: 18,
-                        paddingTop: 4,
+
                         margin: 6,
                       }}
                       onClick={() => handleTaskClick(key)}
@@ -156,7 +156,7 @@ const Todo = ({
                     <QuestionCircleFilled
                       style={{
                         fontSize: 18,
-                        paddingTop: 4,
+
                         margin: 6,
                       }}
                     />
