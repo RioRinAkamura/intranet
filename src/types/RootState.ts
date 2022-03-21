@@ -5,6 +5,7 @@ import { EmployeeChangeLogsState } from 'app/pages/EmployeePage/EmployeeDetailPa
 import { EmployeeNoteState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/Notes/slice/types';
 import { EmployeeProjectState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/Projects/slice/types';
 import { EmployeeSkillState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/Skills/slice/types';
+import { EmployeeTimesheetState } from 'app/pages/EmployeePage/EmployeeDetailPage/components/TimeSheet/slice/types';
 import { EmployeeDetailsState } from 'app/pages/EmployeePage/EmployeeDetailPage/slice/types';
 import { EmployeePageState } from 'app/pages/EmployeePage/EmployeeListPage/slice/types';
 import { UsersManagePageState } from 'app/pages/ManageUserPage/slice/types';
@@ -33,6 +34,7 @@ export interface RootState {
   projectNote?: ProjectNoteState;
   employeeChangeLogs?: EmployeeChangeLogsState;
   employeeSkill: EmployeeSkillState;
+  employeeTimesheet: EmployeeTimesheetState;
   usersmanagepage?: UsersManagePageState;
   // leaveApplication?: LeaveApplicationState;
   DeviceManager?: DevicesManagerState;
