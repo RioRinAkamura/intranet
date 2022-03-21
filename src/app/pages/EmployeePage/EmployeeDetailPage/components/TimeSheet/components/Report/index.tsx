@@ -26,7 +26,7 @@ interface TimeSheetProps {
   reportList?: any[];
 }
 
-const Report = memo(
+export const Report = memo(
   ({
     employeeId,
     isCreate,
@@ -49,8 +49,6 @@ const Report = memo(
     useEffect(() => {
       fetchEmployeeProject();
     }, [fetchEmployeeProject]);
-
-    console.log('reportList', reportList);
 
     const handleSyncClick = () => {
       const values = form?.getFieldsValue();
@@ -329,5 +327,3 @@ const ModalContentWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-
-export default Report;

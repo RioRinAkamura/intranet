@@ -24,7 +24,7 @@ import { Wrapper } from 'styles/StyledCommon';
 import { api } from 'utils/api';
 import { datePickerViewProps } from 'utils/types';
 import Button from '../../../../../components/Button';
-import Report from './components/Report';
+import { Report } from './components/Report/Loadable';
 import { useHandleEmployeeTimesheets } from './useHandleEmployeeTimesheets';
 
 const { Option } = Select;
@@ -33,7 +33,7 @@ interface TimesheetProps {
   employeeId: string;
 }
 
-export const Timesheet = memo((props: TimesheetProps) => {
+export const TimeSheet = memo((props: TimesheetProps) => {
   const { employeeId } = props;
   const [form] = Form.useForm();
 
@@ -252,11 +252,11 @@ export const Timesheet = memo((props: TimesheetProps) => {
     setIsDelete(false);
   };
 
-  const handleCancel = async () => {
-    await setIsView(false);
-    await setIsCreate(false);
-    await setIsEdit(false);
-    await form.resetFields();
+  const handleCancel = () => {
+    setIsView(false);
+    setIsCreate(false);
+    setIsEdit(false);
+    form.resetFields();
   };
 
   const handleToggle = () => {
@@ -349,8 +349,6 @@ export const Timesheet = memo((props: TimesheetProps) => {
 
     if (doneList) {
       const doneData = doneList.map(value => {
-        console.log('value', value);
-
         return {
           id: value.id ? value.id : null,
           employee_id: employeeId,
