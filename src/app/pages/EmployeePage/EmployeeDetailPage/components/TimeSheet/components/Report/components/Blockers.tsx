@@ -1,8 +1,10 @@
 import { MinusSquareFilled, QuestionCircleFilled } from '@ant-design/icons';
+import { Report } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Form, FormInstance, Input, InputProps, Select } from 'antd';
 import Button from 'app/components/Button';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useHandleEmployeeTimesheets } from '../../../useHandleEmployeeTimesheets';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -14,6 +16,7 @@ interface ReportItemProps {
   employeeId: string;
   projectList?: any[];
   form?: FormInstance;
+  reportList?: Report[];
 }
 
 const inputProps: InputProps = {
@@ -28,6 +31,7 @@ const Blockers = ({
   employeeId,
   projectList,
   form,
+  reportList,
 }: ReportItemProps) => {
   const defaultReportValue = {
     id: null,
@@ -43,6 +47,8 @@ const Blockers = ({
     tomorrow_progress: 0,
   };
 
+  const { deleteEmployeeReport } = useHandleEmployeeTimesheets();
+
   const handleTaskClick = key => {
     const values = form?.getFieldValue('blockers');
     const link = values.map(value => value.reference);
@@ -53,6 +59,7 @@ const Blockers = ({
   };
 
   const [projectName, setProjectName] = useState<any[]>([]);
+  const [blockersReport, setBlockersReport] = useState<Report[]>([]);
 
   useEffect(() => {
     const values = form?.getFieldValue('blockers');
@@ -61,6 +68,19 @@ const Blockers = ({
       setProjectName(projects);
     }
   }, [form]);
+
+  useEffect(() => {
+    if (reportList) {
+      const blockerList = reportList.filter(report => report.type === '5');
+      setBlockersReport(blockerList);
+    }
+  }, [reportList]);
+
+  const onRemoveReport = async key => {
+    if (blockersReport[key]) {
+      await deleteEmployeeReport(employeeId, blockersReport[key].id);
+    }
+  };
 
   return (
     <Form.List name="blockers">
@@ -184,7 +204,10 @@ const Blockers = ({
                           fontSize: 24,
                           textAlign: 'right',
                         }}
-                        onClick={() => remove(name)}
+                        onClick={() => {
+                          onRemoveReport(key);
+                          remove(name);
+                        }}
                       />
                     </IconWrapper>
                   ) : (

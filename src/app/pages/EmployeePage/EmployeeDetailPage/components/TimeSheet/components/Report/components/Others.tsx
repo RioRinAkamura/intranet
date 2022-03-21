@@ -1,8 +1,10 @@
 import { MinusSquareFilled, QuestionCircleFilled } from '@ant-design/icons';
+import { Report } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Form, FormInstance, Input, InputProps, Select } from 'antd';
 import Button from 'app/components/Button';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useHandleEmployeeTimesheets } from '../../../useHandleEmployeeTimesheets';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -13,8 +15,8 @@ interface ReportItemProps {
   isView?: boolean;
   employeeId: string;
   projectList?: any[];
-
   form?: FormInstance;
+  reportList?: Report[];
 }
 
 const inputProps: InputProps = {
@@ -29,6 +31,7 @@ const Others = ({
   employeeId,
   projectList,
   form,
+  reportList,
 }: ReportItemProps) => {
   const defaultReportValue = {
     id: null,
@@ -43,8 +46,10 @@ const Others = ({
     today_progress: 0,
     tomorrow_progress: 0,
   };
+  const { deleteEmployeeReport } = useHandleEmployeeTimesheets();
 
   const [projectName, setProjectName] = useState<any[]>([]);
+  const [otherReport, setOtherReport] = useState<Report[]>([]);
 
   const handleTaskClick = key => {
     const values = form?.getFieldValue('others');
@@ -62,6 +67,19 @@ const Others = ({
       setProjectName(projects);
     }
   }, [form]);
+
+  useEffect(() => {
+    if (reportList) {
+      const otherList = reportList.filter(report => report.type === '7');
+      setOtherReport(otherList);
+    }
+  }, [reportList]);
+
+  const onRemoveReport = async key => {
+    if (otherReport[key]) {
+      await deleteEmployeeReport(employeeId, otherReport[key].id);
+    }
+  };
 
   return (
     <Form.List name="others">
@@ -185,7 +203,10 @@ const Others = ({
                           fontSize: 24,
                           textAlign: 'right',
                         }}
-                        onClick={() => remove(name)}
+                        onClick={() => {
+                          onRemoveReport(key);
+                          remove(name);
+                        }}
                       />
                     </IconWrapper>
                   ) : (

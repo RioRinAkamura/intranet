@@ -37,10 +37,14 @@ const Report = memo(
     loading,
   }: TimeSheetProps) => {
     const [projectList, setProjectList] = useState<any[]>([]);
+    const [reportList, setReportList] = useState<any[]>([]);
 
     const DATE_FORMAT = config.DATE_FORMAT;
 
-    const { fetchEmployeeReport } = useHandleEmployeeTimesheets();
+    const {
+      fetchEmployeeReport,
+      employeeReports,
+    } = useHandleEmployeeTimesheets();
 
     const fetchEmployeeProject = useCallback(async () => {
       const response = await api.hr.employee.project.list(employeeId);
@@ -48,9 +52,13 @@ const Report = memo(
     }, [employeeId]);
 
     useEffect(() => {
-      fetchEmployeeReport(employeeId);
       fetchEmployeeProject();
-    }, [fetchEmployeeReport, employeeId, fetchEmployeeProject]);
+      fetchEmployeeReport(employeeId);
+    }, [fetchEmployeeProject, fetchEmployeeReport, employeeId]);
+
+    useEffect(() => {
+      setReportList(employeeReports.results);
+    }, [employeeReports]);
 
     const handleSyncClick = () => {
       const values = form?.getFieldsValue();
@@ -219,6 +227,7 @@ const Report = memo(
                 isEdit={isEdit}
                 projectList={projectList}
                 form={form}
+                reportList={reportList}
               />
             </>
             <Divider />
@@ -231,6 +240,7 @@ const Report = memo(
                 isEdit={isEdit}
                 projectList={projectList}
                 form={form}
+                reportList={reportList}
               />
             </>
             <Divider />
@@ -243,6 +253,7 @@ const Report = memo(
                 isEdit={isEdit}
                 projectList={projectList}
                 form={form}
+                reportList={reportList}
               />
             </>
             <Divider />
@@ -255,6 +266,7 @@ const Report = memo(
                 isEdit={isEdit}
                 projectList={projectList}
                 form={form}
+                reportList={reportList}
               />
             </>
             <Divider />
@@ -267,6 +279,7 @@ const Report = memo(
                 isEdit={isEdit}
                 projectList={projectList}
                 form={form}
+                reportList={reportList}
               />
             </>
             <Divider />
@@ -279,6 +292,7 @@ const Report = memo(
                 isEdit={isEdit}
                 projectList={projectList}
                 form={form}
+                reportList={reportList}
               />
             </>
           </WrapperReportItem>
@@ -302,6 +316,7 @@ const Report = memo(
                 isEdit={isEdit}
                 projectList={projectList}
                 form={form}
+                reportList={reportList}
               />
             </>
           </WrapperReportItem>

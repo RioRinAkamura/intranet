@@ -1,8 +1,10 @@
 import { MinusSquareFilled, QuestionCircleFilled } from '@ant-design/icons';
+import { Report } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Form, FormInstance, Input, InputProps, Select } from 'antd';
 import Button from 'app/components/Button';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useHandleEmployeeTimesheets } from '../../../useHandleEmployeeTimesheets';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -12,10 +14,9 @@ interface ReportItemProps {
   isEdit?: boolean;
   isView?: boolean;
   employeeId: string;
-
   projectList?: any[];
-
   form?: FormInstance;
+  reportList?: Report[];
 }
 
 const inputProps: InputProps = {
@@ -30,6 +31,7 @@ const Issues = ({
   employeeId,
   projectList,
   form,
+  reportList,
 }: ReportItemProps) => {
   const defaultReportValue = {
     id: null,
@@ -44,7 +46,11 @@ const Issues = ({
     today_progress: 0,
     tomorrow_progress: 0,
   };
+
+  const { deleteEmployeeReport } = useHandleEmployeeTimesheets();
+
   const [projectName, setProjectName] = useState<any[]>([]);
+  const [issuesReport, setIssuesReport] = useState<Report[]>([]);
 
   const handleTaskClick = key => {
     const values = form?.getFieldValue('issues');
@@ -62,6 +68,19 @@ const Issues = ({
       setProjectName(projects);
     }
   }, [form]);
+
+  useEffect(() => {
+    if (reportList) {
+      const issueList = reportList.filter(report => report.type === '4');
+      setIssuesReport(issueList);
+    }
+  }, [reportList]);
+
+  const onRemoveReport = async key => {
+    if (issuesReport[key]) {
+      await deleteEmployeeReport(employeeId, issuesReport[key].id);
+    }
+  };
 
   return (
     <Form.List name="issues">
@@ -185,7 +204,10 @@ const Issues = ({
                           fontSize: 24,
                           textAlign: 'right',
                         }}
-                        onClick={() => remove(name)}
+                        onClick={() => {
+                          onRemoveReport(key);
+                          remove(name);
+                        }}
                       />
                     </IconWrapper>
                   ) : (

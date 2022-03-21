@@ -149,13 +149,10 @@ export const useHandleEmployeeTimesheets = (): {
     }
   };
 
-  const deleteEmployeeReport = async (
-    employeeId: string,
-    timesheetId: string,
-  ) => {
+  const deleteEmployeeReport = async (employeeId: string, reportId: string) => {
     setLoading(true);
     try {
-      await api.hr.employee.report.delete(employeeId, timesheetId);
+      await api.hr.employee.report.delete(employeeId, reportId);
     } catch (error) {
       console.log(error);
     } finally {

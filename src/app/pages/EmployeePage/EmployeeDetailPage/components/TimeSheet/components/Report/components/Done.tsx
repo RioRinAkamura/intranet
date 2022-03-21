@@ -1,8 +1,10 @@
 import { MinusSquareFilled, QuestionCircleFilled } from '@ant-design/icons';
+import { Report } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Form, FormInstance, Input, InputProps, Select } from 'antd';
 import Button from 'app/components/Button';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useHandleEmployeeTimesheets } from '../../../useHandleEmployeeTimesheets';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -14,6 +16,7 @@ interface ReportItemProps {
   employeeId: string;
   projectList?: any[];
   form?: FormInstance;
+  reportList?: any[];
 }
 
 const inputProps: InputProps = {
@@ -28,6 +31,7 @@ const Done = ({
   employeeId,
   projectList,
   form,
+  reportList,
 }: ReportItemProps) => {
   const defaultReportValue = {
     id: null,
@@ -43,7 +47,10 @@ const Done = ({
     tomorrow_progress: 0,
   };
 
+  const { deleteEmployeeReport } = useHandleEmployeeTimesheets();
+
   const [projectName, setProjectName] = useState<any[]>([]);
+  const [doneReport, setDoneReport] = useState<Report[]>([]);
 
   const handleTaskClick = key => {
     const values = form?.getFieldValue('done');
@@ -61,6 +68,19 @@ const Done = ({
       setProjectName(projects);
     }
   }, [form]);
+
+  useEffect(() => {
+    if (reportList) {
+      const doneList = reportList.filter(report => report.type === '2');
+      setDoneReport(doneList);
+    }
+  }, [reportList]);
+
+  const onRemoveReport = async key => {
+    if (doneReport[key]) {
+      await deleteEmployeeReport(employeeId, doneReport[key].id);
+    }
+  };
 
   return (
     <Form.List name="done">
@@ -184,7 +204,10 @@ const Done = ({
                           fontSize: 24,
                           textAlign: 'right',
                         }}
-                        onClick={() => remove(name)}
+                        onClick={() => {
+                          onRemoveReport(key);
+                          remove(name);
+                        }}
                       />
                     </IconWrapper>
                   ) : (

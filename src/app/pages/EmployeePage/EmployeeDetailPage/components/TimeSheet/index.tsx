@@ -230,6 +230,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
 
   const handleCancel = () => {
     form.resetFields();
+    fetchEmployeeReport(employeeId);
     setIsView(false);
     setIsCreate(false);
     setIsEdit(false);
@@ -245,7 +246,7 @@ export const Timesheet = memo((props: TimesheetProps) => {
   }, [fetchEmployeeReport, employeeId]);
 
   useEffect(() => {
-    setReportList(employeeReports.results.map(report => report));
+    setReportList(employeeReports.results);
   }, [employeeReports]);
 
   const [newDate, setNewDate] = useState<string>();
