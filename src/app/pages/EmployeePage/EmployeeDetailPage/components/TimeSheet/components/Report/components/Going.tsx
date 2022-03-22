@@ -57,17 +57,10 @@ const Going = ({
       win.focus();
     }
   };
-
-  const [projectName, setProjectName] = useState<any[]>([]);
   const [goingReport, setGoingReport] = useState<Report[]>([]);
 
-  useEffect(() => {
-    const values = form?.getFieldValue('going');
-    if (values) {
-      const projects = values.map(value => value?.project?.name);
-      setProjectName(projects);
-    }
-  }, [form]);
+  const values = form?.getFieldValue('going');
+  const projectName = values.map(value => value?.project?.name);
 
   useEffect(() => {
     if (reportList) {
@@ -111,7 +104,7 @@ const Going = ({
                     <QuestionCircleFilled
                       style={{
                         fontSize: 18,
-                        paddingTop: 4,
+
                         margin: 6,
                       }}
                       onClick={() => handleTaskClick(key)}
@@ -156,7 +149,7 @@ const Going = ({
                     <QuestionCircleFilled
                       style={{
                         fontSize: 18,
-                        paddingTop: 4,
+
                         margin: 6,
                       }}
                     />

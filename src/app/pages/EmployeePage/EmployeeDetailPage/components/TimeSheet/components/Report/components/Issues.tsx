@@ -48,8 +48,6 @@ const Issues = ({
   };
 
   const { deleteEmployeeReport } = useHandleEmployeeTimesheets();
-
-  const [projectName, setProjectName] = useState<any[]>([]);
   const [issuesReport, setIssuesReport] = useState<Report[]>([]);
 
   const handleTaskClick = key => {
@@ -61,13 +59,8 @@ const Issues = ({
     }
   };
 
-  useEffect(() => {
-    const values = form?.getFieldValue('issues');
-    if (values) {
-      const projects = values.map(value => value?.project?.name);
-      setProjectName(projects);
-    }
-  }, [form]);
+  const values = form?.getFieldValue('issues');
+  const projectName = values.map(value => value?.project?.name);
 
   useEffect(() => {
     if (reportList) {
@@ -112,7 +105,7 @@ const Issues = ({
                     <QuestionCircleFilled
                       style={{
                         fontSize: 18,
-                        paddingTop: 4,
+
                         margin: 6,
                       }}
                       onClick={() => handleTaskClick(key)}
@@ -157,7 +150,7 @@ const Issues = ({
                     <QuestionCircleFilled
                       style={{
                         fontSize: 18,
-                        paddingTop: 4,
+
                         margin: 6,
                       }}
                     />

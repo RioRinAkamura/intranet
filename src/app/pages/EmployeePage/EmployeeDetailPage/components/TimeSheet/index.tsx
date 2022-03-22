@@ -146,6 +146,26 @@ export const TimeSheet = memo((props: TimesheetProps) => {
     );
   };
 
+  const onWorkStatusChange = async (value, record) => {
+    let workStatusTimesheet = { ...record, work_status: value };
+    try {
+      await editEmployeeTimesheet(employeeId, workStatusTimesheet);
+      fetchEmployeeTimesheets(employeeId);
+      notify({
+        type: ToastMessageType.Info,
+        duration: 2,
+        message: 'Updated',
+      });
+    } catch (e) {
+      console.log(e);
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: 'Update Failed',
+      });
+    }
+  };
+
   const columns: ColumnProps<EmployeeTimesheet>[] = [
     {
       title: 'Date',
@@ -157,7 +177,7 @@ export const TimeSheet = memo((props: TimesheetProps) => {
       title: 'Work status',
       dataIndex: 'work_status',
       width: 130,
-      render: text => {
+      render: (text, record) => {
         return (
           <Select
             defaultValue={text}
@@ -165,6 +185,7 @@ export const TimeSheet = memo((props: TimesheetProps) => {
               color: text === '1' ? 'green' : text === '2' ? 'red' : '',
               width: '100%',
             }}
+            onChange={value => onWorkStatusChange(value, record)}
           >
             <Option style={{ color: 'green' }} value="1">
               ON TRACK
@@ -286,14 +307,11 @@ export const TimeSheet = memo((props: TimesheetProps) => {
   const othersArr = reportList.filter(report => report.type === '7');
   const timesheetArr = reportList.filter(report => report.type === '1');
 
-  const getReportByDate = record => {
+  const getReportByDate = async record => {
     const doneByDate = doneArr.filter(
       report => report?.timesheet?.date === record?.date,
     );
-    // const doneByProject = doneByDate.map(done => {
-    //   return (done = { ...done, project_id: done?.project?.name });
-    // });
-    // console.log('doneByProject', doneByProject);
+
     setDoneDateSelect(doneByDate);
 
     const goingByDate = goingArr.filter(
@@ -532,8 +550,6 @@ export const TimeSheet = memo((props: TimesheetProps) => {
     }
 
     let reportArr = Array.prototype.concat.apply([], newDataArr);
-    console.log('reportArr', reportArr);
-
     try {
       for (let i = 0; i < reportArr.length; i++) {
         await addEmployeeReport(employeeId, reportArr[i]);
