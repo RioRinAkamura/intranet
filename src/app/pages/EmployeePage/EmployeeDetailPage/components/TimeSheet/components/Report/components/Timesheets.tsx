@@ -61,7 +61,7 @@ const Timesheets = ({
   };
 
   const values = form?.getFieldValue('timesheets');
-  const projectName = values.map(value => value?.project?.name);
+  const projectName = values?.map(value => value?.project?.name);
 
   useEffect(() => {
     if (reportList) {

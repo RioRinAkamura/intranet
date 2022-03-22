@@ -60,7 +60,7 @@ const Others = ({
   };
 
   const values = form?.getFieldValue('others');
-  const projectName = values.map(value => value?.project?.name);
+  const projectName = values?.map(value => value?.project?.name);
 
   useEffect(() => {
     if (reportList) {

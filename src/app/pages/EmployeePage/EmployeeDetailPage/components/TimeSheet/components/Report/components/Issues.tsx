@@ -60,7 +60,7 @@ const Issues = ({
   };
 
   const values = form?.getFieldValue('issues');
-  const projectName = values.map(value => value?.project?.name);
+  const projectName = values?.map(value => value?.project?.name);
 
   useEffect(() => {
     if (reportList) {
