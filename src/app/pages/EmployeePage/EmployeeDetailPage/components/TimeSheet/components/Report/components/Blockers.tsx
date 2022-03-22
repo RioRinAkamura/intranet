@@ -61,7 +61,7 @@ const Blockers = ({
   const [blockersReport, setBlockersReport] = useState<Report[]>([]);
 
   const values = form?.getFieldValue('blockers');
-  const projectName = values.map(value => value?.project?.name);
+  const projectName = values?.map(value => value?.project?.name);
 
   useEffect(() => {
     if (reportList) {

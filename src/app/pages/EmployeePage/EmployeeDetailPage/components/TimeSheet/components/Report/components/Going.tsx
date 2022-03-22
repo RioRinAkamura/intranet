@@ -60,7 +60,7 @@ const Going = ({
   const [goingReport, setGoingReport] = useState<Report[]>([]);
 
   const values = form?.getFieldValue('going');
-  const projectName = values.map(value => value?.project?.name);
+  const projectName = values?.map(value => value?.project?.name);
 
   useEffect(() => {
     if (reportList) {

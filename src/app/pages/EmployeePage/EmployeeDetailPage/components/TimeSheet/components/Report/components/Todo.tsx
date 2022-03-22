@@ -59,7 +59,7 @@ const Todo = ({
     }
   };
   const values = form?.getFieldValue('todo');
-  const projectName = values.map(value => value?.project?.name);
+  const projectName = values?.map(value => value?.project?.name);
 
   useEffect(() => {
     if (reportList) {
