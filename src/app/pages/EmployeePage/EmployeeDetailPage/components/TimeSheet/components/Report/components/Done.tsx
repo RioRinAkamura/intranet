@@ -60,7 +60,6 @@ const Done = ({
   };
   const values = form?.getFieldValue('done');
   const projectName = values?.map(value => value?.project?.name);
-  console.log('projectName', projectName);
 
   useEffect(() => {
     if (reportList) {
