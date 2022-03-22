@@ -48,7 +48,6 @@ const Todo = ({
   };
   const { deleteEmployeeReport } = useHandleEmployeeTimesheets();
 
-  const [projectName, setProjectName] = useState<any[]>([]);
   const [todoReport, setTodoReport] = useState<Report[]>([]);
 
   const handleTaskClick = key => {
@@ -59,14 +58,8 @@ const Todo = ({
       win.focus();
     }
   };
-
-  useEffect(() => {
-    const values = form?.getFieldValue('todo');
-    if (values) {
-      const projects = values.map(value => value?.project?.name);
-      setProjectName(projects);
-    }
-  }, [form]);
+  const values = form?.getFieldValue('todo');
+  const projectName = values.map(value => value?.project?.name);
 
   useEffect(() => {
     if (reportList) {
