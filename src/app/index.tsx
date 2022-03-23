@@ -36,6 +36,7 @@ import { PrivatePath } from 'utils/url.const';
 import { SkillManagePage } from './pages/SkillManagePage/Loadable';
 import { useAuthState } from './components/Auth/useAuthState';
 import { UserManageDetailPage } from './pages/ManageUserPage/UserDetailPage';
+import { TimesheetListPage } from './pages/TimesheetPage/TimesheetListPage';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -144,6 +145,12 @@ export function App() {
                     <PrivateRoute
                       path={PrivatePath.SKILLS}
                       component={SkillManagePage}
+                    />
+
+                    {/* Timesheet */}
+                    <PrivateRoute
+                      path={PrivatePath.TIMESHEETS}
+                      component={TimesheetListPage}
                     />
                   </>
                 )}

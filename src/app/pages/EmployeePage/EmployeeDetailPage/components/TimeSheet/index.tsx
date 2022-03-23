@@ -200,7 +200,7 @@ export const TimeSheet = memo((props: TimesheetProps) => {
     {
       title: 'Total hours',
       dataIndex: 'today_hour_total',
-      width: 130,
+      width: 80,
       render: text => text,
     },
     {
