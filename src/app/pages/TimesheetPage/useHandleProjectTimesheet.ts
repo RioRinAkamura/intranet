@@ -1,11 +1,9 @@
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import {
-  CreateReportQueryParams,
+  CreateProjectTimesheetQueryParams,
   ProjectTimesheet,
-  ProjectTimesheetQueryParams,
   Report,
-  ReportQueryParams,
   UpdateProjectTimesheetQueryParams,
-  UpdateReportQueryParams,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Pagination } from '@hdwebsoft/intranet-api-sdk/libs/type';
 import { useCallback, useState } from 'react';
@@ -15,22 +13,16 @@ export const useHandleProjectTimesheets = (): {
   loading: boolean;
   error: boolean;
   projectTimesheets: Pagination<ProjectTimesheet>;
-  projectReports: Pagination<Report>;
+  projectTimesheetItems: ProjectTimesheet[];
+  employeeReports: Report[];
+  employees: Employee[];
   fetchProjectTimesheets: () => void;
-  addProjectTimesheet: (
-    projectId: string,
-    data: ProjectTimesheetQueryParams,
-  ) => void;
-  editProjectTimesheet: (
-    projectId: string,
-    data: UpdateProjectTimesheetQueryParams,
-  ) => void;
-  deleteProjectTimesheet: (projectId: string, timesheetId: string) => void;
-  //REPORT
-  // fetchProjectReport: (projectId: string) => void;
-  // addProjectReport: (projectId: string, data: ReportQueryParams) => void;
-  // editProjectReport: (projectId: string, data: ReportQueryParams) => void;
-  // deleteProjectReport: (projectId: string, timesheetId: string) => void;
+  addProjectTimesheet: (data: UpdateProjectTimesheetQueryParams) => void;
+  editProjectTimesheet: (data: UpdateProjectTimesheetQueryParams) => void;
+  deleteProjectTimesheet: (timesheetId: string) => void;
+  getEmployees: () => Promise<void>;
+  getEmployeeReport: (employeeId: string) => Promise<void>;
+  getProjectTimesheetItems: (timesheetId: string) => Promise<void>;
 } => {
   const [projectTimesheets, setProjectTimesheets] = useState<
     Pagination<ProjectTimesheet>
@@ -41,21 +33,18 @@ export const useHandleProjectTimesheets = (): {
     previous: '',
   });
 
-  const [projectReports, setProjectReports] = useState<Pagination<Report>>({
-    count: 0,
-    results: [],
-    next: '',
-    previous: '',
-  });
-
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employeeReports, setEmployeeReport] = useState<Report[]>([]);
+  const [projectTimesheetItems, setProjectTimesheetItems] = useState<
+    ProjectTimesheet[]
+  >([]);
 
   const fetchProjectTimesheets = useCallback(async () => {
     try {
       const response = await api.hr.projectTimesheet.list();
       setProjectTimesheets(response);
-      console.log('projectTimesheets', projectTimesheets);
     } catch (error) {
       setError(error);
       console.log(error);
@@ -65,8 +54,7 @@ export const useHandleProjectTimesheets = (): {
   }, []);
 
   const addProjectTimesheet = async (
-    projectId: string,
-    data: ProjectTimesheetQueryParams,
+    data: CreateProjectTimesheetQueryParams,
   ) => {
     setLoading(true);
     try {
@@ -79,7 +67,6 @@ export const useHandleProjectTimesheets = (): {
   };
 
   const editProjectTimesheet = async (
-    projectId: string,
     data: UpdateProjectTimesheetQueryParams,
   ) => {
     setLoading(true);
@@ -92,10 +79,7 @@ export const useHandleProjectTimesheets = (): {
     }
   };
 
-  const deleteProjectTimesheet = async (
-    projectId: string,
-    timesheetId: string,
-  ) => {
+  const deleteProjectTimesheet = async (timesheetId: string) => {
     setLoading(true);
     try {
       await api.hr.projectTimesheet.delete(timesheetId);
@@ -106,73 +90,58 @@ export const useHandleProjectTimesheets = (): {
     }
   };
 
-  //REPORT
+  const getEmployees = useCallback(async () => {
+    try {
+      const response = await api.hr.employee.list(
+        undefined,
+        undefined,
+        undefined,
+        1,
+        500,
+      );
+      if (response) {
+        setEmployees(response.results);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
 
-  // const fetchProjectReport = useCallback(async (projectId: string) => {
-  //   try {
-  //     const response = await api.hr.projectTimesheet.list(projectId);
-  //     if (response) {
-  //       setProjectReports(response);
-  //     }
-  //   } catch (error) {
-  //     setError(error);
-  //     console.log(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, []);
+  const getProjectTimesheetItems = useCallback(async (timesheetId: string) => {
+    try {
+      const response = await api.hr.projectTimesheet.listReport(timesheetId);
+      if (response) {
+        setProjectTimesheetItems(response.results);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
 
-  // const addProjectReport = async (
-  //   projectId: string,
-  //   data: CreateReportQueryParams,
-  // ) => {
-  //   setLoading(true);
-  //   try {
-  //     await api.hr.project.report.create(projectId, data);
-  //   } catch (e) {
-  //     console.log(e);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const editProjectReport = async (
-  //   projectId: string,
-  //   data: UpdateReportQueryParams,
-  // ) => {
-  //   setLoading(true);
-  //   try {
-  //     await api.hr.project.report.update(projectId, data);
-  //   } catch (e) {
-  //     console.log(e);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const deleteProjectReport = async (projectId: string, reportId: string) => {
-  //   setLoading(true);
-  //   try {
-  //     await api.hr.project.report.delete(projectId, reportId);
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const getEmployeeReport = useCallback(async (employeeId: string) => {
+    try {
+      const response = await api.hr.employee.report.list(employeeId);
+      if (response) {
+        setEmployeeReport(response.results);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
 
   return {
     loading,
     error,
     projectTimesheets,
-    projectReports,
+    projectTimesheetItems,
+    employees,
+    employeeReports,
     fetchProjectTimesheets,
     addProjectTimesheet,
     editProjectTimesheet,
     deleteProjectTimesheet,
-    // fetchProjectReport,
-    // addProjectReport,
-    // editProjectReport,
-    // deleteProjectReport,
+    getEmployees,
+    getProjectTimesheetItems,
+    getEmployeeReport,
   };
 };
