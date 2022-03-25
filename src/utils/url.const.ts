@@ -50,4 +50,6 @@ export enum PrivatePath {
   SKILLS_CREATE = '/skills/create',
   SKILLS_CATEGORIES = '/skills/categories',
   SKILLS_CATEGORIES_CREATE = '/skills/categories/create',
+
+  TIMESHEETS = '/project-timesheets',
 }

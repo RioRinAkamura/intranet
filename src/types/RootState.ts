@@ -13,6 +13,7 @@ import { ProjectChangeLogsState } from 'app/pages/ProjectPage/ProjectDetailPage/
 import { ProjectNoteState } from 'app/pages/ProjectPage/ProjectDetailPage/components/Notes/slice/types';
 import { ProjectsState } from 'app/pages/ProjectPage/ProjectListPage/slice/types';
 import { TaskManagerState } from 'app/pages/TaskManagerPage/slice/types';
+import { ProjectTimesheetState } from 'app/pages/TimesheetPage/TimesheetListPage/slice/types';
 import { ThemeState } from 'styles/theme/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
@@ -35,6 +36,7 @@ export interface RootState {
   employeeChangeLogs?: EmployeeChangeLogsState;
   employeeSkill: EmployeeSkillState;
   employeeTimesheet: EmployeeTimesheetState;
+  projectTimesheet: ProjectTimesheetState;
   usersmanagepage?: UsersManagePageState;
   // leaveApplication?: LeaveApplicationState;
   DeviceManager?: DevicesManagerState;

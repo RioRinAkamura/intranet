@@ -198,9 +198,15 @@ export const TimeSheet = memo((props: TimesheetProps) => {
       },
     },
     {
-      title: 'Total hours',
+      title: 'Today total hours',
       dataIndex: 'today_hour_total',
-      width: 130,
+      width: 100,
+      render: text => text,
+    },
+    {
+      title: 'Tomorrow total hours',
+      dataIndex: 'tomorrow_hour_total',
+      width: 100,
       render: text => text,
     },
     {
