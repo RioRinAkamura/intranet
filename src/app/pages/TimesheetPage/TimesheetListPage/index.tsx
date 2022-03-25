@@ -60,6 +60,7 @@ export const TimesheetListPage = () => {
   // const [isDeleteMulti, setIsDeleteMulti] = useState(false);
 
   const [creatorTimesheet, setCreatorTimesheet] = useState<any[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string>();
 
   const [isView, setIsView] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState<boolean>(false);
@@ -175,10 +176,9 @@ export const TimesheetListPage = () => {
     setIsCreate(false);
   };
 
-  const [selectedDate, setSelectedDate] = useState<string>();
-
   const handleCreatorClick = async (creator, record) => {
     setSelectedDate(record.date);
+    console.log('selectedDate', selectedDate);
     try {
       await getEmployeeReport(creator.id);
     } catch (err) {
@@ -196,7 +196,7 @@ export const TimesheetListPage = () => {
       title: 'Date',
       dataIndex: 'date',
       width: 100,
-      render: value => value,
+      render: value => (value ? moment(value).format('MM-DD-YYYY') : ''),
     },
     {
       title: 'Work Status',
@@ -347,7 +347,7 @@ export const TimesheetListPage = () => {
                 Date:
                 <DatePicker
                   {...datePickerViewProps}
-                  format={DATE_FORMAT}
+                  format={'MM-DD-YYYY'}
                   disabledDate={disabledDate}
                   style={{ marginLeft: 12 }}
                   allowClear={false}
@@ -398,14 +398,10 @@ export const TimesheetListPage = () => {
                 Date:
                 <DatePicker
                   {...datePickerViewProps}
-                  format={DATE_FORMAT}
+                  format={'MM-DD-YYYY'}
                   style={{ marginLeft: 12 }}
                   allowClear={false}
-                  defaultValue={
-                    selectedDate
-                      ? moment(selectedDate)
-                      : moment(selectedTimesheet?.date, DATE_FORMAT)
-                  }
+                  defaultValue={moment(selectedDate)}
                 />
               </div>
             </ModalContentWrapper>

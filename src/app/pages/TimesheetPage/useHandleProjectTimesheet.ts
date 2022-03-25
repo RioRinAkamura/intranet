@@ -42,6 +42,7 @@ export const useHandleProjectTimesheets = (): {
   >([]);
 
   const fetchProjectTimesheets = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await api.hr.projectTimesheet.list();
       setProjectTimesheets(response);
@@ -108,6 +109,7 @@ export const useHandleProjectTimesheets = (): {
   }, []);
 
   const getProjectTimesheetItems = useCallback(async (timesheetId: string) => {
+    setLoading(true);
     try {
       const response = await api.hr.projectTimesheet.listReport(timesheetId);
       if (response) {
@@ -115,10 +117,13 @@ export const useHandleProjectTimesheets = (): {
       }
     } catch (error: any) {
       setError(error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const getEmployeeReport = useCallback(async (employeeId: string) => {
+    setLoading(true);
     try {
       const response = await api.hr.employee.report.list(employeeId);
       if (response) {
@@ -126,6 +131,8 @@ export const useHandleProjectTimesheets = (): {
       }
     } catch (error: any) {
       setError(error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 

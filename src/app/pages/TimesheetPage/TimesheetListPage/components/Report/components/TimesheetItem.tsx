@@ -1,7 +1,7 @@
 import { QuestionCircleFilled } from '@ant-design/icons';
-import { Report } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Form, Input, InputProps } from 'antd';
-import React from 'react';
+import { DialogModal } from 'app/components/DialogModal';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 interface TimesheetItemProps {
@@ -26,6 +26,23 @@ const TimesheetItem = ({
 }: TimesheetItemProps) => {
   const handleTaskClick = reference => {
     const win = window.open(reference, '_blank');
+    if (win) {
+      win.focus();
+    }
+  };
+  const [isDesc, setIsDesc] = useState<boolean>(false);
+  const [desc, setDesc] = useState<string>();
+
+  const handleDescClick = desc => {
+    setDesc(desc);
+    setIsDesc(true);
+  };
+  const handleCancelDesc = () => {
+    setIsDesc(false);
+  };
+
+  const handleProjectClick = projectId => {
+    const win = window.open(`/projects/${projectId}/`, '_blank');
     if (win) {
       win.focus();
     }
@@ -71,6 +88,7 @@ const TimesheetItem = ({
                       fontSize: 18,
                       margin: 6,
                     }}
+                    onClick={() => handleProjectClick(report.project.id)}
                   />
                 </IconWrapper>
               </Wrapper>
@@ -91,6 +109,7 @@ const TimesheetItem = ({
                       fontSize: 18,
                       margin: 6,
                     }}
+                    onClick={() => handleDescClick(report.description)}
                   />
                 </IconWrapper>
               </Wrapper>
@@ -194,15 +213,23 @@ const TimesheetItem = ({
                 <FormItemStyled
                   label="Assignee"
                   name="assignee"
-                  style={{ marginTop: 30 }}
+                  // style={{ marginTop: 30 }}
                 >
                   {report?.assignee?.name}
                 </FormItemStyled>
               </Wrapper>
-              <div style={{ marginTop: 20 }}></div>
             </WrapperItem>
           </div>
         ))}
+
+      <DialogModal
+        isOpen={isDesc}
+        cancelText={'Cancel'}
+        handleCancel={handleCancelDesc}
+        title="Description"
+      >
+        {desc ? desc : ''}
+      </DialogModal>
     </>
   );
 };

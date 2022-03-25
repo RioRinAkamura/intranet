@@ -52,6 +52,7 @@ export const useHandleEmployeeTimesheets = (): {
   const [error, setError] = useState<boolean>(false);
 
   const fetchEmployeeTimesheets = useCallback(async (employeeId: string) => {
+    setLoading(true);
     try {
       const response = await api.hr.employee.timesheet.list(employeeId);
       setEmployeeTimesheets(response);
@@ -108,6 +109,7 @@ export const useHandleEmployeeTimesheets = (): {
   //REPORT
 
   const fetchEmployeeReport = useCallback(async (employeeId: string) => {
+    setLoading(true);
     try {
       const response = await api.hr.employee.report.list(employeeId);
       if (response) {
