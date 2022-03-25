@@ -55,12 +55,15 @@ export const TimesheetListPage = () => {
     deleteProjectTimesheet,
   } = useHandleProjectTimesheets();
 
-  // const state = useSelector(selectProjectTimesheetState);
-
-  // const [isDeleteMulti, setIsDeleteMulti] = useState(false);
+  // const {
+  //   employeeTimesheets,
+  //   fetchEmployeeTimesheets,
+  //   editEmployeeTimesheet,
+  // } = useHandleEmployeeTimesheets();
 
   const [creatorTimesheet, setCreatorTimesheet] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>();
+  // const [employeeTimesheetList, setEmployeeTimesheetList] = useState<any[]>([]);
 
   const [isView, setIsView] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState<boolean>(false);
@@ -76,7 +79,6 @@ export const TimesheetListPage = () => {
   }, [fetchProjectTimesheets, getEmployees]);
 
   const onViewClick = async record => {
-    console.log('record', record);
     await getProjectTimesheetItems(record.id);
     setSelectedTimesheet(record);
     setIsView(true);
@@ -138,6 +140,8 @@ export const TimesheetListPage = () => {
   const handleCancel = () => {
     setIsView(false);
     setIsCreate(false);
+    setSelectedTimesheet(undefined);
+    form.resetFields();
   };
 
   const handleCancelCreateTimesheet = () => {
@@ -178,7 +182,6 @@ export const TimesheetListPage = () => {
 
   const handleCreatorClick = async (creator, record) => {
     setSelectedDate(record.date);
-    console.log('selectedDate', selectedDate);
     try {
       await getEmployeeReport(creator.id);
     } catch (err) {
@@ -189,6 +192,24 @@ export const TimesheetListPage = () => {
     );
     setCreatorTimesheet(creatorRpByDate);
     setIsCreator(true);
+  };
+
+  const handleApproveAll = async record => {
+    // console.log('record', record);
+    // const creatorsId = record.creators.map(creator => creator.id);
+    // console.log('creatorsId', creatorsId);
+    // for (let id of creatorsId) {
+    //   await fetchEmployeeTimesheets(id);
+    //   let listTimesheet = [
+    //     ...employeeTimesheetList,
+    //     employeeTimesheets.results,
+    //   ];
+    //   setEmployeeTimesheetList(listTimesheet);
+    //   let listApprove = { ...employeeTimesheets, status: '3' };
+    //   await editEmployeeTimesheet(id, listApprove);
+    // }
+    // console.log('employeeTimesheets', employeeTimesheets);
+    // console.log('employeeTimesheetList', employeeTimesheetList);
   };
 
   const columns: ColumnProps<ProjectTimesheet>[] = [
@@ -224,7 +245,7 @@ export const TimesheetListPage = () => {
     {
       title: 'Creators',
       dataIndex: 'creators',
-      width: 130,
+      width: 170,
       render: (value, record) =>
         value.map(creator => (
           <CreatorStyle onClick={() => handleCreatorClick(creator, record)}>
@@ -235,8 +256,23 @@ export const TimesheetListPage = () => {
     {
       title: 'Approved',
       dataIndex: 'approved',
-      width: 130,
+      width: 80,
       render: value => value,
+    },
+    {
+      title: '',
+      width: 130,
+      render: (value, record) => (
+        <>
+          <Button
+            loading={loading}
+            size="small"
+            onClick={() => handleApproveAll(record)}
+          >
+            Approve All
+          </Button>
+        </>
+      ),
     },
 
     {
@@ -258,10 +294,6 @@ export const TimesheetListPage = () => {
       },
     },
   ];
-
-  const onFinish = values => {
-    console.log('values form project timesheets', values);
-  };
 
   return (
     <>
@@ -335,12 +367,7 @@ export const TimesheetListPage = () => {
         loading={loading}
         width={920}
       >
-        <Form
-          name="project-timesheets"
-          form={form}
-          onFinish={onFinish}
-          autoComplete="off"
-        >
+        <Form name="project-timesheets" form={form} autoComplete="off">
           <Form.Item name="date">
             <ModalContentWrapper>
               <div>
