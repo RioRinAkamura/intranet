@@ -56,7 +56,7 @@ export const Creators = (props: CreatorsProps) => {
     }
   };
 
-  const getCreators = (id?: string): string[] => {
+  const getCreators = (id?: string): any[] => {
     let creatorIds: string[] = [];
     if (timesheet.creators) {
       if (id) {
@@ -76,13 +76,14 @@ export const Creators = (props: CreatorsProps) => {
 
   const updateCreator = async (id?: string) => {
     try {
-      if (!value) return;
+      if (!value && !id) return;
       let creatorIds = getCreators(id);
       if (value) creatorIds = [...creatorIds, value];
+      let newCerators = creatorIds.map(creator => ({ id: creator }));
       const timesheetUpdated: ProjectTimesheet = await api.hr.projectTimesheet.update(
         {
           ...timesheet,
-          //   assignee_id: timesheet.creators,
+          creators: newCerators,
         },
       );
       callback();
