@@ -3,11 +3,13 @@ import {
   EyeOutlined,
   MoreOutlined,
   PlusCircleOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import { ProjectTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Col, DatePicker, Form, Popover, Row, Table, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';
+import { Avatar } from 'app/components/Avatar';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import Button, { IconButton } from 'app/components/Button';
 import { DeleteModal } from 'app/components/DeleteModal';
@@ -22,6 +24,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { datePickerViewProps } from 'utils/types';
 import { useHandleProjectTimesheets } from '../useHandleProjectTimesheet';
+import { Creators } from './components/Creators';
 import { ProjectTimesheetForm } from './components/Form';
 import { Report } from './components/Report';
 // import { selectProjectTimesheetState } from './slice/selectors';
@@ -65,9 +68,12 @@ export const TimesheetListPage = () => {
   const [selectedDate, setSelectedDate] = useState<string>();
   // const [employeeTimesheetList, setEmployeeTimesheetList] = useState<any[]>([]);
 
+  const [timesheet, setTimesheet] = useState<ProjectTimesheet>();
+  const [creatorSelected, setCreatorSelected] = useState<string>('');
   const [isView, setIsView] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState<boolean>(false);
   const [isCreator, setIsCreator] = useState<boolean>(false);
+  const [isAddCreator, setIsAddCreator] = useState<boolean>(false);
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<
     ProjectTimesheet
@@ -81,6 +87,7 @@ export const TimesheetListPage = () => {
   const onViewClick = async record => {
     await getProjectTimesheetItems(record.id);
     setSelectedTimesheet(record);
+
     setIsView(true);
   };
 
@@ -182,6 +189,7 @@ export const TimesheetListPage = () => {
 
   const handleCreatorClick = async (creator, record) => {
     setSelectedDate(record.date);
+    setCreatorSelected(creator.name);
     try {
       await getEmployeeReport(creator.id);
     } catch (err) {
@@ -210,6 +218,15 @@ export const TimesheetListPage = () => {
     // }
     // console.log('employeeTimesheets', employeeTimesheets);
     // console.log('employeeTimesheetList', employeeTimesheetList);
+  };
+
+  const openAddCreators = record => {
+    setTimesheet(record);
+    setIsAddCreator(true);
+  };
+
+  const handleCancelAddCreator = () => {
+    setIsAddCreator(false);
   };
 
   const columns: ColumnProps<ProjectTimesheet>[] = [
@@ -246,12 +263,37 @@ export const TimesheetListPage = () => {
       title: 'Creators',
       dataIndex: 'creators',
       width: 170,
-      render: (value, record) =>
-        value.map(creator => (
-          <CreatorStyle onClick={() => handleCreatorClick(creator, record)}>
-            {creator.name} <br />
-          </CreatorStyle>
-        )),
+      render: (creator, record) => {
+        return (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              {creator.map(creator => (
+                <div style={{ marginTop: 4 }}>
+                  <CreatorsWrapper>
+                    <Avatar
+                      size={30}
+                      src={creator.avatar || undefined}
+                      name={creator.first_name + ' ' + creator.last_name}
+                    />
+                    <CreatorStyle
+                      onClick={() => handleCreatorClick(creator, record)}
+                    >
+                      {creator.name} <br />
+                    </CreatorStyle>
+                  </CreatorsWrapper>
+                </div>
+              ))}
+            </div>
+            <SettingOutlined onClick={() => openAddCreators(record)} />
+          </div>
+        );
+      },
     },
     {
       title: 'Approved',
@@ -264,11 +306,7 @@ export const TimesheetListPage = () => {
       width: 130,
       render: (value, record) => (
         <>
-          <Button
-            loading={loading}
-            size="small"
-            onClick={() => handleApproveAll(record)}
-          >
+          <Button size="small" onClick={() => handleApproveAll(record)}>
             Approve All
           </Button>
         </>
@@ -378,7 +416,7 @@ export const TimesheetListPage = () => {
                   disabledDate={disabledDate}
                   style={{ marginLeft: 12 }}
                   allowClear={false}
-                  defaultValue={moment(selectedTimesheet?.date, DATE_FORMAT)}
+                  value={moment(selectedTimesheet?.date, DATE_FORMAT)}
                 />
               </div>
             </ModalContentWrapper>
@@ -413,6 +451,7 @@ export const TimesheetListPage = () => {
       {/* CREATOR TIMESHEET BY DATE */}
       <DialogModal
         isOpen={isCreator}
+        title={creatorSelected}
         cancelText={'Cancel'}
         handleCancel={handleCancelCreatorTimesheet}
         loading={loading}
@@ -428,7 +467,7 @@ export const TimesheetListPage = () => {
                   format={'MM-DD-YYYY'}
                   style={{ marginLeft: 12 }}
                   allowClear={false}
-                  defaultValue={moment(selectedDate)}
+                  value={moment(selectedDate)}
                 />
               </div>
             </ModalContentWrapper>
@@ -441,6 +480,22 @@ export const TimesheetListPage = () => {
             projectTimesheetItems={creatorTimesheet}
           />
         </Form>
+      </DialogModal>
+
+      <DialogModal
+        isOpen={isAddCreator}
+        cancelText={'Cancel'}
+        okText={'Save'}
+        title="Creators"
+        handleCancel={handleCancelAddCreator}
+        loading={loading}
+      >
+        {timesheet && (
+          <Creators
+            timesheet={timesheet}
+            callback={() => fetchProjectTimesheets()}
+          />
+        )}
       </DialogModal>
 
       <DeleteModal
@@ -476,7 +531,13 @@ const ModalContentWrapper = styled.div`
 
 const CreatorStyle = styled.span`
   cursor: pointer;
+  margin-left: 6px;
   :hover {
     font-weight: 500;
   }
+`;
+
+const CreatorsWrapper = styled.div`
+  display: flex;
+  align-items: center;
 `;

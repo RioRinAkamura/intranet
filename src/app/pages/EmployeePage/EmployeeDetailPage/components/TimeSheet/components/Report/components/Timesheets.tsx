@@ -232,7 +232,7 @@ const Timesheets = ({
                         {...(isView ? inputProps : {})}
                         size="small"
                         type="number"
-                        max={24}
+                        max={8}
                         min={0}
                       />
                     </FormItemStyled>

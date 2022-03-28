@@ -52,6 +52,7 @@ export const TimeSheet = memo((props: TimesheetProps) => {
   const [todoDateSelect, setTodoDateSelect] = useState<any[]>([]);
   const [otherDateSelect, setOtherDateSelect] = useState<any[]>([]);
   const [timesheetDateSelect, setTimesheetDateSelect] = useState<any[]>([]);
+  const [newDate, setNewDate] = useState<string>();
 
   const { notify } = useNotify();
 
@@ -279,11 +280,11 @@ export const TimeSheet = memo((props: TimesheetProps) => {
     setIsDelete(false);
   };
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     setIsView(false);
     setIsCreate(false);
     setIsEdit(false);
-    form.resetFields();
+    await form.resetFields();
   };
 
   const handleToggle = () => {
@@ -298,8 +299,6 @@ export const TimeSheet = memo((props: TimesheetProps) => {
   useEffect(() => {
     setReportList(employeeReports.results);
   }, [employeeReports]);
-
-  const [newDate, setNewDate] = useState<string>();
 
   const handleDateChange = date => {
     setNewDate(moment(date).format(DATE_FORMAT));
@@ -683,7 +682,7 @@ export const TimeSheet = memo((props: TimesheetProps) => {
                   {...(isView || isEdit ? datePickerViewProps : {})}
                   format={DATE_FORMAT}
                   disabledDate={disabledDate}
-                  defaultValue={
+                  value={
                     isView || isEdit
                       ? moment(selectedTimesheet?.date)
                       : moment(today, DATE_FORMAT)
