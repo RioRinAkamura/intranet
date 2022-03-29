@@ -12,30 +12,31 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { PrivatePath } from 'utils/url.const';
+import '../app.less';
 import { GlobalStyle } from '../styles/global-styles';
 import AppLayout from './components/AppLayout';
-import { PrivateRoute, PublicRoute } from './components/Auth/Route';
-import { HomePage } from './pages/HomePage/Loadable';
-import { Login } from './pages/Login/Loadable';
-import { NotFoundPage } from './pages/NotFoundPage/Loadable';
-import { EmployeePage } from './pages/EmployeePage/Loadable';
-import { authProvider } from './components/Auth/defaultAuthProvider';
 import { AuthContextProvider } from './components/Auth/Context';
-import { ForgotPassword } from './pages/ForgotPassword/Loadable';
-import { ResetPassword } from './pages/ResetPassword/Loadable';
-import { ToastContextProvider } from './components/Toast/context';
-import { BreadCrumbsContextProvider } from './components/Breadcrumbs/context';
-import { ProjectPage } from './pages/ProjectPage/Loadable';
-import { LeaveApplicationPage } from './pages/LeaveApplicationPage/LeaveApplicationListPage/Loadable';
-import { UserPage } from './pages/ManageUserPage/Loadable';
-import { LeaveApplicationDetailPage } from './pages/LeaveApplicationPage/LeaveApplicationDetailPage/Loadable';
-import { DeviceManagePage } from './pages/DeviceManagePage/Loadable';
-import { TaskManagerPage } from './pages/TaskManagerPage/Loadable';
-import '../app.less';
-import { PrivatePath } from 'utils/url.const';
-import { SkillManagePage } from './pages/SkillManagePage/Loadable';
+import { authProvider } from './components/Auth/defaultAuthProvider';
+import { PrivateRoute, PublicRoute } from './components/Auth/Route';
 import { useAuthState } from './components/Auth/useAuthState';
+import { BreadCrumbsContextProvider } from './components/Breadcrumbs/context';
+import { ToastContextProvider } from './components/Toast/context';
+import { DeviceManagePage } from './pages/DeviceManagePage/Loadable';
+import { TimeSheet } from './pages/EmployeePage/EmployeeDetailPage/components/TimeSheet';
+import { EmployeePage } from './pages/EmployeePage/Loadable';
+import { ForgotPassword } from './pages/ForgotPassword/Loadable';
+import { HomePage } from './pages/HomePage/Loadable';
+import { LeaveApplicationDetailPage } from './pages/LeaveApplicationPage/LeaveApplicationDetailPage/Loadable';
+import { LeaveApplicationPage } from './pages/LeaveApplicationPage/LeaveApplicationListPage/Loadable';
+import { Login } from './pages/Login/Loadable';
+import { UserPage } from './pages/ManageUserPage/Loadable';
 import { UserManageDetailPage } from './pages/ManageUserPage/UserDetailPage';
+import { NotFoundPage } from './pages/NotFoundPage/Loadable';
+import { ProjectPage } from './pages/ProjectPage/Loadable';
+import { ResetPassword } from './pages/ResetPassword/Loadable';
+import { SkillManagePage } from './pages/SkillManagePage/Loadable';
+import { TaskManagerPage } from './pages/TaskManagerPage/Loadable';
 import { TimesheetListPage } from './pages/TimesheetPage/TimesheetListPage';
 
 export function App() {
@@ -84,6 +85,10 @@ export function App() {
                       path={PrivatePath.USERS_ID}
                       component={UserManageDetailPage}
                     />
+                    <PrivateRoute
+                      path={PrivatePath.USERS_ID_TIMESHEETS}
+                      component={TimeSheet}
+                    />
                   </>
                 ) : (
                   <>
@@ -105,10 +110,10 @@ export function App() {
                     />
                     {/* Project */}
                     <PrivateRoute
+                      exact
                       path={PrivatePath.PROJECTS}
                       component={ProjectPage}
                     />
-
                     {/* LeaveApplication */}
                     <PrivateRoute
                       path={PrivatePath.LEAVE_APPLICATION}
@@ -123,19 +128,16 @@ export function App() {
                       path={PrivatePath.LEAVE_APPLICATION_ID}
                       component={LeaveApplicationDetailPage}
                     />
-
                     {/* User */}
                     <PrivateRoute
                       path={PrivatePath.USERS}
                       component={UserPage}
                     />
-
                     {/* Devices */}
                     <PrivateRoute
                       path={PrivatePath.DEVICES}
                       component={DeviceManagePage}
                     />
-
                     {/* Task */}
                     <PrivateRoute
                       path={PrivatePath.TASKS}
@@ -146,10 +148,9 @@ export function App() {
                       path={PrivatePath.SKILLS}
                       component={SkillManagePage}
                     />
-
                     {/* Timesheet */}
                     <PrivateRoute
-                      path={PrivatePath.TIMESHEETS}
+                      path={PrivatePath.PROJECT_TIMESHEETS}
                       component={TimesheetListPage}
                     />
                   </>

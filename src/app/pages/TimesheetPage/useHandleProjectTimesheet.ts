@@ -21,7 +21,7 @@ export const useHandleProjectTimesheets = (): {
   editProjectTimesheet: (data: UpdateProjectTimesheetQueryParams) => void;
   deleteProjectTimesheet: (timesheetId: string) => void;
   getEmployees: () => Promise<void>;
-  getEmployeeReport: (employeeId: string) => Promise<void>;
+  getEmployeeReport: (employeeId: string, date: string) => Promise<void>;
   getProjectTimesheetItems: (timesheetId: string) => Promise<void>;
 } => {
   const [projectTimesheets, setProjectTimesheets] = useState<
@@ -122,19 +122,25 @@ export const useHandleProjectTimesheets = (): {
     }
   }, []);
 
-  const getEmployeeReport = useCallback(async (employeeId: string) => {
-    setLoading(true);
-    try {
-      const response = await api.hr.employee.report.list(employeeId);
-      if (response) {
-        setEmployeeReport(response.results);
+  const getEmployeeReport = useCallback(
+    async (employeeId: string, date: string) => {
+      setLoading(true);
+      try {
+        const response = await api.hr.employee.report.listByDate(
+          employeeId,
+          date,
+        );
+        if (response) {
+          setEmployeeReport(response.results);
+        }
+      } catch (error: any) {
+        setError(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [],
+  );
 
   return {
     loading,

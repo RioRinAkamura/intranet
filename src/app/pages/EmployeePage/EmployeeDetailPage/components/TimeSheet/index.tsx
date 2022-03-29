@@ -43,15 +43,16 @@ export const TimeSheet = memo((props: TimesheetProps) => {
 
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<any>();
-  const [reportList, setReportList] = useState<any[]>([]);
+  const [reportList, setReportList] = useState<any[]>();
   const [employee, setEmployee] = useState<any>();
-  const [doneDateSelect, setDoneDateSelect] = useState<any[]>([]);
-  const [goingDateSelect, setGoingDateSelect] = useState<any[]>([]);
-  const [blockerDateSelect, setBlockerDateSelect] = useState<any[]>([]);
-  const [issuesDateSelect, setIssuesDateSelect] = useState<any[]>([]);
-  const [todoDateSelect, setTodoDateSelect] = useState<any[]>([]);
-  const [otherDateSelect, setOtherDateSelect] = useState<any[]>([]);
-  const [timesheetDateSelect, setTimesheetDateSelect] = useState<any[]>([]);
+
+  const [doneList, setDoneList] = useState<any[]>();
+  const [goingList, setGoingList] = useState<any[]>();
+  const [blockerList, setBLockerList] = useState<any[]>();
+  const [issueList, setIssueList] = useState<any[]>();
+  const [todoList, setTodoList] = useState<any[]>();
+  const [otherList, setOtherList] = useState<any[]>();
+  const [timesheetList, setTimesheetList] = useState<any[]>();
   const [newDate, setNewDate] = useState<string>();
 
   const { notify } = useNotify();
@@ -75,11 +76,31 @@ export const TimeSheet = memo((props: TimesheetProps) => {
     loading,
     deleteEmployeeTimesheet,
     fetchEmployeeReport,
+    fetchEmployeeReportByDate,
   } = useHandleEmployeeTimesheets();
+
+  useEffect(() => {
+    fetchEmployeeReport(employeeId);
+  }, [fetchEmployeeReport, employeeId]);
+
+  useEffect(() => {
+    setReportList(employeeReports.results);
+  }, [employeeReports]);
+
+  const [projectList, setProjectList] = useState<any[]>();
 
   useEffect(() => {
     fetchEmployeeTimesheets(employeeId);
   }, [fetchEmployeeTimesheets, employeeId]);
+
+  const fetchEmployeeProject = useCallback(async (employeeId: string) => {
+    const response = await api.hr.employee.project.list(employeeId);
+    setProjectList(response.results);
+  }, []);
+
+  useEffect(() => {
+    fetchEmployeeProject(employeeId);
+  }, [fetchEmployeeProject, employeeId]);
 
   const fetchEmployee = useCallback(async () => {
     const response = await api.hr.employee.get(employeeId);
@@ -98,16 +119,15 @@ export const TimeSheet = memo((props: TimesheetProps) => {
   const showDeleteModal = () => {
     setIsDelete(true);
   };
-
-  const onViewClick = record => {
+  const onViewClick = async (record: EmployeeTimesheet) => {
     setSelectedTimesheet(record);
-    getReportByDate(record);
+    await fetchEmployeeReportByDate(record.employee.id, record.date);
     setIsView(true);
   };
 
-  const onEditClick = record => {
+  const onEditClick = async record => {
     setSelectedTimesheet(record);
-    getReportByDate(record);
+    await fetchEmployeeReportByDate(record.employee.id, record.date);
     setIsEdit(true);
   };
 
@@ -280,11 +300,11 @@ export const TimeSheet = memo((props: TimesheetProps) => {
     setIsDelete(false);
   };
 
-  const handleCancel = async () => {
+  const handleCancel = () => {
     setIsView(false);
     setIsCreate(false);
     setIsEdit(false);
-    await form.resetFields();
+    form.resetFields();
   };
 
   const handleToggle = () => {
@@ -292,72 +312,37 @@ export const TimeSheet = memo((props: TimesheetProps) => {
     setIsView(!isView);
   };
 
-  useEffect(() => {
-    fetchEmployeeReport(employeeId);
-  }, [fetchEmployeeReport, employeeId]);
-
-  useEffect(() => {
-    setReportList(employeeReports.results);
-  }, [employeeReports]);
-
   const handleDateChange = date => {
     setNewDate(moment(date).format(DATE_FORMAT));
   };
 
-  const doneArr = reportList.filter(report => report.type === '2');
-  const goingArr = reportList.filter(report => report.type === '3');
-  const blockerArr = reportList.filter(report => report.type === '5');
-  const issuesArr = reportList.filter(report => report.type === '4');
-  const todoArr = reportList.filter(report => report.type === '6');
-  const othersArr = reportList.filter(report => report.type === '7');
-  const timesheetArr = reportList.filter(report => report.type === '1');
-
-  const getReportByDate = async record => {
-    const doneByDate = doneArr.filter(
-      report => report?.timesheet?.date === record?.date,
-    );
-
-    setDoneDateSelect(doneByDate);
-
-    const goingByDate = goingArr.filter(
-      report => report?.timesheet?.date === record?.date,
-    );
-    setGoingDateSelect(goingByDate);
-
-    const blockerByDate = blockerArr.filter(
-      report => report?.timesheet?.date === record?.date,
-    );
-    setBlockerDateSelect(blockerByDate);
-
-    const issuesByDate = issuesArr.filter(
-      report => report?.timesheet?.date === record?.date,
-    );
-    setIssuesDateSelect(issuesByDate);
-
-    const todoByDate = todoArr.filter(
-      report => report?.timesheet?.date === record?.date,
-    );
-    setTodoDateSelect(todoByDate);
-
-    const otherByDate = othersArr.filter(
-      report => report?.timesheet?.date === record?.date,
-    );
-    setOtherDateSelect(otherByDate);
-
-    const timesheetByDate = timesheetArr.filter(
-      report => report?.timesheet?.date === record?.date,
-    );
-    setTimesheetDateSelect(timesheetByDate);
-  };
+  useEffect(() => {
+    if (reportList) {
+      const doneArr = reportList.filter(report => report.type === '2');
+      setDoneList(doneArr);
+      const goingArr = reportList.filter(report => report.type === '3');
+      setGoingList(goingArr);
+      const blockerArr = reportList.filter(report => report.type === '5');
+      setBLockerList(blockerArr);
+      const issuesArr = reportList.filter(report => report.type === '4');
+      setIssueList(issuesArr);
+      const todoArr = reportList.filter(report => report.type === '6');
+      setTodoList(todoArr);
+      const othersArr = reportList.filter(report => report.type === '7');
+      setOtherList(othersArr);
+      const timesheetArr = reportList.filter(report => report.type === '1');
+      setTimesheetList(timesheetArr);
+    }
+  }, [reportList]);
 
   const initialValuesForm = {
-    done: isCreate ? undefined : doneDateSelect,
-    going: isCreate ? undefined : goingDateSelect,
-    blockers: isCreate ? undefined : blockerDateSelect,
-    issues: isCreate ? undefined : issuesDateSelect,
-    todo: isCreate ? undefined : todoDateSelect,
-    others: isCreate ? undefined : otherDateSelect,
-    timesheets: isCreate ? undefined : timesheetDateSelect,
+    done: isCreate ? undefined : doneList,
+    going: isCreate ? undefined : goingList,
+    blockers: isCreate ? undefined : blockerList,
+    issues: isCreate ? undefined : issueList,
+    todo: isCreate ? undefined : todoList,
+    others: isCreate ? undefined : otherList,
+    timesheets: isCreate ? undefined : timesheetList,
   };
 
   const onFinish = async values => {
@@ -582,8 +567,13 @@ export const TimeSheet = memo((props: TimesheetProps) => {
   };
 
   const handleDecline = async () => {
-    let declinedTimesheet = { ...selectedTimesheet, status: '2' };
-    declinedTimesheet = { ...declinedTimesheet, approver: employee };
+    let declinedTimesheet = {
+      ...selectedTimesheet,
+      status: '2',
+      approver: null,
+    };
+    let employeeDecline = { ...employee, id: null, avatar: null, name: null };
+    declinedTimesheet = { ...declinedTimesheet, approver: employeeDecline };
     try {
       await editEmployeeTimesheet(employeeId, declinedTimesheet);
       fetchEmployeeTimesheets(employeeId);
@@ -607,6 +597,8 @@ export const TimeSheet = memo((props: TimesheetProps) => {
 
   const handleApprove = async () => {
     let approvedTimesheet = { ...selectedTimesheet, status: '3' };
+    console.log('approvedTimesheet', approvedTimesheet);
+
     approvedTimesheet = { ...approvedTimesheet, approver: employee };
     try {
       await editEmployeeTimesheet(employeeId, approvedTimesheet);
@@ -665,14 +657,19 @@ export const TimeSheet = memo((props: TimesheetProps) => {
         }
         handleCancel={handleCancel}
         loading={loading}
-        width={920}
+        width={1000}
+        maskClosable={false}
       >
         <Form
+          labelCol={{ span: 5 }}
+          // wrapperCol={{ span: 19 }}
           name="dynamic_form_nest_item"
           form={form}
           onFinish={onFinish}
           autoComplete="off"
           initialValues={initialValuesForm}
+          scrollToFirstError={true}
+          requiredMark={false}
         >
           <Form.Item name="date">
             <ModalContentWrapper>
@@ -743,8 +740,8 @@ export const TimeSheet = memo((props: TimesheetProps) => {
             isEdit={isEdit}
             form={form}
             newDate={newDate}
-            loading={loading}
             reportList={reportList}
+            projectList={projectList}
           />
         </Form>
       </DialogModal>
@@ -778,16 +775,3 @@ const ModalContentWrapper = styled.div`
 const StyledDatePicker = styled(DatePicker)`
   margin-bottom: 12px;
 `;
-
-// const ButtonStyled = styled.button`
-//   background-color: #1c91ff;
-//   color: #fff;
-//   border: none;
-//   border-radius: 16px;
-//   height: 72%;
-//   width: 80px;
-//   cursor: pointer;
-//   :hover {
-//     background-color: #188fffcc;
-//   }
-// `;

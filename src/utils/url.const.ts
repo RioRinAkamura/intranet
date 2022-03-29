@@ -39,6 +39,7 @@ export enum PrivatePath {
   USERS = '/users',
   USERS_CREATE = '/users/create',
   USERS_ID = '/users/:id',
+  USERS_ID_TIMESHEETS = '/users/:id/timesheets',
 
   TASKS = '/tasks',
 
@@ -51,5 +52,5 @@ export enum PrivatePath {
   SKILLS_CATEGORIES = '/skills/categories',
   SKILLS_CATEGORIES_CREATE = '/skills/categories/create',
 
-  TIMESHEETS = '/project-timesheets',
+  PROJECT_TIMESHEETS = '/projects/daily-reports',
 }

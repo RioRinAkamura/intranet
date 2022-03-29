@@ -20,14 +20,12 @@ import config from 'config';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-// import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { datePickerViewProps } from 'utils/types';
 import { useHandleProjectTimesheets } from '../useHandleProjectTimesheet';
 import { Creators } from './components/Creators';
 import { ProjectTimesheetForm } from './components/Form';
 import { Report } from './components/Report';
-// import { selectProjectTimesheetState } from './slice/selectors';
 
 export const TimesheetListPage = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -58,13 +56,7 @@ export const TimesheetListPage = () => {
     deleteProjectTimesheet,
   } = useHandleProjectTimesheets();
 
-  // const {
-  //   employeeTimesheets,
-  //   fetchEmployeeTimesheets,
-  //   editEmployeeTimesheet,
-  // } = useHandleEmployeeTimesheets();
-
-  const [creatorTimesheet, setCreatorTimesheet] = useState<any[]>([]);
+  const [creatorTimesheet, setCreatorTimesheet] = useState<any[]>();
   const [selectedDate, setSelectedDate] = useState<string>();
   // const [employeeTimesheetList, setEmployeeTimesheetList] = useState<any[]>([]);
 
@@ -190,34 +182,36 @@ export const TimesheetListPage = () => {
   const handleCreatorClick = async (creator, record) => {
     setSelectedDate(record.date);
     setCreatorSelected(creator.name);
-    try {
-      await getEmployeeReport(creator.id);
-    } catch (err) {
-      console.log(err);
-    }
-    const creatorRpByDate = employeeReports.filter(
-      report => report.timesheet.date === record.date,
-    );
-    setCreatorTimesheet(creatorRpByDate);
+    await getEmployeeReport(creator.id, record.date);
+    setCreatorTimesheet(employeeReports);
+
     setIsCreator(true);
   };
 
   const handleApproveAll = async record => {
-    // console.log('record', record);
     // const creatorsId = record.creators.map(creator => creator.id);
-    // console.log('creatorsId', creatorsId);
+    // let timesheetList: any[] = [];
     // for (let id of creatorsId) {
-    //   await fetchEmployeeTimesheets(id);
-    //   let listTimesheet = [
-    //     ...employeeTimesheetList,
-    //     employeeTimesheets.results,
-    //   ];
-    //   setEmployeeTimesheetList(listTimesheet);
-    //   let listApprove = { ...employeeTimesheets, status: '3' };
-    //   await editEmployeeTimesheet(id, listApprove);
+    //   const response = await api.hr.employee.timesheet.listByDate(
+    //     id,
+    //     record.date,
+    //   );
     // }
-    // console.log('employeeTimesheets', employeeTimesheets);
-    // console.log('employeeTimesheetList', employeeTimesheetList);
+    // timesheetList = [...timesheetList, employeeTimesheets.results];
+    // try {
+    //   notify({
+    //     type: ToastMessageType.Info,
+    //     duration: 2,
+    //     message: 'Approved all',
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    //   notify({
+    //     type: ToastMessageType.Error,
+    //     duration: 2,
+    //     message: 'Failed',
+    //   });
+    // }
   };
 
   const openAddCreators = record => {
@@ -484,8 +478,6 @@ export const TimesheetListPage = () => {
 
       <DialogModal
         isOpen={isAddCreator}
-        cancelText={'Cancel'}
-        okText={'Save'}
         title="Creators"
         handleCancel={handleCancelAddCreator}
         loading={loading}

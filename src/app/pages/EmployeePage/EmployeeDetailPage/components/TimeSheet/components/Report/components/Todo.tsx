@@ -15,7 +15,7 @@ interface ReportItemProps {
   isEdit?: boolean;
   isView?: boolean;
   employeeId: string;
-  projectList: any[];
+  projectList?: any[];
   form?: FormInstance;
   reportList?: Report[];
 }

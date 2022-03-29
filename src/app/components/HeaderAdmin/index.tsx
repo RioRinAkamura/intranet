@@ -65,7 +65,9 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
                   </Active>
                   <Active>
                     <NavItem>
-                      <NavLink to="/projects">Projects</NavLink>
+                      <NavLink exact to="/projects">
+                        Projects
+                      </NavLink>
                     </NavItem>
                   </Active>
                   <Active>
@@ -85,7 +87,9 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
                   </Active>
                   <Active>
                     <NavItem>
-                      <NavLink to="/project-timesheets">Timesheets</NavLink>
+                      <NavLink exact to="/projects/daily-reports">
+                        Timesheets
+                      </NavLink>
                     </NavItem>
                   </Active>
                 </>

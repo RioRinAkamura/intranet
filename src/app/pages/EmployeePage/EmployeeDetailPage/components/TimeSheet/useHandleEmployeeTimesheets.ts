@@ -17,6 +17,7 @@ export const useHandleEmployeeTimesheets = (): {
   employeeTimesheets: Pagination<EmployeeTimesheet>;
   employeeReports: Pagination<Report>;
   fetchEmployeeTimesheets: (employeeId: string) => void;
+  fetchEmployeeTimesheetsByDate: (employeeId: string, date: string) => void;
   addEmployeeTimesheet: (
     employeeId: string,
     data: EmployeeTimesheetQueryParams,
@@ -26,8 +27,10 @@ export const useHandleEmployeeTimesheets = (): {
     data: UpdateEmployeeTimesheetQueryParams,
   ) => void;
   deleteEmployeeTimesheet: (employeeId: string, timesheetId: string) => void;
+
   //REPORT
   fetchEmployeeReport: (employeeId: string) => void;
+  fetchEmployeeReportByDate: (employeeId: string, date: string) => void;
   addEmployeeReport: (employeeId: string, data: ReportQueryParams) => void;
   editEmployeeReport: (employeeId: string, data: ReportQueryParams) => void;
   deleteEmployeeReport: (employeeId: string, timesheetId: string) => void;
@@ -63,6 +66,25 @@ export const useHandleEmployeeTimesheets = (): {
       setLoading(false);
     }
   }, []);
+
+  const fetchEmployeeTimesheetsByDate = useCallback(
+    async (employeeId: string, date: string) => {
+      setLoading(true);
+      try {
+        const response = await api.hr.employee.timesheet.listByDate(
+          employeeId,
+          date,
+        );
+        setEmployeeTimesheets(response);
+      } catch (error) {
+        setError(error);
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
 
   const addEmployeeTimesheet = async (
     employeeId: string,
@@ -123,6 +145,27 @@ export const useHandleEmployeeTimesheets = (): {
     }
   }, []);
 
+  const fetchEmployeeReportByDate = useCallback(
+    async (employeeId: string, date: string) => {
+      setLoading(true);
+      try {
+        const response = await api.hr.employee.report.listByDate(
+          employeeId,
+          date,
+        );
+        if (response) {
+          setEmployeeReports(response);
+        }
+      } catch (error) {
+        setError(error);
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
+
   const addEmployeeReport = async (
     employeeId: string,
     data: CreateReportQueryParams,
@@ -168,6 +211,7 @@ export const useHandleEmployeeTimesheets = (): {
     employeeTimesheets,
     employeeReports,
     fetchEmployeeTimesheets,
+    fetchEmployeeTimesheetsByDate,
     addEmployeeTimesheet,
     editEmployeeTimesheet,
     deleteEmployeeTimesheet,
@@ -175,5 +219,6 @@ export const useHandleEmployeeTimesheets = (): {
     addEmployeeReport,
     editEmployeeReport,
     deleteEmployeeReport,
+    fetchEmployeeReportByDate,
   };
 };

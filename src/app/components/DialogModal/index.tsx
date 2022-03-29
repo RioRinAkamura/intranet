@@ -13,6 +13,7 @@ interface Props {
   children?: React.ReactNode;
   footer?: React.ReactNode;
   handleCancel?: () => void;
+  maskClosable?: boolean;
   cancelText?: string;
   handleSubmit?: () => void;
   loading?: boolean;
@@ -30,6 +31,7 @@ export const DialogModal = React.memo(
     footer,
     handleCancel,
     cancelText,
+    maskClosable,
     handleSubmit,
     okText,
     width,
@@ -44,6 +46,7 @@ export const DialogModal = React.memo(
         visible={isOpen}
         onCancel={handleCancel}
         onOk={handleOk}
+        maskClosable={maskClosable}
         footer={
           footer ? (
             footer
