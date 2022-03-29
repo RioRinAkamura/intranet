@@ -552,6 +552,7 @@
       "qc": "QC",
       "dev": "Developer",
       "other": "Other",
+      "staff": "Staff",
       "form": {
         "employee": {
           "label": "Employee",

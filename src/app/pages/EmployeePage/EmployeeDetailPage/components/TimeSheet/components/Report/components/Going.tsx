@@ -15,7 +15,7 @@ interface ReportItemProps {
   isEdit?: boolean;
   isView?: boolean;
   employeeId: string;
-  projectList: any[];
+  projectList?: any[];
   form?: FormInstance;
   reportList?: Report[];
 }
@@ -127,7 +127,6 @@ const Going = ({
                       <QuestionCircleFilled
                         style={{
                           fontSize: 18,
-
                           margin: 6,
                         }}
                         onClick={() => handleTaskClick(key)}
@@ -217,8 +216,6 @@ const Going = ({
                   <Wrapper>
                     <FormItemStyled
                       label="Progress"
-                      {...restField}
-                      name={[name, 'today_progress']}
                       rules={[
                         {
                           required: true,
@@ -227,57 +224,61 @@ const Going = ({
                       ]}
                       style={{
                         marginTop: isCreate || isEdit ? 40 : 0,
-                        width: '40%',
                       }}
                     >
-                      <StyledInputProgress
-                        {...(isView ? inputProps : {})}
-                        size="small"
-                        type="number"
-                        min={0}
-                        max={100}
-                      />
+                      <FormItemStyled style={{ height: '10px' }}>
+                        <FormItemStyled
+                          {...restField}
+                          name={[name, 'today_progress']}
+                          noStyle
+                        >
+                          <StyledInputProgress
+                            {...(isView ? inputProps : {})}
+                            size="small"
+                            type="number"
+                            min={0}
+                            max={100}
+                            style={{ marginLeft: 6 }}
+                          />
+                        </FormItemStyled>
+                        <span
+                          style={{
+                            marginTop: isCreate || isEdit ? 44 : 0,
+                          }}
+                        >
+                          % today
+                        </span>
+                        <FormItemStyled
+                          {...restField}
+                          name={[name, 'tomorrow_progress']}
+                          rules={[
+                            {
+                              required: true,
+                              message: '',
+                            },
+                          ]}
+                          noStyle
+                        >
+                          <StyledInputProgress
+                            {...(isView ? inputProps : {})}
+                            size="small"
+                            type="number"
+                            min={0}
+                            max={100}
+                            style={{ marginLeft: 8 }}
+                          />
+                        </FormItemStyled>
+                        <span
+                          style={{
+                            marginTop: isCreate || isEdit ? 44 : 0,
+                          }}
+                        >
+                          % tomorrow
+                        </span>
+                      </FormItemStyled>
                     </FormItemStyled>
-                    <span
-                      style={{
-                        marginTop: isCreate || isEdit ? 44 : 0,
-                        width: '16%',
-                      }}
-                    >
-                      % today
-                    </span>
-
-                    <FormItemStyled
-                      {...restField}
-                      name={[name, 'tomorrow_progress']}
-                      rules={[
-                        {
-                          required: true,
-                          message: '',
-                        },
-                      ]}
-                      style={{
-                        marginTop: isCreate || isEdit ? 40 : 0,
-                        width: '16%',
-                      }}
-                    >
-                      <StyledInputProgress
-                        {...(isView ? inputProps : {})}
-                        size="small"
-                        type="number"
-                        min={0}
-                        max={100}
-                      />
-                    </FormItemStyled>
-                    <span
-                      style={{
-                        marginTop: isCreate || isEdit ? 44 : 0,
-                        width: '28%',
-                      }}
-                    >
-                      % tomorrow
-                    </span>
                   </Wrapper>
+
                   <div style={{ textAlign: 'right' }}>
                     {isCreate || isEdit ? (
                       <IconWrapper>
@@ -356,6 +357,7 @@ const StyledSelect = styled(Select)`
 
 const StyledInputProgress = styled(Input)`
   width: 50px;
+  text-align: center;
   margin: 0px 2px;
   ::-webkit-inner-spin-button {
     -webkit-appearance: none;

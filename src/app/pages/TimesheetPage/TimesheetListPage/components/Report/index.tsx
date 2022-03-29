@@ -3,6 +3,8 @@ import { Divider, FormInstance } from 'antd';
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TimesheetItem from './components/TimesheetItem';
+import Button from 'app/components/Button';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 
 interface TimeSheetProps {
   isCreate?: boolean;
@@ -10,18 +12,13 @@ interface TimeSheetProps {
   form?: FormInstance;
   selectedTimesheet?: EmployeeTimesheet;
   loading?: boolean;
-  reportList?: any[];
   projectTimesheetItems?: any[];
 }
 
 export const Report = memo(
-  ({
-    isView,
-    form,
-    loading,
-    reportList,
-    projectTimesheetItems,
-  }: TimeSheetProps) => {
+  ({ isView, form, loading, projectTimesheetItems }: TimeSheetProps) => {
+    const { notify } = useNotify();
+
     const [doneList, setDoneList] = useState<any[]>([]);
     const [goingList, setGoingList] = useState<any[]>([]);
     const [blockerList, setBlockerList] = useState<any[]>([]);
@@ -69,14 +66,62 @@ export const Report = memo(
       }
     }, [projectTimesheetItems]);
 
+    const onCopyText = () => {
+      const data = {
+        Done: doneList,
+        Going: goingList,
+        Blockers: blockerList,
+        Issues: issueList,
+        Todo: todoList,
+        Others: otherList,
+        Timesheets: timesheetList,
+      };
+      navigator.clipboard.writeText(JSON.stringify(data, null, '\t'));
+      notify({
+        type: ToastMessageType.Info,
+        message: 'Copied',
+        duration: 2,
+      });
+    };
+
+    const [isMark, setIsMark] = useState<boolean>(false);
+    const onCopyMarkdown = () => {
+      setIsMark(!isMark);
+    };
+
     return (
       <>
         <ModalContentWrapper>
           <WrapperReportItem>
             <h3>Report</h3>
+            <div
+              style={{
+                display: 'flex',
+                width: '100%',
+                justifyContent: 'space-between',
+                marginBottom: '20px',
+              }}
+            >
+              <Button type="primary" size="small" onClick={onCopyText}>
+                cp(Text)
+              </Button>
+              <Button type="primary" size="small" onClick={onCopyMarkdown}>
+                cp(Markdown)
+              </Button>
+              <Button type="primary" size="small">
+                cp(Slack)
+              </Button>
+              <Button type="primary" size="small">
+                cp(Word)
+              </Button>
+            </div>
             <>
               <h3>DONE</h3>
-              <TimesheetItem isView={isView} reportList={doneList} />
+              <TimesheetItem
+                isView={isView}
+                reportList={doneList}
+                isMark={isMark}
+              />
             </>
             <Divider />
             <>
@@ -85,27 +130,44 @@ export const Report = memo(
                 isView={isView}
                 reportList={goingList}
                 isGoing={true}
+                isMark={isMark}
               />
             </>
             <Divider />
             <>
               <h3>BLOCKERS</h3>
-              <TimesheetItem isView={isView} reportList={blockerList} />
+              <TimesheetItem
+                isView={isView}
+                reportList={blockerList}
+                isMark={isMark}
+              />
             </>
             <Divider />
             <>
               <h3>ISSUES</h3>
-              <TimesheetItem isView={isView} reportList={issueList} />
+              <TimesheetItem
+                isView={isView}
+                reportList={issueList}
+                isMark={isMark}
+              />
             </>
             <Divider />
             <>
               <h3>TODO</h3>
-              <TimesheetItem isView={isView} reportList={todoList} />
+              <TimesheetItem
+                isView={isView}
+                reportList={todoList}
+                isMark={isMark}
+              />
             </>
             <Divider />
             <>
               <h3>OTHERS</h3>
-              <TimesheetItem isView={isView} reportList={otherList} />
+              <TimesheetItem
+                isView={isView}
+                reportList={otherList}
+                isMark={isMark}
+              />
             </>
           </WrapperReportItem>
           <WrapperReportItem>
@@ -114,6 +176,7 @@ export const Report = memo(
               isView={isView}
               reportList={timesheetList}
               isTimesheet={true}
+              isMark={isMark}
             />
           </WrapperReportItem>
         </ModalContentWrapper>

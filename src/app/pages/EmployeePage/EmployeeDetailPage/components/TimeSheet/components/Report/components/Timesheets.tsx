@@ -42,8 +42,8 @@ const Timesheets = ({
     date: null,
     type: null,
     description: null,
-    today_hour: 0,
-    tomorrow_hour: 0,
+    today_hour: null,
+    tomorrow_hour: null,
     today_progress: 0,
     tomorrow_progress: 0,
   };
@@ -173,7 +173,6 @@ const Timesheets = ({
                       <QuestionCircleFilled
                         style={{
                           fontSize: 18,
-
                           margin: 6,
                         }}
                         onClick={() => handleProjectClick(key)}
@@ -214,66 +213,56 @@ const Timesheets = ({
                   </Wrapper>
                   <Wrapper>
                     <FormItemStyled
-                      label="Progress"
-                      {...restField}
-                      style={{
-                        marginTop: isCreate || isEdit ? 40 : 0,
-                        width: '44%',
-                      }}
-                      name={[name, 'today_hour']}
+                      label="Worklog"
                       rules={[
                         {
                           required: true,
                           message: '',
                         },
                       ]}
+                      style={{
+                        marginTop: isCreate || isEdit ? 36 : 0,
+                      }}
                     >
-                      <StyledInputProgress
-                        {...(isView ? inputProps : {})}
-                        size="small"
-                        type="number"
-                        max={8}
-                        min={0}
-                      />
+                      <FormItemStyled style={{ height: '10px' }}>
+                        <FormItemStyled
+                          {...restField}
+                          name={[name, 'today_hour']}
+                          noStyle
+                        >
+                          <StyledInputProgress
+                            {...(isView ? inputProps : {})}
+                            size="small"
+                            type="number"
+                            min={1}
+                            max={8}
+                            style={{ marginLeft: 6 }}
+                          />
+                        </FormItemStyled>
+                        <span>h today</span>
+                        <FormItemStyled
+                          {...restField}
+                          name={[name, 'tomorrow_hour']}
+                          rules={[
+                            {
+                              required: true,
+                              message: '',
+                            },
+                          ]}
+                          noStyle
+                        >
+                          <StyledInputProgress
+                            {...(isView ? inputProps : {})}
+                            size="small"
+                            type="number"
+                            min={0}
+                            max={8}
+                            style={{ marginLeft: 8 }}
+                          />
+                        </FormItemStyled>
+                        <span>h tomorrow</span>
+                      </FormItemStyled>
                     </FormItemStyled>
-                    <span
-                      style={{
-                        marginTop: isCreate || isEdit ? 44 : 4,
-                        width: '18%',
-                      }}
-                    >
-                      h today
-                    </span>
-                    <FormItemStyled
-                      {...restField}
-                      style={{
-                        marginTop: isCreate || isEdit ? 40 : 0,
-                        width: '18%',
-                      }}
-                      name={[name, 'tomorrow_hour']}
-                      rules={[
-                        {
-                          required: true,
-                          message: '',
-                        },
-                      ]}
-                    >
-                      <StyledInputProgress
-                        {...(isView ? inputProps : {})}
-                        size="small"
-                        type="number"
-                        max={24}
-                        min={0}
-                      />
-                    </FormItemStyled>
-                    <span
-                      style={{
-                        marginTop: isCreate || isEdit ? 44 : 4,
-                        width: '30%',
-                      }}
-                    >
-                      h tomorrow
-                    </span>
                   </Wrapper>
                   <div style={{ textAlign: 'right' }}>
                     {isCreate || isEdit ? (
@@ -352,7 +341,8 @@ const StyledSelect = styled(Select)`
 `;
 
 const StyledInputProgress = styled(Input)`
-  width: 50px;
+  width: 40px;
+  text-align: center;
   margin: 0px 2px;
   ::-webkit-inner-spin-button {
     -webkit-appearance: none;

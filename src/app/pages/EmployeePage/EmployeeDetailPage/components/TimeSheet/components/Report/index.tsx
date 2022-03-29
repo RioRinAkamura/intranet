@@ -3,9 +3,8 @@ import { Divider, FormInstance } from 'antd';
 import Button from 'app/components/Button';
 import config from 'config';
 import moment from 'moment';
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
-import { api } from 'utils/api';
 import Blockers from './components/Blockers';
 import Done from './components/Done';
 import Going from './components/Going';
@@ -21,9 +20,9 @@ interface TimeSheetProps {
   isView?: boolean;
   form?: FormInstance;
   selectedTimesheet?: EmployeeTimesheet;
-  loading?: boolean;
   newDate?: any;
   reportList?: any[];
+  projectList?: any[];
 }
 
 export const Report = memo(
@@ -34,172 +33,161 @@ export const Report = memo(
     isView,
     form,
     newDate,
-    loading,
     reportList,
+    projectList,
   }: TimeSheetProps) => {
-    const [projectList, setProjectList] = useState<any[]>([]);
-
     const DATE_FORMAT = config.DATE_FORMAT;
-
-    const fetchEmployeeProject = useCallback(async () => {
-      const response = await api.hr.employee.project.list(employeeId);
-      setProjectList(response.results);
-    }, [employeeId]);
-
-    useEffect(() => {
-      fetchEmployeeProject();
-    }, [fetchEmployeeProject]);
-
     const handleSyncClick = () => {
-      const values = form?.getFieldsValue();
+      form?.validateFields().then(() => {
+        const values = form?.getFieldsValue();
+        const doneList = values.done ? values.done : undefined;
+        const goingList = values.going ? values.going : undefined;
+        const blockerList = values.blockers ? values.blockers : undefined;
+        const issueList = values.issues ? values.issues : undefined;
+        const todoList = values.todo ? values.todo : undefined;
+        const otherList = values.others ? values.others : undefined;
+        const timesheetList = values.timesheets ? values.timesheets : undefined;
 
-      const doneList = values.done ? values.done : undefined;
-      const goingList = values.going ? values.going : undefined;
-      const blockerList = values.blockers ? values.blockers : undefined;
-      const issueList = values.issues ? values.issues : undefined;
-      const todoList = values.todo ? values.todo : undefined;
-      const otherList = values.others ? values.others : undefined;
-      const timesheetList = values.timesheets ? values.timesheets : undefined;
+        let timesheetArr: any[] = [];
 
-      let timesheetArr: any[] = [];
+        if (doneList) {
+          const doneData = doneList.map(value => {
+            return {
+              id: value.id ? value.id : null,
+              employee_id: employeeId,
+              project_id: value.project_id ? value.project_id : null,
+              reference: value.reference,
+              date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+              type: '1',
+              description: value.description,
+              today_hour: null,
+              tomorrow_hour: null,
+              today_progress: 0,
+              tomorrow_progress: 0,
+            };
+          });
+          timesheetArr = [...timesheetArr, doneData];
+        }
+        if (goingList) {
+          const goingData = goingList.map(value => {
+            return {
+              id: value.id ? value.id : null,
+              employee_id: employeeId,
+              project_id: value.project_id ? value.project_id : null,
+              reference: value.reference,
+              date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+              type: '1',
+              description: value.description,
+              today_hour: null,
+              tomorrow_hour: null,
+              today_progress: 0,
+              tomorrow_progress: 0,
+            };
+          });
+          timesheetArr = [...timesheetArr, goingData];
+        }
+        if (blockerList) {
+          const blockerData = blockerList.map(value => {
+            return {
+              id: value.id ? value.id : null,
+              employee_id: employeeId,
+              project_id: value.project_id ? value.project_id : null,
+              reference: value.reference,
+              date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+              type: '1',
+              description: value.description,
+              today_hour: null,
+              tomorrow_hour: null,
+              today_progress: 0,
+              tomorrow_progress: 0,
+            };
+          });
+          timesheetArr = [...timesheetArr, blockerData];
+        }
+        if (issueList) {
+          const issuesData = issueList.map(value => {
+            return {
+              id: value.id ? value.id : null,
+              employee_id: employeeId,
+              project_id: value.project_id ? value.project_id : null,
+              reference: value.reference,
+              date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+              type: '1',
+              description: value.description,
+              today_hour: null,
+              tomorrow_hour: null,
+              today_progress: 0,
+              tomorrow_progress: 0,
+            };
+          });
+          timesheetArr = [...timesheetArr, issuesData];
+        }
+        if (todoList) {
+          const todoData = todoList.map(value => {
+            return {
+              id: value.id ? value.id : null,
+              employee_id: employeeId,
+              project_id: value.project_id ? value.project_id : null,
+              reference: value.reference,
+              date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+              type: '1',
+              description: value.description,
+              today_hour: null,
+              tomorrow_hour: null,
+              today_progress: 0,
+              tomorrow_progress: 0,
+            };
+          });
+          timesheetArr = [...timesheetArr, todoData];
+        }
+        if (otherList) {
+          const otherData = otherList.map(value => {
+            return {
+              id: value.id ? value.id : null,
+              employee_id: employeeId,
+              project_id: value.project_id ? value.project_id : null,
+              reference: value.reference,
+              date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+              type: '1',
+              description: value.description,
+              today_hour: null,
+              tomorrow_hour: null,
+              today_progress: 0,
+              tomorrow_progress: 0,
+            };
+          });
+          timesheetArr = [...timesheetArr, otherData];
+        }
+        if (timesheetList) {
+          const timesheetData = timesheetList.map(value => {
+            return {
+              id: value.id ? value.id : null,
+              employee_id: employeeId,
+              project_id: value.project_id ? value.project_id : null,
+              reference: value.reference,
+              date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
+              type: '1',
+              description: value.description,
+              today_hour: null,
+              tomorrow_hour: null,
+              today_progress: 0,
+              tomorrow_progress: 0,
+            };
+          });
+          timesheetArr = [...timesheetArr, timesheetData];
+        }
 
-      if (doneList) {
-        const doneData = doneList.map(value => {
-          return {
-            id: value.id ? value.id : null,
-            employee_id: employeeId,
-            project_id: value.project_id ? value.project_id : null,
-            reference: value.reference,
-            date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
-            type: '1',
-            description: value.description,
-            today_hour: 0,
-            tomorrow_hour: 0,
-            today_progress: 0,
-            tomorrow_progress: 0,
-          };
-        });
-        timesheetArr = [...timesheetArr, doneData];
-      }
-      if (goingList) {
-        const goingData = goingList.map(value => {
-          return {
-            id: value.id ? value.id : null,
-            employee_id: employeeId,
-            project_id: value.project_id ? value.project_id : null,
-            reference: value.reference,
-            date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
-            type: '1',
-            description: value.description,
-            today_hour: 0,
-            tomorrow_hour: 0,
-            today_progress: 0,
-            tomorrow_progress: 0,
-          };
-        });
-        timesheetArr = [...timesheetArr, goingData];
-      }
-      if (blockerList) {
-        const blockerData = blockerList.map(value => {
-          return {
-            id: value.id ? value.id : null,
-            employee_id: employeeId,
-            project_id: value.project_id ? value.project_id : null,
-            reference: value.reference,
-            date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
-            type: '1',
-            description: value.description,
-            today_hour: 0,
-            tomorrow_hour: 0,
-            today_progress: 0,
-            tomorrow_progress: 0,
-          };
-        });
-        timesheetArr = [...timesheetArr, blockerData];
-      }
-      if (issueList) {
-        const issuesData = issueList.map(value => {
-          return {
-            id: value.id ? value.id : null,
-            employee_id: employeeId,
-            project_id: value.project_id ? value.project_id : null,
-            reference: value.reference,
-            date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
-            type: '1',
-            description: value.description,
-            today_hour: 0,
-            tomorrow_hour: 0,
-            today_progress: 0,
-            tomorrow_progress: 0,
-          };
-        });
-        timesheetArr = [...timesheetArr, issuesData];
-      }
-      if (todoList) {
-        const todoData = todoList.map(value => {
-          return {
-            id: value.id ? value.id : null,
-            employee_id: employeeId,
-            project_id: value.project_id ? value.project_id : null,
-            reference: value.reference,
-            date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
-            type: '1',
-            description: value.description,
-            today_hour: 0,
-            tomorrow_hour: 0,
-            today_progress: 0,
-            tomorrow_progress: 0,
-          };
-        });
-        timesheetArr = [...timesheetArr, todoData];
-      }
-      if (otherList) {
-        const otherData = otherList.map(value => {
-          return {
-            id: value.id ? value.id : null,
-            employee_id: employeeId,
-            project_id: value.project_id ? value.project_id : null,
-            reference: value.reference,
-            date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
-            type: '1',
-            description: value.description,
-            today_hour: 0,
-            tomorrow_hour: 0,
-            today_progress: 0,
-            tomorrow_progress: 0,
-          };
-        });
-        timesheetArr = [...timesheetArr, otherData];
-      }
-      if (timesheetList) {
-        const timesheetData = timesheetList.map(value => {
-          return {
-            id: value.id ? value.id : null,
-            employee_id: employeeId,
-            project_id: value.project_id ? value.project_id : null,
-            reference: value.reference,
-            date: newDate ? newDate : moment(values.date).format(DATE_FORMAT),
-            type: '1',
-            description: value.description,
-            today_hour: 0,
-            tomorrow_hour: 0,
-            today_progress: 0,
-            tomorrow_progress: 0,
-          };
-        });
-        timesheetArr = [...timesheetArr, timesheetData];
-      }
+        let reportArr = Array.prototype.concat.apply([], timesheetArr);
 
-      let reportArr = Array.prototype.concat.apply([], timesheetArr);
+        const arrayUnique = [
+          ...new Map(
+            reportArr.map((item: any) => [item['reference'], item]),
+          ).values(),
+        ];
 
-      const arrayUnique = [
-        ...new Map(
-          reportArr.map((item: any) => [item['reference'], item]),
-        ).values(),
-      ];
-
-      form?.setFieldsValue({
-        timesheets: arrayUnique,
+        form?.setFieldsValue({
+          timesheets: arrayUnique,
+        });
       });
     };
 
@@ -317,7 +305,7 @@ export const Report = memo(
 );
 
 const WrapperReportItem = styled.div`
-  width: 420px;
+  width: 465px;
   border: 1px solid rgba(0, 0, 0, 0.15);
   /* border-radius: 10px; */
   padding: 16px;
