@@ -597,8 +597,6 @@ export const TimeSheet = memo((props: TimesheetProps) => {
 
   const handleApprove = async () => {
     let approvedTimesheet = { ...selectedTimesheet, status: '3' };
-    console.log('approvedTimesheet', approvedTimesheet);
-
     approvedTimesheet = { ...approvedTimesheet, approver: employee };
     try {
       await editEmployeeTimesheet(employeeId, approvedTimesheet);

@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
 import { Form, Input, Tabs } from 'antd';
-import { useHistory, useLocation, useParams } from 'react-router';
-import moment from 'moment';
-import { useProjectDetail } from './useProjectDetail';
+import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
+import { CardForm } from 'app/components/CardForm';
 import PageTitle from 'app/components/PageTitle';
 import { config } from 'config';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation, useParams } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import { PrivatePath } from 'utils/url.const';
+import { ChangeLogs } from './components/ChangeLogs';
+import { Employees } from './components/Employees';
+import { Notes } from './components/Notes';
 import { ProjectInfo } from './components/ProjectInfo';
 // import { TeamMembers } from './components/TeamMembers';
 import { ProjectDetailMessages } from './messages';
-import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
-import { ChangeLogs } from './components/ChangeLogs';
-import { PrivatePath } from 'utils/url.const';
-import { Route, Switch } from 'react-router-dom';
-import { CardForm } from 'app/components/CardForm';
-import { Employees } from './components/Employees';
-import { Notes } from './components/Notes';
+import { useProjectDetail } from './useProjectDetail';
 
 interface Props {}
 interface LocationState {
