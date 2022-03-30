@@ -110,14 +110,13 @@ export function App() {
                     />
                     {/* Project */}
                     <PrivateRoute
-                      exact
                       path={PrivatePath.PROJECTS}
                       component={ProjectPage}
                     />
                     {/* LeaveApplication */}
                     <PrivateRoute
-                      path={PrivatePath.LEAVE_APPLICATION}
                       exact
+                      path={PrivatePath.LEAVE_APPLICATION}
                       component={LeaveApplicationPage}
                     />
                     <PrivateRoute
@@ -150,7 +149,7 @@ export function App() {
                     />
                     {/* Timesheet */}
                     <PrivateRoute
-                      path={PrivatePath.PROJECT_TIMESHEETS}
+                      path={PrivatePath.PROJECTS_TIMESHEETS}
                       component={TimesheetListPage}
                     />
                   </>

@@ -87,9 +87,7 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
                   </Active>
                   <Active>
                     <NavItem>
-                      <NavLink exact to="/projects/daily-reports">
-                        Timesheets
-                      </NavLink>
+                      <NavLink to="/projects-daily-reports">Timesheets</NavLink>
                     </NavItem>
                   </Active>
                 </>

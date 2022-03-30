@@ -8,6 +8,8 @@ export enum PrivatePath {
   PROJECTS_ID_MEMBERS_ADD = '/projects/:id/members/add',
   PROJECTS_ID_EMPLOYEES = '/projects/:id/employees',
 
+  PROJECTS_TIMESHEETS = '/projects-daily-reports',
+
   EMPLOYEES = '/employees',
   EMPLOYEES_CREATE = '/employees/create',
   EMPLOYEES_ID = '/employees/:id',
@@ -51,6 +53,4 @@ export enum PrivatePath {
   SKILLS_CREATE = '/skills/create',
   SKILLS_CATEGORIES = '/skills/categories',
   SKILLS_CATEGORIES_CREATE = '/skills/categories/create',
-
-  PROJECT_TIMESHEETS = '/projects/daily-reports',
 }

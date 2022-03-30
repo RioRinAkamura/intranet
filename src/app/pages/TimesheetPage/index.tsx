@@ -11,7 +11,7 @@ export const TimesheetPage: React.FC = () => {
     <>
       <Switch>
         <PrivateRoute
-          path={PrivatePath.PROJECT_TIMESHEETS}
+          path={PrivatePath.PROJECTS_TIMESHEETS}
           component={TimesheetListPage}
         />
       </Switch>
