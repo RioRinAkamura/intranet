@@ -197,7 +197,7 @@ export const ProjectDetailPage = (props: Props) => {
 
           <Switch>
             <Route
-              // exact
+              exact
               path={PrivatePath.PROJECTS_ID}
               component={() => projectDetailForm()}
             />
