@@ -23,7 +23,7 @@ import { useAuthState } from './components/Auth/useAuthState';
 import { BreadCrumbsContextProvider } from './components/Breadcrumbs/context';
 import { ToastContextProvider } from './components/Toast/context';
 import { DeviceManagePage } from './pages/DeviceManagePage/Loadable';
-import { TimeSheet } from './pages/EmployeePage/EmployeeDetailPage/components/TimeSheet';
+import { TimeSheet } from './pages/EmployeePage/EmployeeDetailPage/components/TimeSheet/Loadable';
 import { EmployeePage } from './pages/EmployeePage/Loadable';
 import { ForgotPassword } from './pages/ForgotPassword/Loadable';
 import { HomePage } from './pages/HomePage/Loadable';
@@ -37,7 +37,9 @@ import { ProjectPage } from './pages/ProjectPage/Loadable';
 import { ResetPassword } from './pages/ResetPassword/Loadable';
 import { SkillManagePage } from './pages/SkillManagePage/Loadable';
 import { TaskManagerPage } from './pages/TaskManagerPage/Loadable';
+import { TimesheetPage } from './pages/TimesheetPage/Loadable';
 import { TimesheetListPage } from './pages/TimesheetPage/TimesheetListPage';
+import { UserTimesheetPage } from './pages/UserTimesheetPage/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -86,8 +88,8 @@ export function App() {
                       component={UserManageDetailPage}
                     />
                     <PrivateRoute
-                      path={PrivatePath.USERS_ID_TIMESHEETS}
-                      component={TimeSheet}
+                      path={PrivatePath.TIMESHEETS}
+                      component={UserTimesheetPage}
                     />
                   </>
                 ) : (

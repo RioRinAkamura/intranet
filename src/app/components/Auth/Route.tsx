@@ -9,12 +9,12 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
   const { authenticated, identity } = useAuthState();
   const location = useLocation();
 
-  // handle staff role
   if (
     identity &&
     identity?.role?.length === 1 &&
     identity?.role[0].name === 'staff'
   ) {
+    // handle staff role
     if (location.pathname.includes(identity?.id as string)) {
       return <Route {...rest} render={props => <Component {...props} />} />;
     } else {
@@ -24,9 +24,14 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
           {...rest}
           render={props =>
             location.pathname.includes('/dashboard') ? (
-              <Component {...props} />
+              <>
+                1111111111111111
+                <Component {...props} />
+              </>
             ) : (
-              <Redirect to={config.DASHBOARD_PATH} />
+              <>
+                <Redirect to={config.DASHBOARD_PATH} />
+              </>
             )
           }
         />
