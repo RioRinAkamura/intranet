@@ -1,6 +1,7 @@
 import { Checkbox, Form, Input, InputProps } from 'antd';
+import Button from 'app/components/Button';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 interface TimesheetItemProps {
@@ -27,13 +28,20 @@ const TimesheetItem = ({
 }: TimesheetItemProps) => {
   const { notify } = useNotify();
 
-  // const [checked, setChecked] = useState<boolean>(false);
-  // const [data, setData] = useState<any>();
+  const [data, setData] = useState<any[]>([]);
 
-  let data: any[] = [];
-  const onCopyMarkdown = report => {
-    data = [...data, report];
-    // setMarkdown(!markdown);
+  const onChange = event => {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      setData([...data, event.target.value]);
+    } else {
+      let index = data.indexOf(event.target.value);
+      data.splice(index, 1);
+      setData(data);
+    }
+  };
+
+  const onCopyMD = () => {
     navigator.clipboard.writeText(JSON.stringify(data, null, '\t'));
     notify({
       type: ToastMessageType.Info,
@@ -44,12 +52,17 @@ const TimesheetItem = ({
 
   return (
     <>
+      {isMark && (
+        <Button size="small" style={{ marginBottom: 4 }} onClick={onCopyMD}>
+          Copy
+        </Button>
+      )}
       {reportList &&
         reportList.map(report => (
           <div key={report.id}>
             <WrapperItem style={{ position: 'relative' }}>
               <span style={{ position: 'absolute', right: 12, top: 12 }}>
-                {isMark && <Checkbox onClick={() => onCopyMarkdown(report)} />}
+                {isMark && <Checkbox value={report} onChange={onChange} />}
               </span>
               <Wrapper>
                 <FormItemStyled label="Task" name="reference">
