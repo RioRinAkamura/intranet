@@ -9,6 +9,7 @@ import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/times
 import { DatePicker, Form, Popover, Select, Table, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';
+import { useAuthState } from 'app/components/Auth/useAuthState';
 import { IconButton } from 'app/components/Button';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { DialogModal } from 'app/components/DialogModal';
@@ -50,6 +51,9 @@ export const TimeSheet: React.FC = () => {
   const [timesheetList, setTimesheetList] = useState<any[]>();
   const [newDate, setNewDate] = useState<string>();
 
+  const { identity } = useAuthState();
+  const employeeId = identity?.employee?.id;
+
   const { notify } = useNotify();
   const { t } = useTranslation();
 
@@ -68,12 +72,15 @@ export const TimeSheet: React.FC = () => {
     loading,
     deleteEmployeeTimesheet,
     fetchEmployeeReport,
-    fetchEmployeeReportByDate,
   } = useHandleEmployeeTimesheets();
 
   useEffect(() => {
-    fetchEmployeeReport(id);
-  }, [fetchEmployeeReport, id]);
+    if (employeeId) {
+      fetchEmployeeReport(employeeId);
+    } else {
+      fetchEmployeeReport(id);
+    }
+  }, [fetchEmployeeReport, id, employeeId]);
 
   useEffect(() => {
     setReportList(employeeReports.results);
@@ -82,8 +89,12 @@ export const TimeSheet: React.FC = () => {
   const [projectList, setProjectList] = useState<any[]>();
 
   useEffect(() => {
-    fetchEmployeeTimesheets(id);
-  }, [fetchEmployeeTimesheets, id]);
+    if (employeeId) {
+      fetchEmployeeTimesheets(employeeId);
+    } else {
+      fetchEmployeeTimesheets(id);
+    }
+  }, [fetchEmployeeTimesheets, id, employeeId]);
 
   const fetchEmployeeProject = useCallback(async (id: string) => {
     const response = await api.hr.employee.project.list(id);
@@ -91,18 +102,32 @@ export const TimeSheet: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchEmployeeProject(id);
-  }, [fetchEmployeeProject, id]);
+    if (employeeId) {
+      fetchEmployeeProject(employeeId);
+    } else {
+      fetchEmployeeProject(id);
+    }
+  }, [fetchEmployeeProject, id, employeeId]);
 
   const fetchEmployee = useCallback(async () => {
-    const response = await api.hr.employee.get(id);
-    const employeeInfo = {
-      id: response.id,
-      avatar: response.avatar,
-      name: response.first_name + ' ' + response.last_name,
-    };
-    setEmployee(employeeInfo);
-  }, [id]);
+    if (employeeId) {
+      const response = await api.hr.employee.get(employeeId);
+      const employeeInfo = {
+        id: response.id,
+        avatar: response.avatar,
+        name: response.first_name + ' ' + response.last_name,
+      };
+      setEmployee(employeeInfo);
+    } else {
+      const response = await api.hr.employee.get(id);
+      const employeeInfo = {
+        id: response.id,
+        avatar: response.avatar,
+        name: response.first_name + ' ' + response.last_name,
+      };
+      setEmployee(employeeInfo);
+    }
+  }, [id, employeeId]);
 
   useEffect(() => {
     fetchEmployee();
@@ -111,15 +136,33 @@ export const TimeSheet: React.FC = () => {
   const showDeleteModal = () => {
     setIsDelete(true);
   };
+
+  // useEffect(() => {
+  //   if (selectedTimesheet) {
+  //     fetchEmployeeReportByDate(
+  //       selectedTimesheet.employee.id,
+  //       selectedTimesheet.date,
+  //     );
+  //   }
+  // }, [selectedTimesheet, fetchEmployeeReportByDate]);
+
   const onViewClick = async (record: EmployeeTimesheet) => {
     setSelectedTimesheet(record);
-    await fetchEmployeeReportByDate(record.employee.id, record.date);
+    const response: any = await api.hr.employee.report.listByDate(
+      record.employee.id,
+      record.date,
+    );
+    setReportList(response.results);
     setIsView(true);
   };
 
   const onEditClick = async record => {
     setSelectedTimesheet(record);
-    await fetchEmployeeReportByDate(record.employee.id, record.date);
+    const response: any = await api.hr.employee.report.listByDate(
+      record.employee.id,
+      record.date,
+    );
+    setReportList(response.results);
     setIsEdit(true);
   };
 
@@ -162,8 +205,13 @@ export const TimeSheet: React.FC = () => {
   const onWorkStatusChange = async (value, record) => {
     let workStatusTimesheet = { ...record, work_status: value };
     try {
-      await editEmployeeTimesheet(id, workStatusTimesheet);
-      fetchEmployeeTimesheets(id);
+      if (employeeId) {
+        await editEmployeeTimesheet(employeeId, workStatusTimesheet);
+        fetchEmployeeTimesheets(employeeId);
+      } else {
+        await editEmployeeTimesheet(id, workStatusTimesheet);
+        fetchEmployeeTimesheets(id);
+      }
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -270,9 +318,16 @@ export const TimeSheet: React.FC = () => {
     if (!selectedTimesheet) return;
     try {
       setIsDelete(false);
-      await deleteEmployeeTimesheet(id, selectedTimesheet.id);
-      fetchEmployeeTimesheets(id);
-      fetchEmployeeReport(id);
+      if (employeeId) {
+        await deleteEmployeeTimesheet(employeeId, selectedTimesheet.id);
+        fetchEmployeeTimesheets(employeeId);
+        fetchEmployeeReport(employeeId);
+      } else {
+        await deleteEmployeeTimesheet(id, selectedTimesheet.id);
+        fetchEmployeeTimesheets(id);
+        fetchEmployeeReport(id);
+      }
+
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -351,7 +406,7 @@ export const TimeSheet: React.FC = () => {
       const doneData = doneList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id,
+          employee_id: id ? id : employeeId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -377,7 +432,7 @@ export const TimeSheet: React.FC = () => {
       const goingData = goingList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id,
+          employee_id: id ? id : employeeId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -403,7 +458,7 @@ export const TimeSheet: React.FC = () => {
       const blockerData = blockerList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id,
+          employee_id: id ? id : employeeId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -429,7 +484,7 @@ export const TimeSheet: React.FC = () => {
       const issueData = issueList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id,
+          employee_id: id ? id : employeeId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -455,7 +510,7 @@ export const TimeSheet: React.FC = () => {
       const todoData = todoList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id,
+          employee_id: id ? id : employeeId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -482,7 +537,7 @@ export const TimeSheet: React.FC = () => {
       const otherData = otherList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id,
+          employee_id: id ? id : employeeId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -508,7 +563,7 @@ export const TimeSheet: React.FC = () => {
       const timesheetData = timesheetList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id,
+          employee_id: id ? id : employeeId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -534,9 +589,17 @@ export const TimeSheet: React.FC = () => {
     let reportArr = Array.prototype.concat.apply([], newDataArr);
     try {
       for (let i = 0; i < reportArr.length; i++) {
-        await addEmployeeReport(id, reportArr[i]);
+        if (employeeId) {
+          await addEmployeeReport(employeeId, reportArr[i]);
+        } else {
+          await addEmployeeReport(id, reportArr[i]);
+        }
       }
-      fetchEmployeeTimesheets(id);
+      if (employeeId) {
+        fetchEmployeeTimesheets(employeeId);
+      } else {
+        fetchEmployeeTimesheets(id);
+      }
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -555,7 +618,12 @@ export const TimeSheet: React.FC = () => {
     setIsEdit(false);
     setIsView(false);
     form.resetFields();
-    fetchEmployeeReport(id);
+
+    if (employeeId) {
+      fetchEmployeeReport(employeeId);
+    } else {
+      fetchEmployeeReport(id);
+    }
   };
 
   const handleDecline = async () => {
@@ -564,11 +632,21 @@ export const TimeSheet: React.FC = () => {
       status: '2',
       approver: null,
     };
-    let employeeDecline = { ...employee, id: null, avatar: null, name: null };
+    let employeeDecline = {
+      ...employee,
+      id: null,
+      avatar: null,
+      name: null,
+    };
     declinedTimesheet = { ...declinedTimesheet, approver: employeeDecline };
     try {
-      await editEmployeeTimesheet(id, declinedTimesheet);
-      fetchEmployeeTimesheets(id);
+      if (employeeId) {
+        await editEmployeeTimesheet(employeeId, declinedTimesheet);
+        fetchEmployeeTimesheets(employeeId);
+      } else {
+        await editEmployeeTimesheet(id, declinedTimesheet);
+        fetchEmployeeTimesheets(id);
+      }
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -591,8 +669,13 @@ export const TimeSheet: React.FC = () => {
     let approvedTimesheet = { ...selectedTimesheet, status: '3' };
     approvedTimesheet = { ...approvedTimesheet, approver: employee };
     try {
-      await editEmployeeTimesheet(id, approvedTimesheet);
-      fetchEmployeeTimesheets(id);
+      if (employeeId) {
+        await editEmployeeTimesheet(employeeId, approvedTimesheet);
+        fetchEmployeeTimesheets(employeeId);
+      } else {
+        await editEmployeeTimesheet(id, approvedTimesheet);
+        fetchEmployeeTimesheets(id);
+      }
       notify({
         type: ToastMessageType.Info,
         duration: 2,

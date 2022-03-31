@@ -142,7 +142,9 @@ const TimesheetItem = ({
                 </FormItemStyled>
               </Wrapper>
               <Wrapper>
-                <FormItemStyled label="Member" name="employee"></FormItemStyled>
+                <FormItemStyled label="Member" name="employee">
+                  {report.employee.name}
+                </FormItemStyled>
               </Wrapper>
             </WrapperItem>
           </div>
