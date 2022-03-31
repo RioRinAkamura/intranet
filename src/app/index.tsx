@@ -23,7 +23,7 @@ import { useAuthState } from './components/Auth/useAuthState';
 import { BreadCrumbsContextProvider } from './components/Breadcrumbs/context';
 import { ToastContextProvider } from './components/Toast/context';
 import { DeviceManagePage } from './pages/DeviceManagePage/Loadable';
-import { TimeSheet } from './pages/EmployeePage/EmployeeDetailPage/components/TimeSheet';
+import { TimeSheet } from './pages/EmployeePage/EmployeeDetailPage/components/TimeSheet/Loadable';
 import { EmployeePage } from './pages/EmployeePage/Loadable';
 import { ForgotPassword } from './pages/ForgotPassword/Loadable';
 import { HomePage } from './pages/HomePage/Loadable';
@@ -31,7 +31,6 @@ import { LeaveApplicationDetailPage } from './pages/LeaveApplicationPage/LeaveAp
 import { LeaveApplicationPage } from './pages/LeaveApplicationPage/LeaveApplicationListPage/Loadable';
 import { Login } from './pages/Login/Loadable';
 import { UserPage } from './pages/ManageUserPage/Loadable';
-import { UserManageDetailPage } from './pages/ManageUserPage/UserDetailPage';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { ProjectPage } from './pages/ProjectPage/Loadable';
 import { ResetPassword } from './pages/ResetPassword/Loadable';
@@ -42,6 +41,13 @@ import { TimesheetListPage } from './pages/TimesheetPage/TimesheetListPage';
 export function App() {
   const { i18n } = useTranslation();
   const { identity } = useAuthState();
+
+  if (
+    identity &&
+    identity?.role?.length === 1 &&
+    identity?.role[0].name === 'staff'
+  ) {
+  }
   return (
     <BrowserRouter>
       <Helmet
@@ -72,88 +78,74 @@ export function App() {
                 component={ResetPassword}
               />
               <AppLayout>
-                {identity &&
-                identity?.role?.length === 1 &&
-                identity?.role[0].name === 'staff' ? (
-                  <>
-                    <PrivateRoute
-                      exact
-                      path={config.ROOT_PATH}
-                      component={HomePage}
-                    />
-                    <PrivateRoute
-                      path={PrivatePath.USERS_ID}
-                      component={UserManageDetailPage}
-                    />
-                    <PrivateRoute
-                      path={PrivatePath.USERS_ID_TIMESHEETS}
-                      component={TimeSheet}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <PrivateRoute
-                      exact
-                      path={config.ROOT_PATH}
-                      component={HomePage}
-                    />
-                    {/* Dashboard */}
-                    <PrivateRoute
-                      exact
-                      path={config.DASHBOARD_PATH}
-                      component={HomePage}
-                    />
-                    {/* Employee */}
-                    <PrivateRoute
-                      path={config.USERS_PATH}
-                      component={EmployeePage}
-                    />
-                    {/* Project */}
-                    <PrivateRoute
-                      path={PrivatePath.PROJECTS}
-                      component={ProjectPage}
-                    />
-                    {/* LeaveApplication */}
-                    <PrivateRoute
-                      exact
-                      path={PrivatePath.LEAVE_APPLICATION}
-                      component={LeaveApplicationPage}
-                    />
-                    <PrivateRoute
-                      path={PrivatePath.LEAVE_APPLICATION_CREATE}
-                      component={LeaveApplicationDetailPage}
-                    />
-                    <PrivateRoute
-                      path={PrivatePath.LEAVE_APPLICATION_ID}
-                      component={LeaveApplicationDetailPage}
-                    />
-                    {/* User */}
-                    <PrivateRoute
-                      path={PrivatePath.USERS}
-                      component={UserPage}
-                    />
-                    {/* Devices */}
-                    <PrivateRoute
-                      path={PrivatePath.DEVICES}
-                      component={DeviceManagePage}
-                    />
-                    {/* Task */}
-                    <PrivateRoute
-                      path={PrivatePath.TASKS}
-                      component={TaskManagerPage}
-                    />
-                    {/* Skill */}
-                    <PrivateRoute
-                      path={PrivatePath.SKILLS}
-                      component={SkillManagePage}
-                    />
-                    {/* Timesheet */}
-                    <PrivateRoute
-                      path={PrivatePath.PROJECTS_TIMESHEETS}
-                      component={TimesheetListPage}
-                    />
-                  </>
-                )}
+                <>
+                  {/* <PrivateRoute
+                    path={PrivatePath.USERS_ID}
+                    component={UserManageDetailPage}
+                  /> */}
+                  <PrivateRoute
+                    exact
+                    path={config.ROOT_PATH}
+                    component={HomePage}
+                  />
+                  {/* Dashboard */}
+                  <PrivateRoute
+                    exact
+                    path={config.DASHBOARD_PATH}
+                    component={HomePage}
+                  />
+                  {/* Employee */}
+                  <PrivateRoute
+                    path={config.USERS_PATH}
+                    component={EmployeePage}
+                  />
+                  {/* Project */}
+                  <PrivateRoute
+                    path={PrivatePath.PROJECTS}
+                    component={ProjectPage}
+                  />
+                  {/* LeaveApplication */}
+                  <PrivateRoute
+                    exact
+                    path={PrivatePath.LEAVE_APPLICATION}
+                    component={LeaveApplicationPage}
+                  />
+                  <PrivateRoute
+                    path={PrivatePath.LEAVE_APPLICATION_CREATE}
+                    component={LeaveApplicationDetailPage}
+                  />
+                  <PrivateRoute
+                    path={PrivatePath.LEAVE_APPLICATION_ID}
+                    component={LeaveApplicationDetailPage}
+                  />
+                  {/* User */}
+                  <PrivateRoute path={PrivatePath.USERS} component={UserPage} />
+                  {/* Devices */}
+                  <PrivateRoute
+                    path={PrivatePath.DEVICES}
+                    component={DeviceManagePage}
+                  />
+                  {/* Task */}
+                  <PrivateRoute
+                    path={PrivatePath.TASKS}
+                    component={TaskManagerPage}
+                  />
+                  {/* Skill */}
+                  <PrivateRoute
+                    path={PrivatePath.SKILLS}
+                    component={SkillManagePage}
+                  />
+                  {/* Timesheet */}
+                  <PrivateRoute
+                    path={PrivatePath.PROJECTS_TIMESHEETS}
+                    component={TimesheetListPage}
+                  />
+                  {/* User timesheet */}
+                  <PrivateRoute
+                    path={PrivatePath.TIMESHEETS}
+                    component={TimeSheet}
+                  />
+                </>
               </AppLayout>
 
               <Route component={NotFoundPage} />

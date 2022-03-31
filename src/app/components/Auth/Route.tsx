@@ -9,29 +9,42 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
   const { authenticated, identity } = useAuthState();
   const location = useLocation();
 
-  // handle staff role
   if (
     identity &&
     identity?.role?.length === 1 &&
     identity?.role[0].name === 'staff'
   ) {
+    // handle staff role
     if (location.pathname.includes(identity?.id as string)) {
       return <Route {...rest} render={props => <Component {...props} />} />;
-    } else {
-      // history.push(config.DASHBOARD_PATH);
-      return (
-        <Route
-          {...rest}
-          render={props =>
-            location.pathname.includes('/dashboard') ? (
-              <Component {...props} />
-            ) : (
-              <Redirect to={config.DASHBOARD_PATH} />
-            )
-          }
-        />
-      );
     }
+
+    if (location.pathname.includes('/timesheets')) {
+      // console.log('route timesheet', rest);
+      return <Route {...rest} render={props => <Component {...props} />} />;
+    }
+
+    if (location.pathname.includes('/projects')) {
+      return <Route {...rest} render={props => <Component {...props} />} />;
+    }
+
+    return (
+      <Route
+        {...rest}
+        render={props =>
+          location.pathname.includes('/dashboard') ? (
+            <>
+              {`${location.pathname.includes('/dashboard')}`}
+              <Component {...props} />
+            </>
+          ) : (
+            <>
+              <Redirect to={config.DASHBOARD_PATH} />
+            </>
+          )
+        }
+      />
+    );
   }
   return (
     // Show the component only when the user is logged in

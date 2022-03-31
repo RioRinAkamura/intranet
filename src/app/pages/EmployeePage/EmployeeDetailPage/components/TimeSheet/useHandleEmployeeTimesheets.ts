@@ -7,6 +7,7 @@ import {
   UpdateEmployeeTimesheetQueryParams,
   UpdateReportQueryParams,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
+import { User } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
 import { Pagination } from '@hdwebsoft/intranet-api-sdk/libs/type';
 import { useCallback, useState } from 'react';
 import { api } from 'utils/api';
@@ -16,6 +17,7 @@ export const useHandleEmployeeTimesheets = (): {
   error: boolean;
   employeeTimesheets: Pagination<EmployeeTimesheet>;
   employeeReports: Pagination<Report>;
+  employeeIdByUser?: User;
   fetchEmployeeTimesheets: (employeeId: string) => void;
   fetchEmployeeTimesheetsByDate: (employeeId: string, date: string) => void;
   addEmployeeTimesheet: (
@@ -27,6 +29,7 @@ export const useHandleEmployeeTimesheets = (): {
     data: UpdateEmployeeTimesheetQueryParams,
   ) => void;
   deleteEmployeeTimesheet: (employeeId: string, timesheetId: string) => void;
+  getEmployeeIdByUser: () => void;
 
   //REPORT
   fetchEmployeeReport: (employeeId: string) => void;
@@ -50,6 +53,7 @@ export const useHandleEmployeeTimesheets = (): {
     next: '',
     previous: '',
   });
+  const [employeeIdByUser, setEmployeeIdByUser] = useState<User>();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -205,11 +209,24 @@ export const useHandleEmployeeTimesheets = (): {
     }
   };
 
+  const getEmployeeIdByUser = async () => {
+    setLoading(true);
+    try {
+      const response = await api.user.me();
+      setEmployeeIdByUser(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     loading,
     error,
     employeeTimesheets,
     employeeReports,
+    employeeIdByUser,
     fetchEmployeeTimesheets,
     fetchEmployeeTimesheetsByDate,
     addEmployeeTimesheet,
@@ -220,5 +237,6 @@ export const useHandleEmployeeTimesheets = (): {
     editEmployeeReport,
     deleteEmployeeReport,
     fetchEmployeeReportByDate,
+    getEmployeeIdByUser,
   };
 };

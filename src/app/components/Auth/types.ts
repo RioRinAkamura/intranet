@@ -1,3 +1,5 @@
+import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
+
 export enum RoleName {
   ADMIN = 'Admin',
   HUMAN_RESOURCE = 'Human Resource',
@@ -18,6 +20,7 @@ export interface UserIdentity {
   displayName?: string;
   avatar?: string;
   role?: Role[];
+  employee?: Employee;
 }
 
 /* --- STATE --- */

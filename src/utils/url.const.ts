@@ -43,6 +43,8 @@ export enum PrivatePath {
   USERS_ID = '/users/:id',
   USERS_ID_TIMESHEETS = '/users/:id/timesheets',
 
+  TIMESHEETS = '/timesheets',
+
   TASKS = '/tasks',
 
   LEAVE_APPLICATION = '/leave_applications',

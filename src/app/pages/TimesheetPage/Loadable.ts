@@ -1,6 +1,6 @@
 import { lazyLoad } from 'utils/loadable';
 
-export const ProjectPage = lazyLoad(
+export const TimesheetPage = lazyLoad(
   () => import('./index'),
   module => module.TimesheetPage,
 );
