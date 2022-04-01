@@ -51,18 +51,6 @@ export const TimeSheet: React.FC = () => {
   const [timesheetList, setTimesheetList] = useState<any[]>();
   const [newDate, setNewDate] = useState<string>();
 
-  // const getEmployeeTimesheetState = useSelector(selectEmployeeTimesheet);
-  // const { actions } = useEmployeeTimesheetSlice();
-  // const { setFilterText } = useHandleDataTable(
-  //   getEmployeeTimesheetState,
-  //   actions,
-  // );
-  // const { getColumnSearchCheckboxProps } = useTableConfig(
-  //   getEmployeeTimesheetState,
-  //   EmployeeTimesheetMessage,
-  //   setFilterText,
-  // );
-
   const { identity } = useAuthState();
   const employeeId = identity?.employee?.id;
 
