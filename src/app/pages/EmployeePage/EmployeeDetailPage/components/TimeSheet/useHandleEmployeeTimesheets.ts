@@ -8,7 +8,11 @@ import {
   UpdateReportQueryParams,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { User } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
-import { Pagination } from '@hdwebsoft/intranet-api-sdk/libs/type';
+import {
+  Pagination,
+  SelectOption,
+} from '@hdwebsoft/intranet-api-sdk/libs/type';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { useCallback, useState } from 'react';
 import { api } from 'utils/api';
 
@@ -18,6 +22,12 @@ export const useHandleEmployeeTimesheets = (): {
   employeeTimesheets: Pagination<EmployeeTimesheet>;
   employeeReports: Pagination<Report>;
   employeeIdByUser?: User;
+  workStatus: SelectOption[];
+
+  update: (data: EmployeeTimesheet) => Promise<EmployeeTimesheet | undefined>;
+
+  getworkStatus: () => Promise<void>;
+
   fetchEmployeeTimesheets: (employeeId: string) => void;
   fetchEmployeeTimesheetsByDate: (employeeId: string, date: string) => void;
   addEmployeeTimesheet: (
@@ -54,9 +64,11 @@ export const useHandleEmployeeTimesheets = (): {
     previous: '',
   });
   const [employeeIdByUser, setEmployeeIdByUser] = useState<User>();
+  const [workStatus, setWorkStatus] = useState<SelectOption[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const { notify } = useNotify();
 
   const fetchEmployeeTimesheets = useCallback(async (employeeId: string) => {
     setLoading(true);
@@ -221,12 +233,51 @@ export const useHandleEmployeeTimesheets = (): {
     }
   };
 
+  const getworkStatus = useCallback(async () => {
+    try {
+      const response = await api.hr.employee.timesheet.getWorkStatus();
+      if (response) {
+        setWorkStatus(response);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
+
+  const update = async (
+    data: EmployeeTimesheet,
+  ): Promise<EmployeeTimesheet | undefined> => {
+    setLoading(true);
+    try {
+      const response = await api.hr.employee.timesheet.updateTimesheet(data);
+      if (response) {
+        notify({
+          type: ToastMessageType.Info,
+          duration: 2,
+          message: 'Succes',
+        });
+        return response;
+      }
+    } catch (error: any) {
+      setError(error);
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     loading,
     error,
     employeeTimesheets,
     employeeReports,
     employeeIdByUser,
+    workStatus,
+    update,
     fetchEmployeeTimesheets,
     fetchEmployeeTimesheetsByDate,
     addEmployeeTimesheet,
@@ -238,5 +289,6 @@ export const useHandleEmployeeTimesheets = (): {
     deleteEmployeeReport,
     fetchEmployeeReportByDate,
     getEmployeeIdByUser,
+    getworkStatus,
   };
 };

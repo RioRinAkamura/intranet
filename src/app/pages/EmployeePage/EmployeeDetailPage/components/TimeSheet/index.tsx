@@ -19,14 +19,23 @@ import config from 'config';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { Wrapper } from 'styles/StyledCommon';
 import { api } from 'utils/api';
+import { useTableConfig } from 'utils/tableConfig';
 import { datePickerViewProps } from 'utils/types';
 import Button from '../../../../../components/Button';
 import { Report } from './components/Report/Loadable';
 import { useHandleEmployeeTimesheets } from './useHandleEmployeeTimesheets';
+import {
+  selectEmployeeTimesheet,
+  selectEmployeeTimesheetParams,
+} from './slice/selectors';
+import { EmployeeTimesheetMessage } from './message';
+import { useEmployeeTimesheetSlice } from './slice';
+import { useHandleDataTable } from './useHandleDataTable';
 
 const { Option } = Select;
 
@@ -50,6 +59,22 @@ export const TimeSheet: React.FC = () => {
   const [otherList, setOtherList] = useState<any[]>();
   const [timesheetList, setTimesheetList] = useState<any[]>();
   const [newDate, setNewDate] = useState<string>();
+  const getEmployeeTimesheetState = useSelector(selectEmployeeTimesheet);
+  const params = useSelector(selectEmployeeTimesheetParams);
+
+  const { actions } = useEmployeeTimesheetSlice();
+  const dispatch = useDispatch();
+
+  const { setFilterText } = useHandleDataTable(
+    getEmployeeTimesheetState,
+    actions,
+  );
+
+  const { getColumnSearchCheckboxProps } = useTableConfig(
+    getEmployeeTimesheetState,
+    EmployeeTimesheetMessage,
+    setFilterText,
+  );
 
   const { identity } = useAuthState();
   const employeeId = identity?.employee?.id;
@@ -65,11 +90,14 @@ export const TimeSheet: React.FC = () => {
 
   const {
     employeeTimesheets,
-    editEmployeeTimesheet,
     employeeReports,
+    loading,
+    workStatus,
+    getworkStatus,
+    update,
+    editEmployeeTimesheet,
     addEmployeeReport,
     fetchEmployeeTimesheets,
-    loading,
     deleteEmployeeTimesheet,
     fetchEmployeeReport,
   } = useHandleEmployeeTimesheets();
@@ -130,21 +158,16 @@ export const TimeSheet: React.FC = () => {
   }, [id, employeeId]);
 
   useEffect(() => {
+    getworkStatus();
+  }, [getworkStatus]);
+
+  useEffect(() => {
     fetchEmployee();
   }, [fetchEmployee]);
 
   const showDeleteModal = () => {
     setIsDelete(true);
   };
-
-  // useEffect(() => {
-  //   if (selectedTimesheet) {
-  //     fetchEmployeeReportByDate(
-  //       selectedTimesheet.employee.id,
-  //       selectedTimesheet.date,
-  //     );
-  //   }
-  // }, [selectedTimesheet, fetchEmployeeReportByDate]);
 
   const onViewClick = async (record: EmployeeTimesheet) => {
     setSelectedTimesheet(record);
@@ -238,6 +261,22 @@ export const TimeSheet: React.FC = () => {
       title: 'Work status',
       dataIndex: 'work_status',
       width: 130,
+      ...getColumnSearchCheckboxProps(
+        ['work_status'],
+        workStatus,
+        undefined,
+        undefined,
+        async value => {
+          try {
+            const response = await update(value);
+            if (response) {
+              dispatch(actions.fetchEmployeeTimesheet({ params: params }));
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      ),
       render: (text, record) => {
         return (
           <Select
