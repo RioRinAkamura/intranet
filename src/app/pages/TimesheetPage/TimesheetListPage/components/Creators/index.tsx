@@ -147,7 +147,7 @@ export const Creators = (props: CreatorsProps) => {
               <Avatar
                 size={30}
                 src={creator.avatar || undefined}
-                name={creator.first_name + ' ' + creator.last_name}
+                name={creator.name}
               />
               <StyledCreatorName>{creator.name}</StyledCreatorName>
             </StyledWrapperCreator>
