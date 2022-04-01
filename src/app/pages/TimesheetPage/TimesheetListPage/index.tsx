@@ -214,7 +214,6 @@ export const TimesheetListPage = () => {
   }, [fetchEmployee]);
 
   const handleApproveAll = async record => {
-    // console.log('employee', employee);
     const creatorsId = record.creators.map(creator => creator.id);
     try {
       for (let id of creatorsId) {

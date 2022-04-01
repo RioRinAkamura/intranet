@@ -1,7 +1,6 @@
 import {
   CreateReportQueryParams,
   EmployeeTimesheet,
-  EmployeeTimesheetQueryParams,
   Report,
   ReportQueryParams,
   UpdateEmployeeTimesheetQueryParams,
@@ -12,7 +11,6 @@ import {
   Pagination,
   SelectOption,
 } from '@hdwebsoft/intranet-api-sdk/libs/type';
-import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { useCallback, useState } from 'react';
 import { api } from 'utils/api';
 
@@ -24,16 +22,11 @@ export const useHandleEmployeeTimesheets = (): {
   employeeIdByUser?: User;
   workStatus: SelectOption[];
 
-  update: (data: EmployeeTimesheet) => Promise<EmployeeTimesheet | undefined>;
-
   getworkStatus: () => Promise<void>;
 
   fetchEmployeeTimesheets: (employeeId: string) => void;
   fetchEmployeeTimesheetsByDate: (employeeId: string, date: string) => void;
-  addEmployeeTimesheet: (
-    employeeId: string,
-    data: EmployeeTimesheetQueryParams,
-  ) => void;
+
   editEmployeeTimesheet: (
     employeeId: string,
     data: UpdateEmployeeTimesheetQueryParams,
@@ -68,7 +61,6 @@ export const useHandleEmployeeTimesheets = (): {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-  const { notify } = useNotify();
 
   const fetchEmployeeTimesheets = useCallback(async (employeeId: string) => {
     setLoading(true);
@@ -101,20 +93,6 @@ export const useHandleEmployeeTimesheets = (): {
     },
     [],
   );
-
-  const addEmployeeTimesheet = async (
-    employeeId: string,
-    data: EmployeeTimesheetQueryParams,
-  ) => {
-    setLoading(true);
-    try {
-      await api.hr.employee.timesheet.create(employeeId, data);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const editEmployeeTimesheet = async (
     employeeId: string,
@@ -244,32 +222,6 @@ export const useHandleEmployeeTimesheets = (): {
     }
   }, []);
 
-  const update = async (
-    data: EmployeeTimesheet,
-  ): Promise<EmployeeTimesheet | undefined> => {
-    setLoading(true);
-    try {
-      const response = await api.hr.employee.timesheet.updateTimesheet(data);
-      if (response) {
-        notify({
-          type: ToastMessageType.Info,
-          duration: 2,
-          message: 'Succes',
-        });
-        return response;
-      }
-    } catch (error: any) {
-      setError(error);
-      notify({
-        type: ToastMessageType.Error,
-        duration: 2,
-        message: error.message,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return {
     loading,
     error,
@@ -277,10 +229,9 @@ export const useHandleEmployeeTimesheets = (): {
     employeeReports,
     employeeIdByUser,
     workStatus,
-    update,
     fetchEmployeeTimesheets,
     fetchEmployeeTimesheetsByDate,
-    addEmployeeTimesheet,
+    // addEmployeeTimesheet,
     editEmployeeTimesheet,
     deleteEmployeeTimesheet,
     fetchEmployeeReport,
