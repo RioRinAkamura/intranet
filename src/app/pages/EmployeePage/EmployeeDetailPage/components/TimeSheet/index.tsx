@@ -733,7 +733,6 @@ export const TimeSheet: React.FC = () => {
       >
         <Form
           labelCol={{ span: 5 }}
-          // wrapperCol={{ span: 19 }}
           name="dynamic_form_nest_item"
           form={form}
           onFinish={onFinish}
@@ -750,7 +749,7 @@ export const TimeSheet: React.FC = () => {
                   {...(isView || isEdit ? datePickerViewProps : {})}
                   format={DATE_FORMAT}
                   disabledDate={disabledDate}
-                  value={
+                  defaultValue={
                     isView || isEdit
                       ? moment(selectedTimesheet?.date)
                       : moment(today, DATE_FORMAT)

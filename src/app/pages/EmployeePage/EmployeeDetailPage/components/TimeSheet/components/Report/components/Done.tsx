@@ -139,12 +139,16 @@ const Done = ({
                       label="Project"
                       {...restField}
                       name={[name, 'project_id']}
-                      // rules={[
-                      //   {
-                      //     required: true,
-                      //     message: '',
-                      //   },
-                      // ]}
+                      rules={
+                        isCreate
+                          ? [
+                              {
+                                required: true,
+                                message: '',
+                              },
+                            ]
+                          : undefined
+                      }
                     >
                       {isView ? (
                         <Input

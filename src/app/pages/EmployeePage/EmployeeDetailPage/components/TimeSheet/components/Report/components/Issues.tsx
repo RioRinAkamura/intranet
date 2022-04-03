@@ -141,6 +141,16 @@ const Issues = ({
                       label="Project"
                       {...restField}
                       name={[name, 'project_id']}
+                      rules={
+                        isCreate
+                          ? [
+                              {
+                                required: true,
+                                message: '',
+                              },
+                            ]
+                          : undefined
+                      }
                     >
                       {isView ? (
                         <Input
