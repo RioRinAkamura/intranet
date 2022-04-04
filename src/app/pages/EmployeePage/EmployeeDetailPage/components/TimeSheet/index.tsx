@@ -41,7 +41,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
 
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<any>();
-  const [reportList, setReportList] = useState<any[]>();
+  const [reportListByDate, setReportListByDate] = useState<any[]>();
   const [employee, setEmployee] = useState<any>();
 
   const [doneList, setDoneList] = useState<any[]>();
@@ -76,7 +76,6 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
 
   const {
     employeeTimesheets,
-    employeeReports,
     loading,
     // workStatus,
     getworkStatus,
@@ -84,21 +83,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     addEmployeeReport,
     fetchEmployeeTimesheets,
     deleteEmployeeTimesheet,
-    fetchEmployeeReport,
   } = useHandleEmployeeTimesheets();
-
-  useEffect(() => {
-    if (employeeId) {
-      fetchEmployeeReport(employeeId);
-      return;
-    } else if (userId) {
-      fetchEmployeeReport(userId);
-    }
-  }, [fetchEmployeeReport, employeeId, userId]);
-
-  useEffect(() => {
-    setReportList(employeeReports.results);
-  }, [employeeReports]);
 
   const [projectList, setProjectList] = useState<any[]>();
 
@@ -164,18 +149,49 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
       record.employee.id,
       record.date,
     );
-    setReportList(response.results);
+    setReportListByDate(response.results);
     setIsView(true);
   };
 
   const onEditClick = async record => {
     setSelectedTimesheet(record);
-    const response: any = await api.hr.employee.report.listByDate(
+    const response = await api.hr.employee.report.listByDate(
       record.employee.id,
       record.date,
     );
-    setReportList(response.results);
+    setReportListByDate(response.results);
     setIsEdit(true);
+  };
+
+  useEffect(() => {
+    if (reportListByDate) {
+      const doneArr = reportListByDate.filter(report => report.type === '2');
+      setDoneList(doneArr);
+      const goingArr = reportListByDate.filter(report => report.type === '3');
+      setGoingList(goingArr);
+      const blockerArr = reportListByDate.filter(report => report.type === '5');
+      setBLockerList(blockerArr);
+      const issuesArr = reportListByDate.filter(report => report.type === '4');
+      setIssueList(issuesArr);
+      const todoArr = reportListByDate.filter(report => report.type === '6');
+      setTodoList(todoArr);
+      const othersArr = reportListByDate.filter(report => report.type === '7');
+      setOtherList(othersArr);
+      const timesheetArr = reportListByDate.filter(
+        report => report.type === '1',
+      );
+      setTimesheetList(timesheetArr);
+    }
+  }, [reportListByDate]);
+
+  const initialValuesForm = {
+    done: isCreate ? undefined : doneList,
+    going: isCreate ? undefined : goingList,
+    blockers: isCreate ? undefined : blockerList,
+    issues: isCreate ? undefined : issueList,
+    todo: isCreate ? undefined : todoList,
+    others: isCreate ? undefined : otherList,
+    timesheets: isCreate ? undefined : timesheetList,
   };
 
   const moreButton = (record: EmployeeTimesheet) => {
@@ -335,12 +351,10 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
       if (employeeId) {
         await deleteEmployeeTimesheet(employeeId, selectedTimesheet.id);
         fetchEmployeeTimesheets(employeeId);
-        fetchEmployeeReport(employeeId);
         return;
       } else if (userId) {
         await deleteEmployeeTimesheet(userId, selectedTimesheet.id);
         fetchEmployeeTimesheets(userId);
-        fetchEmployeeReport(userId);
       }
       notify({
         type: ToastMessageType.Info,
@@ -362,10 +376,10 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
   };
 
   const handleCancel = () => {
+    form.resetFields();
     setIsView(false);
     setIsCreate(false);
     setIsEdit(false);
-    form.resetFields();
   };
 
   const handleToggle = () => {
@@ -375,35 +389,6 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
 
   const handleDateChange = date => {
     setNewDate(moment(date).format(DATE_FORMAT));
-  };
-
-  useEffect(() => {
-    if (reportList) {
-      const doneArr = reportList.filter(report => report.type === '2');
-      setDoneList(doneArr);
-      const goingArr = reportList.filter(report => report.type === '3');
-      setGoingList(goingArr);
-      const blockerArr = reportList.filter(report => report.type === '5');
-      setBLockerList(blockerArr);
-      const issuesArr = reportList.filter(report => report.type === '4');
-      setIssueList(issuesArr);
-      const todoArr = reportList.filter(report => report.type === '6');
-      setTodoList(todoArr);
-      const othersArr = reportList.filter(report => report.type === '7');
-      setOtherList(othersArr);
-      const timesheetArr = reportList.filter(report => report.type === '1');
-      setTimesheetList(timesheetArr);
-    }
-  }, [reportList]);
-
-  const initialValuesForm = {
-    done: isCreate ? undefined : doneList,
-    going: isCreate ? undefined : goingList,
-    blockers: isCreate ? undefined : blockerList,
-    issues: isCreate ? undefined : issueList,
-    todo: isCreate ? undefined : todoList,
-    others: isCreate ? undefined : otherList,
-    timesheets: isCreate ? undefined : timesheetList,
   };
 
   const onFinish = async values => {
@@ -632,12 +617,6 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     setIsEdit(false);
     setIsView(false);
     form.resetFields();
-
-    if (userId && isStaff) {
-      fetchEmployeeReport(userId);
-    } else {
-      fetchEmployeeReport(employeeId);
-    }
   };
 
   const handleDecline = async () => {
@@ -763,7 +742,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
                   disabledDate={disabledDate}
                   defaultValue={
                     isView || isEdit
-                      ? moment(selectedTimesheet?.date)
+                      ? moment(selectedTimesheet.date)
                       : moment(today, DATE_FORMAT)
                   }
                   onChange={date => handleDateChange(date)}
@@ -822,7 +801,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
             isEdit={isEdit}
             form={form}
             newDate={newDate}
-            reportList={reportList}
+            reportList={reportListByDate}
             projectList={projectList}
           />
         </Form>

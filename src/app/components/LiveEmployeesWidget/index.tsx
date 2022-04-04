@@ -80,7 +80,7 @@ export default function LiveEmployeeWidgets() {
       ) : (
         <Row gutter={[0, 32]} align="middle" justify="space-between">
           {liveEmployeeLabel.map((label, index) => (
-            <Col span={2}>
+            <Col key={index} span={2}>
               <LiveEmployeeItemsWrapper>
                 <h4>{liveEmployeeData[index]}</h4>
                 <p style={{ color: buildLabelColor(label) }}>
