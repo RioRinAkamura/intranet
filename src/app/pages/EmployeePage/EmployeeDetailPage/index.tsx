@@ -257,7 +257,7 @@ export function EmployeeDetailPage(props: Props) {
             <Projects employeeId={id} />
           </Route>
           <Route path={PrivatePath.EMPLOYEES_ID_TIMESHEET}>
-            <TimeSheet />
+            <TimeSheet employeeId={id} />
           </Route>
           <Route path={PrivatePath.EMPLOYEES_ID_REPORT}>
             <Report employeeId={id} />
