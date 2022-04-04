@@ -123,57 +123,58 @@ export const useHandleDataTable = (
   const setOrdering = <T,>(
     sorter: SorterResult<T> | SorterResult<T>[],
   ): void => {
-    if (isEmpty(sorter)) return;
-    if (isArray(sorter)) {
-      const orderingParams = sorter.map(item => {
-        if (item.order === 'ascend') {
-          return item.field;
-        } else if (item.order === 'descend') {
-          return '-' + item.field;
-        } else {
-          return '';
-        }
-      });
-
-      if (ordering !== orderingParams.toString()) {
-        history.replace({
-          search: stringify({
-            ...urlParams,
-            ordering: orderingParams.toString(),
-          }),
+    if (!isEmpty(sorter)) {
+      if (isArray(sorter)) {
+        const orderingParams = sorter.map(item => {
+          if (item.order === 'ascend') {
+            return item.field;
+          } else if (item.order === 'descend') {
+            return '-' + item.field;
+          } else {
+            return '';
+          }
         });
-        dispatch(actions.setOrdering(orderingParams.toString()));
-      }
-    } else {
-      if (sorter.order === 'ascend') {
-        if (ordering !== sorter.field) {
+
+        if (ordering !== orderingParams.toString()) {
           history.replace({
             search: stringify({
               ...urlParams,
-              ordering: sorter.field,
+              ordering: orderingParams.toString(),
             }),
           });
-          dispatch(actions.setOrdering(sorter.field));
-        }
-      } else if (sorter.order === 'descend') {
-        if (ordering !== '-' + sorter.field) {
-          history.replace({
-            search: stringify({
-              ...urlParams,
-              ordering: '-' + sorter.field,
-            }),
-          });
-          dispatch(actions.setOrdering('-' + sorter.field));
+          dispatch(actions.setOrdering(orderingParams.toString()));
         }
       } else {
-        if (urlParams.ordering) {
-          delete urlParams.ordering;
-          history.replace({
-            search: stringify({
-              ...urlParams,
-            }),
-          });
-          dispatch(actions.setOrdering(null));
+        if (sorter.order === 'ascend') {
+          if (ordering !== sorter.field) {
+            history.replace({
+              search: stringify({
+                ...urlParams,
+                ordering: sorter.field,
+              }),
+            });
+            dispatch(actions.setOrdering(sorter.field));
+          }
+        } else if (sorter.order === 'descend') {
+          if (ordering !== '-' + sorter.field) {
+            history.replace({
+              search: stringify({
+                ...urlParams,
+                ordering: '-' + sorter.field,
+              }),
+            });
+            dispatch(actions.setOrdering('-' + sorter.field));
+          }
+        } else {
+          if (urlParams.ordering) {
+            delete urlParams.ordering;
+            history.replace({
+              search: stringify({
+                ...urlParams,
+              }),
+            });
+            dispatch(actions.setOrdering(null));
+          }
         }
       }
     }

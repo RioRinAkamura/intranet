@@ -1,9 +1,10 @@
 import { EmployeeTimesheetQueryParams } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { Key } from 'react';
+import { string } from 'yup';
 
 export interface EmployeeTimesheetState {
-  id: string;
-  timesheet: EmployeeTimesheet[];
+  id?: string;
+  timesheet?: EmployeeTimesheet[];
   loading?: boolean;
   error?: Error;
   isFilter?: boolean;
@@ -31,6 +32,7 @@ export interface QueryParams {
   timesheet__name?: string;
   limit?: number;
   page?: number;
+  work_status?: string;
   [key: string]: string | number | undefined;
 }
 

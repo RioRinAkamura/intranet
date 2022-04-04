@@ -6,8 +6,7 @@ import { DeleteEmployeeTimesheetParams } from './types';
 
 function* fetchEmployeeTimesheet(action) {
   try {
-    const { params } = action.payload;
-    const id = action.payload.id;
+    const { params, id } = action.payload;
 
     const response = yield call(
       [api, api.hr.employee.timesheet.list],
@@ -22,34 +21,6 @@ function* fetchEmployeeTimesheet(action) {
     yield put(actions.fetchEmployeeTimesheetFailure);
   }
 }
-
-// function* addTimesheet(action: PayloadAction<EmployeeTimesheet>) {
-//   try {
-//     const timesheet = cloneDeep(action.payload);
-//     yield api.hr.employee.timesheet.create(
-//       timesheet.employeeId,
-//       timesheet.data,
-//     );
-
-//     yield put(actions.addTimesheetSuccess());
-//   } catch (err) {
-//     yield put(actions.addTimesheetFailure());
-//   } finally {
-//     yield put(actions.resetStateAddModal());
-//   }
-// }
-
-// function* editTimesheet(action: PayloadAction<EmployeeTimesheet>) {
-//   try {
-//     const timesheet = cloneDeep(action.payload);
-//     yield api.hr.employee.project.update(timesheet.employeeId, timesheet.data);
-//     yield put(actions.editTimesheetSuccess());
-//   } catch (err) {
-//     yield put(actions.editTimesheetFailure());
-//   } finally {
-//     yield put(actions.resetStateEditModal());
-//   }
-// }
 
 function* deleteTimesheet(
   action: PayloadAction<DeleteEmployeeTimesheetParams>,

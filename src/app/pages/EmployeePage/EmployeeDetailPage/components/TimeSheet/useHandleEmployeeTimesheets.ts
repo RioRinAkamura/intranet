@@ -1,14 +1,16 @@
 import {
   CreateReportQueryParams,
   EmployeeTimesheet,
-  EmployeeTimesheetQueryParams,
   Report,
   ReportQueryParams,
   UpdateEmployeeTimesheetQueryParams,
   UpdateReportQueryParams,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import { User } from '@hdwebsoft/intranet-api-sdk/libs/api/user/models';
-import { Pagination } from '@hdwebsoft/intranet-api-sdk/libs/type';
+import {
+  Pagination,
+  SelectOption,
+} from '@hdwebsoft/intranet-api-sdk/libs/type';
 import { useCallback, useState } from 'react';
 import { api } from 'utils/api';
 
@@ -18,12 +20,13 @@ export const useHandleEmployeeTimesheets = (): {
   employeeTimesheets: Pagination<EmployeeTimesheet>;
   employeeReports: Pagination<Report>;
   employeeIdByUser?: User;
+  workStatus: SelectOption[];
+
+  getworkStatus: () => Promise<void>;
+
   fetchEmployeeTimesheets: (employeeId: string) => void;
   fetchEmployeeTimesheetsByDate: (employeeId: string, date: string) => void;
-  addEmployeeTimesheet: (
-    employeeId: string,
-    data: EmployeeTimesheetQueryParams,
-  ) => void;
+
   editEmployeeTimesheet: (
     employeeId: string,
     data: UpdateEmployeeTimesheetQueryParams,
@@ -54,6 +57,7 @@ export const useHandleEmployeeTimesheets = (): {
     previous: '',
   });
   const [employeeIdByUser, setEmployeeIdByUser] = useState<User>();
+  const [workStatus, setWorkStatus] = useState<SelectOption[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -89,20 +93,6 @@ export const useHandleEmployeeTimesheets = (): {
     },
     [],
   );
-
-  const addEmployeeTimesheet = async (
-    employeeId: string,
-    data: EmployeeTimesheetQueryParams,
-  ) => {
-    setLoading(true);
-    try {
-      await api.hr.employee.timesheet.create(employeeId, data);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const editEmployeeTimesheet = async (
     employeeId: string,
@@ -221,15 +211,27 @@ export const useHandleEmployeeTimesheets = (): {
     }
   };
 
+  const getworkStatus = useCallback(async () => {
+    try {
+      const response = await api.hr.employee.timesheet.getWorkStatus();
+      if (response) {
+        setWorkStatus(response);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
+
   return {
     loading,
     error,
     employeeTimesheets,
     employeeReports,
     employeeIdByUser,
+    workStatus,
     fetchEmployeeTimesheets,
     fetchEmployeeTimesheetsByDate,
-    addEmployeeTimesheet,
+    // addEmployeeTimesheet,
     editEmployeeTimesheet,
     deleteEmployeeTimesheet,
     fetchEmployeeReport,
@@ -238,5 +240,6 @@ export const useHandleEmployeeTimesheets = (): {
     deleteEmployeeReport,
     fetchEmployeeReportByDate,
     getEmployeeIdByUser,
+    getworkStatus,
   };
 };

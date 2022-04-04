@@ -65,11 +65,13 @@ export const TimeSheet: React.FC = () => {
 
   const {
     employeeTimesheets,
-    editEmployeeTimesheet,
     employeeReports,
+    loading,
+    // workStatus,
+    getworkStatus,
+    editEmployeeTimesheet,
     addEmployeeReport,
     fetchEmployeeTimesheets,
-    loading,
     deleteEmployeeTimesheet,
     fetchEmployeeReport,
   } = useHandleEmployeeTimesheets();
@@ -130,21 +132,16 @@ export const TimeSheet: React.FC = () => {
   }, [id, employeeId]);
 
   useEffect(() => {
+    getworkStatus();
+  }, [getworkStatus]);
+
+  useEffect(() => {
     fetchEmployee();
   }, [fetchEmployee]);
 
   const showDeleteModal = () => {
     setIsDelete(true);
   };
-
-  // useEffect(() => {
-  //   if (selectedTimesheet) {
-  //     fetchEmployeeReportByDate(
-  //       selectedTimesheet.employee.id,
-  //       selectedTimesheet.date,
-  //     );
-  //   }
-  // }, [selectedTimesheet, fetchEmployeeReportByDate]);
 
   const onViewClick = async (record: EmployeeTimesheet) => {
     setSelectedTimesheet(record);
@@ -238,6 +235,7 @@ export const TimeSheet: React.FC = () => {
       title: 'Work status',
       dataIndex: 'work_status',
       width: 130,
+      // ...getColumnSearchCheckboxProps(['work_status'], workStatus),
       render: (text, record) => {
         return (
           <Select
@@ -735,7 +733,6 @@ export const TimeSheet: React.FC = () => {
       >
         <Form
           labelCol={{ span: 5 }}
-          // wrapperCol={{ span: 19 }}
           name="dynamic_form_nest_item"
           form={form}
           onFinish={onFinish}
@@ -752,7 +749,7 @@ export const TimeSheet: React.FC = () => {
                   {...(isView || isEdit ? datePickerViewProps : {})}
                   format={DATE_FORMAT}
                   disabledDate={disabledDate}
-                  value={
+                  defaultValue={
                     isView || isEdit
                       ? moment(selectedTimesheet?.date)
                       : moment(today, DATE_FORMAT)

@@ -667,22 +667,7 @@ export const EmployeeListPage: React.FC = () => {
       dataIndex: 'monitoring',
       width: 95,
       ...getColumnSorterProps('monitoring', 2),
-      ...getColumnSearchCheckboxProps(
-        ['monitoring'],
-        monitorings,
-        undefined,
-        undefined,
-        async value => {
-          try {
-            const response = await update(value);
-            if (response) {
-              dispatch(actions.fetchUsers({ params: params }));
-            }
-          } catch (e) {
-            console.log(e);
-          }
-        },
-      ),
+      ...getColumnSearchCheckboxProps(['monitoring'], monitorings),
       render: (text, record: Employee) => (
         <>
           <SelectMonitorings

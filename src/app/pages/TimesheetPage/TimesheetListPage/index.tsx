@@ -9,18 +9,21 @@ import { ProjectTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesh
 import { Col, DatePicker, Form, Popover, Row, Table, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';
+import { useAuthState } from 'app/components/Auth/useAuthState';
 import { Avatar } from 'app/components/Avatar';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import Button, { IconButton } from 'app/components/Button';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { DialogModal } from 'app/components/DialogModal';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+import { useHandleEmployeeTimesheets } from 'app/pages/EmployeePage/EmployeeDetailPage/components/TimeSheet/useHandleEmployeeTimesheets';
 import { UsersMessages } from 'app/pages/ManageUserPage/message';
 import config from 'config';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { api } from 'utils/api';
 import { datePickerViewProps } from 'utils/types';
 import { useHandleProjectTimesheets } from '../useHandleProjectTimesheet';
 import { Creators } from './components/Creators';
@@ -56,9 +59,10 @@ export const TimesheetListPage = () => {
     deleteProjectTimesheet,
   } = useHandleProjectTimesheets();
 
+  const { editEmployeeTimesheet } = useHandleEmployeeTimesheets();
+
   const [creatorTimesheet, setCreatorTimesheet] = useState<any[]>();
   const [selectedDate, setSelectedDate] = useState<string>();
-  // const [employeeTimesheetList, setEmployeeTimesheetList] = useState<any[]>([]);
 
   const [timesheet, setTimesheet] = useState<ProjectTimesheet>();
   const [creatorSelected, setCreatorSelected] = useState<string>('');
@@ -70,6 +74,11 @@ export const TimesheetListPage = () => {
   const [selectedTimesheet, setSelectedTimesheet] = useState<
     ProjectTimesheet
   >();
+
+  const [employee, setEmployee] = useState<any>();
+
+  const { identity } = useAuthState();
+  const employeeId = identity?.employee?.id;
 
   useEffect(() => {
     fetchProjectTimesheets();
@@ -188,30 +197,52 @@ export const TimesheetListPage = () => {
     setIsCreator(true);
   };
 
+  const fetchEmployee = useCallback(async () => {
+    if (employeeId) {
+      const response = await api.hr.employee.get(employeeId);
+      const employeeInfo = {
+        id: response.id,
+        avatar: response.avatar,
+        name: response.first_name + ' ' + response.last_name,
+      };
+      setEmployee(employeeInfo);
+    }
+  }, [employeeId]);
+
+  useEffect(() => {
+    fetchEmployee();
+  }, [fetchEmployee]);
+
   const handleApproveAll = async record => {
-    // const creatorsId = record.creators.map(creator => creator.id);
-    // let timesheetList: any[] = [];
-    // for (let id of creatorsId) {
-    //   const response = await api.hr.employee.timesheet.listByDate(
-    //     id,
-    //     record.date,
-    //   );
-    // }
-    // timesheetList = [...timesheetList, employeeTimesheets.results];
-    // try {
-    //   notify({
-    //     type: ToastMessageType.Info,
-    //     duration: 2,
-    //     message: 'Approved all',
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    //   notify({
-    //     type: ToastMessageType.Error,
-    //     duration: 2,
-    //     message: 'Failed',
-    //   });
-    // }
+    const creatorsId = record.creators.map(creator => creator.id);
+    try {
+      for (let id of creatorsId) {
+        const response = await api.hr.employee.timesheet.listByDate(
+          id,
+          record.date,
+        );
+        const objTimesheet = Object.assign({}, ...response.results);
+        const approvedTimesheet = {
+          ...objTimesheet,
+          approver: employee ? employee : null,
+          status: '3',
+        };
+        editEmployeeTimesheet(id, approvedTimesheet);
+      }
+      fetchProjectTimesheets();
+      notify({
+        type: ToastMessageType.Info,
+        duration: 2,
+        message: 'Approved all',
+      });
+    } catch (err) {
+      console.log(err);
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: 'Failed',
+      });
+    }
   };
 
   const openAddCreators = record => {
@@ -257,7 +288,7 @@ export const TimesheetListPage = () => {
       title: 'Creators',
       dataIndex: 'creators',
       width: 170,
-      render: (creator, record) => {
+      render: (creators, record) => {
         return (
           <div
             style={{
@@ -267,13 +298,13 @@ export const TimesheetListPage = () => {
             }}
           >
             <div>
-              {creator.map(creator => (
-                <div style={{ marginTop: 4 }}>
+              {creators.map(creator => (
+                <div key={creator.id} style={{ marginTop: 4 }}>
                   <CreatorsWrapper>
                     <Avatar
                       size={30}
                       src={creator.avatar || undefined}
-                      name={creator.first_name + ' ' + creator.last_name}
+                      name={creator.name}
                     />
                     <CreatorStyle
                       onClick={() => handleCreatorClick(creator, record)}
