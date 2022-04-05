@@ -6,7 +6,7 @@ import { initialState } from '.';
 const selectSlice = (state: RootState) =>
   state.employeeTimesheet || initialState;
 
-export const selectEmployeeTimesheet = createSelector(
+export const selectEmployeeTimesheetState = createSelector(
   [selectSlice],
   state => state,
 );

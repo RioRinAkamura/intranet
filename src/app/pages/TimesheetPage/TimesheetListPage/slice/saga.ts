@@ -6,14 +6,14 @@ import { DeleteProjectTimesheetParams } from './types';
 
 function* fetchProjectTimesheet(action) {
   const { params } = action.payload;
-  // const queryParams = {
-  //   work_status: params.work_status,
-  // };
+  const queryParams = {
+    work_status: params.work_status,
+  };
   try {
     const response = yield call(
       [api, api.hr.projectTimesheet.list],
       params.search,
-      // { ...queryParams },
+      { ...queryParams },
       params.ordering,
       params.page,
       params.limit,

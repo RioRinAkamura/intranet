@@ -14,7 +14,7 @@ import {
 
 export const initialState: EmployeeTimesheetState = {
   id: '',
-  timesheet: [],
+  results: [],
   loading: false,
   deleteSuccess: false,
   deleteFailed: false,
@@ -43,7 +43,7 @@ const slice = createSlice({
       state.loading = true;
     },
     fetchEmployeeTimesheetSuccess(state, action: PayloadAction<any>) {
-      state.timesheet = action.payload.results;
+      state.results = action.payload.results;
       state.pagination!.total = Number(action.payload.count);
       state.pagination!.current = Number(state.params.page);
       state.pagination!.pageSize = Number(state.params.limit);
@@ -61,7 +61,7 @@ const slice = createSlice({
       state.params = { ...state.params, ...action.payload };
       state.filterColumns = {
         ...state.filterColumns,
-        // project__name: action.payload.project__name,
+        work_status: action.payload.work_status,
       };
       state.pagination = {
         ...state.pagination,
