@@ -220,7 +220,6 @@ export const TimesheetListPage = () => {
   };
 
   const handleCreatorClick = async (creator, record) => {
-    console.log('creator click');
     setSelectedDate(record.date);
     setCreatorSelected(creator.name);
     await getEmployeeReport(creator.id, record.date);
