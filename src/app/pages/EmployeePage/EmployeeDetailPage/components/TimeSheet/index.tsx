@@ -19,12 +19,21 @@ import config from 'config';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components/macro';
 import { Wrapper } from 'styles/StyledCommon';
 import { api } from 'utils/api';
+import { useTableConfig } from 'utils/tableConfig';
 import { datePickerViewProps } from 'utils/types';
 import Button from '../../../../../components/Button';
 import { Report } from './components/Report/Loadable';
+import { Messages } from './message';
+import { useEmployeeTimesheetSlice } from './slice';
+import {
+  selectEmployeeTimesheetParams,
+  selectEmployeeTimesheetState,
+} from './slice/selectors';
+import { useHandleDataTable } from './useHandleDataTable';
 import { useHandleEmployeeTimesheets } from './useHandleEmployeeTimesheets';
 
 const { Option } = Select;
@@ -64,29 +73,47 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     return current > moment().endOf('day');
   };
   const today = new Date();
-  const [newDate, setNewDate] = useState<any>(moment(today, DATE_FORMAT));
+  const [newDate, setNewDate] = useState<any>(
+    moment(today).format(DATE_FORMAT),
+  );
+
+  const dispatch = useDispatch();
+  const { actions } = useEmployeeTimesheetSlice();
+  const state = useSelector(selectEmployeeTimesheetState);
+  const params = useSelector(selectEmployeeTimesheetParams);
+  const { setFilterText } = useHandleDataTable(state, actions);
 
   const {
-    employeeTimesheets,
     loading,
-    // workStatus,
+    workStatus,
     getworkStatus,
     editEmployeeTimesheet,
     addEmployeeReport,
-    fetchEmployeeTimesheets,
     deleteEmployeeTimesheet,
   } = useHandleEmployeeTimesheets();
 
+  const { getColumnSearchCheckboxProps } = useTableConfig(
+    state,
+    Messages,
+    setFilterText,
+  );
+
   const [projectList, setProjectList] = useState<any[]>();
 
-  useEffect(() => {
+  const fetchEmployeeTimesheets = useCallback(() => {
     if (employeeId) {
-      fetchEmployeeTimesheets(employeeId);
+      dispatch(
+        actions.fetchEmployeeTimesheet({ params: params, id: employeeId }),
+      );
       return;
     } else if (userId) {
-      fetchEmployeeTimesheets(userId);
+      dispatch(actions.fetchEmployeeTimesheet({ params: params, id: userId }));
     }
-  }, [fetchEmployeeTimesheets, employeeId, userId]);
+  }, [dispatch, actions, params, employeeId, userId]);
+
+  useEffect(() => {
+    fetchEmployeeTimesheets();
+  }, [fetchEmployeeTimesheets]);
 
   const fetchEmployeeProject = useCallback(async (id: string) => {
     const response = await api.hr.employee.project.list(id);
@@ -211,10 +238,10 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     try {
       if (userId) {
         await editEmployeeTimesheet(userId, workStatusTimesheet);
-        fetchEmployeeTimesheets(userId);
+        fetchEmployeeTimesheets();
       } else {
         await editEmployeeTimesheet(employeeId, workStatusTimesheet);
-        fetchEmployeeTimesheets(employeeId);
+        fetchEmployeeTimesheets();
       }
       notify({
         type: ToastMessageType.Info,
@@ -243,7 +270,12 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
       title: 'Work status',
       dataIndex: 'work_status',
       width: 130,
-      // ...getColumnSearchCheckboxProps(['work_status'], workStatus),
+      ...getColumnSearchCheckboxProps(
+        ['work_status'],
+        workStatus,
+        undefined,
+        undefined,
+      ),
       render: (text, record) => {
         return (
           <Select
@@ -326,11 +358,11 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
       setIsDelete(false);
       if (employeeId) {
         await deleteEmployeeTimesheet(employeeId, selectedTimesheet.id);
-        fetchEmployeeTimesheets(employeeId);
+        fetchEmployeeTimesheets();
         return;
       } else if (userId) {
         await deleteEmployeeTimesheet(userId, selectedTimesheet.id);
-        fetchEmployeeTimesheets(userId);
+        fetchEmployeeTimesheets();
       }
       notify({
         type: ToastMessageType.Info,
@@ -570,11 +602,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
           await addEmployeeReport(employeeId, reportArr[i]);
         }
       }
-      if (userId && isStaff) {
-        fetchEmployeeTimesheets(userId);
-      } else {
-        fetchEmployeeTimesheets(employeeId);
-      }
+      fetchEmployeeTimesheets();
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -613,7 +641,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
         selectedTimesheet.employee.id,
         declinedTimesheet,
       );
-      fetchEmployeeTimesheets(selectedTimesheet.employee.id);
+      fetchEmployeeTimesheets();
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -640,7 +668,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
         selectedTimesheet.employee.id,
         approvedTimesheet,
       );
-      fetchEmployeeTimesheets(selectedTimesheet.employee.id);
+      fetchEmployeeTimesheets();
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -676,10 +704,10 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
       </Header>
       <Table
         bordered
-        dataSource={employeeTimesheets.results}
+        dataSource={state.results}
         columns={columns}
         rowKey="id"
-        loading={loading}
+        loading={state.loading}
         scroll={{ x: 1100 }}
       />
       <DialogModal

@@ -22,7 +22,7 @@ import config from 'config';
 import moment from 'moment';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { api } from 'utils/api';
 import { useTableConfig } from 'utils/tableConfig';
@@ -32,7 +32,10 @@ import { Creators } from './components/Creators';
 import { ProjectTimesheetForm } from './components/Form';
 import { Report } from './components/Report';
 import { useProjectTimesheetSlice } from './slice';
-import { selectProjectTimesheetState } from './slice/selectors';
+import {
+  selectProjectTimesheetParams,
+  selectProjectTimesheetState,
+} from './slice/selectors';
 import { Messages } from './translate';
 import { useHandleDataTable } from './useHandleDataTable';
 
@@ -53,14 +56,12 @@ export const TimesheetListPage = () => {
 
   const {
     loading,
-    projectTimesheets,
     projectTimesheetItems,
     employees,
     employeeReports,
     workStatus,
     getworkStatus,
     getEmployeeReport,
-    fetchProjectTimesheets,
     getProjectTimesheetItems,
     addProjectTimesheet,
     getEmployees,
@@ -82,10 +83,10 @@ export const TimesheetListPage = () => {
   const [selectedTimesheet, setSelectedTimesheet] = useState<
     ProjectTimesheet
   >();
-
+  const dispatch = useDispatch();
   const { actions } = useProjectTimesheetSlice();
   const state = useSelector(selectProjectTimesheetState);
-
+  const params = useSelector(selectProjectTimesheetParams);
   const { setFilterText } = useHandleDataTable(state, actions);
 
   const { getColumnSearchCheckboxProps } = useTableConfig(
@@ -99,10 +100,17 @@ export const TimesheetListPage = () => {
   const { identity } = useAuthState();
   const employeeId = identity?.employee?.id;
 
+  const fetchProjectTimesheet = useCallback(() => {
+    dispatch(actions.fetchProjectTimesheet({ params: params }));
+  }, [dispatch, actions, params]);
+
   useEffect(() => {
-    fetchProjectTimesheets();
+    fetchProjectTimesheet();
+  }, [fetchProjectTimesheet]);
+
+  useEffect(() => {
     getEmployees();
-  }, [fetchProjectTimesheets, getEmployees]);
+  }, [getEmployees]);
 
   useEffect(() => {
     getworkStatus();
@@ -148,7 +156,7 @@ export const TimesheetListPage = () => {
     try {
       setIsDelete(false);
       await deleteProjectTimesheet(selectedTimesheet.id);
-      fetchProjectTimesheets();
+      fetchProjectTimesheet();
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -194,7 +202,7 @@ export const TimesheetListPage = () => {
     };
     try {
       await addProjectTimesheet(data);
-      fetchProjectTimesheets();
+      fetchProjectTimesheet();
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -215,10 +223,12 @@ export const TimesheetListPage = () => {
     setSelectedDate(record.date);
     setCreatorSelected(creator.name);
     await getEmployeeReport(creator.id, record.date);
-    setCreatorTimesheet(employeeReports);
-
     setIsCreator(true);
   };
+
+  useEffect(() => {
+    setCreatorTimesheet(employeeReports);
+  }, [employeeReports]);
 
   const fetchEmployee = useCallback(async () => {
     if (employeeId) {
@@ -252,7 +262,7 @@ export const TimesheetListPage = () => {
         };
         editEmployeeTimesheet(id, approvedTimesheet);
       }
-      fetchProjectTimesheets();
+      fetchProjectTimesheet();
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -295,7 +305,6 @@ export const TimesheetListPage = () => {
         undefined,
         undefined,
       ),
-
       render: value =>
         value === '1' ? (
           <span style={{ color: 'green' }}>ON TRACK</span>
@@ -444,10 +453,10 @@ export const TimesheetListPage = () => {
           <Col span={24}>
             <Table
               bordered
-              dataSource={projectTimesheets.results}
+              dataSource={state.results}
               columns={columns}
               rowKey="id"
-              loading={loading}
+              loading={state.loading}
               scroll={{ x: 1000 }}
             />
           </Col>
@@ -548,7 +557,7 @@ export const TimesheetListPage = () => {
         {timesheet && (
           <Creators
             timesheet={timesheet}
-            callback={() => fetchProjectTimesheets()}
+            callback={() => fetchProjectTimesheet()}
           />
         )}
       </DialogModal>

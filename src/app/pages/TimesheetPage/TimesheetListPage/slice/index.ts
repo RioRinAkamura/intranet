@@ -13,7 +13,7 @@ import {
 } from './types';
 
 export const initialState: ProjectTimesheetState = {
-  timesheet: [],
+  results: [],
   loading: false,
   deleteSuccess: false,
   deleteFailed: false,
@@ -21,16 +21,13 @@ export const initialState: ProjectTimesheetState = {
   params: {
     limit: 20,
     page: 1,
-    work_status: ['1', '2'],
   },
   pagination: {
     pageSize: 20,
     current: 1,
     total: 20,
   },
-  filterColumns: {
-    work_status: ['1', '2'],
-  },
+  filterColumns: {},
   selectedRowKeys: [],
 };
 
@@ -42,7 +39,7 @@ const slice = createSlice({
       state.loading = true;
     },
     fetchProjectTimesheetSuccess(state, action: PayloadAction<any>) {
-      state.timesheet = action.payload.results;
+      state.results = action.payload.results;
       state.pagination!.total = Number(action.payload.count);
       state.pagination!.current = Number(state.params.page);
       state.pagination!.pageSize = Number(state.params.limit);
@@ -93,14 +90,11 @@ const slice = createSlice({
       }
     },
     resetSearch(state) {
-      state.filterColumns = {
-        work_status: ['1', '2'],
-      };
+      state.filterColumns = {};
       state.params = {
         limit: 20,
         page: 1,
         ordering: '',
-        work_status: ['1', '2'],
       };
       state.selectedRowKeys = undefined;
       state.selectedRows = undefined;

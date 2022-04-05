@@ -4,7 +4,7 @@ import { string } from 'yup';
 
 export interface EmployeeTimesheetState {
   id?: string;
-  timesheet?: EmployeeTimesheet[];
+  results?: any;
   loading?: boolean;
   error?: Error;
   isFilter?: boolean;
@@ -22,14 +22,13 @@ export interface EmployeeTimesheetState {
 }
 
 export interface FilterColumns {
-  timesheet__name?: string;
+  work_status?: string;
   [key: string]: string | undefined;
 }
 
 export interface QueryParams {
   search?: string;
   ordering?: string;
-  timesheet__name?: string;
   limit?: number;
   page?: number;
   work_status?: string;

@@ -6,7 +6,7 @@
 import { translations } from 'locales/translations';
 import { _t } from 'utils/messages';
 
-export const EmployeeTimesheetMessage = {
+export const Messages = {
   title: () => _t(translations.UsersPage.title, 'Employees'),
   description: () => _t(translations.UsersPage.description, 'Employees'),
   filterSearchButton: () =>

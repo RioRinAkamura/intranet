@@ -9,7 +9,7 @@ export interface ProjectTimesheet {
 }
 
 export interface ProjectTimesheetState {
-  timesheet: ProjectTimesheet[];
+  results?: any;
   loading?: boolean;
   error?: Error;
   isFilter?: boolean;
@@ -27,7 +27,7 @@ export interface ProjectTimesheetState {
 }
 
 export interface FilterColumns {
-  work_status?: string | string[];
+  work_status?: string;
   [key: string]: string | string[] | undefined;
 }
 
@@ -36,7 +36,7 @@ export interface QueryParams {
   ordering?: string;
   page?: number;
   limit?: number;
-  work_status?: string | string[];
+  work_status?: string;
   [key: string]: string | number | string[] | undefined;
 }
 

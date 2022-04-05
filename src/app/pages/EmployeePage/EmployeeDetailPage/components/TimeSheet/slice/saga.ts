@@ -5,13 +5,16 @@ import { employeeTimesheetActions as actions } from '.';
 import { DeleteEmployeeTimesheetParams } from './types';
 
 function* fetchEmployeeTimesheet(action) {
+  const { params, id } = action.payload;
+  const queryParams = {
+    work_status: params.work_status,
+  };
   try {
-    const { params, id } = action.payload;
-
     const response = yield call(
       [api, api.hr.employee.timesheet.list],
       id,
       params.search,
+      { ...queryParams },
       params.ordering,
       params.page,
       params.limit,
