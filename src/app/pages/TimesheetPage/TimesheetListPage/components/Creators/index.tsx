@@ -56,7 +56,7 @@ export const Creators = (props: CreatorsProps) => {
     }
   };
 
-  const getCreators = (id?: string): any[] => {
+  const getCreators = (id?: string) => {
     let creatorIds: string[] = [];
     if (timesheet.creators) {
       if (id) {

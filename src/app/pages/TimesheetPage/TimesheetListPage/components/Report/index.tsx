@@ -9,7 +9,7 @@ import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 interface TimeSheetProps {
   isCreate?: boolean;
   isView?: boolean;
-  form?: FormInstance;
+  form: FormInstance;
   selectedTimesheet?: EmployeeTimesheet;
   loading?: boolean;
   projectTimesheetItems?: any[];
@@ -118,65 +118,79 @@ export const Report = memo(
             <>
               <h3>DONE</h3>
               <TimesheetItem
+                // formItemName="done"
                 isView={isView}
                 reportList={doneList}
                 isMark={isMark}
+                // form={form}
               />
             </>
             <Divider />
             <>
               <h3>GOING</h3>
               <TimesheetItem
+                // formItemName="going"
                 isView={isView}
                 reportList={goingList}
                 isGoing={true}
                 isMark={isMark}
+                // form={form}
               />
             </>
             <Divider />
             <>
               <h3>BLOCKERS</h3>
               <TimesheetItem
+                // formItemName="blockers"
                 isView={isView}
                 reportList={blockerList}
                 isMark={isMark}
+                // form={form}
               />
             </>
             <Divider />
             <>
               <h3>ISSUES</h3>
               <TimesheetItem
+                // formItemName="issues"
                 isView={isView}
                 reportList={issueList}
                 isMark={isMark}
+                // form={form}
               />
             </>
             <Divider />
             <>
               <h3>TODO</h3>
               <TimesheetItem
+                // formItemName="todo"
                 isView={isView}
                 reportList={todoList}
                 isMark={isMark}
+                // form={form}
               />
             </>
             <Divider />
             <>
               <h3>OTHERS</h3>
               <TimesheetItem
+                // formItemName="others"
                 isView={isView}
                 reportList={otherList}
                 isMark={isMark}
+                // form={form}
               />
             </>
           </WrapperReportItem>
           <WrapperReportItem>
             <h3>Timesheets</h3>
             <TimesheetItem
+              // formItemName="timesheets"
               isView={isView}
               reportList={timesheetList}
               isTimesheet={true}
               isMark={isMark}
+              // form={form}
             />
           </WrapperReportItem>
         </ModalContentWrapper>

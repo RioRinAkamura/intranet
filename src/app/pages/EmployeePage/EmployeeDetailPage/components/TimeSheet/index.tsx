@@ -19,7 +19,6 @@ import config from 'config';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { Wrapper } from 'styles/StyledCommon';
 import { api } from 'utils/api';
@@ -30,29 +29,32 @@ import { useHandleEmployeeTimesheets } from './useHandleEmployeeTimesheets';
 
 const { Option } = Select;
 
-export const TimeSheet: React.FC = () => {
+interface TimeSheetProps {
+  employeeId: string;
+}
+
+export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
   const [form] = Form.useForm();
-  const { id } = useParams<Record<string, string>>();
   const [isView, setIsView] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState<boolean>(false);
 
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<any>();
-  const [reportList, setReportList] = useState<any[]>();
+  const [reportListByDate, setReportListByDate] = useState<any[]>();
   const [employee, setEmployee] = useState<any>();
 
-  const [doneList, setDoneList] = useState<any[]>();
-  const [goingList, setGoingList] = useState<any[]>();
-  const [blockerList, setBLockerList] = useState<any[]>();
-  const [issueList, setIssueList] = useState<any[]>();
-  const [todoList, setTodoList] = useState<any[]>();
-  const [otherList, setOtherList] = useState<any[]>();
-  const [timesheetList, setTimesheetList] = useState<any[]>();
-  const [newDate, setNewDate] = useState<string>();
-
+  const [isStaff, setIsStaff] = useState<boolean>(false);
   const { identity } = useAuthState();
-  const employeeId = identity?.employee?.id;
+  const userId = identity?.employee?.id;
+  useEffect(() => {
+    if (identity && identity?.role?.length === 0) return;
+    if (identity && identity?.role && identity?.role[0].name === 'staff') {
+      setIsStaff(true);
+    } else {
+      setIsStaff(false);
+    }
+  }, [identity]);
 
   const { notify } = useNotify();
   const { t } = useTranslation();
@@ -62,10 +64,10 @@ export const TimeSheet: React.FC = () => {
     return current > moment().endOf('day');
   };
   const today = new Date();
+  const [newDate, setNewDate] = useState<any>(moment(today, DATE_FORMAT));
 
   const {
     employeeTimesheets,
-    employeeReports,
     loading,
     // workStatus,
     getworkStatus,
@@ -73,30 +75,18 @@ export const TimeSheet: React.FC = () => {
     addEmployeeReport,
     fetchEmployeeTimesheets,
     deleteEmployeeTimesheet,
-    fetchEmployeeReport,
   } = useHandleEmployeeTimesheets();
-
-  useEffect(() => {
-    if (employeeId) {
-      fetchEmployeeReport(employeeId);
-    } else {
-      fetchEmployeeReport(id);
-    }
-  }, [fetchEmployeeReport, id, employeeId]);
-
-  useEffect(() => {
-    setReportList(employeeReports.results);
-  }, [employeeReports]);
 
   const [projectList, setProjectList] = useState<any[]>();
 
   useEffect(() => {
     if (employeeId) {
       fetchEmployeeTimesheets(employeeId);
-    } else {
-      fetchEmployeeTimesheets(id);
+      return;
+    } else if (userId) {
+      fetchEmployeeTimesheets(userId);
     }
-  }, [fetchEmployeeTimesheets, id, employeeId]);
+  }, [fetchEmployeeTimesheets, employeeId, userId]);
 
   const fetchEmployeeProject = useCallback(async (id: string) => {
     const response = await api.hr.employee.project.list(id);
@@ -106,13 +96,23 @@ export const TimeSheet: React.FC = () => {
   useEffect(() => {
     if (employeeId) {
       fetchEmployeeProject(employeeId);
-    } else {
-      fetchEmployeeProject(id);
+      return;
+    } else if (userId) {
+      fetchEmployeeProject(userId);
     }
-  }, [fetchEmployeeProject, id, employeeId]);
+  }, [fetchEmployeeProject, employeeId, userId]);
 
   const fetchEmployee = useCallback(async () => {
-    if (employeeId) {
+    if (userId) {
+      const response = await api.hr.employee.get(userId);
+      const employeeInfo = {
+        id: response.id,
+        avatar: response.avatar,
+        name: response.first_name + ' ' + response.last_name,
+      };
+      setEmployee(employeeInfo);
+      return;
+    } else if (employeeId) {
       const response = await api.hr.employee.get(employeeId);
       const employeeInfo = {
         id: response.id,
@@ -120,16 +120,8 @@ export const TimeSheet: React.FC = () => {
         name: response.first_name + ' ' + response.last_name,
       };
       setEmployee(employeeInfo);
-    } else {
-      const response = await api.hr.employee.get(id);
-      const employeeInfo = {
-        id: response.id,
-        avatar: response.avatar,
-        name: response.first_name + ' ' + response.last_name,
-      };
-      setEmployee(employeeInfo);
     }
-  }, [id, employeeId]);
+  }, [userId, employeeId]);
 
   useEffect(() => {
     getworkStatus();
@@ -149,19 +141,34 @@ export const TimeSheet: React.FC = () => {
       record.employee.id,
       record.date,
     );
-    setReportList(response.results);
+    setReportListByDate(response.results);
     setIsView(true);
   };
 
   const onEditClick = async record => {
     setSelectedTimesheet(record);
-    const response: any = await api.hr.employee.report.listByDate(
+    const response = await api.hr.employee.report.listByDate(
       record.employee.id,
       record.date,
     );
-    setReportList(response.results);
+    setReportListByDate(response.results);
     setIsEdit(true);
   };
+
+  useEffect(() => {
+    if (reportListByDate) {
+      form.setFieldsValue({
+        ...reportListByDate,
+        done: reportListByDate.filter(report => report.type === '2'),
+        going: reportListByDate.filter(report => report.type === '3'),
+        blockers: reportListByDate.filter(report => report.type === '5'),
+        issues: reportListByDate.filter(report => report.type === '4'),
+        todo: reportListByDate.filter(report => report.type === '6'),
+        others: reportListByDate.filter(report => report.type === '7'),
+        timesheets: reportListByDate.filter(report => report.type === '1'),
+      });
+    }
+  }, [reportListByDate, form]);
 
   const moreButton = (record: EmployeeTimesheet) => {
     return (
@@ -202,12 +209,12 @@ export const TimeSheet: React.FC = () => {
   const onWorkStatusChange = async (value, record) => {
     let workStatusTimesheet = { ...record, work_status: value };
     try {
-      if (employeeId) {
+      if (userId) {
+        await editEmployeeTimesheet(userId, workStatusTimesheet);
+        fetchEmployeeTimesheets(userId);
+      } else {
         await editEmployeeTimesheet(employeeId, workStatusTimesheet);
         fetchEmployeeTimesheets(employeeId);
-      } else {
-        await editEmployeeTimesheet(id, workStatusTimesheet);
-        fetchEmployeeTimesheets(id);
       }
       notify({
         type: ToastMessageType.Info,
@@ -229,6 +236,7 @@ export const TimeSheet: React.FC = () => {
       title: 'Date',
       dataIndex: 'date',
       width: 130,
+      sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix(),
       render: text => (text ? moment(text).format('MM-DD-YYYY') : ''),
     },
     {
@@ -319,13 +327,11 @@ export const TimeSheet: React.FC = () => {
       if (employeeId) {
         await deleteEmployeeTimesheet(employeeId, selectedTimesheet.id);
         fetchEmployeeTimesheets(employeeId);
-        fetchEmployeeReport(employeeId);
-      } else {
-        await deleteEmployeeTimesheet(id, selectedTimesheet.id);
-        fetchEmployeeTimesheets(id);
-        fetchEmployeeReport(id);
+        return;
+      } else if (userId) {
+        await deleteEmployeeTimesheet(userId, selectedTimesheet.id);
+        fetchEmployeeTimesheets(userId);
       }
-
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -346,10 +352,10 @@ export const TimeSheet: React.FC = () => {
   };
 
   const handleCancel = () => {
+    form.resetFields();
     setIsView(false);
     setIsCreate(false);
     setIsEdit(false);
-    form.resetFields();
   };
 
   const handleToggle = () => {
@@ -359,35 +365,6 @@ export const TimeSheet: React.FC = () => {
 
   const handleDateChange = date => {
     setNewDate(moment(date).format(DATE_FORMAT));
-  };
-
-  useEffect(() => {
-    if (reportList) {
-      const doneArr = reportList.filter(report => report.type === '2');
-      setDoneList(doneArr);
-      const goingArr = reportList.filter(report => report.type === '3');
-      setGoingList(goingArr);
-      const blockerArr = reportList.filter(report => report.type === '5');
-      setBLockerList(blockerArr);
-      const issuesArr = reportList.filter(report => report.type === '4');
-      setIssueList(issuesArr);
-      const todoArr = reportList.filter(report => report.type === '6');
-      setTodoList(todoArr);
-      const othersArr = reportList.filter(report => report.type === '7');
-      setOtherList(othersArr);
-      const timesheetArr = reportList.filter(report => report.type === '1');
-      setTimesheetList(timesheetArr);
-    }
-  }, [reportList]);
-
-  const initialValuesForm = {
-    done: isCreate ? undefined : doneList,
-    going: isCreate ? undefined : goingList,
-    blockers: isCreate ? undefined : blockerList,
-    issues: isCreate ? undefined : issueList,
-    todo: isCreate ? undefined : todoList,
-    others: isCreate ? undefined : otherList,
-    timesheets: isCreate ? undefined : timesheetList,
   };
 
   const onFinish = async values => {
@@ -404,7 +381,7 @@ export const TimeSheet: React.FC = () => {
       const doneData = doneList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id ? id : employeeId,
+          employee_id: employeeId ? employeeId : userId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -430,7 +407,7 @@ export const TimeSheet: React.FC = () => {
       const goingData = goingList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id ? id : employeeId,
+          employee_id: employeeId ? employeeId : userId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -456,7 +433,7 @@ export const TimeSheet: React.FC = () => {
       const blockerData = blockerList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id ? id : employeeId,
+          employee_id: employeeId ? employeeId : userId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -482,7 +459,7 @@ export const TimeSheet: React.FC = () => {
       const issueData = issueList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id ? id : employeeId,
+          employee_id: employeeId ? employeeId : userId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -508,7 +485,7 @@ export const TimeSheet: React.FC = () => {
       const todoData = todoList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id ? id : employeeId,
+          employee_id: employeeId ? employeeId : userId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -535,7 +512,7 @@ export const TimeSheet: React.FC = () => {
       const otherData = otherList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id ? id : employeeId,
+          employee_id: employeeId ? employeeId : userId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -561,7 +538,7 @@ export const TimeSheet: React.FC = () => {
       const timesheetData = timesheetList.map(value => {
         return {
           id: value.id ? value.id : null,
-          employee_id: id ? id : employeeId,
+          employee_id: employeeId ? employeeId : userId,
           project_id: value.project_id
             ? value.project_id
             : value.project
@@ -587,16 +564,16 @@ export const TimeSheet: React.FC = () => {
     let reportArr = Array.prototype.concat.apply([], newDataArr);
     try {
       for (let i = 0; i < reportArr.length; i++) {
-        if (employeeId) {
-          await addEmployeeReport(employeeId, reportArr[i]);
+        if (userId && isStaff) {
+          await addEmployeeReport(userId, reportArr[i]);
         } else {
-          await addEmployeeReport(id, reportArr[i]);
+          await addEmployeeReport(employeeId, reportArr[i]);
         }
       }
-      if (employeeId) {
-        fetchEmployeeTimesheets(employeeId);
+      if (userId && isStaff) {
+        fetchEmployeeTimesheets(userId);
       } else {
-        fetchEmployeeTimesheets(id);
+        fetchEmployeeTimesheets(employeeId);
       }
       notify({
         type: ToastMessageType.Info,
@@ -616,12 +593,6 @@ export const TimeSheet: React.FC = () => {
     setIsEdit(false);
     setIsView(false);
     form.resetFields();
-
-    if (employeeId) {
-      fetchEmployeeReport(employeeId);
-    } else {
-      fetchEmployeeReport(id);
-    }
   };
 
   const handleDecline = async () => {
@@ -638,13 +609,11 @@ export const TimeSheet: React.FC = () => {
     };
     declinedTimesheet = { ...declinedTimesheet, approver: employeeDecline };
     try {
-      if (employeeId) {
-        await editEmployeeTimesheet(employeeId, declinedTimesheet);
-        fetchEmployeeTimesheets(employeeId);
-      } else {
-        await editEmployeeTimesheet(id, declinedTimesheet);
-        fetchEmployeeTimesheets(id);
-      }
+      await editEmployeeTimesheet(
+        selectedTimesheet.employee.id,
+        declinedTimesheet,
+      );
+      fetchEmployeeTimesheets(selectedTimesheet.employee.id);
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -667,13 +636,11 @@ export const TimeSheet: React.FC = () => {
     let approvedTimesheet = { ...selectedTimesheet, status: '3' };
     approvedTimesheet = { ...approvedTimesheet, approver: employee };
     try {
-      if (employeeId) {
-        await editEmployeeTimesheet(employeeId, approvedTimesheet);
-        fetchEmployeeTimesheets(employeeId);
-      } else {
-        await editEmployeeTimesheet(id, approvedTimesheet);
-        fetchEmployeeTimesheets(id);
-      }
+      await editEmployeeTimesheet(
+        selectedTimesheet.employee.id,
+        approvedTimesheet,
+      );
+      fetchEmployeeTimesheets(selectedTimesheet.employee.id);
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -737,7 +704,6 @@ export const TimeSheet: React.FC = () => {
           form={form}
           onFinish={onFinish}
           autoComplete="off"
-          initialValues={initialValuesForm}
           scrollToFirstError={true}
           requiredMark={false}
         >
@@ -749,10 +715,10 @@ export const TimeSheet: React.FC = () => {
                   {...(isView || isEdit ? datePickerViewProps : {})}
                   format={DATE_FORMAT}
                   disabledDate={disabledDate}
-                  defaultValue={
+                  value={
                     isView || isEdit
                       ? moment(selectedTimesheet?.date)
-                      : moment(today, DATE_FORMAT)
+                      : moment(newDate, DATE_FORMAT)
                   }
                   onChange={date => handleDateChange(date)}
                   style={{ marginLeft: 12 }}
@@ -804,13 +770,13 @@ export const TimeSheet: React.FC = () => {
           </Form.Item>
 
           <Report
-            employeeId={id}
+            employeeId={employeeId}
             isView={isView}
             isCreate={isCreate}
             isEdit={isEdit}
             form={form}
             newDate={newDate}
-            reportList={reportList}
+            reportList={reportListByDate}
             projectList={projectList}
           />
         </Form>

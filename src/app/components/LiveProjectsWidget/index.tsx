@@ -86,7 +86,7 @@ export default function LiveProjectsWidget() {
       ) : (
         <Row gutter={[0, 32]} align="middle" justify="space-between">
           {liveProjectLabel.map((label, index) => (
-            <Col span={2}>
+            <Col key={index} span={2}>
               <LiveEmployeeItemsWrapper>
                 <h4>{liveProjectData[index]}</h4>
                 <p style={{ color: buildLabelColor(label) }}>

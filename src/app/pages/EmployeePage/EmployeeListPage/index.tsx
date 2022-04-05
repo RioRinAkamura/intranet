@@ -638,7 +638,7 @@ export const EmployeeListPage: React.FC = () => {
               style={{ cursor: 'pointer' }}
             />
             {fiveBestSkills.map(skill => (
-              <span style={{ fontSize: '12px' }}>
+              <span key={skill.id} style={{ fontSize: '12px' }}>
                 {skill.skill.name}({skill.level})&nbsp;
               </span>
             ))}
