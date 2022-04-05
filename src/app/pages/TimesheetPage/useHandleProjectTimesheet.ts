@@ -5,7 +5,10 @@ import {
   Report,
   UpdateProjectTimesheetQueryParams,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
-import { Pagination } from '@hdwebsoft/intranet-api-sdk/libs/type';
+import {
+  Pagination,
+  SelectOption,
+} from '@hdwebsoft/intranet-api-sdk/libs/type';
 import { useCallback, useState } from 'react';
 import { api } from 'utils/api';
 
@@ -16,6 +19,9 @@ export const useHandleProjectTimesheets = (): {
   projectTimesheetItems: ProjectTimesheet[];
   employeeReports: Report[];
   employees: Employee[];
+  workStatus: SelectOption[];
+  getworkStatus: () => Promise<void>;
+
   fetchProjectTimesheets: () => void;
   addProjectTimesheet: (data: UpdateProjectTimesheetQueryParams) => void;
   editProjectTimesheet: (data: UpdateProjectTimesheetQueryParams) => void;
@@ -40,6 +46,7 @@ export const useHandleProjectTimesheets = (): {
   const [projectTimesheetItems, setProjectTimesheetItems] = useState<
     ProjectTimesheet[]
   >([]);
+  const [workStatus, setWorkStatus] = useState<SelectOption[]>([]);
 
   const fetchProjectTimesheets = useCallback(async () => {
     setLoading(true);
@@ -142,6 +149,17 @@ export const useHandleProjectTimesheets = (): {
     [],
   );
 
+  const getworkStatus = useCallback(async () => {
+    try {
+      const response = await api.hr.projectTimesheet.getWorkStatus();
+      if (response) {
+        setWorkStatus(response);
+      }
+    } catch (error: any) {
+      setError(error);
+    }
+  }, []);
+
   return {
     loading,
     error,
@@ -149,6 +167,8 @@ export const useHandleProjectTimesheets = (): {
     projectTimesheetItems,
     employees,
     employeeReports,
+    workStatus,
+    getworkStatus,
     fetchProjectTimesheets,
     addProjectTimesheet,
     editProjectTimesheet,

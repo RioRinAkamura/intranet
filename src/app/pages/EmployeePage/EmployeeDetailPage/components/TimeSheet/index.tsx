@@ -44,15 +44,6 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
   const [reportListByDate, setReportListByDate] = useState<any[]>();
   const [employee, setEmployee] = useState<any>();
 
-  const [doneList, setDoneList] = useState<any[]>();
-  const [goingList, setGoingList] = useState<any[]>();
-  const [blockerList, setBLockerList] = useState<any[]>();
-  const [issueList, setIssueList] = useState<any[]>();
-  const [todoList, setTodoList] = useState<any[]>();
-  const [otherList, setOtherList] = useState<any[]>();
-  const [timesheetList, setTimesheetList] = useState<any[]>();
-  const [newDate, setNewDate] = useState<string>();
-
   const [isStaff, setIsStaff] = useState<boolean>(false);
   const { identity } = useAuthState();
   const userId = identity?.employee?.id;
@@ -73,6 +64,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     return current > moment().endOf('day');
   };
   const today = new Date();
+  const [newDate, setNewDate] = useState<any>(moment(today, DATE_FORMAT));
 
   const {
     employeeTimesheets,
@@ -165,34 +157,18 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
 
   useEffect(() => {
     if (reportListByDate) {
-      const doneArr = reportListByDate.filter(report => report.type === '2');
-      setDoneList(doneArr);
-      const goingArr = reportListByDate.filter(report => report.type === '3');
-      setGoingList(goingArr);
-      const blockerArr = reportListByDate.filter(report => report.type === '5');
-      setBLockerList(blockerArr);
-      const issuesArr = reportListByDate.filter(report => report.type === '4');
-      setIssueList(issuesArr);
-      const todoArr = reportListByDate.filter(report => report.type === '6');
-      setTodoList(todoArr);
-      const othersArr = reportListByDate.filter(report => report.type === '7');
-      setOtherList(othersArr);
-      const timesheetArr = reportListByDate.filter(
-        report => report.type === '1',
-      );
-      setTimesheetList(timesheetArr);
+      form.setFieldsValue({
+        ...reportListByDate,
+        done: reportListByDate.filter(report => report.type === '2'),
+        going: reportListByDate.filter(report => report.type === '3'),
+        blockers: reportListByDate.filter(report => report.type === '5'),
+        issues: reportListByDate.filter(report => report.type === '4'),
+        todo: reportListByDate.filter(report => report.type === '6'),
+        others: reportListByDate.filter(report => report.type === '7'),
+        timesheets: reportListByDate.filter(report => report.type === '1'),
+      });
     }
-  }, [reportListByDate]);
-
-  const initialValuesForm = {
-    done: isCreate ? undefined : doneList,
-    going: isCreate ? undefined : goingList,
-    blockers: isCreate ? undefined : blockerList,
-    issues: isCreate ? undefined : issueList,
-    todo: isCreate ? undefined : todoList,
-    others: isCreate ? undefined : otherList,
-    timesheets: isCreate ? undefined : timesheetList,
-  };
+  }, [reportListByDate, form]);
 
   const moreButton = (record: EmployeeTimesheet) => {
     return (
@@ -728,7 +704,6 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
           form={form}
           onFinish={onFinish}
           autoComplete="off"
-          initialValues={initialValuesForm}
           scrollToFirstError={true}
           requiredMark={false}
         >
@@ -740,10 +715,10 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
                   {...(isView || isEdit ? datePickerViewProps : {})}
                   format={DATE_FORMAT}
                   disabledDate={disabledDate}
-                  defaultValue={
+                  value={
                     isView || isEdit
-                      ? moment(selectedTimesheet.date)
-                      : moment(today, DATE_FORMAT)
+                      ? moment(selectedTimesheet?.date)
+                      : moment(newDate, DATE_FORMAT)
                   }
                   onChange={date => handleDateChange(date)}
                   style={{ marginLeft: 12 }}

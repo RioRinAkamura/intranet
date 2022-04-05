@@ -22,13 +22,19 @@ import config from 'config';
 import moment from 'moment';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { api } from 'utils/api';
+import { useTableConfig } from 'utils/tableConfig';
 import { datePickerViewProps } from 'utils/types';
 import { useHandleProjectTimesheets } from '../useHandleProjectTimesheet';
 import { Creators } from './components/Creators';
 import { ProjectTimesheetForm } from './components/Form';
 import { Report } from './components/Report';
+import { useProjectTimesheetSlice } from './slice';
+import { selectProjectTimesheetState } from './slice/selectors';
+import { Messages } from './translate';
+import { useHandleDataTable } from './useHandleDataTable';
 
 export const TimesheetListPage = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
@@ -51,6 +57,8 @@ export const TimesheetListPage = () => {
     projectTimesheetItems,
     employees,
     employeeReports,
+    workStatus,
+    getworkStatus,
     getEmployeeReport,
     fetchProjectTimesheets,
     getProjectTimesheetItems,
@@ -75,6 +83,17 @@ export const TimesheetListPage = () => {
     ProjectTimesheet
   >();
 
+  const { actions } = useProjectTimesheetSlice();
+  const state = useSelector(selectProjectTimesheetState);
+
+  const { setFilterText } = useHandleDataTable(state, actions);
+
+  const { getColumnSearchCheckboxProps } = useTableConfig(
+    state,
+    Messages,
+    setFilterText,
+  );
+
   const [employee, setEmployee] = useState<any>();
 
   const { identity } = useAuthState();
@@ -84,6 +103,10 @@ export const TimesheetListPage = () => {
     fetchProjectTimesheets();
     getEmployees();
   }, [fetchProjectTimesheets, getEmployees]);
+
+  useEffect(() => {
+    getworkStatus();
+  }, [getworkStatus]);
 
   const onViewClick = async record => {
     await getProjectTimesheetItems(record.id);
@@ -259,12 +282,20 @@ export const TimesheetListPage = () => {
       title: 'Date',
       dataIndex: 'date',
       width: 100,
+      sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix(),
       render: value => (value ? moment(value).format('MM-DD-YYYY') : ''),
     },
     {
       title: 'Work Status',
       dataIndex: 'work_status',
       width: 100,
+      ...getColumnSearchCheckboxProps(
+        ['work_status'],
+        workStatus,
+        undefined,
+        undefined,
+      ),
+
       render: value =>
         value === '1' ? (
           <span style={{ color: 'green' }}>ON TRACK</span>
@@ -423,6 +454,7 @@ export const TimesheetListPage = () => {
         </Row>
       </Wrapper>
 
+      {/* PROJECT TIMSHEET VIEW */}
       <DialogModal
         isOpen={isView}
         title="Project Timesheet"

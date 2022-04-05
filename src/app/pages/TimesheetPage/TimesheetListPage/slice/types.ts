@@ -1,8 +1,14 @@
-import { ProjectTimesheetQueryParams } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
-import { Key } from 'react';
+
+export interface ProjectTimesheet {
+  date: string;
+  today_hour_total?: number;
+  tomorrow_hour_total?: number;
+  creators?: string;
+  approved?: string;
+  work_status?: string;
+}
 
 export interface ProjectTimesheetState {
-  id: string;
   timesheet: ProjectTimesheet[];
   loading?: boolean;
   error?: Error;
@@ -10,7 +16,7 @@ export interface ProjectTimesheetState {
   params: QueryParams;
   pagination?: Pagination;
   filterColumns?: FilterColumns;
-  selectedRowKeys?: Key[];
+  selectedRowKeys?: string[];
   selectedRows?: any[];
   deleteSuccess?: boolean;
   deleteFailed?: boolean;
@@ -21,17 +27,17 @@ export interface ProjectTimesheetState {
 }
 
 export interface FilterColumns {
-  timesheet__name?: string;
-  [key: string]: string | undefined;
+  work_status?: string | string[];
+  [key: string]: string | string[] | undefined;
 }
 
 export interface QueryParams {
   search?: string;
   ordering?: string;
-  timesheet__name?: string;
-  limit?: number;
   page?: number;
-  [key: string]: string | number | undefined;
+  limit?: number;
+  work_status?: string | string[];
+  [key: string]: string | number | string[] | undefined;
 }
 
 interface Pagination {
@@ -40,11 +46,6 @@ interface Pagination {
   total?: number;
 }
 
-export interface ProjectTimesheet {
-  projectId: string;
-  id: string;
-  data: ProjectTimesheetQueryParams;
-}
 export interface DeleteProjectTimesheetParams {
   projectId: string;
   timesheetId: string;
