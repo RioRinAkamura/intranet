@@ -20,7 +20,7 @@ import { useHandleEmployeeTimesheets } from 'app/pages/EmployeePage/EmployeeDeta
 import { UsersMessages } from 'app/pages/ManageUserPage/message';
 import config from 'config';
 import moment from 'moment';
-import { useCallback, useEffect, useState } from 'react';
+import { Key, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -80,6 +80,7 @@ export const TimesheetListPage = () => {
   const [isCreator, setIsCreator] = useState<boolean>(false);
   const [isAddCreator, setIsAddCreator] = useState<boolean>(false);
   const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [isDeleteMulti, setIsDeleteMulti] = useState<boolean>(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<
     ProjectTimesheet
   >();
@@ -87,7 +88,10 @@ export const TimesheetListPage = () => {
   const { actions } = useProjectTimesheetSlice();
   const state = useSelector(selectProjectTimesheetState);
   const params = useSelector(selectProjectTimesheetParams);
-  const { setFilterText } = useHandleDataTable(state, actions);
+  const { setFilterText, setSelectedRows, setPagination } = useHandleDataTable(
+    state,
+    actions,
+  );
 
   const { getColumnSearchCheckboxProps } = useTableConfig(
     state,
@@ -151,12 +155,35 @@ export const TimesheetListPage = () => {
     );
   };
 
+  const handleSelectedRows = (
+    selectedRowKeys: Key[],
+    selectedRows: ProjectTimesheet[],
+  ) => {
+    setSelectedRows(selectedRowKeys, selectedRows);
+  };
+
   const handleConfirmDelete = async () => {
-    if (!selectedTimesheet) return;
     try {
-      setIsDelete(false);
-      await deleteProjectTimesheet(selectedTimesheet.id);
-      fetchProjectTimesheet();
+      if (isDeleteMulti) {
+        const ids = state.selectedRowKeys || [];
+        const arrPromise = await ids.map((timesheetId: string) => {
+          return api.hr.projectTimesheet.delete(timesheetId);
+        });
+        await Promise.all(arrPromise);
+        dispatch(actions.deleteTimesheetSuccess());
+        notify({
+          type: ToastMessageType.Info,
+          duration: 2,
+          message: 'Delete Timesheets Successfully',
+        });
+        setIsDeleteMulti(false);
+        dispatch(
+          actions.selectedRows({ selectedRowKeys: [], selectedRows: [] }),
+        );
+        return;
+      } else if (selectedTimesheet) {
+        await deleteProjectTimesheet(selectedTimesheet.id);
+      }
       notify({
         type: ToastMessageType.Info,
         duration: 2,
@@ -169,6 +196,9 @@ export const TimesheetListPage = () => {
         duration: 2,
         message: 'Delete Failed',
       });
+    } finally {
+      fetchProjectTimesheet();
+      setIsDelete(false);
     }
   };
 
@@ -411,9 +441,9 @@ export const TimesheetListPage = () => {
       <Wrapper>
         <Row>
           <Col span={8} style={{ marginBottom: '10px' }}>
-            {/* <Row justify="start" align="middle" style={{ height: '100%' }}>
+            <Row justify="start" align="middle" style={{ height: '100%' }}>
               {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
-                <StyledButton
+                <Button
                   type="primary"
                   danger
                   size="middle"
@@ -431,7 +461,7 @@ export const TimesheetListPage = () => {
               <span style={{ marginLeft: '6px' }}>
                 Total: {state.pagination?.total}
               </span>
-            </Row> */}
+            </Row>
           </Col>
           <Col span={16}>
             <Row justify="end">
@@ -452,12 +482,34 @@ export const TimesheetListPage = () => {
           </Col>
           <Col span={24}>
             <Table
+              rowSelection={{
+                columnWidth: 20,
+                selectedRowKeys: state.selectedRowKeys,
+                onChange: handleSelectedRows,
+              }}
+              rowKey={'id'}
               bordered
               dataSource={state.results}
               columns={columns}
-              rowKey="id"
               loading={state.loading}
               scroll={{ x: 1000 }}
+              pagination={{
+                ...state.pagination,
+                onChange: (page: number, pageSize?: number) => {
+                  setPagination({ current: page, pageSize });
+                },
+                showTotal: (total, range) => (
+                  <div>
+                    Showing{' '}
+                    <span>
+                      {range[0]}-{range[1]}
+                    </span>{' '}
+                    of {total} items
+                  </div>
+                ),
+                pageSizeOptions: ['10', '20', '50', '100'],
+                showSizeChanger: true,
+              }}
             />
           </Col>
         </Row>

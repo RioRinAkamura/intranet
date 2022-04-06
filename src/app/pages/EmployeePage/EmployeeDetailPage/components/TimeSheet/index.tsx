@@ -6,7 +6,16 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { EmployeeTimesheet } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
-import { DatePicker, Form, Popover, Select, Table, Tooltip } from 'antd';
+import {
+  Col,
+  DatePicker,
+  Form,
+  Popover,
+  Row,
+  Select,
+  Table,
+  Tooltip,
+} from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';
 import { useAuthState } from 'app/components/Auth/useAuthState';
@@ -17,7 +26,7 @@ import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { UsersMessages } from 'app/pages/EmployeePage/EmployeeListPage/messages';
 import config from 'config';
 import moment from 'moment';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Key, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components/macro';
@@ -49,6 +58,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
   const [isCreate, setIsCreate] = useState<boolean>(false);
 
   const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [isDeleteMulti, setIsDeleteMulti] = useState<boolean>(false);
   const [selectedTimesheet, setSelectedTimesheet] = useState<any>();
   const [reportListByDate, setReportListByDate] = useState<any[]>();
   const [employee, setEmployee] = useState<any>();
@@ -81,7 +91,10 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
   const { actions } = useEmployeeTimesheetSlice();
   const state = useSelector(selectEmployeeTimesheetState);
   const params = useSelector(selectEmployeeTimesheetParams);
-  const { setFilterText } = useHandleDataTable(state, actions);
+  const { setFilterText, setSelectedRows, setPagination } = useHandleDataTable(
+    state,
+    actions,
+  );
 
   const {
     loading,
@@ -352,10 +365,46 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     },
   ];
 
+  const handleSelectedRows = (
+    selectedRowKeys: Key[],
+    selectedRows: EmployeeTimesheet[],
+  ) => {
+    setSelectedRows(selectedRowKeys, selectedRows);
+  };
+
   const handleConfirmDelete = async () => {
-    if (!selectedTimesheet) return;
     try {
-      setIsDelete(false);
+      if (isDeleteMulti) {
+        const ids = state.selectedRowKeys || [];
+
+        const arrPromise = await ids.map((timesheetId: string) => {
+          let deleteTimesheet;
+          if (employeeId) {
+            deleteTimesheet = api.hr.employee.timesheet.delete(
+              employeeId,
+              timesheetId,
+            );
+          } else if (userId) {
+            deleteTimesheet = api.hr.employee.timesheet.delete(
+              userId,
+              timesheetId,
+            );
+          }
+          return deleteTimesheet;
+        });
+        await Promise.all(arrPromise);
+        dispatch(actions.deleteTimesheetSuccess());
+        notify({
+          type: ToastMessageType.Info,
+          duration: 2,
+          message: 'Delete Timesheets Successfully',
+        });
+        setIsDeleteMulti(false);
+        dispatch(
+          actions.selectedRows({ selectedRowKeys: [], selectedRows: [] }),
+        );
+        return;
+      }
       if (employeeId) {
         await deleteEmployeeTimesheet(employeeId, selectedTimesheet.id);
         fetchEmployeeTimesheets();
@@ -376,6 +425,9 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
         duration: 2,
         message: 'Delete Failed',
       });
+    } finally {
+      fetchEmployeeTimesheets();
+      setIsDelete(false);
     }
   };
 
@@ -595,12 +647,10 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
 
     let reportArr = Array.prototype.concat.apply([], newDataArr);
     try {
-      for (let i = 0; i < reportArr.length; i++) {
-        if (userId && isStaff) {
-          await addEmployeeReport(userId, reportArr[i]);
-        } else {
-          await addEmployeeReport(employeeId, reportArr[i]);
-        }
+      if (userId && isStaff) {
+        await addEmployeeReport(userId, reportArr);
+      } else {
+        await addEmployeeReport(employeeId, reportArr);
       }
       fetchEmployeeTimesheets();
       notify({
@@ -689,26 +739,79 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
 
   return (
     <Wrapper>
-      <Header>
-        <StyledButton
-          type="primary"
-          icon={<PlusCircleOutlined />}
-          onClick={() => {
-            setIsCreate(true);
-            form.resetFields();
-          }}
-          size="middle"
-        >
-          Create
-        </StyledButton>
-      </Header>
+      <Row>
+        <Col span={8} style={{ marginBottom: '10px' }}>
+          <Row justify="start" align="middle" style={{ height: '100%' }}>
+            {state.selectedRowKeys && state.selectedRowKeys.length > 0 && (
+              <Button
+                type="primary"
+                danger
+                size="middle"
+                disabled={
+                  !state?.selectedRowKeys?.length ||
+                  state?.selectedRowKeys?.length === 0
+                }
+                icon={<DeleteOutlined />}
+                onClick={() => {
+                  setIsDelete(true);
+                  setIsDeleteMulti(true);
+                }}
+              />
+            )}
+            <span style={{ marginLeft: '6px' }}>
+              Total: {state.pagination?.total}
+            </span>
+          </Row>
+        </Col>
+        <Col span={16}>
+          <Row justify="end">
+            <Button
+              size="normal"
+              shape="round"
+              style={{
+                marginBottom: 10,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+              type="primary"
+              onClick={() => setIsCreate(true)}
+              icon={<PlusCircleOutlined />}
+            >
+              Create
+            </Button>
+          </Row>
+        </Col>
+      </Row>
+
       <Table
+        rowSelection={{
+          columnWidth: 20,
+          selectedRowKeys: state.selectedRowKeys,
+          onChange: handleSelectedRows,
+        }}
+        rowKey={'id'}
         bordered
         dataSource={state.results}
         columns={columns}
-        rowKey="id"
         loading={state.loading}
         scroll={{ x: 1100 }}
+        pagination={{
+          ...state.pagination,
+          onChange: (page: number, pageSize?: number) => {
+            setPagination({ current: page, pageSize });
+          },
+          showTotal: (total, range) => (
+            <div>
+              Showing{' '}
+              <span>
+                {range[0]}-{range[1]}
+              </span>{' '}
+              of {total} items
+            </div>
+          ),
+          pageSizeOptions: ['10', '20', '50', '100'],
+          showSizeChanger: true,
+        }}
       />
       <DialogModal
         isOpen={isCreate || isEdit || isView}
@@ -818,18 +921,6 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     </Wrapper>
   );
 };
-
-const Header = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding-bottom: 20px;
-`;
-
-const StyledButton = styled(Button)`
-  svg {
-    vertical-align: baseline;
-  }
-`;
 
 const ModalContentWrapper = styled.div`
   display: flex;
