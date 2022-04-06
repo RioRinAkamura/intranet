@@ -37,7 +37,7 @@ export const useHandleEmployeeTimesheets = (): {
   //REPORT
   fetchEmployeeReport: (employeeId: string) => void;
   fetchEmployeeReportByDate: (employeeId: string, date: string) => void;
-  addEmployeeReport: (employeeId: string, data: ReportQueryParams) => void;
+  addEmployeeReport: (employeeId: string, data: ReportQueryParams[]) => void;
   editEmployeeReport: (employeeId: string, data: ReportQueryParams) => void;
   deleteEmployeeReport: (employeeId: string, timesheetId: string) => void;
 } => {
@@ -162,7 +162,7 @@ export const useHandleEmployeeTimesheets = (): {
 
   const addEmployeeReport = async (
     employeeId: string,
-    data: CreateReportQueryParams,
+    data: CreateReportQueryParams[],
   ) => {
     setLoading(true);
     try {

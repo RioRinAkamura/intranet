@@ -11,7 +11,7 @@ export interface EmployeeTimesheetState {
   params: QueryParams;
   pagination?: Pagination;
   filterColumns?: FilterColumns;
-  selectedRowKeys?: Key[];
+  selectedRowKeys?: string[];
   selectedRows?: any[];
   deleteSuccess?: boolean;
   deleteFailed?: boolean;
