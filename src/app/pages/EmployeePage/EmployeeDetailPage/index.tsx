@@ -5,11 +5,12 @@
  */
 import { models } from '@hdwebsoft/intranet-api-sdk';
 import { Form, Tabs } from 'antd';
+import { useAuthState } from 'app/components/Auth/useAuthState';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import PageTitle from 'app/components/PageTitle';
 import { TotalSearchForm } from 'app/components/TotalSearchForm';
 import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components/macro';
@@ -30,7 +31,6 @@ import { Skills } from './components/Skills/Loadable';
 import { SocialNetwork } from './components/SocialNetwork';
 import { TimeSheet } from './components/TimeSheet';
 import { Report } from './components/TimeSheet/components/Report/Loadable';
-import { useUserDetailsSlice } from './slice';
 import { useHandleEmployeeDetail } from './useHandleEmployeeDetail';
 
 interface Props {}
@@ -56,6 +56,17 @@ enum TabKeys {
 }
 
 export function EmployeeDetailPage(props: Props) {
+  const [isStaff, setIsStaff] = React.useState<boolean>(false);
+  const { identity } = useAuthState();
+  React.useEffect(() => {
+    if (identity && identity?.role?.length === 0) return;
+    if (identity && identity?.role && identity?.role[0].name === 'staff') {
+      setIsStaff(true);
+    } else {
+      setIsStaff(false);
+    }
+  }, [identity]);
+
   const { id } = useParams<Record<string, string>>();
   const location = useLocation<LocationState>();
   const history = useHistory();
@@ -72,10 +83,7 @@ export function EmployeeDetailPage(props: Props) {
 
   const [searchForm] = Form.useForm();
 
-  const dispatch = useDispatch();
-
   const { actions } = useNotesSlice();
-  const userDetailsSlice = useUserDetailsSlice();
 
   const employeeNoteState = useSelector(selectEmployeeNotes);
   const { setSearchText, resetSearch } = useHandleDataTable(
@@ -157,9 +165,7 @@ export function EmployeeDetailPage(props: Props) {
   }, [history.location.pathname]);
 
   React.useEffect(() => {
-    if (id) {
-      getDetail(id);
-    }
+    getDetail(id);
   }, [id, getDetail]);
 
   React.useEffect(() => {
@@ -200,12 +206,6 @@ export function EmployeeDetailPage(props: Props) {
     }
   }, [history, location]);
 
-  React.useEffect(() => {
-    if (!id || getDefaultTab !== TabKeys.details) return;
-
-    dispatch(userDetailsSlice.actions.fetchEmployeeSkills(id));
-  }, [dispatch, getDefaultTab, id, userDetailsSlice.actions]);
-
   return (
     <>
       <StyledPageTitle
@@ -229,20 +229,31 @@ export function EmployeeDetailPage(props: Props) {
         )}
       </StyledPageTitle>
       <>
-        <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
-          <TabPane tab="Details" key={TabKeys.details} />
-          <TabPane tab="Contract" key={TabKeys.contract} />
-          <TabPane tab="Bank Accounts" key={TabKeys.bankAccounts} />
-          <TabPane tab="Citizen Info" key={TabKeys.citizenInfo} />
-          <TabPane tab="Skills" key={TabKeys.skills} />
-          <TabPane tab="Social Accounts" key={TabKeys.socialAccounts} />
-          <TabPane tab="Projects" key={TabKeys.projects} />
-          <TabPane tab="Timesheets" key={TabKeys.timesheet} />
-          <TabPane tab="Notes" key={TabKeys.notes} />
-          <TabPane tab="Devices" key={TabKeys.devices} />
-          <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
-        </StyledTabs>
-
+        {isStaff ? (
+          <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
+            <TabPane tab="Details" key={TabKeys.details} />
+            <TabPane tab="Contract" key={TabKeys.contract} />
+            <TabPane tab="Bank Accounts" key={TabKeys.bankAccounts} />
+            <TabPane tab="Citizen Info" key={TabKeys.citizenInfo} />
+            <TabPane tab="Social Accounts" key={TabKeys.socialAccounts} />
+            <TabPane tab="Timesheets" key={TabKeys.timesheet} />
+            <TabPane tab="Projects" key={TabKeys.projects} />
+          </StyledTabs>
+        ) : (
+          <StyledTabs defaultActiveKey={getDefaultTab} onChange={onChangeTab}>
+            <TabPane tab="Details" key={TabKeys.details} />
+            <TabPane tab="Contract" key={TabKeys.contract} />
+            <TabPane tab="Bank Accounts" key={TabKeys.bankAccounts} />
+            <TabPane tab="Citizen Info" key={TabKeys.citizenInfo} />
+            <TabPane tab="Skills" key={TabKeys.skills} />
+            <TabPane tab="Social Accounts" key={TabKeys.socialAccounts} />
+            <TabPane tab="Projects" key={TabKeys.projects} />
+            <TabPane tab="Timesheets" key={TabKeys.timesheet} />
+            <TabPane tab="Notes" key={TabKeys.notes} />
+            <TabPane tab="Devices" key={TabKeys.devices} />
+            <TabPane tab="Change Logs" key={TabKeys.changeLogs} />
+          </StyledTabs>
+        )}
         <Switch>
           <Route path={PrivatePath.EMPLOYEES_ID_CHANGELOGS}>
             <ChangeLogs employeeId={id} />

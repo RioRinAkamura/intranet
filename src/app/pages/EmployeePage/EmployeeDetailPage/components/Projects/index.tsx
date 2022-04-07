@@ -43,11 +43,23 @@ import {
   EmployeeProject,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { ActionIcon } from 'app/components/ActionIcon';
+import { useAuthState } from 'app/components/Auth/useAuthState';
 interface ProjectsProps {
   employeeId: string;
 }
 
 export const Projects = memo(({ employeeId }: ProjectsProps) => {
+  const [isStaff, setIsStaff] = useState<boolean>(false);
+  const { identity } = useAuthState();
+  useEffect(() => {
+    if (identity && identity?.role?.length === 0) return;
+    if (identity && identity?.role && identity?.role[0].name === 'staff') {
+      setIsStaff(true);
+    } else {
+      setIsStaff(false);
+    }
+  }, [identity]);
+
   const { t } = useTranslation();
   const history = useHistory();
   const { notify } = useNotify();
@@ -305,16 +317,18 @@ export const Projects = memo(({ employeeId }: ProjectsProps) => {
 
   return (
     <Wrapper>
-      <Header>
-        <StyledButton
-          type="primary"
-          icon={<PlusCircleOutlined />}
-          onClick={() => setOpen(true)}
-          size="middle"
-        >
-          Add project
-        </StyledButton>
-      </Header>
+      {!isStaff && (
+        <Header>
+          <StyledButton
+            type="primary"
+            icon={<PlusCircleOutlined />}
+            onClick={() => setOpen(true)}
+            size="middle"
+          >
+            Add project
+          </StyledButton>
+        </Header>
+      )}
 
       <Table
         rowSelection={{

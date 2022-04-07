@@ -23,7 +23,6 @@ import { useAuthState } from './components/Auth/useAuthState';
 import { BreadCrumbsContextProvider } from './components/Breadcrumbs/context';
 import { ToastContextProvider } from './components/Toast/context';
 import { DeviceManagePage } from './pages/DeviceManagePage/Loadable';
-import { TimeSheet } from './pages/EmployeePage/EmployeeDetailPage/components/TimeSheet/Loadable';
 import { EmployeePage } from './pages/EmployeePage/Loadable';
 import { ForgotPassword } from './pages/ForgotPassword/Loadable';
 import { HomePage } from './pages/HomePage/Loadable';
@@ -79,10 +78,6 @@ export function App() {
               />
               <AppLayout>
                 <>
-                  {/* <PrivateRoute
-                    path={PrivatePath.USERS_ID}
-                    component={UserManageDetailPage}
-                  /> */}
                   <PrivateRoute
                     exact
                     path={config.ROOT_PATH}
@@ -139,11 +134,6 @@ export function App() {
                   <PrivateRoute
                     path={PrivatePath.PROJECTS_TIMESHEETS}
                     component={TimesheetListPage}
-                  />
-                  {/* User timesheet */}
-                  <PrivateRoute
-                    path={PrivatePath.TIMESHEETS}
-                    component={TimeSheet}
                   />
                 </>
               </AppLayout>

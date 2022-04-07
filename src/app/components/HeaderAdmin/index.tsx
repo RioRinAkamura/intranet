@@ -17,6 +17,7 @@ interface Props {
 
 const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
   const { identity } = useGetIdentity();
+  const userId = identity?.employee?.id;
   const { breadCrumb } = useBreadCrumbContext();
   return (
     <>
@@ -48,18 +49,14 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
                   </Active>
                   <Active>
                     <NavItem>
-                      <NavLink to="/timesheets" activeClassName="active">
-                        Timesheets
+                      <NavLink
+                        to={`/employees/${userId}`}
+                        activeClassName="active"
+                      >
+                        Employee
                       </NavLink>
                     </NavItem>
                   </Active>
-                  {/* <Active>
-                    <NavItem>
-                      <NavLink to="/Projects" activeClassName="active">
-                        Projects
-                      </NavLink>
-                    </NavItem>
-                  </Active> */}
                 </>
               ) : (
                 <>

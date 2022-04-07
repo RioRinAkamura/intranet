@@ -5,6 +5,7 @@
  */
 import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { Col, Form, Row } from 'antd';
+import { useAuthState } from 'app/components/Auth/useAuthState';
 import Button from 'app/components/Button';
 import moment from 'moment';
 import * as React from 'react';
@@ -23,6 +24,18 @@ interface ProfileInfoProps {
 
 export const ProfileInfo = (props: ProfileInfoProps) => {
   const { employeeId } = props;
+
+  const [isStaff, setIsStaff] = React.useState<boolean>(false);
+  const { identity } = useAuthState();
+  React.useEffect(() => {
+    if (identity && identity?.role?.length === 0) return;
+    if (identity && identity?.role && identity?.role[0].name === 'staff') {
+      setIsStaff(true);
+    } else {
+      setIsStaff(false);
+    }
+  }, [identity]);
+
   const { t } = useTranslation();
   const { id } = useParams<Record<string, string>>();
   const history = useHistory();
@@ -67,41 +80,43 @@ export const ProfileInfo = (props: ProfileInfoProps) => {
           <ProfileInfoDetail isView={isView} isEdit={isEdit} form={form} />
         }
       />
-      <WrapperButton>
-        <Row gutter={[8, 8]} justify="end">
-          <Col>
-            {isEdit && (
+      {!isStaff && (
+        <WrapperButton>
+          <Row gutter={[8, 8]} justify="end">
+            <Col>
+              {isEdit && (
+                <Button
+                  block
+                  onClick={() => {
+                    if (isEdit) {
+                      setIsEdit(false);
+                      history.push(`${PrivatePath.EMPLOYEES}/${id}`);
+                    } else if (isView) {
+                      history.push(`${PrivatePath.EMPLOYEES}/${id}`);
+                    }
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                >
+                  {t(UserDetailMessages.formBackButton())}
+                </Button>
+              )}
+            </Col>
+            <Col>
               <Button
+                loading={loading}
                 block
+                type="primary"
                 onClick={() => {
-                  if (isEdit) {
-                    setIsEdit(false);
-                    history.push(`${PrivatePath.EMPLOYEES}/${id}`);
-                  } else if (isView) {
-                    history.push(`${PrivatePath.EMPLOYEES}/${id}`);
-                  }
+                  history.push(`${PrivatePath.EMPLOYEES}/${id}/edit`);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
               >
-                {t(UserDetailMessages.formBackButton())}
+                {t(UserDetailMessages.formEditButton())}
               </Button>
-            )}
-          </Col>
-          <Col>
-            <Button
-              loading={loading}
-              block
-              type="primary"
-              onClick={() => {
-                history.push(`${PrivatePath.EMPLOYEES}/${id}/edit`);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            >
-              {t(UserDetailMessages.formEditButton())}
-            </Button>
-          </Col>
-        </Row>
-      </WrapperButton>
+            </Col>
+          </Row>
+        </WrapperButton>
+      )}
     </>
   );
 };
