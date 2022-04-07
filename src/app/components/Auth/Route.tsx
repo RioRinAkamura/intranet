@@ -21,14 +21,6 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
       return <Route {...rest} render={props => <Component {...props} />} />;
     }
 
-    if (location.pathname.includes(`/employees/${userId}/timesheets`)) {
-      return <Route {...rest} render={props => <Component {...props} />} />;
-    }
-
-    if (location.pathname.includes(`/employees/${userId}/projects`)) {
-      return <Route {...rest} render={props => <Component {...props} />} />;
-    }
-
     if (location.pathname.includes(`/employees/${userId}`)) {
       return <Route {...rest} render={props => <Component {...props} />} />;
     }
