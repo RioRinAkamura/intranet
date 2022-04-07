@@ -7,6 +7,8 @@ import { useLocation } from 'react-router-dom';
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {
   const { authenticated, identity } = useAuthState();
+  const userId = identity?.employee?.id;
+
   const location = useLocation();
 
   if (
@@ -19,12 +21,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
       return <Route {...rest} render={props => <Component {...props} />} />;
     }
 
-    if (location.pathname.includes('/timesheets')) {
-      // console.log('route timesheet', rest);
-      return <Route {...rest} render={props => <Component {...props} />} />;
-    }
-
-    if (location.pathname.includes('/projects')) {
+    if (location.pathname.includes(`/employees/${userId}`)) {
       return <Route {...rest} render={props => <Component {...props} />} />;
     }
 

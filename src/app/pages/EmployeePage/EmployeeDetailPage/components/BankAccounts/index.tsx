@@ -5,6 +5,7 @@
  */
 import { Employee } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
 import { Col, Form, Row } from 'antd';
+import { useAuthState } from 'app/components/Auth/useAuthState';
 import Button from 'app/components/Button';
 import config from 'config';
 import moment from 'moment';
@@ -25,6 +26,16 @@ interface BankAccountsProps {
 
 export const BankAccounts = (props: BankAccountsProps) => {
   const { employeeId } = props;
+  const [isStaff, setIsStaff] = React.useState<boolean>(false);
+  const { identity } = useAuthState();
+  React.useEffect(() => {
+    if (identity && identity?.role?.length === 0) return;
+    if (identity && identity?.role && identity?.role[0].name === 'staff') {
+      setIsStaff(true);
+    } else {
+      setIsStaff(false);
+    }
+  }, [identity]);
   const { t } = useTranslation();
   const { id } = useParams<Record<string, string>>();
   const history = useHistory();
@@ -99,54 +110,56 @@ export const BankAccounts = (props: BankAccountsProps) => {
           <BankAccountsDetail isView={isView} isEdit={isEdit} />
         }
       />
-      <WrapperButton>
-        <Row gutter={[8, 8]} justify="end">
-          <Col>
-            {isEdit && (
+      {!isStaff && (
+        <WrapperButton>
+          <Row gutter={[8, 8]} justify="end">
+            <Col>
+              {isEdit && (
+                <Button
+                  block
+                  onClick={() => {
+                    if (isEdit) {
+                      setIsEdit(false);
+                      history.push(
+                        `${PrivatePath.EMPLOYEES}/${id}/bank-accounts`,
+                      );
+                    } else if (isView) {
+                      history.push(
+                        `${PrivatePath.EMPLOYEES}/${id}/bank-accounts`,
+                      );
+                    }
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                >
+                  {t(UserDetailMessages.formBackButton())}
+                </Button>
+              )}
+            </Col>
+            <Col>
               <Button
+                loading={loading}
                 block
+                type="primary"
                 onClick={() => {
-                  if (isEdit) {
-                    setIsEdit(false);
+                  if (isView) {
+                    setIsEdit(true);
                     history.push(
-                      `${PrivatePath.EMPLOYEES}/${id}/bank-accounts`,
+                      `${PrivatePath.EMPLOYEES}/${id}/bank-accounts/edit`,
                     );
-                  } else if (isView) {
-                    history.push(
-                      `${PrivatePath.EMPLOYEES}/${id}/bank-accounts`,
-                    );
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  } else {
+                    handleBankAccountEditSubmit();
                   }
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
               >
-                {t(UserDetailMessages.formBackButton())}
+                {isView
+                  ? t(UserDetailMessages.formEditButton())
+                  : t(UserDetailMessages.formSubmitButton())}
               </Button>
-            )}
-          </Col>
-          <Col>
-            <Button
-              loading={loading}
-              block
-              type="primary"
-              onClick={() => {
-                if (isView) {
-                  setIsEdit(true);
-                  history.push(
-                    `${PrivatePath.EMPLOYEES}/${id}/bank-accounts/edit`,
-                  );
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                } else {
-                  handleBankAccountEditSubmit();
-                }
-              }}
-            >
-              {isView
-                ? t(UserDetailMessages.formEditButton())
-                : t(UserDetailMessages.formSubmitButton())}
-            </Button>
-          </Col>
-        </Row>
-      </WrapperButton>
+            </Col>
+          </Row>
+        </WrapperButton>
+      )}
     </>
   );
 };
