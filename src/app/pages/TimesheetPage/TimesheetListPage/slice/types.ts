@@ -1,4 +1,3 @@
-
 export interface ProjectTimesheet {
   date: string;
   today_hour_total?: number;
@@ -28,6 +27,7 @@ export interface ProjectTimesheetState {
 
 export interface FilterColumns {
   work_status?: string;
+  creators?: string;
   [key: string]: string | string[] | undefined;
 }
 
@@ -37,6 +37,7 @@ export interface QueryParams {
   page?: number;
   limit?: number;
   work_status?: string;
+  creators?: string;
   [key: string]: string | number | string[] | undefined;
 }
 
