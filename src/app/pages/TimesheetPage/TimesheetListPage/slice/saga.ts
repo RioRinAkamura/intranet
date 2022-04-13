@@ -8,6 +8,7 @@ function* fetchProjectTimesheet(action) {
   const { params } = action.payload;
   const queryParams = {
     work_status: params.work_status,
+    creators__first_name: params.creators,
   };
   try {
     const response = yield call(

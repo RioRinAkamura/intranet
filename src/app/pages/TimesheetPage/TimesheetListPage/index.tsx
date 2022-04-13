@@ -93,11 +93,10 @@ export const TimesheetListPage = () => {
     actions,
   );
 
-  const { getColumnSearchCheckboxProps } = useTableConfig(
-    state,
-    Messages,
-    setFilterText,
-  );
+  const {
+    getColumnSearchCheckboxProps,
+    getColumnSearchInputProps,
+  } = useTableConfig(state, Messages, setFilterText);
 
   const [employee, setEmployee] = useState<any>();
 
@@ -358,6 +357,7 @@ export const TimesheetListPage = () => {
       title: 'Creators',
       dataIndex: 'creators',
       width: 170,
+      ...getColumnSearchInputProps(['creators']),
       render: (creators, record) => {
         return (
           <div

@@ -58,6 +58,7 @@ const slice = createSlice({
       state.filterColumns = {
         ...state.filterColumns,
         work_status: action.payload.work_status,
+        creators: action.payload.creators,
       };
       state.pagination = {
         ...state.pagination,
