@@ -8,6 +8,7 @@ function* fetchEmployeeTimesheet(action) {
   const { params, id } = action.payload;
   const queryParams = {
     work_status: params.work_status,
+    date: params.date,
   };
   try {
     const response = yield call(

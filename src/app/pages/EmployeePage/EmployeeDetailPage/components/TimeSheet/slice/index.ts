@@ -62,6 +62,7 @@ const slice = createSlice({
       state.filterColumns = {
         ...state.filterColumns,
         work_status: action.payload.work_status,
+        date: action.payload.date,
       };
       state.pagination = {
         ...state.pagination,

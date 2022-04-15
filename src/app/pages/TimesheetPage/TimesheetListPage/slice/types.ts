@@ -28,6 +28,7 @@ export interface ProjectTimesheetState {
 export interface FilterColumns {
   work_status?: string;
   creators?: string;
+  date?: string;
   [key: string]: string | string[] | undefined;
 }
 
@@ -38,6 +39,7 @@ export interface QueryParams {
   limit?: number;
   work_status?: string;
   creators?: string;
+  date?: string;
   [key: string]: string | number | string[] | undefined;
 }
 

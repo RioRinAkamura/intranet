@@ -105,11 +105,10 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     deleteEmployeeTimesheet,
   } = useHandleEmployeeTimesheets();
 
-  const { getColumnSearchCheckboxProps } = useTableConfig(
-    state,
-    Messages,
-    setFilterText,
-  );
+  const {
+    getColumnSearchCheckboxProps,
+    getColumnSearchInputProps,
+  } = useTableConfig(state, Messages, setFilterText);
 
   const [projectList, setProjectList] = useState<any[]>();
 
@@ -276,6 +275,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
       title: 'Date',
       dataIndex: 'date',
       width: 130,
+      ...getColumnSearchInputProps(['date'], 0, 'date'),
       sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix(),
       render: text => (text ? moment(text).format('MM-DD-YYYY') : ''),
     },
