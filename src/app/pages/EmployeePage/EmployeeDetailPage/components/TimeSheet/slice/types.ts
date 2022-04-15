@@ -23,6 +23,7 @@ export interface EmployeeTimesheetState {
 
 export interface FilterColumns {
   work_status?: string;
+  date?: string;
   [key: string]: string | undefined;
 }
 
@@ -32,6 +33,7 @@ export interface QueryParams {
   limit?: number;
   page?: number;
   work_status?: string;
+  date?: string;
   [key: string]: string | number | undefined;
 }
 

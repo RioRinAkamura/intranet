@@ -154,7 +154,6 @@ export const useTableConfig = (
     return ordering;
   };
 
-  let searchInput: Input;
   const getColumnSearchInputProps = (
     dataIndex: string[],
     filterIndex?: number,
@@ -166,9 +165,8 @@ export const useTableConfig = (
         <Wrapper>
           {type === 'date' ? (
             <DatePicker
-              size="large"
               format={DATE_FORMAT}
-              style={{ width: '100%', marginBottom: 10 }}
+              style={{ width: 188, marginBottom: 8, display: 'block' }}
               onChange={e =>
                 setSelectedKeys(prevState => ({
                   ...prevState,
@@ -180,11 +178,6 @@ export const useTableConfig = (
             />
           ) : (
             <Input
-              ref={node => {
-                if (node !== null) {
-                  searchInput = node;
-                }
-              }}
               placeholder={`${t(
                 messageTrans.filterInputPlaceholder(),
               )} ${dataIndex}`}
@@ -238,13 +231,6 @@ export const useTableConfig = (
             .toLowerCase()
             .includes(value.toLowerCase())
         : '',
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          searchInput.select();
-        }, 100);
-      }
-    },
     render: (text, record) => {
       let dataText = '';
       dataIndex.map(data => {

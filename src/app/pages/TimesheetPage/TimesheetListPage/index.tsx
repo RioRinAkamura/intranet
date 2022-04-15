@@ -322,6 +322,7 @@ export const TimesheetListPage = () => {
       dataIndex: 'date',
       width: 100,
       sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix(),
+      ...getColumnSearchInputProps(['date'], 0, 'date'),
       render: value => (value ? moment(value).format('MM-DD-YYYY') : ''),
     },
     {
