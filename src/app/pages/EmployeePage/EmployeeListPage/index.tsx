@@ -830,6 +830,12 @@ export const EmployeeListPage: React.FC = () => {
       Promise.all(arrPromise).then(values => {
         const newEmloyeeSkills = [...employeeSkills, ...values];
         setEmployeeSkills(newEmloyeeSkills);
+        setEmployeeRecord(prevState => {
+          return {
+            ...prevState,
+            skills: newEmloyeeSkills,
+          };
+        });
         setSkillModalVisible(false);
         notify({
           type: ToastMessageType.Info,
@@ -845,10 +851,6 @@ export const EmployeeListPage: React.FC = () => {
   const onEmployeeSkillChange = async (employeeSkill: EmployeeSkill, value) => {
     setEmployeeRecord(prevState => {
       const newSkill = [...prevState.skills].map(skill => {
-        // if (skill.id === employeeSkill.id) {
-        //   skill.level = value;
-        // }
-
         return {
           ...skill,
           level: skill.id === employeeSkill.id ? value : skill.level,
