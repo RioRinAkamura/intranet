@@ -827,7 +827,7 @@ export const EmployeeListPage: React.FC = () => {
         );
       });
 
-      Promise.all(arrPromise).then(async values => {
+      Promise.all(arrPromise).then(values => {
         const newEmloyeeSkills = [...employeeSkills, ...values];
         setEmployeeSkills(newEmloyeeSkills);
         setEmployeeRecord(prevState => {
