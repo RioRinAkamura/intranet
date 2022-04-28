@@ -33,6 +33,7 @@ import { UserPage } from './pages/ManageUserPage/Loadable';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { ProjectPage } from './pages/ProjectPage/Loadable';
 import { ResetPassword } from './pages/ResetPassword/Loadable';
+import { ShareTimesheetPage } from './pages/ShareTimesheetPage';
 import { SkillManagePage } from './pages/SkillManagePage/Loadable';
 import { TaskManagerPage } from './pages/TaskManagerPage/Loadable';
 import { TimesheetListPage } from './pages/TimesheetPage/TimesheetListPage';
@@ -75,6 +76,11 @@ export function App() {
                 restricted={true}
                 path="/reset-password"
                 component={ResetPassword}
+              />
+              <PublicRoute
+                restricted={false}
+                path={'/share-url'}
+                component={ShareTimesheetPage}
               />
               <AppLayout>
                 <>

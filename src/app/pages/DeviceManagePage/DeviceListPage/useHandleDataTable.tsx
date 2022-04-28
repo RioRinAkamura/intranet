@@ -82,7 +82,6 @@ export const useHandleDataTable = (
   };
 
   const setSearchText = (text: string): void => {
-    console.log('setSearchText', text);
     if (urlParams.limit || urlParams.page) {
       history.replace({
         search: stringify({ search: text }),

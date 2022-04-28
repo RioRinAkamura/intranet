@@ -1,4 +1,5 @@
 import {
+  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
@@ -111,6 +112,8 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
   } = useTableConfig(state, Messages, setFilterText);
 
   const [projectList, setProjectList] = useState<any[]>();
+  const [isShareReport, setIsShareReport] = useState<boolean>(false);
+  const [linkShare, setLinkShare] = useState<string>('');
 
   const fetchEmployeeTimesheets = useCallback(() => {
     if (employeeId) {
@@ -435,6 +438,10 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     setIsDelete(false);
   };
 
+  const handleCancelShare = () => {
+    setIsShareReport(false);
+  };
+
   const handleCancel = () => {
     form.resetFields();
     setIsView(false);
@@ -737,6 +744,38 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     setIsCreate(false);
   };
 
+  const handleShare = async () => {
+    if (selectedTimesheet && !isStaff) {
+      const data = {
+        payload: {
+          employee_id: employeeId,
+          date: selectedTimesheet.date,
+        },
+        share_type: '1',
+      };
+      const reponse = await api.hr.employee.timesheet.shareReport(data);
+      const urlPage =
+        window.location.origin + `/share-url/?token=${reponse.id}`;
+      setLinkShare(urlPage);
+    } else {
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: 'Failed',
+      });
+    }
+    setIsShareReport(true);
+  };
+
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(linkShare);
+    notify({
+      type: ToastMessageType.Info,
+      message: 'Copied',
+      duration: 2,
+    });
+  };
+
   return (
     <Wrapper>
       <Row>
@@ -883,7 +922,6 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
                   type="primary"
                   style={{ margin: '0px 12px' }}
                   onClick={handleDecline}
-                  // loading={loading}
                 >
                   Decline
                 </Button>
@@ -892,9 +930,17 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
                   disabled={isCreate}
                   type="primary"
                   onClick={handleApprove}
-                  // loading={loading}
                 >
                   Approve
+                </Button>
+                <Button
+                  size="normal"
+                  disabled={isCreate}
+                  type="primary"
+                  style={{ marginLeft: '12px' }}
+                  onClick={handleShare}
+                >
+                  Share
                 </Button>
               </div>
             </ModalContentWrapper>
@@ -918,6 +964,22 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
         handleCancel={handleCancelDelete}
         content="Are you sure you want to delete this information?"
       />
+
+      <DialogModal
+        isOpen={isShareReport}
+        title="Share report"
+        handleCancel={handleCancelShare}
+        loading={loading}
+        width={600}
+        maskClosable={false}
+      >
+        <ShareContent>
+          <p>{linkShare}</p>
+          <IconWrapper>
+            <CopyOutlined style={{ fontSize: 18 }} onClick={handleCopyClick} />
+          </IconWrapper>
+        </ShareContent>
+      </DialogModal>
     </Wrapper>
   );
 };
@@ -929,4 +991,21 @@ const ModalContentWrapper = styled.div`
 
 const StyledDatePicker = styled(DatePicker)`
   margin-bottom: 12px;
+`;
+
+const ShareContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+`;
+
+const IconWrapper = styled.div`
+  cursor: pointer;
+  margin-left: 16px;
+  color: #1890ff;
 `;
