@@ -4,7 +4,6 @@ import {
   ProjectTimesheet,
   Report,
   UpdateProjectTimesheetQueryParams,
-  ShareableUrlParams,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/timesheet/models';
 import {
   Pagination,
@@ -22,7 +21,6 @@ export const useHandleProjectTimesheets = (): {
   employees: Employee[];
   workStatus: SelectOption[];
   getworkStatus: () => Promise<void>;
-  shareUrlTimesheet: (data: ShareableUrlParams) => Promise<void>;
   fetchProjectTimesheets: () => void;
   addProjectTimesheet: (data: UpdateProjectTimesheetQueryParams) => void;
   editProjectTimesheet: (data: UpdateProjectTimesheetQueryParams) => void;
@@ -161,15 +159,6 @@ export const useHandleProjectTimesheets = (): {
     }
   }, []);
 
-  const shareUrlTimesheet = useCallback(async (data: ShareableUrlParams) => {
-    try {
-      const response = await api.hr.projectTimesheet.shareReport(data);
-      console.log('response SHARE', response);
-    } catch (error: any) {
-      setError(error);
-    }
-  }, []);
-
   return {
     loading,
     error,
@@ -179,7 +168,6 @@ export const useHandleProjectTimesheets = (): {
     employeeReports,
     workStatus,
     getworkStatus,
-    shareUrlTimesheet,
     fetchProjectTimesheets,
     addProjectTimesheet,
     editProjectTimesheet,

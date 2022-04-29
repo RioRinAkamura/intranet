@@ -1,23 +1,13 @@
-import { Divider } from 'antd';
-import { useForm } from 'antd/lib/form/Form';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { api } from 'utils/api';
-import Blockers from './components/Blockers';
-import Done from './components/Done';
-import Going from './components/Going';
-import Issues from './components/Issues';
-import Others from './components/Others';
-import Timesheets from './components/Timesheets';
-import Todo from './components/Todo';
+import ReportItem from './components/ReportItem';
 
 export const ShareTimesheetPage = () => {
   const search = window.location.search;
   const token = search.replace('?token=', '');
-  console.log('token', token);
-  const [data, setData] = useState<any[]>();
 
-  const form = useForm();
+  const [data, setData] = useState<any[]>();
 
   const [done, setDone] = useState<any[]>();
   const [going, setGoing] = useState<any[]>();
@@ -28,7 +18,9 @@ export const ShareTimesheetPage = () => {
   const [timesheet, setTimesheet] = useState<any[]>();
 
   const fetchData = useCallback(async () => {
-    const response = await api.hr.employee.timesheet.getReportShared(token);
+    const response: any = await api.hr.employee.timesheet.getReportShared(
+      token,
+    );
     if (response) {
       setData(response.results);
     }
@@ -37,8 +29,6 @@ export const ShareTimesheetPage = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-  console.log('data', data);
-
   useEffect(() => {
     if (data) {
       const doneList = data.filter(report => report.type === '2');
@@ -58,35 +48,34 @@ export const ShareTimesheetPage = () => {
     }
   }, [data]);
 
-  const date = data?.map(item => item.timesheet.date);
-  console.log('date', date);
+  const date = data?.map(item => item.timesheet?.date);
 
   return (
     <WrapperContent>
       <ModalContentWrapper>
-        <div>Date: {date ? date[0] : ''}</div>
-        <Divider />
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <h2>Report</h2>
+        <h3>Date: {date ? date[0] : ''}</h3>
+        <WrapperReport>
           <WrapperReportItem>
             <h3>REPORT</h3>
             <h3>DONE</h3>
-            <Done reportList={done} />
+            <ReportItem reportList={done} />
             <h3>GOING</h3>
-            <Going reportList={going} />
+            <ReportItem reportList={going} isGoing={true} />
             <h3>BLOCKERS</h3>
-            <Blockers reportList={blocker} />
+            <ReportItem reportList={blocker} />
             <h3>ISSUES</h3>
-            <Issues reportList={issue} />
+            <ReportItem reportList={issue} />
             <h3>TODO</h3>
-            <Todo reportList={todo} />
+            <ReportItem reportList={todo} />
             <h3>OTHERS</h3>
-            <Others reportList={other} />
+            <ReportItem reportList={other} />
           </WrapperReportItem>
           <WrapperReportItem>
             <h3>TIMESHEET</h3>
-            <Timesheets reportList={timesheet} />
+            <ReportItem reportList={timesheet} isTimesheet={true} />
           </WrapperReportItem>
-        </div>
+        </WrapperReport>
       </ModalContentWrapper>
     </WrapperContent>
   );
@@ -103,9 +92,13 @@ const ModalContentWrapper = styled.div`
   margin: 40px 0px;
 `;
 
+const WrapperReport = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 const WrapperReportItem = styled.div`
   width: 420px;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  /* border-radius: 10px; */
   padding: 16px;
 `;
