@@ -1,4 +1,5 @@
 import {
+  CopyOutlined,
   DeleteOutlined,
   EyeOutlined,
   MoreOutlined,
@@ -84,6 +85,10 @@ export const TimesheetListPage = () => {
   const [selectedTimesheet, setSelectedTimesheet] = useState<
     ProjectTimesheet
   >();
+
+  const [isShareReport, setIsShareReport] = useState<boolean>(false);
+  const [linkShare, setLinkShare] = useState<string>('');
+
   const dispatch = useDispatch();
   const { actions } = useProjectTimesheetSlice();
   const state = useSelector(selectProjectTimesheetState);
@@ -203,6 +208,10 @@ export const TimesheetListPage = () => {
 
   const handleCancelDelete = () => {
     setIsDelete(false);
+  };
+
+  const handleCancelShare = () => {
+    setIsShareReport(false);
   };
 
   const handleCancel = () => {
@@ -429,6 +438,38 @@ export const TimesheetListPage = () => {
     },
   ];
 
+  const handleShare = async () => {
+    if (selectedTimesheet) {
+      const data = {
+        payload: {
+          project_timesheet_id: selectedTimesheet?.id,
+          date: selectedTimesheet.date,
+        },
+        share_type: '2',
+      };
+      const reponse = await api.hr.projectTimesheet.shareReport(data);
+      const urlPage =
+        window.location.origin + `/share-url/?token=${reponse.id}`;
+      setLinkShare(urlPage);
+    } else {
+      notify({
+        type: ToastMessageType.Error,
+        duration: 2,
+        message: 'Failed',
+      });
+    }
+    setIsShareReport(true);
+  };
+
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(linkShare);
+    notify({
+      type: ToastMessageType.Info,
+      message: 'Copied',
+      duration: 2,
+    });
+  };
+
   return (
     <>
       <Wrapper>
@@ -538,6 +579,14 @@ export const TimesheetListPage = () => {
                   value={moment(selectedTimesheet?.date, DATE_FORMAT)}
                 />
               </div>
+              <Button
+                size="normal"
+                disabled={isCreate}
+                type="primary"
+                onClick={handleShare}
+              >
+                Share
+              </Button>
             </ModalContentWrapper>
           </Form.Item>
 
@@ -621,6 +670,21 @@ export const TimesheetListPage = () => {
         handleCancel={handleCancelDelete}
         content="Are you sure you want to delete this information?"
       />
+      <DialogModal
+        isOpen={isShareReport}
+        title="Share report"
+        handleCancel={handleCancelShare}
+        loading={loading}
+        width={600}
+        maskClosable={false}
+      >
+        <ShareContent>
+          <p>{linkShare}</p>
+          <IconWrapper>
+            <CopyOutlined style={{ fontSize: 18 }} onClick={handleCopyClick} />
+          </IconWrapper>
+        </ShareContent>
+      </DialogModal>
     </>
   );
 };
@@ -657,4 +721,21 @@ const CreatorStyle = styled.span`
 const CreatorsWrapper = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const ShareContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+`;
+
+const IconWrapper = styled.div`
+  cursor: pointer;
+  margin-left: 16px;
+  color: #1890ff;
 `;

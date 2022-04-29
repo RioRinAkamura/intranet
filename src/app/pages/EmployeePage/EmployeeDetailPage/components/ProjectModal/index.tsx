@@ -3,7 +3,15 @@
  * ProjectModal
  *
  */
-import { Button, DatePicker, Form, Select, Spin, Switch } from 'antd';
+import {
+  AutoComplete,
+  Button,
+  DatePicker,
+  Form,
+  Select,
+  Spin,
+  Switch,
+} from 'antd';
 import { DialogModal } from 'app/components/DialogModal';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
@@ -74,6 +82,19 @@ export const ProjectModal = memo((props: Props) => {
       dispatch(actions.addProject(_values));
     }
   };
+
+  const [allocationOptions, setAllocationOptions] = useState<
+    { value: string }[]
+  >([]);
+
+  useEffect(() => {
+    const options = allocations.map(item => {
+      return {
+        value: String(item),
+      };
+    });
+    setAllocationOptions(options);
+  }, [allocations]);
 
   useEffect(() => {
     getRoles();
@@ -249,15 +270,12 @@ export const ProjectModal = memo((props: Props) => {
               },
             ]}
           >
-            <Select showSearch size="large" placeholder="Select allocation">
-              {allocations.map((item, index: number) => {
-                return (
-                  <Option key={index} value={item}>
-                    {item}
-                  </Option>
-                );
-              })}
-            </Select>
+            <AutoComplete
+              style={{ width: '100%' }}
+              size="large"
+              placeholder="Allocation"
+              options={allocationOptions}
+            />
           </FormSearchItem>
           <FormSearchItem label="Joined" name="joined_at">
             <DatePicker

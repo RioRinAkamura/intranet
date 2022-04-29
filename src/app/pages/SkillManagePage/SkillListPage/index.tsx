@@ -153,8 +153,6 @@ export const SkillListPage: React.FC = () => {
           size="small"
           onClick={() => {
             setIsEdit(true);
-            console.log(record, 'record');
-            // setSelectedSkill(record);
             form.setFieldsValue({ ...record });
           }}
         />

@@ -21,7 +21,6 @@ export const useHandleProjectTimesheets = (): {
   employees: Employee[];
   workStatus: SelectOption[];
   getworkStatus: () => Promise<void>;
-
   fetchProjectTimesheets: () => void;
   addProjectTimesheet: (data: UpdateProjectTimesheetQueryParams) => void;
   editProjectTimesheet: (data: UpdateProjectTimesheetQueryParams) => void;
