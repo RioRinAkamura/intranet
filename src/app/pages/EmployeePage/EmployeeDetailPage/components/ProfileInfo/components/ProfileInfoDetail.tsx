@@ -80,7 +80,7 @@ export const ProfileInfoDetail = (props: ProfileInfoProps) => {
       data = data.format(DATE_FORMAT);
     }
 
-    navigator.clipboard.writeText(JSON.stringify(data, null, '\t'));
+    navigator.clipboard.writeText(data);
     notify({
       type: ToastMessageType.Info,
       message: 'Copied',
