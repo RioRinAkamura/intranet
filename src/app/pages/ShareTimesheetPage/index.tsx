@@ -84,6 +84,8 @@ export const ShareTimesheetPage = () => {
 const WrapperContent = styled.div`
   display: flex;
   justify-content: center;
+  background-color: #fff;
+  min-height: 100vh;
 `;
 
 const ModalContentWrapper = styled.div`
