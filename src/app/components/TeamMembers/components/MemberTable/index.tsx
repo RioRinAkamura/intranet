@@ -1,5 +1,4 @@
 import {
-  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
@@ -10,22 +9,22 @@ import {
   Employee,
   Member,
 } from '@hdwebsoft/intranet-api-sdk/libs/api/hr/models';
-import { Popover, Table, Tag, Tooltip, Switch } from 'antd';
+import { Popover, Switch, Table, Tag, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { ActionIcon } from 'app/components/ActionIcon';
 import { Avatar } from 'app/components/Avatar/Loadable';
 import { IconButton } from 'app/components/Button';
+import CopyToClipboard from 'app/components/CopyToClipboard';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { useProjectDetail } from 'app/pages/ProjectPage/ProjectDetailPage/useProjectDetail';
+import moment from 'moment';
 import React, { memo, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import styled from 'styled-components';
 import { api } from 'utils/api';
 import { antColours, DeleteType } from 'utils/types';
 import { PrivatePath } from 'utils/url.const';
 import { getSelectValues } from 'utils/variable';
-import moment from 'moment';
-import { ActionIcon } from 'app/components/ActionIcon';
-import styled from 'styled-components';
-import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
 
 interface Props {
   projectId: string;
@@ -55,7 +54,6 @@ export const MemberTable = memo((props: Props) => {
 
   // hooks
   const { roles, getRoles } = useProjectDetail();
-  const { notify } = useNotify();
 
   useEffect(() => {
     getRoles();
@@ -131,15 +129,6 @@ export const MemberTable = memo((props: Props) => {
     }
   };
 
-  const handleCopyEmailClick = (email: string) => {
-    navigator.clipboard.writeText(email);
-    notify({
-      type: ToastMessageType.Info,
-      message: 'Copied',
-      duration: 2,
-    });
-  };
-
   const moreButton = (record: Member) => (
     <>
       <Tooltip title={'Detail'}>
@@ -208,16 +197,12 @@ export const MemberTable = memo((props: Props) => {
           <div style={{ flex: 9 }}>
             <MemberInfo>
               <div>{text.first_name + ' ' + text.last_name}</div>
-              <Tooltip title="Member detail">
-                <LinkEmployee onClick={() => handleLinkEmployeeClick(text)} />
-              </Tooltip>
+              <LinkEmployee onClick={() => handleLinkEmployeeClick(text)} />
             </MemberInfo>
             <MemberInfo>
               <EmailWrap>{text.email}</EmailWrap>
               <Tooltip title="Copy email">
-                <CopyOutlined
-                  onClick={() => handleCopyEmailClick(text.email)}
-                />
+                <CopyToClipboard text={text.email} />
               </Tooltip>
             </MemberInfo>
           </div>
