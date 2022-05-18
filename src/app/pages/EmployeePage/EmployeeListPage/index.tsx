@@ -32,6 +32,7 @@ import { Avatar } from 'app/components/Avatar/Loadable';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import Button, { IconButton } from 'app/components/Button';
 import { CardLayout } from 'app/components/CardLayout';
+import CopyToClipboard from 'app/components/CopyToClipboard';
 import { DeleteConfirmModal } from 'app/components/DeleteConfirmModal';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { DialogModal } from 'app/components/DialogModal';
@@ -489,14 +490,6 @@ export const EmployeeListPage: React.FC = () => {
       return `${calc} days ago.`;
     }
   };
-  const copyToClipBoard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    notify({
-      type: ToastMessageType.Info,
-      message: 'Copied',
-      duration: 2,
-    });
-  };
 
   const handleClickedSkills = (value, record: Employee) => {
     setEmployeeSkills(() => [...value]);
@@ -562,8 +555,8 @@ export const EmployeeListPage: React.FC = () => {
         text ? (
           <>
             <span>{text}</span>
-            <StyledCopyIcon onClick={() => copyToClipBoard(text)}>
-              <CopyOutlined />
+            <StyledCopyIcon>
+              <CopyToClipboard text={text} />
             </StyledCopyIcon>
           </>
         ) : (
@@ -579,8 +572,8 @@ export const EmployeeListPage: React.FC = () => {
       render: (text, record: Employee) => (
         <>
           <span>{phoneFormat(text)}</span>
-          <StyledCopyIcon onClick={() => copyToClipBoard(text)}>
-            <CopyOutlined />
+          <StyledCopyIcon>
+            <CopyToClipboard text={text} />
           </StyledCopyIcon>
         </>
       ),

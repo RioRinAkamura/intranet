@@ -1,5 +1,4 @@
 import {
-  CopyOutlined,
   DeleteOutlined,
   EyeOutlined,
   MoreOutlined,
@@ -14,6 +13,7 @@ import { useAuthState } from 'app/components/Auth/useAuthState';
 import { Avatar } from 'app/components/Avatar';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import Button, { IconButton } from 'app/components/Button';
+import CopyToClipboard from 'app/components/CopyToClipboard';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { DialogModal } from 'app/components/DialogModal';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
@@ -461,15 +461,6 @@ export const TimesheetListPage = () => {
     setIsShareReport(true);
   };
 
-  const handleCopyClick = () => {
-    navigator.clipboard.writeText(linkShare);
-    notify({
-      type: ToastMessageType.Info,
-      message: 'Copied',
-      duration: 2,
-    });
-  };
-
   return (
     <>
       <Wrapper>
@@ -681,7 +672,7 @@ export const TimesheetListPage = () => {
         <ShareContent>
           <p>{linkShare}</p>
           <IconWrapper>
-            <CopyOutlined style={{ fontSize: 18 }} onClick={handleCopyClick} />
+            <CopyToClipboard text={linkShare} />
           </IconWrapper>
         </ShareContent>
       </DialogModal>

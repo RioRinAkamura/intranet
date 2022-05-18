@@ -1,5 +1,4 @@
 import {
-  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
@@ -21,6 +20,7 @@ import { ColumnProps } from 'antd/lib/table';
 import { ActionIcon } from 'app/components/ActionIcon';
 import { useAuthState } from 'app/components/Auth/useAuthState';
 import { IconButton } from 'app/components/Button';
+import CopyToClipboard from 'app/components/CopyToClipboard';
 import { DeleteModal } from 'app/components/DeleteModal';
 import { DialogModal } from 'app/components/DialogModal';
 import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
@@ -767,15 +767,6 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
     setIsShareReport(true);
   };
 
-  const handleCopyClick = () => {
-    navigator.clipboard.writeText(linkShare);
-    notify({
-      type: ToastMessageType.Info,
-      message: 'Copied',
-      duration: 2,
-    });
-  };
-
   return (
     <Wrapper>
       <Row>
@@ -976,7 +967,7 @@ export const TimeSheet = ({ employeeId }: TimeSheetProps) => {
         <ShareContent>
           <p>{linkShare}</p>
           <IconWrapper>
-            <CopyOutlined style={{ fontSize: 18 }} onClick={handleCopyClick} />
+            <CopyToClipboard text={linkShare} />
           </IconWrapper>
         </ShareContent>
       </DialogModal>
