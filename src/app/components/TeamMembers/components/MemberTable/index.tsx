@@ -1,4 +1,5 @@
 import {
+  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
@@ -24,6 +25,8 @@ import { getSelectValues } from 'utils/variable';
 import moment from 'moment';
 import { ActionIcon } from 'app/components/ActionIcon';
 import styled from 'styled-components';
+import { ToastMessageType, useNotify } from 'app/components/ToastNotification';
+
 interface Props {
   projectId: string;
   dataSource: Member[];
@@ -52,6 +55,7 @@ export const MemberTable = memo((props: Props) => {
 
   // hooks
   const { roles, getRoles } = useProjectDetail();
+  const { notify } = useNotify();
 
   useEffect(() => {
     getRoles();
@@ -127,6 +131,15 @@ export const MemberTable = memo((props: Props) => {
     }
   };
 
+  const handleCopyEmailClick = (email: string) => {
+    navigator.clipboard.writeText(email);
+    notify({
+      type: ToastMessageType.Info,
+      message: 'Copied',
+      duration: 2,
+    });
+  };
+
   const moreButton = (record: Member) => (
     <>
       <Tooltip title={'Detail'}>
@@ -176,7 +189,7 @@ export const MemberTable = memo((props: Props) => {
     {
       title: 'Project Role',
       dataIndex: 'project_role',
-      width: 100,
+      width: 150,
       render: text => getSelectValues(roles, text)?.label,
     },
     {
@@ -184,36 +197,31 @@ export const MemberTable = memo((props: Props) => {
       dataIndex: 'member',
       width: 150,
       render: text => (
-        <span
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <span style={{ display: 'block', flex: 2 }}>
+        <MemberCol>
+          <div style={{ flex: 1 }}>
             <Avatar
               src={text.avatar}
               name={text.first_name + ' ' + text.last_name}
               size={30}
             />
-          </span>
-          <span
-            style={{
-              display: 'flex',
-              flex: 8,
-              width: '100%',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <span style={{ marginLeft: '5px', display: 'block' }}>
-              {text.first_name + ' ' + text.last_name}
-            </span>
-            <span style={{ display: 'block', lineHeight: '100%' }}>
-              <LinkEmployee onClick={() => handleLinkEmployeeClick(text)} />
-            </span>
-          </span>
-        </span>
+          </div>
+          <div style={{ flex: 9 }}>
+            <MemberInfo>
+              <div>{text.first_name + ' ' + text.last_name}</div>
+              <Tooltip title="Member detail">
+                <LinkEmployee onClick={() => handleLinkEmployeeClick(text)} />
+              </Tooltip>
+            </MemberInfo>
+            <MemberInfo>
+              <EmailWrap>{text.email}</EmailWrap>
+              <Tooltip title="Copy email">
+                <CopyOutlined
+                  onClick={() => handleCopyEmailClick(text.email)}
+                />
+              </Tooltip>
+            </MemberInfo>
+          </div>
+        </MemberCol>
       ),
     },
     {
@@ -236,7 +244,7 @@ export const MemberTable = memo((props: Props) => {
     {
       title: <ActionIcon />,
       dataIndex: '',
-      width: 60,
+      width: 100,
       render: (record: Member, index: number) => {
         return (
           <>
@@ -297,4 +305,23 @@ const LinkEmployee = styled(LinkOutlined)`
   /* margin-left: 12px; */
   color: #1890ff;
   cursor: pointer;
+`;
+
+const MemberCol = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const MemberInfo = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 5px;
+`;
+
+const EmailWrap = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
