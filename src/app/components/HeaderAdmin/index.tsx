@@ -19,6 +19,9 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
   const { identity } = useGetIdentity();
   const userId = identity?.employee?.id;
   const { breadCrumb } = useBreadCrumbContext();
+
+  const breadCrumbItems = breadCrumb.split('/');
+
   return (
     <>
       <Wrapper>
@@ -114,11 +117,22 @@ const HeaderAdmin: React.FC<Props> = ({ collapsed, onCollapse }) => {
 
         <SubHeader>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-            <Breadcrumb.Item>
-              {/* {window.location.pathname.substr(1)} */}
-              {breadCrumb}
-            </Breadcrumb.Item>
+            {breadCrumbItems &&
+              breadCrumbItems.map(
+                (breadCrumItem: string, index: number, arr) => {
+                  if (arr.length - 1 === index) {
+                    return <Breadcrumb.Item>{breadCrumItem}</Breadcrumb.Item>;
+                  } else {
+                    return (
+                      <Breadcrumb.Item>
+                        <a href={`/${breadCrumItem.toLowerCase()}`}>
+                          {breadCrumItem}
+                        </a>
+                      </Breadcrumb.Item>
+                    );
+                  }
+                },
+              )}
           </Breadcrumb>
         </SubHeader>
       </Wrapper>
