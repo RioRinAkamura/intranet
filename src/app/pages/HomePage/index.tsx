@@ -3,13 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { PageWrapper } from 'app/components/PageWrapper';
 import { PieChartOutlined } from '@ant-design/icons';
 import styled from 'styled-components/macro';
-// import { Chart } from './components/Chart';
 import { Col, Row } from 'antd';
-// import { Managers } from './components/Managers';
-// import { Activities } from './components/Activities';
-// import { PerformanceEmployees } from './components/PerformanceEmployees';
-// import { NewEmployees } from './components/NewEmployees';
-// import { Recruitments } from './components/Recruitments';
 import PageTitle from 'app/components/PageTitle';
 import { useBreadCrumbContext } from 'app/components/Breadcrumbs/context';
 import LiveEmployeeWidgets from 'app/components/LiveEmployeesWidget';
@@ -19,7 +13,7 @@ export const HomePage: React.FC = () => {
   const { setBreadCrumb } = useBreadCrumbContext();
 
   React.useEffect(() => {
-    setBreadCrumb('');
+    setBreadCrumb('Dashboard');
   }, [setBreadCrumb]);
 
   return (
